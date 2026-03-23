@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "echo 'Static site - no build needed'",
+  "outputDirectory": ".",
+  "public": true,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://jaiwshim-project.github.io/30-14-K_Pub_Hub/:path*",
+      "permanent": false
+    }
+  ]
+}

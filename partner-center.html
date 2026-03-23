@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>파트너 센터 | K-AI출판허브</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .publisher-profile { display: flex; align-items: center; gap: 20px; padding: 24px; margin-bottom: 24px; }
+    .pub-prof-logo { font-size: 56px; }
+    .pub-prof-info h2 { font-size: 22px; font-weight: 700; }
+    .pub-prof-info .pub-meta { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+    .pub-prof-stats { display: flex; gap: 24px; margin-left: auto; }
+    .pub-prof-stat { text-align: center; }
+    .pub-prof-stat .num { font-size: 24px; font-weight: 700; color: var(--primary-light); }
+    .pub-prof-stat .label { font-size: 11px; color: var(--text-muted); }
+    .book-manage-table { width: 100%; }
+    .book-manage-table th { text-align: left; padding: 10px 14px; font-size: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); background: var(--bg-tertiary); }
+    .book-manage-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid var(--border-color); }
+    .book-manage-table tr:hover { background: var(--bg-card-hover); }
+    .status-badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .status-badge.active { background: rgba(0,184,148,0.15); color: var(--accent); }
+    .status-badge.pending { background: rgba(241,196,15,0.15); color: #F1C40F; }
+    .status-badge.learning { background: rgba(27,77,142,0.15); color: var(--primary-light); }
+    .ai-data-section { margin-top: 24px; }
+    .ai-progress-item { display: flex; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+    .ai-progress-item:last-child { border-bottom: none; }
+    .ai-progress-item .book-name { flex: 1; font-size: 14px; }
+    .ai-progress-item .progress-bar-full { width: 200px; }
+    .ai-progress-item .progress-pct { font-size: 13px; font-weight: 600; min-width: 48px; text-align: right; }
+    .settlement-table th { text-align: right; }
+    .settlement-table td { text-align: right; }
+    .settlement-table td:first-child, .settlement-table th:first-child { text-align: left; }
+    @media (max-width: 768px) { .publisher-profile { flex-direction: column; text-align: center; } .pub-prof-stats { margin-left: 0; } .ai-progress-item { flex-wrap: wrap; } .ai-progress-item .progress-bar-full { width: 100%; } }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="sidebar-header"><div class="logo"><span class="logo-icon">📚</span><span class="logo-text">K-AI출판허브</span></div></div>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i><span>홈</span></a></li>
+        <li class="nav-item"><a href="ai-library.html"><i class="fas fa-book-open"></i><span>AI 라이브러리</span></a></li>
+        <li class="nav-item"><a href="ai-book-tutor.html"><i class="fas fa-robot"></i><span>AI 북튜터</span></a></li>
+        <li class="nav-item"><a href="web-to-book.html"><i class="fas fa-rocket"></i><span>웹-투-북 퍼블리싱</span></a></li>
+        <li class="nav-item"><a href="publishers.html"><i class="fas fa-building"></i><span>출판사 연합관</span></a></li>
+        <li class="nav-item"><a href="community.html"><i class="fas fa-comments"></i><span>커뮤니티</span></a></li>
+        <li class="nav-item"><a href="b2b-solutions.html"><i class="fas fa-briefcase"></i><span>B2B 솔루션</span></a></li>
+        <li class="nav-item"><a href="dashboard.html"><i class="fas fa-chart-line"></i><span>대시보드</span></a></li>
+        <li class="nav-item"><a href="partner-center.html"><i class="fas fa-cogs"></i><span>파트너 센터</span></a></li>
+        <li class="nav-item"><a href="about.html"><i class="fas fa-info-circle"></i><span>소개</span></a></li>
+        <li class="nav-item"><a href="proposal.html"><i class="fas fa-file-contract"></i><span>제안서</span></a></li>
+      </ul>
+    </nav>
+    <div class="main-wrapper">
+      <header class="header">
+        <button class="hamburger-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="도서, 출판사, 지식을 검색하세요..."></div>
+        <div class="header-actions">
+          <button onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+          <button onclick="toggleLanguage()"><span class="lang-badge">KO</span></button>
+          <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+        </div>
+      </header>
+      <main class="main-content">
+        <h1 class="page-title"><i class="fas fa-cogs" style="color:var(--secondary);margin-right:8px"></i> 파트너 센터</h1>
+
+        <!-- Publisher Profile -->
+        <div class="card publisher-profile">
+          <div class="pub-prof-logo">📘</div>
+          <div class="pub-prof-info">
+            <h2>진한엠앤비</h2>
+            <div class="pub-meta">입점일: 2024.06.01 · 전문 분야: 공학, 기술, 자격증</div>
+            <div style="margin-top:8px"><span class="tag accent">AI 북튜터 활성</span> <span class="tag">프리미엄 파트너</span></div>
+          </div>
+          <div class="pub-prof-stats">
+            <div class="pub-prof-stat"><div class="num">245</div><div class="label">등록 도서</div></div>
+            <div class="pub-prof-stat"><div class="num">12,500</div><div class="label">총 판매</div></div>
+            <div class="pub-prof-stat"><div class="num">45,600</div><div class="label">AI 질의</div></div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab active" onclick="showPartnerTab('books')">도서 관리</button>
+          <button class="tab" onclick="showPartnerTab('ai')">AI 데이터</button>
+          <button class="tab" onclick="showPartnerTab('stats')">통계</button>
+          <button class="tab" onclick="showPartnerTab('settlement')">정산</button>
+        </div>
+
+        <!-- Books Tab -->
+        <div class="tab-content active" id="partner-books">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <span style="font-size:14px;color:var(--text-secondary)">총 245권 등록</span>
+            <button class="btn btn-primary btn-sm" onclick="openModal('newBookModal')"><i class="fas fa-plus"></i> 새 도서 등록</button>
+          </div>
+          <div class="table-container">
+            <table class="book-manage-table">
+              <thead><tr><th>도서명</th><th>ISBN</th><th>상태</th><th>AI 학습</th><th>판매수</th><th>액션</th></tr></thead>
+              <tbody>
+                <tr><td><strong>요양보호사 양성 표준교재 2024</strong></td><td>979-11-XXXXX-01</td><td><span class="status-badge active">활성</span></td><td><span class="status-badge active">완료</span></td><td>12,500</td><td><button class="btn btn-sm btn-ghost">편집</button></td></tr>
+                <tr><td><strong>전기차 공학 개론</strong></td><td>979-11-XXXXX-02</td><td><span class="status-badge active">활성</span></td><td><span class="status-badge active">완료</span></td><td>8,300</td><td><button class="btn btn-sm btn-ghost">편집</button></td></tr>
+                <tr><td><strong>드론 설계 및 제어 실무</strong></td><td>979-11-XXXXX-03</td><td><span class="status-badge active">활성</span></td><td><span class="status-badge learning">학습 중</span></td><td>6,200</td><td><button class="btn btn-sm btn-ghost">편집</button></td></tr>
+                <tr><td><strong>신재생에너지 시스템 공학</strong></td><td>979-11-XXXXX-04</td><td><span class="status-badge active">활성</span></td><td><span class="status-badge active">완료</span></td><td>5,600</td><td><button class="btn btn-sm btn-ghost">편집</button></td></tr>
+                <tr><td><strong>스마트 모빌리티 기초</strong></td><td>979-11-XXXXX-05</td><td><span class="status-badge pending">검토 중</span></td><td><span class="status-badge pending">대기</span></td><td>-</td><td><button class="btn btn-sm btn-ghost">편집</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AI Data Tab -->
+        <div class="tab-content" id="partner-ai">
+          <div class="card ai-data-section">
+            <h3 style="margin-bottom:16px"><i class="fas fa-brain" style="color:var(--accent);margin-right:8px"></i> AI 학습 상태</h3>
+            <div class="ai-progress-item">
+              <span class="book-name">요양보호사 양성 표준교재 2024</span>
+              <div class="progress-bar-full"><div class="fill" style="width:100%;background:var(--accent)"></div></div>
+              <span class="ai-progress-pct" style="color:var(--accent)">100%</span>
+            </div>
+            <div class="ai-progress-item">
+              <span class="book-name">전기차 공학 개론</span>
+              <div class="progress-bar-full"><div class="fill" style="width:100%;background:var(--accent)"></div></div>
+              <span class="ai-progress-pct" style="color:var(--accent)">100%</span>
+            </div>
+            <div class="ai-progress-item">
+              <span class="book-name">드론 설계 및 제어 실무</span>
+              <div class="progress-bar-full"><div class="fill" style="width:73%;background:var(--primary-light)"></div></div>
+              <span class="ai-progress-pct" style="color:var(--primary-light)">73%</span>
+            </div>
+            <div class="ai-progress-item">
+              <span class="book-name">신재생에너지 시스템 공학</span>
+              <div class="progress-bar-full"><div class="fill" style="width:100%;background:var(--accent)"></div></div>
+              <span class="ai-progress-pct" style="color:var(--accent)">100%</span>
+            </div>
+            <div style="margin-top:16px"><button class="btn btn-primary btn-sm"><i class="fas fa-sync"></i> AI 재학습 요청</button></div>
+          </div>
+        </div>
+
+        <!-- Stats Tab -->
+        <div class="tab-content" id="partner-stats">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div class="chart-box"><h3><i class="fas fa-chart-bar" style="color:var(--primary-light)"></i> 도서별 판매</h3><canvas id="partnerSalesChart"></canvas></div>
+            <div class="chart-box"><h3><i class="fas fa-robot" style="color:var(--accent)"></i> AI 이용량</h3><canvas id="partnerAiChart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Settlement Tab -->
+        <div class="tab-content" id="partner-settlement">
+          <div class="table-container">
+            <table class="book-manage-table settlement-table">
+              <thead><tr><th>월</th><th>판매 수익</th><th>AI 구독 수익</th><th>수수료(15%)</th><th>정산액</th></tr></thead>
+              <tbody>
+                <tr><td>2026년 3월</td><td>₩4,250,000</td><td>₩1,890,000</td><td>₩921,000</td><td><strong style="color:var(--accent)">₩5,219,000</strong></td></tr>
+                <tr><td>2026년 2월</td><td>₩3,980,000</td><td>₩1,720,000</td><td>₩855,000</td><td><strong>₩4,845,000</strong></td></tr>
+                <tr><td>2026년 1월</td><td>₩3,650,000</td><td>₩1,580,000</td><td>₩784,500</td><td><strong>₩4,445,500</strong></td></tr>
+                <tr><td>2025년 12월</td><td>₩4,100,000</td><td>₩1,650,000</td><td>₩862,500</td><td><strong>₩4,887,500</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- New Book Modal -->
+        <div class="modal-overlay" id="newBookModal">
+          <div class="modal">
+            <div class="modal-header"><h3>새 도서 등록</h3><button class="modal-close" onclick="closeModal('newBookModal')"><i class="fas fa-times"></i></button></div>
+            <div class="form-group"><label>도서명</label><input class="input" placeholder="도서 제목을 입력하세요"></div>
+            <div class="form-group"><label>저자</label><input class="input" placeholder="저자명"></div>
+            <div class="form-group"><label>ISBN</label><input class="input" placeholder="979-11-XXXXX-XX-X"></div>
+            <div class="form-group"><label>분야</label><select class="select"><option>공학</option><option>IT/프로그래밍</option><option>의료/간호</option><option>자격증</option></select></div>
+            <div class="form-group"><label>파일 업로드</label><div style="padding:32px;border:2px dashed var(--border-color);border-radius:var(--border-radius);text-align:center;color:var(--text-muted);cursor:pointer"><i class="fas fa-cloud-upload-alt" style="font-size:24px;margin-bottom:8px;display:block"></i>PDF 또는 ePub 파일을 드래그하세요<br><span style="font-size:12px">최대 100MB</span></div></div>
+            <div style="display:flex;gap:12px;justify-content:flex-end"><button class="btn btn-ghost" onclick="closeModal('newBookModal')">취소</button><button class="btn btn-primary" onclick="closeModal('newBookModal');showToast('도서가 등록되었습니다. AI 학습이 시작됩니다.','success')"><i class="fas fa-upload"></i> 등록</button></div>
+          </div>
+        </div>
+      </main>
+      <footer class="footer"><div class="footer-links"><a href="about.html">이용약관</a><a href="about.html">문의하기</a><a href="sitemap-page.html">구조도</a></div><p>© 2026 K-AI출판허브. All rights reserved.</p></footer>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function showPartnerTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById(`partner-${tab}`).classList.add('active');
+
+      if (tab === 'stats' && !window.partnerChartsInit) {
+        window.partnerChartsInit = true;
+        const gridColor = 'rgba(255,255,255,0.06)';
+        Chart.defaults.color = '#A0AEC0';
+        Chart.defaults.borderColor = gridColor;
+
+        new Chart(document.getElementById('partnerSalesChart'), {
+          type: 'bar',
+          data: { labels: ['요양보호사', '전기차', '드론', '신재생에너지'], datasets: [{ data: [12500, 8300, 6200, 5600], backgroundColor: ['#1B4D8E', '#00B894', '#FF6B35', '#27AE60'], borderRadius: 6, barPercentage: 0.5 }] },
+          options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: gridColor } }, x: { grid: { display: false } } } }
+        });
+
+        new Chart(document.getElementById('partnerAiChart'), {
+          type: 'line',
+          data: { labels: ['1월', '2월', '3월'], datasets: [{ label: 'AI 질의', data: [12300, 14200, 15892], borderColor: '#00B894', backgroundColor: 'rgba(0,184,148,0.1)', fill: true, tension: 0.4, pointRadius: 4 }] },
+          options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: gridColor } }, x: { grid: { display: false } } } }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

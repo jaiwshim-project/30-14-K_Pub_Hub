@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 라이브러리 | K-AI출판허브</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .library-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+    .filter-bar select, .filter-bar input { padding: 8px 14px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); color: var(--text-primary); font-family: var(--font-primary); font-size: 13px; outline: none; }
+    .filter-bar select:focus, .filter-bar input:focus { border-color: var(--primary-light); }
+    .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+    .recent-queries { margin-top: 32px; }
+    .query-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+    .query-item:last-child { border-bottom: none; }
+    .query-item .query-book { font-size: 12px; color: var(--primary-light); white-space: nowrap; }
+    .query-item .query-text { flex: 1; color: var(--text-secondary); }
+    .query-item .query-time { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+    .ai-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: rgba(0,184,148,0.15); color: var(--accent); border-radius: 4px; font-size: 11px; font-weight: 600; }
+    @media (max-width: 768px) { .library-stats { grid-template-columns: 1fr 1fr; } .books-grid { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="sidebar-header"><div class="logo"><span class="logo-icon">📚</span><span class="logo-text">K-AI출판허브</span></div></div>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i><span data-i18n="nav.home">홈</span></a></li>
+        <li class="nav-item"><a href="ai-library.html"><i class="fas fa-book-open"></i><span data-i18n="nav.library">AI 라이브러리</span></a></li>
+        <li class="nav-item"><a href="ai-book-tutor.html"><i class="fas fa-robot"></i><span data-i18n="nav.tutor">AI 북튜터</span></a></li>
+        <li class="nav-item"><a href="web-to-book.html"><i class="fas fa-rocket"></i><span data-i18n="nav.w2b">웹-투-북 퍼블리싱</span></a></li>
+        <li class="nav-item"><a href="publishers.html"><i class="fas fa-building"></i><span data-i18n="nav.publishers">출판사 연합관</span></a></li>
+        <li class="nav-item"><a href="community.html"><i class="fas fa-comments"></i><span data-i18n="nav.community">커뮤니티</span></a></li>
+        <li class="nav-item"><a href="b2b-solutions.html"><i class="fas fa-briefcase"></i><span data-i18n="nav.b2b">B2B 솔루션</span></a></li>
+        <li class="nav-item"><a href="dashboard.html"><i class="fas fa-chart-line"></i><span data-i18n="nav.dashboard">대시보드</span></a></li>
+        <li class="nav-item"><a href="partner-center.html"><i class="fas fa-cogs"></i><span data-i18n="nav.partner">파트너 센터</span></a></li>
+        <li class="nav-item"><a href="about.html"><i class="fas fa-info-circle"></i><span>소개</span></a></li>
+        <li class="nav-item"><a href="proposal.html"><i class="fas fa-file-contract"></i><span>제안서</span></a></li>
+      </ul>
+    </nav>
+
+    <div class="main-wrapper">
+      <header class="header">
+        <button class="hamburger-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="search-bar"><i class="fas fa-search"></i><input type="text" data-i18n-placeholder="search.placeholder" placeholder="도서, 출판사, 지식을 검색하세요..."></div>
+        <div class="header-actions">
+          <button onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+          <button onclick="toggleLanguage()"><span class="lang-badge">KO</span></button>
+          <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <h1 class="page-title"><i class="fas fa-book-open" style="color:var(--secondary);margin-right:8px"></i> <span data-i18n="library.myBooks">내 서재</span></h1>
+
+        <!-- Stats -->
+        <div class="library-stats">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(27,77,142,0.2);color:var(--primary-light)"><i class="fas fa-books"></i></div>
+            <div class="stat-info"><h3>8</h3><p data-i18n="library.totalBooks">총 보유 도서</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(0,184,148,0.2);color:var(--accent)"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info"><h3>2</h3><p data-i18n="library.completed">완독 도서</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(255,107,53,0.2);color:var(--secondary)"><i class="fas fa-spinner"></i></div>
+            <div class="stat-info"><h3>5</h3><p data-i18n="library.inProgress">학습 중</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(155,89,182,0.2);color:#9B59B6"><i class="fas fa-robot"></i></div>
+            <div class="stat-info"><h3>147</h3><p data-i18n="library.aiQueries">AI 질의 횟수</p></div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+          <select id="categoryFilter" onchange="filterBooks()">
+            <option value="all">전체 분야</option>
+            <option value="의료/간호">의료/간호</option>
+            <option value="공학">공학</option>
+            <option value="IT/프로그래밍">IT/프로그래밍</option>
+            <option value="IT/AI">IT/AI</option>
+            <option value="IT/데이터">IT/데이터</option>
+          </select>
+          <select id="publisherFilter" onchange="filterBooks()">
+            <option value="all">전체 출판사</option>
+            <option value="진한엠앤비">진한엠앤비</option>
+            <option value="한빛미디어">한빛미디어</option>
+            <option value="에이콘출판">에이콘출판</option>
+            <option value="청문각">청문각</option>
+          </select>
+          <select id="sortFilter" onchange="filterBooks()">
+            <option value="recent">최근 학습순</option>
+            <option value="progress">진도순</option>
+            <option value="title">제목순</option>
+          </select>
+          <input type="text" id="searchBooks" placeholder="도서 검색..." oninput="filterBooks()" style="flex:1;min-width:150px">
+        </div>
+
+        <!-- Books Grid -->
+        <div class="books-grid" id="booksGrid"></div>
+
+        <!-- Recent AI Queries -->
+        <div class="recent-queries">
+          <div class="section-header" style="margin-top:16px">
+            <h2><i class="fas fa-clock-rotate-left" style="color:var(--accent);margin-right:8px"></i> 최근 AI 질의 내역</h2>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden">
+            <div class="query-item">
+              <i class="fas fa-message" style="color:var(--primary-light)"></i>
+              <span class="query-book">요양보호사 교재</span>
+              <span class="query-text">거동이 불편한 어르신을 휠체어로 옮길 때 주의할 점은?</span>
+              <span class="query-time">10분 전</span>
+            </div>
+            <div class="query-item">
+              <i class="fas fa-message" style="color:var(--primary-light)"></i>
+              <span class="query-book">전기차 공학</span>
+              <span class="query-text">리튬이온 배터리 열폭주 방지 기술에 대해 설명해줘</span>
+              <span class="query-time">1시간 전</span>
+            </div>
+            <div class="query-item">
+              <i class="fas fa-message" style="color:var(--primary-light)"></i>
+              <span class="query-book">Python 데이터 분석</span>
+              <span class="query-text">판다스 DataFrame merge와 join의 차이점은?</span>
+              <span class="query-time">3시간 전</span>
+            </div>
+            <div class="query-item">
+              <i class="fas fa-message" style="color:var(--primary-light)"></i>
+              <span class="query-book">AI 머신러닝</span>
+              <span class="query-text">CNN과 RNN의 차이를 쉽게 설명해줘</span>
+              <span class="query-time">어제</span>
+            </div>
+            <div class="query-item">
+              <i class="fas fa-message" style="color:var(--primary-light)"></i>
+              <span class="query-book">드론 설계</span>
+              <span class="query-text">PID 제어기의 파라미터 튜닝 방법은?</span>
+              <span class="query-time">2일 전</span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-links"><a href="about.html">이용약관</a><a href="about.html">문의하기</a><a href="sitemap-page.html">구조도</a></div>
+        <p data-i18n="footer.copyright">© 2026 K-AI출판허브. All rights reserved.</p>
+      </footer>
+    </div>
+  </div>
+
+  <script src="common.js"></script>
+  <script>
+    function filterBooks() {
+      const cat = document.getElementById('categoryFilter').value;
+      const pub = document.getElementById('publisherFilter').value;
+      const sort = document.getElementById('sortFilter').value;
+      const search = document.getElementById('searchBooks').value.toLowerCase();
+
+      let filtered = sampleBooks.filter(b => {
+        if (cat !== 'all' && b.category !== cat) return false;
+        if (pub !== 'all' && b.publisher !== pub) return false;
+        if (search && !b.title.toLowerCase().includes(search) && !b.author.toLowerCase().includes(search)) return false;
+        return true;
+      });
+
+      if (sort === 'progress') filtered.sort((a, b) => b.progress - a.progress);
+      else if (sort === 'title') filtered.sort((a, b) => a.title.localeCompare(b.title));
+
+      renderBooks(filtered);
+    }
+
+    function renderBooks(books) {
+      const grid = document.getElementById('booksGrid');
+      if (!books.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)"><i class="fas fa-search" style="font-size:32px;margin-bottom:12px;display:block"></i>검색 결과가 없습니다</div>';
+        return;
+      }
+      grid.innerHTML = books.map(book => `
+        <div class="book-card" onclick="location.href='book-detail.html?id=${book.id}'">
+          <div class="book-cover" style="background:linear-gradient(135deg,${book.coverColor},${book.coverColor}99)">
+            <span style="font-size:64px">${book.coverIcon}</span>
+          </div>
+          <div class="book-info">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+              <div class="book-title" style="flex:1">${book.title}</div>
+              ${book.aiEnabled ? '<span class="ai-badge"><i class="fas fa-robot"></i> AI</span>' : ''}
+            </div>
+            <div class="book-author">${book.author}</div>
+            <div class="book-publisher">${book.publisher}</div>
+            <div class="book-meta">
+              <div class="progress-bar"><div class="progress-fill" style="width:${book.progress}%"></div></div>
+              <span class="progress-text">${book.progress}%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--text-muted)">
+              <span><i class="fas fa-star" style="color:#FFC107"></i> ${book.rating}</span>
+              <a href="ai-book-tutor.html?book=${book.id}" style="color:var(--accent);font-weight:600" onclick="event.stopPropagation()"><i class="fas fa-robot"></i> AI 튜터</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    renderBooks(sampleBooks);
+  </script>
+</body>
+</html>

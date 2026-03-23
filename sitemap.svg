@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 950" font-family="'Pretendard','Inter',sans-serif">
+  <defs>
+    <linearGradient id="gP" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1B4D8E"/><stop offset="100%" stop-color="#2D6BC4"/></linearGradient>
+    <linearGradient id="gS" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF6B35"/><stop offset="100%" stop-color="#FF8A5C"/></linearGradient>
+    <linearGradient id="gA" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00B894"/><stop offset="100%" stop-color="#00D9A7"/></linearGradient>
+    <linearGradient id="gV" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#9B59B6"/><stop offset="100%" stop-color="#8E44AD"/></linearGradient>
+    <linearGradient id="gR" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E74C3C"/><stop offset="100%" stop-color="#C0392B"/></linearGradient>
+    <linearGradient id="gY" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F39C12"/><stop offset="100%" stop-color="#E67E22"/></linearGradient>
+    <linearGradient id="gB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3498DB"/><stop offset="100%" stop-color="#2980B9"/></linearGradient>
+    <linearGradient id="gCover" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0D1B2A"/><stop offset="35%" stop-color="#1B4D8E"/><stop offset="65%" stop-color="#2D6BC4"/><stop offset="100%" stop-color="#00B894"/></linearGradient>
+    <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.1"/></filter>
+    <filter id="shL"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="950" rx="16" fill="#F5F7FA"/>
+
+  <!-- Title Bar -->
+  <rect x="0" y="0" width="1200" height="70" rx="16" fill="url(#gCover)"/>
+  <rect x="0" y="40" width="1200" height="30" fill="url(#gCover)"/>
+  <text x="600" y="35" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">K-AI출판허브 · 플랫폼 메뉴 구조도 (16 Pages)</text>
+  <text x="600" y="56" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.6)">Platform Site Map &amp; Architecture · 2026.03</text>
+
+  <!-- ===== ROOT ===== -->
+  <rect x="460" y="88" width="280" height="50" rx="25" fill="url(#gP)" filter="url(#shL)"/>
+  <text x="498" y="118" font-size="18">📚</text>
+  <text x="524" y="119" font-size="15" font-weight="700" fill="#fff">K-AI출판허브 (index.html)</text>
+
+  <line x1="600" y1="138" x2="600" y2="168" stroke="#CBD5E0" stroke-width="2"/>
+
+  <!-- ===== LEVEL 1 — 8 Main Branches ===== -->
+  <line x1="75" y1="168" x2="1125" y2="168" stroke="#CBD5E0" stroke-width="2"/>
+
+  <!-- Branch positions: 75, 225, 375, 525, 675, 825, 975, 1125 -->
+  <line x1="75" y1="168" x2="75" y2="196" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="225" y1="168" x2="225" y2="196" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="375" y1="168" x2="375" y2="196" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="525" y1="168" x2="525" y2="196" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="675" y1="168" x2="675" y2="196" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="825" y1="168" x2="825" y2="196" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="975" y1="168" x2="975" y2="196" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="1125" y1="168" x2="1125" y2="196" stroke="#CBD5E0" stroke-width="2"/>
+
+  <!-- 1. AI 라이브러리 -->
+  <rect x="10" y="196" width="130" height="42" rx="10" fill="url(#gS)" filter="url(#sh)"/>
+  <text x="75" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">📚 AI 라이브러리</text>
+  <line x1="75" y1="238" x2="75" y2="258" stroke="#FFB088" stroke-width="1.5"/>
+  <rect x="5" y="258" width="140" height="28" rx="6" fill="#fff" stroke="#FFB088" stroke-width="1" filter="url(#sh)"/>
+  <text x="75" y="276" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">내 서재 / 학습 진도</text>
+  <line x1="75" y1="286" x2="75" y2="298" stroke="#FFB088" stroke-width="1.5"/>
+  <rect x="5" y="298" width="140" height="28" rx="6" fill="#fff" stroke="#FFB088" stroke-width="1" filter="url(#sh)"/>
+  <text x="75" y="316" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">필터 / 정렬 / 검색</text>
+  <line x1="75" y1="326" x2="75" y2="338" stroke="#FFB088" stroke-width="1.5"/>
+  <rect x="5" y="338" width="140" height="28" rx="6" fill="#fff" stroke="#FFB088" stroke-width="1" filter="url(#sh)"/>
+  <text x="75" y="356" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">도서 상세 (book-detail)</text>
+
+  <!-- 2. AI 북튜터 -->
+  <rect x="160" y="196" width="130" height="42" rx="10" fill="url(#gA)" filter="url(#sh)"/>
+  <text x="225" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">🤖 AI 북튜터</text>
+  <line x1="225" y1="238" x2="225" y2="258" stroke="#66D9C2" stroke-width="1.5"/>
+  <rect x="155" y="258" width="140" height="28" rx="6" fill="#fff" stroke="#66D9C2" stroke-width="1" filter="url(#sh)"/>
+  <text x="225" y="276" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">RAG 채팅 (Gemini)</text>
+  <line x1="225" y1="286" x2="225" y2="298" stroke="#66D9C2" stroke-width="1.5"/>
+  <rect x="155" y="298" width="140" height="28" rx="6" fill="#fff" stroke="#66D9C2" stroke-width="1" filter="url(#sh)"/>
+  <text x="225" y="316" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">PDF 업로드 / IndexedDB</text>
+  <line x1="225" y1="326" x2="225" y2="338" stroke="#66D9C2" stroke-width="1.5"/>
+  <rect x="155" y="338" width="140" height="28" rx="6" fill="#fff" stroke="#66D9C2" stroke-width="1" filter="url(#sh)"/>
+  <text x="225" y="356" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">적용 도서 목록 (8권)</text>
+  <line x1="225" y1="366" x2="225" y2="378" stroke="#66D9C2" stroke-width="1.5"/>
+  <rect x="155" y="378" width="140" height="28" rx="6" fill="#fff" stroke="#66D9C2" stroke-width="1" filter="url(#sh)"/>
+  <text x="225" y="396" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">빠른 질문 / 퀴즈</text>
+
+  <!-- 3. 출판사 연합관 -->
+  <rect x="310" y="196" width="130" height="42" rx="10" fill="url(#gP)" filter="url(#sh)"/>
+  <text x="375" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">🏢 출판사 연합관</text>
+  <line x1="375" y1="238" x2="375" y2="258" stroke="#7BADE0" stroke-width="1.5"/>
+  <rect x="305" y="258" width="140" height="28" rx="6" fill="#fff" stroke="#7BADE0" stroke-width="1" filter="url(#sh)"/>
+  <text x="375" y="276" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">입점 출판사 카드 (10곳)</text>
+  <line x1="375" y1="286" x2="375" y2="298" stroke="#7BADE0" stroke-width="1.5"/>
+  <rect x="305" y="298" width="140" height="28" rx="6" fill="#fff" stroke="#7BADE0" stroke-width="1" filter="url(#sh)"/>
+  <text x="375" y="316" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">홈페이지 링크 목록</text>
+  <line x1="375" y1="326" x2="375" y2="338" stroke="#7BADE0" stroke-width="1.5"/>
+  <rect x="305" y="338" width="140" height="28" rx="6" fill="#fff" stroke="#7BADE0" stroke-width="1" filter="url(#sh)"/>
+  <text x="375" y="356" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">입점 절차 / 검색 필터</text>
+
+  <!-- 4. 커뮤니티 -->
+  <rect x="460" y="196" width="130" height="42" rx="10" fill="url(#gV)" filter="url(#sh)"/>
+  <text x="525" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">💬 커뮤니티</text>
+  <line x1="525" y1="238" x2="525" y2="258" stroke="#C39BD3" stroke-width="1.5"/>
+  <rect x="455" y="258" width="140" height="28" rx="6" fill="#fff" stroke="#C39BD3" stroke-width="1" filter="url(#sh)"/>
+  <text x="525" y="276" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">저자 Q&amp;A / 독자 토론</text>
+  <line x1="525" y1="286" x2="525" y2="298" stroke="#C39BD3" stroke-width="1.5"/>
+  <rect x="455" y="298" width="140" height="28" rx="6" fill="#fff" stroke="#C39BD3" stroke-width="1" filter="url(#sh)"/>
+  <text x="525" y="316" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">서평 / 스터디 그룹</text>
+
+  <!-- 5. B2B 솔루션 -->
+  <rect x="610" y="196" width="130" height="42" rx="10" fill="url(#gY)" filter="url(#sh)"/>
+  <text x="675" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">💼 B2B 솔루션</text>
+  <line x1="675" y1="238" x2="675" y2="258" stroke="#F5CBA7" stroke-width="1.5"/>
+  <rect x="605" y="258" width="140" height="28" rx="6" fill="#fff" stroke="#F5CBA7" stroke-width="1" filter="url(#sh)"/>
+  <text x="675" y="276" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">기업/대학/공공 솔루션</text>
+  <line x1="675" y1="286" x2="675" y2="298" stroke="#F5CBA7" stroke-width="1.5"/>
+  <rect x="605" y="298" width="140" height="28" rx="6" fill="#fff" stroke="#F5CBA7" stroke-width="1" filter="url(#sh)"/>
+  <text x="675" y="316" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">요금제 (3단) / 문의 폼</text>
+
+  <!-- 6. 대시보드 + 파트너 -->
+  <rect x="760" y="196" width="130" height="42" rx="10" fill="url(#gR)" filter="url(#sh)"/>
+  <text x="825" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">📊 관리 영역</text>
+  <line x1="825" y1="238" x2="825" y2="258" stroke="#F1948A" stroke-width="1.5"/>
+  <rect x="755" y="258" width="140" height="28" rx="6" fill="#fff" stroke="#F1948A" stroke-width="1" filter="url(#sh)"/>
+  <text x="825" y="276" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">대시보드 (Chart.js)</text>
+  <line x1="825" y1="286" x2="825" y2="298" stroke="#F1948A" stroke-width="1.5"/>
+  <rect x="755" y="298" width="140" height="28" rx="6" fill="#fff" stroke="#F1948A" stroke-width="1" filter="url(#sh)"/>
+  <text x="825" y="316" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">파트너 센터</text>
+  <line x1="825" y1="326" x2="825" y2="338" stroke="#F1948A" stroke-width="1.5"/>
+  <rect x="755" y="338" width="140" height="28" rx="6" fill="#fff" stroke="#F1948A" stroke-width="1" filter="url(#sh)"/>
+  <text x="825" y="356" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">콘텐츠 관리 CMS</text>
+  <line x1="825" y1="366" x2="825" y2="378" stroke="#F1948A" stroke-width="1.5"/>
+  <rect x="755" y="378" width="140" height="28" rx="6" fill="#fff" stroke="#F1948A" stroke-width="1" filter="url(#sh)"/>
+  <text x="825" y="396" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">검색 (search.html)</text>
+
+  <!-- 7. 소개 / 파트너십 -->
+  <rect x="910" y="196" width="130" height="42" rx="10" fill="url(#gB)" filter="url(#sh)"/>
+  <text x="975" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">ℹ️ 소개</text>
+  <line x1="975" y1="238" x2="975" y2="258" stroke="#85C1E9" stroke-width="1.5"/>
+  <rect x="905" y="258" width="140" height="28" rx="6" fill="#fff" stroke="#85C1E9" stroke-width="1" filter="url(#sh)"/>
+  <text x="975" y="276" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">비전 / 비즈니스 모델</text>
+  <line x1="975" y1="286" x2="975" y2="298" stroke="#85C1E9" stroke-width="1.5"/>
+  <rect x="905" y="298" width="140" height="28" rx="6" fill="#fff" stroke="#85C1E9" stroke-width="1" filter="url(#sh)"/>
+  <text x="975" y="316" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">VitalSource 벤치마킹</text>
+  <line x1="975" y1="326" x2="975" y2="338" stroke="#85C1E9" stroke-width="1.5"/>
+  <rect x="905" y="338" width="140" height="28" rx="6" fill="#fff" stroke="#85C1E9" stroke-width="1" filter="url(#sh)"/>
+  <text x="975" y="356" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">팀 소개 / 로드맵</text>
+  <line x1="975" y1="366" x2="975" y2="378" stroke="#85C1E9" stroke-width="1.5"/>
+  <rect x="905" y="378" width="140" height="28" rx="6" fill="#fff" stroke="#85C1E9" stroke-width="1" filter="url(#sh)"/>
+  <text x="975" y="396" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">파트너십 신청 폼</text>
+
+  <!-- 8. 제안서 -->
+  <rect x="1060" y="196" width="130" height="42" rx="10" fill="url(#gCover)" filter="url(#sh)"/>
+  <text x="1125" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">📋 제안서</text>
+  <line x1="1125" y1="238" x2="1125" y2="258" stroke="#5DADE2" stroke-width="1.5"/>
+  <rect x="1055" y="258" width="140" height="28" rx="6" fill="#fff" stroke="#5DADE2" stroke-width="1" filter="url(#sh)"/>
+  <text x="1125" y="276" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">제안 개요 (12장)</text>
+  <line x1="1125" y1="286" x2="1125" y2="298" stroke="#5DADE2" stroke-width="1.5"/>
+  <rect x="1055" y="298" width="140" height="28" rx="6" fill="#fff" stroke="#5DADE2" stroke-width="1" filter="url(#sh)"/>
+  <text x="1125" y="316" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">출판협회/문체부 대상</text>
+  <line x1="1125" y1="326" x2="1125" y2="338" stroke="#5DADE2" stroke-width="1.5"/>
+  <rect x="1055" y="338" width="140" height="28" rx="6" fill="#fff" stroke="#5DADE2" stroke-width="1" filter="url(#sh)"/>
+  <text x="1125" y="356" text-anchor="middle" font-size="9" font-weight="600" fill="#4A5568">예산 / 로드맵 / 인쇄</text>
+
+  <!-- ===== Page Count Summary ===== -->
+  <text x="600" y="445" text-anchor="middle" font-size="11" fill="#A0AEC0">전체 페이지 구성 (16 Pages)</text>
+  <rect x="60" y="456" width="1080" height="48" rx="12" fill="#EDF0F5" stroke="#CBD5E0" stroke-width="1" filter="url(#sh)"/>
+  <text x="140" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">📚 index.html</text>
+  <text x="270" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">📖 ai-library</text>
+  <text x="390" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">🤖 ai-book-tutor</text>
+  <text x="520" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">🏢 publishers</text>
+  <text x="640" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">📄 book-detail</text>
+  <text x="760" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">🔍 search</text>
+  <text x="880" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">💬 community</text>
+  <text x="1020" y="485" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">💼 b2b-solutions</text>
+  <rect x="60" y="510" width="1080" height="48" rx="12" fill="#EDF0F5" stroke="#CBD5E0" stroke-width="1" filter="url(#sh)"/>
+  <text x="140" y="539" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">📊 dashboard</text>
+  <text x="280" y="539" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">🛠 partner-center</text>
+  <text x="430" y="539" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">📝 publisher-dash</text>
+  <text x="580" y="539" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">🤝 partnership</text>
+  <text x="720" y="539" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">ℹ️ about</text>
+  <text x="850" y="539" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">📋 proposal</text>
+  <text x="980" y="539" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">🗺 sitemap-page</text>
+  <text x="1100" y="539" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">📃 publisher-list</text>
+
+  <!-- ===== Shared Features ===== -->
+  <text x="600" y="590" text-anchor="middle" font-size="11" fill="#A0AEC0">공통 기능 &amp; 기술 스택</text>
+  <rect x="60" y="600" width="1080" height="52" rx="12" fill="url(#gP)" filter="url(#sh)"/>
+  <text x="130" y="631" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">🔍 시맨틱 검색</text>
+  <text x="280" y="631" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">🌙 다크/라이트 테마</text>
+  <text x="440" y="631" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">🌐 한국어/영어</text>
+  <text x="590" y="631" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">📱 모바일 반응형</text>
+  <text x="740" y="631" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">🔔 알림 시스템</text>
+  <text x="890" y="631" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">🖨 인쇄/PDF</text>
+  <text x="1040" y="631" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">💾 IndexedDB</text>
+
+  <!-- Tech Stack -->
+  <rect x="150" y="670" width="180" height="44" rx="10" fill="#fff" stroke="#2D6BC4" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="240" y="697" text-anchor="middle" font-size="12" font-weight="700" fill="#1B4D8E">🧠 Gemini API (RAG)</text>
+
+  <rect x="355" y="670" width="160" height="44" rx="10" fill="#fff" stroke="#FF6B35" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="435" y="697" text-anchor="middle" font-size="12" font-weight="700" fill="#FF6B35">📄 PDF.js</text>
+
+  <rect x="540" y="670" width="160" height="44" rx="10" fill="#fff" stroke="#00B894" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="620" y="697" text-anchor="middle" font-size="12" font-weight="700" fill="#00B894">📊 Chart.js</text>
+
+  <rect x="725" y="670" width="160" height="44" rx="10" fill="#fff" stroke="#9B59B6" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="805" y="697" text-anchor="middle" font-size="12" font-weight="700" fill="#9B59B6">💾 IndexedDB</text>
+
+  <rect x="910" y="670" width="160" height="44" rx="10" fill="#fff" stroke="#3498DB" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="990" y="697" text-anchor="middle" font-size="12" font-weight="700" fill="#3498DB">🎨 CSS Premium</text>
+
+  <!-- ===== Business Model ===== -->
+  <text x="600" y="745" text-anchor="middle" font-size="11" fill="#A0AEC0">비즈니스 모델</text>
+
+  <rect x="100" y="758" width="300" height="52" rx="12" fill="url(#gP)" filter="url(#sh)"/>
+  <text x="140" y="789" font-size="14" font-weight="700" fill="#fff">👤 B2C</text>
+  <text x="200" y="789" font-size="10" fill="rgba(255,255,255,0.8)">AI 북튜터 구독 · 마이크로 결제</text>
+
+  <rect x="430" y="758" width="300" height="52" rx="12" fill="url(#gS)" filter="url(#sh)"/>
+  <text x="470" y="789" font-size="14" font-weight="700" fill="#fff">🏢 B2B</text>
+  <text x="530" y="789" font-size="10" fill="rgba(255,255,255,0.8)">기업·대학 교육 솔루션 라이선스</text>
+
+  <rect x="760" y="758" width="300" height="52" rx="12" fill="url(#gA)" filter="url(#sh)"/>
+  <text x="800" y="789" font-size="14" font-weight="700" fill="#fff">🤝 B2P</text>
+  <text x="860" y="789" font-size="10" fill="rgba(255,255,255,0.8)">출판사 AI 전환 · 데이터 인사이트</text>
+
+  <!-- ===== Target ===== -->
+  <text x="600" y="845" text-anchor="middle" font-size="11" fill="#A0AEC0">제안 대상</text>
+  <rect x="200" y="858" width="340" height="42" rx="10" fill="url(#gB)" filter="url(#sh)"/>
+  <text x="370" y="884" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">🏛 대한출판문화협회 · 출판사 연합 파트너십</text>
+  <rect x="570" y="858" width="400" height="42" rx="10" fill="url(#gV)" filter="url(#sh)"/>
+  <text x="770" y="884" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">🏛 문화체육관광부 · 출판 산업 디지털 전환 지원</text>
+
+  <!-- Footer -->
+  <text x="600" y="930" text-anchor="middle" font-size="9" fill="#CBD5E0">© 2026 K-AI출판허브 · 심재우(AX북그룹) &amp; 김갑용(진한엠앤비) · Vanilla HTML/CSS/JS · 16 Pages</text>
+</svg>

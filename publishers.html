@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>출판사 연합관 | K-AI출판허브</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .alliance-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 28px; }
+    .publishers-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 20px; margin-bottom: 40px; }
+    .pub-detail-card { padding: 28px; }
+    .pub-detail-card .pub-logo { font-size: 56px; margin-bottom: 12px; }
+    .pub-detail-card .pub-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .pub-detail-card .pub-desc { font-size: 14px; color: var(--text-secondary); margin: 12px 0; line-height: 1.6; }
+    .pub-detail-card .pub-stats { display: flex; gap: 20px; margin-top: 16px; justify-content: center; }
+    .pub-detail-card .pub-stat { text-align: center; }
+    .pub-detail-card .pub-stat .num { font-size: 22px; font-weight: 700; color: var(--primary-light); }
+    .pub-detail-card .pub-stat .label { font-size: 12px; color: var(--text-muted); }
+    .onboarding-section { margin-top: 40px; }
+    .onboarding-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 20px; }
+    .step-card { text-align: center; padding: 32px 20px; }
+    .step-card .step-num { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; margin: 0 auto 16px; }
+    .step-card h3 { font-size: 16px; margin-bottom: 8px; }
+    .step-card p { font-size: 13px; color: var(--text-secondary); }
+
+    /* Publisher List with Homepage Links */
+    .pub-full-list { margin-top: 40px; }
+    .pub-list-item { display: grid; grid-template-columns: 64px 1fr auto; gap: 20px; align-items: center; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); margin-bottom: 12px; transition: all var(--transition-normal); }
+    .pub-list-item:hover { background: var(--bg-card-hover); border-color: var(--border-color-strong); transform: translateX(4px); box-shadow: var(--shadow-md); }
+    .pub-list-item.featured { border-color: var(--secondary); box-shadow: 0 0 15px rgba(255,107,53,0.1); }
+    .pub-list-logo-sm { width: 64px; height: 64px; border-radius: var(--border-radius-sm); display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+    .pub-list-mid { flex: 1; min-width: 0; }
+    .pub-list-mid h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .pub-list-mid .pub-list-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .pub-list-mid .pub-list-meta { display: flex; gap: 14px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
+    .pub-list-mid .pub-list-meta span { display: flex; align-items: center; gap: 4px; }
+    .pub-list-actions-col { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; flex-shrink: 0; }
+    .homepage-link-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 600; text-decoration: none; transition: all var(--transition-fast); white-space: nowrap; }
+    .homepage-link-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(27,77,142,0.4); color: #fff; }
+    .homepage-link-btn i { font-size: 11px; }
+    .ai-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; }
+    .ai-dot.on { background: var(--accent); animation: pulse 2s infinite; }
+    .ai-dot.off { background: var(--text-muted); }
+    .pub-filter-bar { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .pub-filter-bar select, .pub-filter-bar input { padding: 7px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); color: var(--text-primary); font-family: var(--font-primary); font-size: 13px; outline: none; }
+    .pub-filter-bar input { flex: 1; min-width: 150px; }
+
+    @media (max-width: 768px) { .alliance-stats { grid-template-columns: 1fr; } .onboarding-steps { grid-template-columns: 1fr; } .pub-list-item { grid-template-columns: 1fr; text-align: center; } .pub-list-logo-sm { margin: 0 auto; } .pub-list-actions-col { align-items: center; flex-direction: row; gap: 8px; justify-content: center; flex-wrap: wrap; } .pub-list-mid .pub-list-meta { justify-content: center; } }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="sidebar-header"><div class="logo"><span class="logo-icon">📚</span><span class="logo-text">K-AI출판허브</span></div></div>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i><span>홈</span></a></li>
+        <li class="nav-item"><a href="ai-library.html"><i class="fas fa-book-open"></i><span>AI 라이브러리</span></a></li>
+        <li class="nav-item"><a href="ai-book-tutor.html"><i class="fas fa-robot"></i><span>AI 북튜터</span></a></li>
+        <li class="nav-item"><a href="web-to-book.html"><i class="fas fa-rocket"></i><span>웹-투-북 퍼블리싱</span></a></li>
+        <li class="nav-item"><a href="publishers.html"><i class="fas fa-building"></i><span>출판사 연합관</span></a></li>
+        <li class="nav-item"><a href="community.html"><i class="fas fa-comments"></i><span>커뮤니티</span></a></li>
+        <li class="nav-item"><a href="b2b-solutions.html"><i class="fas fa-briefcase"></i><span>B2B 솔루션</span></a></li>
+        <li class="nav-item"><a href="dashboard.html"><i class="fas fa-chart-line"></i><span>대시보드</span></a></li>
+        <li class="nav-item"><a href="partner-center.html"><i class="fas fa-cogs"></i><span>파트너 센터</span></a></li>
+        <li class="nav-item"><a href="about.html"><i class="fas fa-info-circle"></i><span>소개</span></a></li>
+        <li class="nav-item"><a href="proposal.html"><i class="fas fa-file-contract"></i><span>제안서</span></a></li>
+      </ul>
+    </nav>
+    <div class="main-wrapper">
+      <header class="header">
+        <button class="hamburger-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="도서, 출판사, 지식을 검색하세요..."></div>
+        <div class="header-actions">
+          <button onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+          <button onclick="toggleLanguage()"><span class="lang-badge">KO</span></button>
+          <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+        </div>
+      </header>
+      <main class="main-content">
+        <h1 class="page-title"><i class="fas fa-building" style="color:var(--accent);margin-right:8px"></i> 출판사 연합관</h1>
+
+        <div class="alliance-stats">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(27,77,142,0.2);color:var(--primary-light)"><i class="fas fa-building"></i></div>
+            <div class="stat-info"><h3>6</h3><p>입점 출판사</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(255,107,53,0.2);color:var(--secondary)"><i class="fas fa-book"></i></div>
+            <div class="stat-info"><h3>1,375</h3><p>총 등록 도서</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(0,184,148,0.2);color:var(--accent)"><i class="fas fa-robot"></i></div>
+            <div class="stat-info"><h3>4</h3><p>AI 북튜터 활성</p></div>
+          </div>
+        </div>
+
+        <div class="publishers-grid" id="publishersGrid"></div>
+
+        <!-- Full Publisher List with Homepage Links -->
+        <div class="pub-full-list">
+          <div class="section-header">
+            <h2><i class="fas fa-list" style="color:var(--primary-light);margin-right:8px"></i> 입점 출판사 목록 & 홈페이지</h2>
+          </div>
+          <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">각 출판사의 홈페이지를 방문하여 더 많은 도서와 정보를 확인하세요.</p>
+
+          <div class="pub-filter-bar">
+            <select id="specialtyFilter" onchange="filterPubList()">
+              <option value="all">전체 분야</option>
+              <option value="공학">공학</option>
+              <option value="IT">IT</option>
+              <option value="의학">의학</option>
+              <option value="자격증">자격증</option>
+            </select>
+            <select id="aiFilter" onchange="filterPubList()">
+              <option value="all">전체</option>
+              <option value="on">AI 북튜터 활성</option>
+              <option value="off">AI 북튜터 미활성</option>
+            </select>
+            <input type="text" id="pubSearchInput" placeholder="출판사명 검색..." oninput="filterPubList()">
+          </div>
+
+          <div id="pubFullList"></div>
+        </div>
+
+        <!-- Onboarding -->
+        <div class="onboarding-section animate-on-scroll">
+          <div class="section-header">
+            <h2><i class="fas fa-door-open" style="color:var(--secondary);margin-right:8px"></i> 우리 출판사도 입점하고 싶어요!</h2>
+          </div>
+          <div class="onboarding-steps">
+            <div class="card step-card">
+              <div class="step-num" style="background:rgba(27,77,142,0.2);color:var(--primary-light)">1</div>
+              <h3>파트너십 신청</h3>
+              <p>간단한 정보 입력으로 입점을 신청하세요. 전문 분야와 보유 도서 목록을 알려주시면 됩니다.</p>
+            </div>
+            <div class="card step-card">
+              <div class="step-num" style="background:rgba(255,107,53,0.2);color:var(--secondary)">2</div>
+              <h3>콘텐츠 업로드</h3>
+              <p>도서 데이터를 업로드하면, AI가 자동으로 학습 가능한 형태로 구조화합니다.</p>
+            </div>
+            <div class="card step-card">
+              <div class="step-num" style="background:rgba(0,184,148,0.2);color:var(--accent)">3</div>
+              <h3>AI 북튜터 활성화</h3>
+              <p>AI 학습이 완료되면 귀사의 모든 도서에 AI 북튜터가 자동으로 장착됩니다!</p>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:28px">
+            <a href="partnership.html" class="btn btn-secondary btn-lg"><i class="fas fa-handshake"></i> 파트너십 신청하기</a>
+          </div>
+        </div>
+      </main>
+      <footer class="footer"><div class="footer-links"><a href="about.html">이용약관</a><a href="about.html">문의하기</a><a href="sitemap-page.html">구조도</a></div><p>© 2026 K-AI출판허브. All rights reserved.</p></footer>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    // Publisher card grid (top section)
+    const grid = document.getElementById('publishersGrid');
+    grid.innerHTML = samplePublishers.map(p => `
+      <div class="card pub-detail-card" style="text-align:center">
+        <div class="pub-logo">${p.logo}</div>
+        <div class="pub-name">${p.name}</div>
+        <div class="publisher-specialty" style="justify-content:center;margin:8px 0">
+          ${p.specialty.map(s => `<span class="tag">${s}</span>`).join('')}
+        </div>
+        <div class="pub-desc">${p.description}</div>
+        <div class="pub-stats">
+          <div class="pub-stat"><div class="num">${p.bookCount}</div><div class="label">등록 도서</div></div>
+          <div class="pub-stat"><div class="num">${p.aiEnabled ? '<span style="color:var(--accent)">ON</span>' : '<span style="color:var(--text-muted)">OFF</span>'}</div><div class="label">AI 북튜터</div></div>
+        </div>
+        <div style="margin-top:16px">
+          <a href="ai-library.html" class="btn btn-sm btn-ghost"><i class="fas fa-book-open"></i> 도서 목록 보기</a>
+          ${p.aiEnabled ? '<a href="ai-book-tutor.html" class="btn btn-sm btn-accent" style="margin-left:8px"><i class="fas fa-robot"></i> AI 튜터</a>' : ''}
+        </div>
+      </div>
+    `).join('');
+
+    // Full publisher list with homepage links
+    const publishersWithLinks = [
+      { name: '진한엠앤비', logo: '📘', logoBg: 'linear-gradient(135deg,#1B4D8E,#2D6BC4)', specialty: ['공학','기술','자격증','드론','자동차'], bookCount: 245, aiEnabled: true, homepage: 'https://www.jinhanbooks.com', description: '공학, IT, 드론, 자동차 등 전문 기술 서적 분야 30년 전통의 출판사. 김갑용 대표가 이끄는 대한민국 대표 공학 전문 출판사.', sales: 32600, aiQueries: 102800, featured: true, joinDate: '2024.06' },
+      { name: '한빛미디어', logo: '📙', logoBg: 'linear-gradient(135deg,#FF6B35,#FF8A5C)', specialty: ['IT','프로그래밍','데이터','디자인'], bookCount: 320, aiEnabled: true, homepage: 'https://www.hanbit.co.kr', description: 'IT/컴퓨터, 프로그래밍, 데이터 분석 분야 국내 최고의 전문 출판사.', sales: 26500, aiQueries: 90900, featured: false, joinDate: '2024.07' },
+      { name: '에이콘출판', logo: '📗', logoBg: 'linear-gradient(135deg,#00B894,#00D9A7)', specialty: ['IT전문서','AI','보안','클라우드'], bookCount: 180, aiEnabled: true, homepage: 'https://www.acornpub.co.kr', description: 'IT 전문서, AI/머신러닝, 사이버 보안 분야의 해외 유수 서적을 번역·출간하는 전문 출판사.', sales: 18700, aiQueries: 67200, featured: false, joinDate: '2024.08' },
+      { name: '청문각', logo: '📕', logoBg: 'linear-gradient(135deg,#9B59B6,#8E44AD)', specialty: ['이공계','교재','수학','물리'], bookCount: 150, aiEnabled: false, homepage: 'https://www.cmgpub.co.kr', description: '대학 이공계 교재 전문 출판사. 수학, 물리학, 화학 등 기초과학부터 응용공학까지.', sales: 4800, aiQueries: 0, featured: false, joinDate: '2024.09' },
+      { name: '교문사', logo: '📓', logoBg: 'linear-gradient(135deg,#E74C3C,#C0392B)', specialty: ['의학','간호','보건','약학'], bookCount: 200, aiEnabled: true, homepage: 'https://www.kyomunsa.co.kr', description: '의학, 간호학, 보건학, 약학 분야의 전문 교재 출판사.', sales: 12500, aiQueries: 45600, featured: false, joinDate: '2024.10' },
+      { name: '시대고시기획', logo: '📔', logoBg: 'linear-gradient(135deg,#F39C12,#E67E22)', specialty: ['자격증','시험','공무원','취업'], bookCount: 280, aiEnabled: false, homepage: 'https://www.sdgosi.com', description: '자격증, 공무원 시험, 취업 준비 교재 전문 출판사.', sales: 11300, aiQueries: 0, featured: false, joinDate: '2024.11' },
+      { name: '길벗', logo: '📒', logoBg: 'linear-gradient(135deg,#2ECC71,#27AE60)', specialty: ['IT','경제경영','자기계발','어학'], bookCount: 410, aiEnabled: true, homepage: 'https://www.gilbut.co.kr', description: 'IT, 경제경영, 자기계발, 어학 등 다양한 분야의 베스트셀러를 출간하는 종합 출판사.', sales: 22400, aiQueries: 58300, featured: false, joinDate: '2025.01' },
+      { name: '위키북스', logo: '📓', logoBg: 'linear-gradient(135deg,#3498DB,#2980B9)', specialty: ['IT','프로그래밍','데이터사이언스'], bookCount: 120, aiEnabled: true, homepage: 'https://wikibook.co.kr', description: '프로그래밍, 데이터 사이언스, 인공지능 분야의 전문 기술 서적 출판사.', sales: 8900, aiQueries: 31200, featured: false, joinDate: '2025.02' },
+      { name: '제이펍', logo: '📕', logoBg: 'linear-gradient(135deg,#1ABC9C,#16A085)', specialty: ['IT','AI','블록체인','게임개발'], bookCount: 95, aiEnabled: false, homepage: 'https://jpub.tistory.com', description: 'IT 개발자를 위한 전문 기술서 출판사. AI, 블록체인, 게임 개발 등 최신 기술 트렌드 반영.', sales: 5200, aiQueries: 0, featured: false, joinDate: '2025.03' },
+      { name: '정보문화사', logo: '📘', logoBg: 'linear-gradient(135deg,#8E44AD,#7D3C98)', specialty: ['IT','실용서','자격증','오피스'], bookCount: 175, aiEnabled: false, homepage: 'https://www.infopub.co.kr', description: 'IT 실용서, 자격증 교재, 오피스 활용서 등을 출간하는 출판사.', sales: 6700, aiQueries: 0, featured: false, joinDate: '2025.03' }
+    ];
+
+    function filterPubList() {
+      const spec = document.getElementById('specialtyFilter').value;
+      const ai = document.getElementById('aiFilter').value;
+      const search = document.getElementById('pubSearchInput').value.toLowerCase();
+
+      let filtered = publishersWithLinks.filter(p => {
+        if (spec !== 'all' && !p.specialty.some(s => s.includes(spec))) return false;
+        if (ai === 'on' && !p.aiEnabled) return false;
+        if (ai === 'off' && p.aiEnabled) return false;
+        if (search && !p.name.toLowerCase().includes(search)) return false;
+        return true;
+      });
+      renderPubList(filtered);
+    }
+
+    function renderPubList(pubs) {
+      document.getElementById('pubFullList').innerHTML = pubs.map(p => `
+        <div class="pub-list-item ${p.featured ? 'featured' : ''}">
+          <div class="pub-list-logo-sm" style="background:${p.logoBg}">${p.logo}</div>
+          <div class="pub-list-mid">
+            <h4>${p.name} ${p.featured ? '<span class="tag secondary" style="font-size:10px;margin-left:6px">대표 파트너</span>' : ''}</h4>
+            <div class="pub-list-desc">${p.description}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">
+              ${p.specialty.map(s => `<span class="tag" style="font-size:10px">${s}</span>`).join('')}
+            </div>
+            <div class="pub-list-meta">
+              <span><i class="fas fa-book"></i> ${p.bookCount}권</span>
+              <span><i class="fas fa-cart-shopping"></i> ${p.sales.toLocaleString()}부</span>
+              <span><span class="ai-dot ${p.aiEnabled ? 'on' : 'off'}"></span> AI ${p.aiEnabled ? 'ON' : 'OFF'}</span>
+              ${p.aiEnabled ? `<span><i class="fas fa-comments"></i> ${p.aiQueries.toLocaleString()}건</span>` : ''}
+              <span><i class="fas fa-calendar"></i> ${p.joinDate}</span>
+            </div>
+          </div>
+          <div class="pub-list-actions-col">
+            <a href="${p.homepage}" target="_blank" rel="noopener noreferrer" class="homepage-link-btn">
+              <i class="fas fa-globe"></i> 홈페이지 <i class="fas fa-external-link-alt"></i>
+            </a>
+            ${p.aiEnabled ? '<a href="ai-book-tutor.html" class="btn btn-sm btn-accent" style="font-size:11px"><i class="fas fa-robot"></i> AI 튜터</a>' : ''}
+            <a href="ai-library.html" class="btn btn-sm btn-ghost" style="font-size:11px"><i class="fas fa-book-open"></i> 도서 목록</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initial render
+    renderPubList(publishersWithLinks);
+
+    // Update stats
+    document.querySelector('.alliance-stats .stat-info h3').textContent = publishersWithLinks.length;
+  </script>
+</body>
+</html>

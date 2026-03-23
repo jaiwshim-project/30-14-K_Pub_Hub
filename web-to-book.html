@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>웹-투-북 퍼블리싱 | K-AI출판허브</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .w2b-hero {
+      background: linear-gradient(135deg, rgba(27,77,142,0.1) 0%, rgba(0,184,148,0.1) 100%);
+      padding: 48px 0;
+      margin-bottom: 40px;
+      border-radius: var(--border-radius);
+      border: 1px solid rgba(27,77,142,0.2);
+    }
+    .w2b-hero h1 { font-size: 42px; margin-bottom: 12px; }
+    .w2b-hero .subtitle { font-size: 18px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px; max-width: 800px; }
+    .w2b-badge { display: inline-block; padding: 6px 12px; background: rgba(27,77,142,0.15); color: var(--primary-light); border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
+    .w2b-badge.en { background: rgba(0,184,148,0.15); color: var(--accent); margin-left: 8px; }
+
+    .process-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 40px; }
+    .process-step { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 24px; text-align: center; transition: all var(--transition-normal); }
+    .process-step:hover { border-color: var(--primary-light); box-shadow: 0 4px 12px rgba(27,77,142,0.1); transform: translateY(-4px); }
+    .process-step .step-num { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; margin: 0 auto 12px; background: rgba(27,77,142,0.2); color: var(--primary-light); }
+    .process-step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .process-step p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    .process-step .duration { font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 12px; }
+
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .feature-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 28px; }
+    .feature-card.authors { border-left: 4px solid var(--primary-light); }
+    .feature-card.readers { border-left: 4px solid var(--accent); }
+    .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .feature-card ul { list-style: none; padding: 0; }
+    .feature-card li { padding: 10px 0; font-size: 14px; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 10px; border-bottom: 1px solid var(--border-color); }
+    .feature-card li:last-child { border-bottom: none; }
+    .feature-card li i { color: var(--accent); margin-top: 2px; flex-shrink: 0; }
+
+    .case-study { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 28px; margin-bottom: 20px; display: grid; grid-template-columns: 120px 1fr; gap: 24px; align-items: center; }
+    .case-study .cover { width: 120px; height: 160px; border-radius: 8px; background: linear-gradient(135deg, #FFE5B4 0%, #FFD699 100%); display: flex; align-items: center; justify-content: center; font-size: 48px; flex-shrink: 0; }
+    .case-study h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .case-study .author { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+    .case-study p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; }
+    .case-study .stats { display: flex; gap: 20px; font-size: 13px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+    .case-study .stat { display: flex; flex-direction: column; }
+    .case-study .stat .num { font-size: 20px; font-weight: 700; color: var(--primary-light); }
+    .case-study .stat .label { color: var(--text-muted); font-size: 12px; }
+
+    .comparison-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+    .comparison-table th { background: var(--bg-secondary); padding: 16px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--border-color); }
+    .comparison-table td { padding: 16px; border-bottom: 1px solid var(--border-color); }
+    .comparison-table tr:hover { background: var(--bg-card); }
+    .comparison-table .feature-name { font-weight: 600; }
+    .comparison-table .check { color: var(--accent); }
+    .comparison-table .times { color: var(--text-muted); }
+
+    .timeline { position: relative; padding: 20px 0; margin-bottom: 40px; }
+    .timeline::before { content: ''; position: absolute; left: 30px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--primary-light), var(--accent)); }
+    .timeline-item { position: relative; padding-left: 80px; margin-bottom: 24px; }
+    .timeline-item::before { content: ''; position: absolute; left: 16px; top: 4px; width: 28px; height: 28px; background: var(--bg-card); border: 3px solid var(--primary-light); border-radius: 50%; }
+    .timeline-item h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .timeline-item p { font-size: 13px; color: var(--text-secondary); }
+
+    .cta-section { background: linear-gradient(135deg, var(--primary), var(--primary-light)); border-radius: var(--border-radius); padding: 48px; color: #fff; text-align: center; margin-top: 40px; }
+    .cta-section h2 { font-size: 32px; margin-bottom: 12px; }
+    .cta-section p { font-size: 16px; margin-bottom: 24px; opacity: 0.95; }
+    .cta-section .btn { margin: 0 8px; }
+
+    .featured-project { transition: all var(--transition-normal); }
+    .featured-project:hover { border-color: var(--primary) !important; box-shadow: 0 8px 24px rgba(27,77,142,0.2) !important; transform: translateY(-4px); }
+
+    @media (max-width: 1024px) {
+      .process-steps { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    }
+
+    @media (max-width: 768px) {
+      .process-steps { grid-template-columns: 1fr; }
+      .w2b-hero h1 { font-size: 32px; }
+      .case-study { grid-template-columns: 1fr; }
+      .case-study .cover { width: 100%; height: 200px; }
+      .comparison-table { font-size: 12px; }
+      .cta-section { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">📚</span>
+          <span class="logo-text">K-AI출판허브</span>
+        </div>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i><span>홈</span></a></li>
+        <li class="nav-item"><a href="ai-library.html"><i class="fas fa-book-open"></i><span>AI 라이브러리</span></a></li>
+        <li class="nav-item"><a href="ai-book-tutor.html"><i class="fas fa-robot"></i><span>AI 북튜터</span></a></li>
+        <li class="nav-item"><a href="web-to-book.html"><i class="fas fa-rocket"></i><span>웹-투-북 퍼블리싱</span></a></li>
+        <li class="nav-item"><a href="publishers.html"><i class="fas fa-building"></i><span>출판사 연합관</span></a></li>
+        <li class="nav-item"><a href="community.html"><i class="fas fa-comments"></i><span>커뮤니티</span></a></li>
+        <li class="nav-item"><a href="b2b-solutions.html"><i class="fas fa-briefcase"></i><span>B2B 솔루션</span></a></li>
+        <li class="nav-item"><a href="dashboard.html"><i class="fas fa-chart-line"></i><span>대시보드</span></a></li>
+        <li class="nav-item"><a href="partner-center.html"><i class="fas fa-cogs"></i><span>파트너 센터</span></a></li>
+        <li class="nav-item"><a href="about.html"><i class="fas fa-info-circle"></i><span>소개</span></a></li>
+        <li class="nav-item"><a href="proposal.html"><i class="fas fa-file-contract"></i><span>제안서</span></a></li>
+      </ul>
+    </nav>
+
+    <!-- Main -->
+    <div class="main-wrapper">
+      <!-- Header -->
+      <header class="header">
+        <button class="hamburger-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="도서, 출판사, 지식을 검색하세요...">
+        </div>
+        <div class="header-actions">
+          <button onclick="toggleTheme()" title="테마 전환"><i class="fas fa-moon"></i></button>
+          <button onclick="toggleLanguage()" title="언어 전환"><span class="lang-badge">KO</span></button>
+          <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="main-content">
+        <!-- Hero Section -->
+        <div class="w2b-hero">
+          <div style="padding: 0 20px;">
+            <div class="w2b-badge"><i class="fas fa-star"></i> 새로운 출판 형태</div>
+            <h1><i class="fas fa-rocket"></i> 웹-투-북 퍼블리싱<span class="w2b-badge en">(Web-to-Book Publishing)</span></h1>
+            <p class="subtitle">
+              "연재에서 책으로" — 웹 플랫폼에서 매일 공개되는 에피소드부터 최종 도서 출판까지,
+              독자와 함께하는 완전히 새로운 출판 생태계입니다.
+            </p>
+            <a href="#process" class="btn btn-secondary btn-lg"><i class="fas fa-chevron-down"></i> 자세히 알아보기</a>
+          </div>
+        </div>
+
+        <!-- Process Steps -->
+        <section id="process">
+          <div class="section-header">
+            <h2><i class="fas fa-stream" style="color:var(--primary-light);margin-right:8px"></i> 웹-투-북 퍼블리싱 프로세스</h2>
+            <p>5단계로 완성되는 새로운 출판 여정</p>
+          </div>
+
+          <div class="process-steps">
+            <div class="process-step">
+              <div class="step-num">1</div>
+              <h3>원고 에피소드화</h3>
+              <p>완성된 원고를 60개 에피소드로 구성하고 최적화합니다.</p>
+              <div class="duration"><i class="fas fa-clock"></i> 1-2주</div>
+            </div>
+            <div class="process-step">
+              <div class="step-num">2</div>
+              <h3>일일 공개</h3>
+              <p>하루에 한 개씩 에피소드를 플랫폼에서 공개합니다. (약 60일)</p>
+              <div class="duration"><i class="fas fa-clock"></i> 60일</div>
+            </div>
+            <div class="process-step">
+              <div class="step-num">3</div>
+              <h3>독자 커뮤니티 형성</h3>
+              <p>투표, 댓글, 피드백을 통해 잠재 독자들과 상호작용합니다.</p>
+              <div class="duration"><i class="fas fa-clock"></i> 지속</div>
+            </div>
+            <div class="process-step">
+              <div class="step-num">4</div>
+              <h3>도서 출판</h3>
+              <p>종이책 + 전자책(ePub)으로 공식 출판합니다. AI 북튜터 자동 장착!</p>
+              <div class="duration"><i class="fas fa-clock"></i> 2-3주</div>
+            </div>
+            <div class="process-step">
+              <div class="step-num">5</div>
+              <h3>플랫폼 연동</h3>
+              <p>웹 플랫폼과 도서 전용 플랫폼이 연동되어 지속적인 상호작용을 유도합니다.</p>
+              <div class="duration"><i class="fas fa-clock"></i> 지속</div>
+            </div>
+          </div>
+
+          <!-- Featured Project -->
+          <div style="margin-top: 40px;">
+            <a href="https://70-01-grandpa-mom.vercel.app/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit; display: block;">
+              <div class="card featured-project" style="
+                padding: 60px 40px;
+                border: none;
+                cursor: pointer;
+                background-image: url('grandpa-grandma-hero.png');
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                position: relative;
+                overflow: hidden;
+                min-height: 400px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--border-radius);
+              ">
+                <span class="btn btn-secondary" style="display: inline-block;">지금 보기 <i class="fas fa-external-link-alt" style="margin-left: 8px;"></i></span>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <!-- Comparison Table -->
+        <section>
+          <div class="section-header">
+            <h2><i class="fas fa-chart-line" style="color:var(--accent);margin-right:8px"></i> 기존 출판 vs 웹-투-북 퍼블리싱</h2>
+          </div>
+
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th style="width:25%">항목</th>
+                <th style="width:35%">기존 출판 프로세스</th>
+                <th style="width:40%">웹-투-북 퍼블리싱</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="feature-name"><i class="fas fa-book"></i> 공개 방식</td>
+                <td>원고 완성 → 한 번에 출판</td>
+                <td>에피소드 → 일일 공개 → 최종 출판</td>
+              </tr>
+              <tr>
+                <td class="feature-name"><i class="fas fa-users"></i> 독자 참여</td>
+                <td>출판 후 리뷰만 수집</td>
+                <td>출판 전 적극적 상호작용 + 피드백 반영 가능</td>
+              </tr>
+              <tr>
+                <td class="feature-name"><i class="fas fa-calendar"></i> 출판까지 시간</td>
+                <td>2-3개월</td>
+                <td>약 2개월 (연재) + 2-3주 (최종 출판)</td>
+              </tr>
+              <tr>
+                <td class="feature-name"><i class="fas fa-chart-bar"></i> 수요 파악</td>
+                <td>출판 전 수요 예측 어려움</td>
+                <td>연재 중 직접 수요 확인 가능</td>
+              </tr>
+              <tr>
+                <td class="feature-name"><i class="fas fa-rocket"></i> 마케팅</td>
+                <td>출판 후 별도 마케팅</td>
+                <td>연재 과정 자체가 마케팅 & 사전 판매</td>
+              </tr>
+              <tr>
+                <td class="feature-name"><i class="fas fa-infinity"></i> 출판 후</td>
+                <td>도서만 판매</td>
+                <td>플랫폼 + 도서 + AI 북튜터 연동 생태계</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Features Grid -->
+        <section>
+          <div class="section-header">
+            <h2><i class="fas fa-gift" style="color:var(--primary-light);margin-right:8px"></i> 작가와 독자를 위한 혜택</h2>
+          </div>
+
+          <div class="features-grid">
+            <div class="feature-card authors">
+              <h3><i class="fas fa-pen-fancy" style="color:var(--primary-light)"></i> 작가의 혜택</h3>
+              <ul>
+                <li><i class="fas fa-check-circle"></i> <strong>사전 검증</strong> — 독자 반응으로 내용 검증 후 최종 출판</li>
+                <li><i class="fas fa-check-circle"></i> <strong>높은 신뢰도</strong> — 이미 60일간 검증된 콘텐츠로 더 신뢰 있는 도서</li>
+                <li><i class="fas fa-check-circle"></i> <strong>확실한 수요</strong> — 연재 중 확보한 팬층으로 초기 판매 보증</li>
+                <li><i class="fas fa-check-circle"></i> <strong>피드백 반영</strong> — 최종 도서에 독자 의견 반영 기회</li>
+                <li><i class="fas fa-check-circle"></i> <strong>멀티채널 수익</strong> — 플랫폼 구독료 + 도서 판매 + AI 상호작용</li>
+                <li><i class="fas fa-check-circle"></i> <strong>커뮤니티 구축</strong> — 충실한 독자 커뮤니티로 향후 프로젝트 기반 마련</li>
+              </ul>
+            </div>
+
+            <div class="feature-card readers">
+              <h3><i class="fas fa-book-reader" style="color:var(--accent)"></i> 독자의 혜택</h3>
+              <ul>
+                <li><i class="fas fa-check-circle"></i> <strong>일일 기대감</strong> — 매일 새로운 에피소드로 책 읽는 재미 극대화</li>
+                <li><i class="fas fa-check-circle"></i> <strong>직접 참여</strong> — 투표, 댓글, 피드백으로 스토리에 영향을 미침</li>
+                <li><i class="fas fa-check-circle"></i> <strong>커뮤니티</strong> — 같은 책을 사랑하는 독자들과 함께 경험</li>
+                <li><i class="fas fa-check-circle"></i> <strong>AI 학습</strong> — 최종 도서의 AI 북튜터와 심화 학습</li>
+                <li><i class="fas fa-check-circle"></i> <strong>우선 구매</strong> — 연재 완료 후 도서 우선 구매권</li>
+                <li><i class="fas fa-check-circle"></i> <strong>영원한 기록</strong> — 웹 플랫폼과 도서에서 영구적으로 접근 가능</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Case Study -->
+        <section>
+          <div class="section-header">
+            <h2><i class="fas fa-star" style="color:var(--secondary);margin-right:8px"></i> 사례: 공대생 할아버지, 미대생 할머니</h2>
+            <p>웹-투-북 퍼블리싱의 성공적인 사례</p>
+          </div>
+
+          <div class="case-study">
+            <div class="cover">👴👵</div>
+            <div>
+              <h3>공대생 할아버지, 미대생 할머니</h3>
+              <div class="author">심재우 저 | 배경영 일러스트</div>
+              <p>
+                "논리와 감성이 만나는 일상" — 공대형 할아버지와 미대형 할머니가 펼치는 따뜻하고 재미있는 이야기.
+                차이를 인정하고 이해하는 과정을 통해 "우리는 틀린 것이 아니라 다른 것이었다"는 메시지를 전합니다.
+              </p>
+              <p style="font-size:13px;color:var(--text-muted)">
+                60개 에피소드를 하루 하나씩 공개하면서 수만 명의 독자와 만나고,
+                일일 투표, 명대사 큐레이션, 성향 테스트 등을 통해 독자 커뮤니티를 형성한 후,
+                특화된 웹 플랫폼과 함께 종이책·전자책으로 출판됩니다.
+              </p>
+              <div class="stats">
+                <div class="stat">
+                  <div class="num">60</div>
+                  <div class="label">에피소드</div>
+                </div>
+                <div class="stat">
+                  <div class="num">60+</div>
+                  <div class="label">일간 공개</div>
+                </div>
+                <div class="stat">
+                  <div class="num">10K+</div>
+                  <div class="label">예상 팬층</div>
+                </div>
+                <div class="stat">
+                  <div class="num">3in1</div>
+                  <div class="label">플랫폼+책+AI</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Timeline -->
+        <section>
+          <div class="section-header">
+            <h2><i class="fas fa-hourglass-start" style="color:var(--accent);margin-right:8px"></i> 당신의 책이 나가는 일정</h2>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <h4>📅 Week 1-2: 준비 기간</h4>
+              <p>원고를 60개 에피소드로 분할, 플랫폼 최적화, 커버 및 일러스트 준비</p>
+            </div>
+            <div class="timeline-item">
+              <h4>🚀 Day 1-60: 연재 기간</h4>
+              <p>매일 오전 7시(또는 지정 시간)에 새 에피소드 공개, 독자 투표/댓글 활동 진행</p>
+            </div>
+            <div class="timeline-item">
+              <h4>💬 Throughout: 커뮤니티 활동</h4>
+              <p>명대사 큐레이션, 독자 설문, 성향 테스트, 작가의 코멘트 등 상호작용</p>
+            </div>
+            <div class="timeline-item">
+              <h4>🎉 Day 61-75: 최종 출판 준비</h4>
+              <p>독자 피드백 반영, 최종 편집, 종이책·전자책 제작, AI 북튜터 학습</p>
+            </div>
+            <div class="timeline-item">
+              <h4>📚 Day 76+: 출판 및 플랫폼 연동</h4>
+              <p>종이책 출판, 전자책(ePub) 공개, 특화 웹 플랫폼 런칭, AI 북튜터 활성화</p>
+            </div>
+            <div class="timeline-item">
+              <h4>∞ Forever: 생태계 운영</h4>
+              <p>웹 플랫폼 + 도서 + AI 북튜터가 연동되어 지속적인 독자 상호작용 유도</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+          <h2>당신의 책도 웹-투-북으로 시작하세요</h2>
+          <p>원고가 있으신가요? 이제 단순히 '출판'하는 것이 아니라 '커뮤니티와 함께 성장'하세요.</p>
+          <div>
+            <a href="partnership.html" class="btn btn-tertiary btn-lg"><i class="fas fa-handshake"></i> 파트너십 신청</a>
+            <a href="community.html" class="btn btn-ghost btn-lg"><i class="fas fa-comments"></i> 커뮤니티 둘러보기</a>
+          </div>
+        </div>
+
+        <!-- FAQ-like Section -->
+        <section style="margin-top:40px">
+          <div class="section-header">
+            <h2><i class="fas fa-question-circle" style="color:var(--primary-light);margin-right:8px"></i> 자주 묻는 질문</h2>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+            <div class="card" style="padding:20px">
+              <h4 style="color:var(--primary-light);margin-bottom:8px"><i class="fas fa-feather"></i> 원고의 길이 제한이 있나요?</h4>
+              <p style="font-size:13px;color:var(--text-secondary)">아니요. 단편부터 장편까지 모두 가능합니다. 다만 60개 에피소드로 적절히 분할할 수 있어야 합니다.</p>
+            </div>
+
+            <div class="card" style="padding:20px">
+              <h4 style="color:var(--primary-light);margin-bottom:8px"><i class="fas fa-hourglass"></i> 에피소드 공개 주기를 조정할 수 있나요?</h4>
+              <p style="font-size:13px;color:var(--text-secondary)">네, 기본은 일일 공개이지만 상황에 따라 주 3-4회 등으로 조정 가능합니다. (최소 2주 이상)</p>
+            </div>
+
+            <div class="card" style="padding:20px">
+              <h4 style="color:var(--primary-light);margin-bottom:8px"><i class="fas fa-copyright"></i> 저작권은 어떻게 되나요?</h4>
+              <p style="font-size:13px;color:var(--text-secondary)">저자가 모든 저작권을 보유합니다. 플랫폼은 공개 및 홍보 권리만 부여받습니다.</p>
+            </div>
+
+            <div class="card" style="padding:20px">
+              <h4 style="color:var(--primary-light);margin-bottom:8px"><i class="fas fa-dollar-sign"></i> 수익 구조는 어떻게 되나요?</h4>
+              <p style="font-size:13px;color:var(--text-secondary)">플랫폼 구독료, 도서 판매액, AI 북튜터 상호작용 등 다양한 채널에서 수익이 발생합니다.</p>
+            </div>
+
+            <div class="card" style="padding:20px">
+              <h4 style="color:var(--primary-light);margin-bottom:8px"><i class="fas fa-list"></i> 기존 연재물도 가능한가요?</h4>
+              <p style="font-size:13px;color:var(--text-secondary)">네, 이미 일부 공개된 작품도 웹-투-북 모델로 재구성 가능합니다.</p>
+            </div>
+
+            <div class="card" style="padding:20px">
+              <h4 style="color:var(--primary-light);margin-bottom:8px"><i class="fas fa-chart-line"></i> 최종 출판 보장이 있나요?</h4>
+              <p style="font-size:13px;color:var(--text-secondary)">네, 모든 웹-투-북 연재는 완료 후 반드시 종이책과 전자책으로 출판됩니다.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-links">
+          <a href="about.html">이용약관</a>
+          <a href="about.html">문의하기</a>
+          <a href="sitemap-page.html">구조도</a>
+        </div>
+        <p>© 2026 K-AI출판허브. All rights reserved.</p>
+      </footer>
+    </div>
+  </div>
+
+  <script src="common.js"></script>
+</body>
+</html>

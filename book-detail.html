@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>도서 상세 | K-AI출판허브</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .book-hero { display: grid; grid-template-columns: 280px 1fr; gap: 32px; margin-bottom: 32px; }
+    .book-cover-lg { width: 280px; height: 380px; border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; font-size: 96px; position: relative; overflow: hidden; }
+    .book-cover-lg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 60%, rgba(0,0,0,0.3)); }
+    .book-detail-info h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+    .book-detail-info .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0; font-size: 14px; color: var(--text-secondary); }
+    .book-detail-info .meta-row span { display: flex; align-items: center; gap: 6px; }
+    .book-detail-info .price-tag { font-size: 28px; font-weight: 800; color: var(--secondary); margin: 16px 0; }
+    .book-detail-info .price-tag .original { font-size: 16px; text-decoration: line-through; color: var(--text-muted); margin-left: 8px; }
+    .action-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    .ai-mini-widget { margin-top: 20px; padding: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); }
+    .ai-mini-widget h4 { font-size: 14px; margin-bottom: 10px; color: var(--accent); }
+    .ai-mini-widget .mini-input { display: flex; gap: 8px; }
+    .ai-mini-widget input { flex: 1; padding: 10px 14px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 20px; color: var(--text-primary); font-size: 13px; outline: none; font-family: var(--font-primary); }
+    .ai-mini-widget input:focus { border-color: var(--primary-light); }
+    .chapter-list { margin-top: 16px; }
+    .chapter-item { padding: 12px 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-size: 14px; cursor: pointer; transition: background var(--transition-fast); }
+    .chapter-item:hover { background: var(--bg-card-hover); }
+    .chapter-item .ch-num { color: var(--text-muted); margin-right: 12px; font-weight: 600; }
+    .review-card { padding: 16px; border-bottom: 1px solid var(--border-color); }
+    .review-card:last-child { border-bottom: none; }
+    .review-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .review-header .reviewer { font-weight: 600; font-size: 14px; }
+    .review-header .review-date { font-size: 12px; color: var(--text-muted); }
+    .review-text { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+    .ai-summary-section { padding: 20px; }
+    .ai-summary-item { margin-bottom: 16px; padding: 14px; background: var(--bg-glass); border-radius: var(--border-radius-sm); border-left: 3px solid var(--accent); }
+    .ai-summary-item h4 { font-size: 14px; margin-bottom: 6px; color: var(--accent); }
+    .ai-summary-item p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    .related-books { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 16px; margin-top: 16px; }
+    @media (max-width: 768px) { .book-hero { grid-template-columns: 1fr; } .book-cover-lg { width: 100%; max-width: 280px; margin: 0 auto; } }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="sidebar-header"><div class="logo"><span class="logo-icon">📚</span><span class="logo-text">K-AI출판허브</span></div></div>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i><span>홈</span></a></li>
+        <li class="nav-item"><a href="ai-library.html"><i class="fas fa-book-open"></i><span>AI 라이브러리</span></a></li>
+        <li class="nav-item"><a href="ai-book-tutor.html"><i class="fas fa-robot"></i><span>AI 북튜터</span></a></li>
+        <li class="nav-item"><a href="web-to-book.html"><i class="fas fa-rocket"></i><span>웹-투-북 퍼블리싱</span></a></li>
+        <li class="nav-item"><a href="publishers.html"><i class="fas fa-building"></i><span>출판사 연합관</span></a></li>
+        <li class="nav-item"><a href="community.html"><i class="fas fa-comments"></i><span>커뮤니티</span></a></li>
+        <li class="nav-item"><a href="b2b-solutions.html"><i class="fas fa-briefcase"></i><span>B2B 솔루션</span></a></li>
+        <li class="nav-item"><a href="dashboard.html"><i class="fas fa-chart-line"></i><span>대시보드</span></a></li>
+        <li class="nav-item"><a href="partner-center.html"><i class="fas fa-cogs"></i><span>파트너 센터</span></a></li>
+        <li class="nav-item"><a href="about.html"><i class="fas fa-info-circle"></i><span>소개</span></a></li>
+        <li class="nav-item"><a href="proposal.html"><i class="fas fa-file-contract"></i><span>제안서</span></a></li>
+      </ul>
+    </nav>
+    <div class="main-wrapper">
+      <header class="header">
+        <button class="hamburger-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="도서, 출판사, 지식을 검색하세요..."></div>
+        <div class="header-actions">
+          <button onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+          <button onclick="toggleLanguage()"><span class="lang-badge">KO</span></button>
+          <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+        </div>
+      </header>
+      <main class="main-content">
+        <!-- Book Hero -->
+        <div class="book-hero animate-on-scroll">
+          <div class="book-cover-lg" id="bookCover" style="background:linear-gradient(135deg,#1B4D8E,#1B4D8E99)">🏥</div>
+          <div class="book-detail-info">
+            <h1 id="bookTitle">요양보호사 양성 표준교재 2024</h1>
+            <div class="meta-row">
+              <span><i class="fas fa-user"></i> 보건복지부</span>
+              <span><i class="fas fa-building"></i> 진한엠앤비</span>
+              <span><i class="fas fa-calendar"></i> 2024.01.15</span>
+              <span><i class="fas fa-file-lines"></i> 720페이지</span>
+            </div>
+            <div class="meta-row">
+              <span class="star-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+              <span>4.6 (238개 리뷰)</span>
+            </div>
+            <div class="publisher-specialty" style="margin:8px 0"><span class="tag">의료/간호</span><span class="tag accent">AI 북튜터</span><span class="tag secondary">자격증</span></div>
+            <div class="price-tag">₩35,000 <span class="original">₩42,000</span></div>
+            <div class="action-btns">
+              <button class="btn btn-primary btn-lg"><i class="fas fa-cart-shopping"></i> 전자책 구매</button>
+              <a href="ai-book-tutor.html?book=book-001" class="btn btn-accent btn-lg"><i class="fas fa-robot"></i> AI 북튜터 시작</a>
+              <button class="btn btn-ghost btn-lg"><i class="fas fa-eye"></i> 무료 미리보기</button>
+            </div>
+            <!-- AI Mini Widget -->
+            <div class="ai-mini-widget">
+              <h4><i class="fas fa-robot"></i> 이 책에 대해 AI에게 물어보세요</h4>
+              <div class="quick-chips" style="margin-bottom:8px">
+                <button class="quick-chip" onclick="location.href='ai-book-tutor.html?book=book-001'">핵심 요약</button>
+                <button class="quick-chip" onclick="location.href='ai-book-tutor.html?book=book-001'">퀴즈 풀기</button>
+                <button class="quick-chip" onclick="location.href='ai-book-tutor.html?book=book-001'">개념 설명</button>
+              </div>
+              <div class="mini-input">
+                <input type="text" placeholder="예: 치매 돌봄의 핵심 원칙은?" id="miniQuestion">
+                <button class="btn btn-accent btn-sm" onclick="if(document.getElementById('miniQuestion').value)location.href='ai-book-tutor.html?book=book-001'"><i class="fas fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="detailTabs">
+          <button class="tab active" data-tab="intro" onclick="switchTab('intro')">소개</button>
+          <button class="tab" data-tab="toc" onclick="switchTab('toc')">목차</button>
+          <button class="tab" data-tab="ai-summary" onclick="switchTab('ai-summary')">AI 요약</button>
+          <button class="tab" data-tab="reviews" onclick="switchTab('reviews')">리뷰 (238)</button>
+          <button class="tab" data-tab="related" onclick="switchTab('related')">관련 도서</button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="tab-content active" id="tab-intro">
+          <div class="card" style="line-height:1.8;font-size:15px;color:var(--text-secondary)">
+            <h3 style="color:var(--text-primary);margin-bottom:12px">도서 소개</h3>
+            <p>『요양보호사 양성 표준교재 2024』는 보건복지부가 발행한 요양보호사 국가자격증 취득을 위한 공식 표준교재입니다.</p>
+            <p style="margin-top:12px">본 교재는 노인 돌봄의 기본 원리부터 치매 케어, 응급처치, 의사소통 기술까지 요양보호사가 알아야 할 모든 지식을 체계적으로 담고 있습니다. 2024년 개정판에서는 최신 법규 변경사항과 실무 사례가 대폭 보강되었습니다.</p>
+            <p style="margin-top:12px"><strong>K-AI출판허브의 AI 북튜터</strong>가 이 교재의 모든 내용을 학습하여, 24시간 언제든지 질문에 답변하고, 맞춤형 퀴즈를 생성하며, 학습 진도를 관리해 드립니다.</p>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-toc">
+          <div class="card" style="padding:0;overflow:hidden">
+            <div class="chapter-list">
+              <div class="chapter-item"><span><span class="ch-num">1장</span> 노인과 노화 과정</span><span class="tag" style="font-size:11px">p.1-85</span></div>
+              <div class="chapter-item"><span><span class="ch-num">2장</span> 요양보호 관련 제도 및 서비스</span><span class="tag" style="font-size:11px">p.86-150</span></div>
+              <div class="chapter-item"><span><span class="ch-num">3장</span> 요양보호사의 직업윤리와 자기관리</span><span class="tag" style="font-size:11px">p.151-210</span></div>
+              <div class="chapter-item"><span><span class="ch-num">4장</span> 의사소통 및 여가지원</span><span class="tag" style="font-size:11px">p.211-280</span></div>
+              <div class="chapter-item"><span><span class="ch-num">5장</span> 요양보호 각론 (신체활동 지원)</span><span class="tag" style="font-size:11px">p.281-450</span></div>
+              <div class="chapter-item"><span><span class="ch-num">6장</span> 치매 요양보호</span><span class="tag" style="font-size:11px">p.451-560</span></div>
+              <div class="chapter-item"><span><span class="ch-num">7장</span> 응급처치</span><span class="tag" style="font-size:11px">p.561-640</span></div>
+              <div class="chapter-item"><span><span class="ch-num">8장</span> 실기 실습</span><span class="tag" style="font-size:11px">p.641-720</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-ai-summary">
+          <div class="card ai-summary-section">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+              <i class="fas fa-robot" style="color:var(--accent);font-size:18px"></i>
+              <h3 style="font-size:16px">AI가 분석한 단원별 핵심 요약</h3>
+            </div>
+            <div class="ai-summary-item">
+              <h4>1장 · 노인과 노화 과정</h4>
+              <p>노화는 생물학적·심리적·사회적 측면에서 복합적으로 진행됩니다. 노인성 질환(고혈압, 당뇨, 관절염)의 특성을 이해하고, 대상자 중심의 케어 계획을 수립하는 것이 핵심입니다.</p>
+            </div>
+            <div class="ai-summary-item">
+              <h4>5장 · 요양보호 각론</h4>
+              <p>식사, 배설, 이동, 목욕 등 일상생활 지원 기술이 상세히 다뤄집니다. 특히 안전한 체위 변경과 이동 보조 기술(휠체어, 보행기)이 시험 출제 빈도가 높습니다.</p>
+            </div>
+            <div class="ai-summary-item">
+              <h4>6장 · 치매 요양보호</h4>
+              <p>치매의 유형(알츠하이머, 혈관성)별 특징과 행동심리증상(BPSD) 대응법이 핵심입니다. 비약물적 접근(회상요법, 음악요법)의 중요성이 강조됩니다.</p>
+            </div>
+            <div class="ai-summary-item">
+              <h4>7장 · 응급처치</h4>
+              <p>심폐소생술(CPR), 하임리히법, 낙상 시 대응, 화상 처치 등 생명과 직결되는 응급 상황별 대처법을 숙지해야 합니다.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-reviews">
+          <div class="card" style="padding:0">
+            <div class="review-card">
+              <div class="review-header">
+                <div class="post-avatar" style="width:32px;height:32px;font-size:12px">김</div>
+                <span class="reviewer">김수현</span>
+                <span class="star-rating" style="font-size:12px"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+                <span class="review-date">2025.12.15</span>
+              </div>
+              <div class="review-text">AI 북튜터 덕분에 혼자서도 공부가 가능했어요! 모르는 개념을 바로바로 물어볼 수 있어서 학원 다닐 필요가 없었습니다. 퀴즈 기능이 특히 유용했습니다.</div>
+            </div>
+            <div class="review-card">
+              <div class="review-header">
+                <div class="post-avatar" style="width:32px;height:32px;font-size:12px;background:linear-gradient(135deg,var(--secondary),var(--accent))">이</div>
+                <span class="reviewer">이정민</span>
+                <span class="star-rating" style="font-size:12px"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                <span class="review-date">2025.11.28</span>
+              </div>
+              <div class="review-text">720페이지나 되는 교재를 AI가 요약해주고 퀴즈까지 내주니 학습 효율이 3배는 올랐어요. 특히 치매 케어 파트는 AI 설명이 교재보다 이해하기 쉬웠습니다.</div>
+            </div>
+            <div class="review-card">
+              <div class="review-header">
+                <div class="post-avatar" style="width:32px;height:32px;font-size:12px;background:linear-gradient(135deg,#9B59B6,var(--primary))">박</div>
+                <span class="reviewer">박영희</span>
+                <span class="star-rating" style="font-size:12px"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star empty"></i></span>
+                <span class="review-date">2025.10.05</span>
+              </div>
+              <div class="review-text">교재 내용이 알차고, AI 북튜터의 페이지 참조 기능이 정말 편리합니다. 다만 실기 부분은 동영상 콘텐츠가 보강되면 더 좋겠습니다.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-related">
+          <div class="related-books" id="relatedBooks"></div>
+        </div>
+      </main>
+      <footer class="footer"><div class="footer-links"><a href="about.html">이용약관</a><a href="about.html">문의하기</a><a href="sitemap-page.html">구조도</a></div><p>© 2026 K-AI출판허브. All rights reserved.</p></footer>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+    }
+
+    // Related books
+    const related = document.getElementById('relatedBooks');
+    related.innerHTML = sampleBooks.filter(b => b.id !== 'book-001').slice(0, 4).map(renderBookCard).join('');
+  </script>
+</body>
+</html>

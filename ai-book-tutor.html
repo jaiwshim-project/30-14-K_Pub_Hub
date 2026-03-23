@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 북튜터 | K-AI출판허브</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    .tutor-layout { display: grid; grid-template-columns: 300px 1fr; gap: 0; height: calc(100vh - var(--header-height) - 48px); border-radius: var(--border-radius); overflow: hidden; border: 1px solid var(--border-color); }
+    .book-panel { background: var(--bg-secondary); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
+    .book-panel-header { padding: 16px; border-bottom: 1px solid var(--border-color); }
+    .book-panel-header h3 { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+
+    /* API Key Section */
+    .api-key-section { padding: 12px 16px; border-bottom: 1px solid var(--border-color); }
+    .api-key-section label { font-size: 11px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px; }
+    .api-key-row { display: flex; gap: 6px; }
+    .api-key-row input { flex: 1; padding: 7px 10px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 12px; font-family: var(--font-mono); outline: none; }
+    .api-key-row input:focus { border-color: var(--primary-light); }
+    .api-key-row button { padding: 7px 10px; background: var(--primary); color: #fff; border: none; border-radius: 6px; font-size: 11px; cursor: pointer; white-space: nowrap; font-family: var(--font-primary); font-weight: 600; }
+    .api-key-status { font-size: 11px; margin-top: 4px; }
+    .api-key-status.connected { color: var(--accent); }
+    .api-key-status.error { color: #E74C3C; }
+
+    /* PDF Upload Section */
+    .pdf-upload-section { padding: 12px 16px; border-bottom: 1px solid var(--border-color); }
+    .pdf-upload-section label { font-size: 11px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px; }
+    .pdf-drop-zone { padding: 20px 12px; border: 2px dashed var(--border-color); border-radius: 8px; text-align: center; cursor: pointer; transition: all var(--transition-fast); }
+    .pdf-drop-zone:hover, .pdf-drop-zone.dragover { border-color: var(--primary-light); background: rgba(27,77,142,0.05); }
+    .pdf-drop-zone i { font-size: 24px; color: var(--text-muted); display: block; margin-bottom: 6px; }
+    .pdf-drop-zone p { font-size: 12px; color: var(--text-muted); }
+    .pdf-drop-zone .small { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+    .pdf-loaded { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(0,184,148,0.1); border: 1px solid rgba(0,184,148,0.3); border-radius: 8px; }
+    .pdf-loaded i { color: var(--accent); font-size: 18px; }
+    .pdf-loaded .pdf-name { flex: 1; font-size: 12px; font-weight: 600; color: var(--accent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pdf-loaded .pdf-info { font-size: 10px; color: var(--text-muted); }
+    .pdf-loaded .pdf-remove { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 4px; }
+    .pdf-loaded .pdf-remove:hover { color: #E74C3C; }
+
+    /* Processing indicator */
+    .pdf-processing { padding: 12px; text-align: center; }
+    .pdf-processing .progress-bar-full { margin: 8px 0; }
+    .pdf-processing p { font-size: 12px; color: var(--text-secondary); }
+
+    /* RAG info */
+    .rag-info { padding: 10px 16px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); }
+    .rag-info .chunk-count { color: var(--accent); font-weight: 600; }
+
+    /* Book list */
+    .book-list { flex: 1; overflow-y: auto; padding: 8px; }
+    .book-select-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 6px; cursor: pointer; transition: all var(--transition-fast); margin-bottom: 4px; font-size: 13px; }
+    .book-select-item:hover { background: var(--bg-card-hover); }
+    .book-select-item.active { background: rgba(27,77,142,0.2); border: 1px solid rgba(27,77,142,0.3); }
+    .book-select-item .book-mini-cover { width: 36px; height: 46px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .book-select-item .book-mini-title { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .book-select-item .book-mini-pub { font-size: 10px; color: var(--text-muted); }
+
+    /* Chat Area */
+    .chat-area { display: flex; flex-direction: column; background: var(--bg-primary); height: 100%; min-height: 0; overflow: hidden; }
+    .chat-header { padding: 14px 20px; background: var(--bg-glass); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .chat-header .book-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .chat-header .rag-badge { padding: 2px 8px; background: rgba(0,184,148,0.15); color: var(--accent); border-radius: 4px; font-size: 10px; font-weight: 700; }
+    .messages-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; min-height: 0; scroll-behavior: smooth; }
+    .msg { max-width: 78%; animation: fadeIn 0.3s ease; }
+    .msg.ai { align-self: flex-start; }
+    .msg.user { align-self: flex-end; }
+    .msg .bubble { padding: 14px 18px; border-radius: 16px; font-size: 14px; line-height: 1.7; }
+    .msg.ai .bubble { background: var(--bg-card); border: 1px solid var(--border-color); border-bottom-left-radius: 4px; }
+    .msg.user .bubble { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; border-bottom-right-radius: 4px; }
+    .msg .bubble strong { color: var(--secondary); }
+    .msg .bubble .ref { display: inline-block; padding: 2px 8px; background: rgba(0,184,148,0.2); color: var(--accent); border-radius: 4px; font-size: 12px; margin-top: 8px; }
+    .msg .bubble ol, .msg .bubble ul { padding-left: 20px; margin: 8px 0; }
+    .msg .bubble li { margin-bottom: 4px; }
+    .msg .bubble pre { background: var(--bg-tertiary); padding: 10px; border-radius: 6px; overflow-x: auto; font-family: var(--font-mono); font-size: 12px; margin: 8px 0; }
+    .msg .bubble code { font-family: var(--font-mono); font-size: 13px; background: var(--bg-tertiary); padding: 1px 4px; border-radius: 3px; }
+    .typing-dots { display: none; align-self: flex-start; padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; border-bottom-left-radius: 4px; }
+    .typing-dots.show { display: flex; gap: 4px; }
+    .typing-dots span { width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; animation: typingBounce 1.4s infinite; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    .input-area { padding: 14px 20px; background: var(--bg-glass); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); flex-shrink: 0; }
+    .quick-chips { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+    .quick-chips button { padding: 5px 12px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; font-size: 11px; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); font-family: var(--font-primary); }
+    .quick-chips button:hover { background: var(--bg-card-hover); color: var(--primary-light); border-color: var(--primary-light); }
+    .input-row { display: flex; gap: 8px; align-items: flex-end; }
+    .input-row textarea { flex: 1; padding: 12px 16px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 24px; color: var(--text-primary); font-family: var(--font-primary); font-size: 14px; resize: none; outline: none; max-height: 120px; min-height: 44px; line-height: 1.4; }
+    .input-row textarea:focus { border-color: var(--primary-light); }
+    .send-btn { width: 44px; height: 44px; background: linear-gradient(135deg, var(--secondary), var(--secondary-light)); border: none; border-radius: 50%; color: #fff; font-size: 16px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all var(--transition-fast); }
+    .send-btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(255,107,53,0.4); }
+    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    @media (max-width: 768px) {
+      .tutor-layout { grid-template-columns: 1fr; height: auto; }
+      .book-panel { display: none; }
+      .book-panel.mobile-show { display: flex; position: fixed; inset: 0; z-index: 150; width: 100%; }
+      .chat-area { height: calc(100vh - var(--header-height) - 48px); }
+      .msg { max-width: 90%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="sidebar-header"><div class="logo"><span class="logo-icon">📚</span><span class="logo-text">K-AI출판허브</span></div></div>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i><span>홈</span></a></li>
+        <li class="nav-item"><a href="ai-library.html"><i class="fas fa-book-open"></i><span>AI 라이브러리</span></a></li>
+        <li class="nav-item"><a href="ai-book-tutor.html"><i class="fas fa-robot"></i><span>AI 북튜터</span></a></li>
+        <li class="nav-item"><a href="web-to-book.html"><i class="fas fa-rocket"></i><span>웹-투-북 퍼블리싱</span></a></li>
+        <li class="nav-item"><a href="publishers.html"><i class="fas fa-building"></i><span>출판사 연합관</span></a></li>
+        <li class="nav-item"><a href="community.html"><i class="fas fa-comments"></i><span>커뮤니티</span></a></li>
+        <li class="nav-item"><a href="b2b-solutions.html"><i class="fas fa-briefcase"></i><span>B2B 솔루션</span></a></li>
+        <li class="nav-item"><a href="dashboard.html"><i class="fas fa-chart-line"></i><span>대시보드</span></a></li>
+        <li class="nav-item"><a href="partner-center.html"><i class="fas fa-cogs"></i><span>파트너 센터</span></a></li>
+        <li class="nav-item"><a href="about.html"><i class="fas fa-info-circle"></i><span>소개</span></a></li>
+        <li class="nav-item"><a href="proposal.html"><i class="fas fa-file-contract"></i><span>제안서</span></a></li>
+      </ul>
+    </nav>
+
+    <div class="main-wrapper">
+      <header class="header">
+        <button class="hamburger-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="도서, 출판사, 지식을 검색하세요..."></div>
+        <div class="header-actions">
+          <button onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+          <button onclick="toggleLanguage()"><span class="lang-badge">KO</span></button>
+          <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="tutor-layout">
+          <!-- Book Panel -->
+          <div class="book-panel" id="bookPanel">
+            <div class="book-panel-header">
+              <h3><i class="fas fa-robot" style="margin-right:6px;color:var(--accent)"></i> AI 북튜터 (RAG)</h3>
+            </div>
+
+            <!-- Gemini API Key -->
+            <div class="api-key-section">
+              <label><i class="fas fa-key" style="margin-right:4px"></i> Gemini API Key</label>
+              <div class="api-key-row">
+                <input type="password" id="apiKeyInput" placeholder="AIzaSy..." value="">
+                <button onclick="saveApiKey()">저장</button>
+              </div>
+              <div class="api-key-status" id="apiKeyStatus"></div>
+              <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--primary-light);margin-top:6px;text-decoration:none">
+                <i class="fas fa-external-link-alt" style="font-size:9px"></i> API 키 발급받기 (Google AI Studio)
+              </a>
+            </div>
+
+            <!-- PDF Upload -->
+            <div class="pdf-upload-section">
+              <label><i class="fas fa-file-pdf" style="margin-right:4px;color:#E74C3C"></i> PDF 교재 업로드</label>
+              <div id="pdfUploadArea">
+                <div class="pdf-drop-zone" id="pdfDropZone" onclick="document.getElementById('pdfFileInput').click()">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p>PDF 파일을 드래그하거나 클릭</p>
+                  <p class="small">요양보호사 표준교재 등</p>
+                </div>
+                <input type="file" id="pdfFileInput" accept=".pdf" style="display:none" onchange="handlePdfUpload(event)">
+              </div>
+            </div>
+
+            <!-- RAG Info -->
+            <div class="rag-info" id="ragInfo" style="display:none">
+              <i class="fas fa-database" style="color:var(--accent);margin-right:4px"></i>
+              지식 베이스: <span class="chunk-count" id="chunkCount">0</span>개 청크 로드됨
+              <br><span style="font-size:10px">질문하면 관련 내용을 찾아 AI가 답변합니다</span>
+            </div>
+
+            <!-- AI Book Tutor Enabled Books -->
+            <div style="padding:10px 16px 4px;font-size:11px;font-weight:600;color:var(--accent);border-bottom:1px solid var(--border-color)">
+              <i class="fas fa-robot" style="margin-right:4px"></i> AI 북튜터 적용 도서 (<span id="aiBookCount">0</span>)
+            </div>
+            <div class="book-list" id="aiBooksList" style="max-height:200px;border-bottom:1px solid var(--border-color)"></div>
+
+            <!-- Saved/Uploaded Books -->
+            <div style="padding:10px 16px 4px;font-size:11px;font-weight:600;color:var(--text-muted);border-bottom:1px solid var(--border-color)">
+              <i class="fas fa-upload" style="margin-right:4px"></i> 내가 업로드한 교재
+            </div>
+            <div class="book-list" id="bookList" style="flex:1">
+              <div id="savedBooksEmpty" style="padding:12px;font-size:11px;color:var(--text-muted);text-align:center">
+                <i class="fas fa-inbox" style="font-size:20px;display:block;margin-bottom:6px;opacity:0.5"></i>
+                업로드된 교재가 없습니다<br>
+                <span style="font-size:10px">PDF를 업로드하면 자동 저장됩니다</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Area -->
+          <div class="chat-area">
+            <div class="chat-header">
+              <div class="book-icon" id="chatBookIcon" style="background:linear-gradient(135deg,#1B4D8E,#1B4D8E99)">🏥</div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:15px" id="chatBookTitle">AI 북튜터</div>
+                <div style="font-size:12px;color:var(--text-muted)" id="chatBookSub">RAG 기반으로 책 본문 PDF 파일을 업로드하면 AI가 교재 내용을 학습하여 질문에 정확하게 답변합니다</div>
+              </div>
+              <span class="rag-badge" id="ragBadge" style="display:none">RAG</span>
+              <button class="btn btn-sm btn-ghost" style="display:none" id="bookSelectBtn" onclick="document.getElementById('bookPanel').classList.toggle('mobile-show')"><i class="fas fa-book"></i></button>
+            </div>
+
+            <div class="messages-area" id="messagesArea">
+              <div class="msg ai">
+                <div class="bubble">
+                  안녕하세요! 📚 <strong>K-AI출판허브 AI 북튜터</strong>입니다.<br><br>
+                  RAG(검색 증강 생성) 기술로 업로드된 PDF 교재 내용을 기반으로 정확하게 답변합니다.<br><br>
+                  <strong>시작 방법:</strong><br>
+                  1️⃣ 왼쪽 패널에서 <strong>Gemini API 키</strong>를 입력하세요<br>
+                  2️⃣ <strong>PDF 교재</strong>를 업로드하세요<br>
+                  3️⃣ 교재 내용에 대해 <strong>무엇이든 질문</strong>하세요!<br><br>
+                  <span style="font-size:12px;color:var(--text-muted)">💡 해당 도서의 PDF 파일을 바로 업로드하세요.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="typing-dots" id="typingDots"><span></span><span></span><span></span></div>
+
+            <div class="input-area">
+              <div class="quick-chips">
+                <button onclick="sendQuick('이 교재의 전체 핵심 내용을 요약해줘')"><i class="fas fa-compress"></i> 핵심 요약</button>
+                <button onclick="sendQuick('이 교재에서 시험에 자주 나오는 내용으로 퀴즈 5문제 내줘')"><i class="fas fa-question-circle"></i> 퀴즈</button>
+                <button onclick="sendQuick('이 교재의 목차와 구성을 알려줘')"><i class="fas fa-list"></i> 목차</button>
+                <button onclick="sendQuick('초보자가 가장 먼저 알아야 할 핵심 개념을 쉽게 설명해줘')"><i class="fas fa-lightbulb"></i> 쉽게 설명</button>
+              </div>
+              <div class="input-row">
+                <textarea id="chatInput" placeholder="교재에 대해 질문하세요... (PDF 업로드 필요)" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="common.js"></script>
+  <script>
+    // === PDF.js Worker ===
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    // === RAG State ===
+    const RAG = {
+      apiKey: localStorage.getItem('kai-gemini-key') || '',
+      chunks: [],
+      pdfName: '',
+      pdfPages: 0,
+      isProcessing: false,
+      conversationHistory: [],
+      currentBookId: null,
+      selectedAiBook: null  // 현재 선택된 AI 북튜터 도서
+    };
+
+    // ==============================
+    //  IndexedDB - PDF 저장소
+    // ==============================
+    const DB_NAME = 'KAI_BookStore';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'books';
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+          }
+        };
+        req.onsuccess = (e) => resolve(e.target.result);
+        req.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function saveBookToDB(bookData) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).put(bookData);
+        tx.oncomplete = () => resolve();
+        tx.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function getBookFromDB(id) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const req = tx.objectStore(STORE_NAME).get(id);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function getAllBooksFromDB() {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const req = tx.objectStore(STORE_NAME).getAll();
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function deleteBookFromDB(id) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).delete(id);
+        tx.oncomplete = () => resolve();
+        tx.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    // ==============================
+    //  Init
+    // ==============================
+    // AI 북튜터 적용 도서 데이터
+    const aiEnabledBooks = [
+      { id: 'book-001', title: '요양보호사 양성 표준교재 2024', publisher: '진한엠앤비', icon: '🏥', color: '#1B4D8E', pages: 720, aiQueries: 45600 },
+      { id: 'book-002', title: '전기차 공학 개론', publisher: '진한엠앤비', icon: '🔋', color: '#00B894', pages: 520, aiQueries: 23100 },
+      { id: 'book-003', title: '드론 설계 및 제어 실무', publisher: '진한엠앤비', icon: '🚁', color: '#FF6B35', pages: 480, aiQueries: 18400 },
+      { id: 'book-004', title: 'Python 데이터 분석 완전정복', publisher: '한빛미디어', icon: '🐍', color: '#3498DB', pages: 600, aiQueries: 52000 },
+      { id: 'book-005', title: '스마트팩토리 구축 가이드', publisher: '청문각', icon: '🏭', color: '#9B59B6', pages: 550, aiQueries: 12300 },
+      { id: 'book-006', title: '신재생에너지 시스템 공학', publisher: '진한엠앤비', icon: '☀️', color: '#27AE60', pages: 490, aiQueries: 15700 },
+      { id: 'book-007', title: 'AI 머신러닝 이론과 실습', publisher: '에이콘출판', icon: '🤖', color: '#E74C3C', pages: 680, aiQueries: 67200 },
+      { id: 'book-008', title: '데이터 사이언스 입문', publisher: '한빛미디어', icon: '📊', color: '#F39C12', pages: 420, aiQueries: 38900 },
+    ];
+
+    async function renderAiBooksList() {
+      const list = document.getElementById('aiBooksList');
+      const savedBooks = await getAllBooksFromDB();
+      document.getElementById('aiBookCount').textContent = aiEnabledBooks.length;
+
+      list.innerHTML = aiEnabledBooks.map(b => {
+        const titleNorm = b.title.toLowerCase().replace(/[_+\s]/g, '');
+        const matchedSaved = savedBooks.find(sb => {
+          const sbNorm = sb.name.toLowerCase().replace(/\.pdf$/,'').replace(/[_+\s]/g, '');
+          return sbNorm.includes(titleNorm) || titleNorm.includes(sbNorm) || sbNorm.includes(titleNorm.substring(0, 6));
+        });
+        const hasPdf = !!matchedSaved;
+        const isSelected = RAG.selectedAiBook === b.id;
+
+        return `
+          <div class="book-select-item ${isSelected ? 'active' : ''}"
+               style="cursor:pointer"
+               onclick="selectAiBook('${b.id}', ${hasPdf ? `'${matchedSaved.id}'` : 'null'})">
+            <div class="book-mini-cover" style="background:linear-gradient(135deg,${b.color},${b.color}99)">${b.icon}</div>
+            <div style="flex:1;min-width:0">
+              <div class="book-mini-title">${b.title}</div>
+              <div class="book-mini-pub">
+                ${b.publisher} · ${b.pages}p
+                ${hasPdf
+                  ? `<br><span style="color:var(--accent);font-weight:600"><i class="fas fa-check-circle" style="font-size:9px"></i> PDF 업로드됨 · ${matchedSaved.chunkCount}청크</span>`
+                  : `<br><span style="color:var(--text-muted);font-size:10px"><i class="fas fa-upload" style="font-size:9px"></i> PDF 업로드 필요</span>`
+                }
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 도서 선택 → 하이라이트 + 채팅 헤더 갱신 + RAG 로드
+    async function selectAiBook(bookId, savedDbId) {
+      const book = aiEnabledBooks.find(b => b.id === bookId);
+      if (!book) return;
+
+      RAG.selectedAiBook = bookId;
+      RAG.conversationHistory = [];
+
+      // 채팅 헤더 업데이트
+      document.getElementById('chatBookIcon').style.background = `linear-gradient(135deg,${book.color},${book.color}99)`;
+      document.getElementById('chatBookIcon').textContent = book.icon;
+      document.getElementById('chatBookTitle').textContent = book.title;
+
+      // 채팅 초기화
+      const area = document.getElementById('messagesArea');
+
+      if (savedDbId) {
+        // PDF가 있으면 RAG 로드
+        document.getElementById('chatBookSub').innerHTML = `<span style="color:var(--text-muted)">RAG 로딩 중...</span>`;
+        await renderAiBooksList();
+
+        try {
+          const savedBook = await getBookFromDB(savedDbId);
+          if (savedBook) {
+            RAG.chunks = savedBook.chunks;
+            RAG.pdfName = savedBook.name;
+            RAG.pdfPages = savedBook.pages;
+            RAG.currentBookId = savedBook.id;
+
+            document.getElementById('ragInfo').style.display = 'block';
+            document.getElementById('chunkCount').textContent = RAG.chunks.length;
+            document.getElementById('ragBadge').style.display = 'inline-block';
+            document.getElementById('chatBookSub').innerHTML = `RAG 활성 · <span style="color:var(--accent)">●</span> 온라인 · ${RAG.chunks.length}개 청크`;
+            document.getElementById('chatInput').placeholder = '교재에 대해 질문하세요...';
+
+            // PDF 업로드 영역도 갱신
+            document.getElementById('pdfUploadArea').innerHTML = `
+              <div class="pdf-loaded">
+                <i class="fas fa-file-pdf"></i>
+                <div style="flex:1;min-width:0">
+                  <div class="pdf-name">${savedBook.name}</div>
+                  <div class="pdf-info">${savedBook.pages}p · ${savedBook.chunkCount}청크 · 저장됨 ✓</div>
+                </div>
+                <button class="pdf-remove" onclick="unloadCurrentBook()" title="언로드"><i class="fas fa-times"></i></button>
+              </div>
+            `;
+
+            area.innerHTML = `
+              <div class="msg ai"><div class="bubble">
+                📚 <strong>'${book.title}'</strong>의 AI 북튜터입니다!<br><br>
+                이 교재의 <strong>${savedBook.pages}페이지</strong>를 학습했으며, <strong>${RAG.chunks.length}개</strong>의 지식 청크가 준비되어 있습니다.<br><br>
+                교재 내용에 대해 무엇이든 질문하세요!<br>
+                핵심 요약, 퀴즈, 개념 설명 등 학습을 도와드립니다. 💡
+              </div></div>
+            `;
+          }
+        } catch (err) {
+          document.getElementById('chatBookSub').textContent = 'RAG 로드 실패';
+          area.innerHTML = `<div class="msg ai"><div class="bubble">⚠️ 교재 데이터를 불러오는 중 오류가 발생했습니다.</div></div>`;
+        }
+      } else {
+        // PDF가 없으면 업로드 안내
+        RAG.chunks = [];
+        RAG.pdfName = '';
+        RAG.currentBookId = null;
+        document.getElementById('ragInfo').style.display = 'none';
+        document.getElementById('ragBadge').style.display = 'none';
+        document.getElementById('chatBookSub').innerHTML = `<span style="color:var(--secondary)">PDF 업로드 필요</span>`;
+        document.getElementById('chatInput').placeholder = 'PDF를 먼저 업로드하세요...';
+        resetUploadArea();
+
+        await renderAiBooksList();
+
+        area.innerHTML = `
+          <div class="msg ai"><div class="bubble">
+            📚 <strong>'${book.title}'</strong>을(를) 선택하셨습니다.<br><br>
+            이 도서는 아직 <strong>PDF가 업로드되지 않았습니다.</strong><br><br>
+            왼쪽 패널의 <strong>"PDF 교재 업로드"</strong> 영역에서 이 도서의 PDF 파일을 업로드하면,<br>
+            AI 북튜터가 교재 내용을 학습하여 질문에 답변할 수 있게 됩니다! 📄
+          </div></div>
+        `;
+      }
+
+      await renderAiBooksList();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Restore API key
+      if (RAG.apiKey) {
+        document.getElementById('apiKeyInput').value = RAG.apiKey;
+        document.getElementById('apiKeyStatus').textContent = '✓ API 키 저장됨';
+        document.getElementById('apiKeyStatus').className = 'api-key-status connected';
+      }
+      // Drag & drop
+      setupDropZone();
+      // Render AI enabled books (async - checks IndexedDB)
+      await renderAiBooksList();
+      // Load saved books list
+      await renderSavedBooks(); await renderAiBooksList();
+      // Mobile
+      if (window.innerWidth <= 768) {
+        document.getElementById('bookSelectBtn').style.display = 'inline-flex';
+      }
+    });
+
+    function setupDropZone() {
+      const dropZone = document.getElementById('pdfDropZone');
+      if (!dropZone) return;
+      dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type === 'application/pdf') processPdf(file);
+        else showToast('PDF 파일만 업로드 가능합니다', 'error');
+      });
+    }
+
+    // ==============================
+    //  Saved Books List
+    // ==============================
+    async function renderSavedBooks() {
+      const books = await getAllBooksFromDB();
+      const list = document.getElementById('bookList');
+      const emptyMsg = document.getElementById('savedBooksEmpty');
+
+      // Remove old items (keep emptyMsg)
+      list.querySelectorAll('.saved-book-item').forEach(el => el.remove());
+
+      if (books.length === 0) {
+        if (emptyMsg) emptyMsg.style.display = 'block';
+        return;
+      }
+      if (emptyMsg) emptyMsg.style.display = 'none';
+
+      books.forEach(book => {
+        const item = document.createElement('div');
+        item.className = `book-select-item saved-book-item ${RAG.currentBookId === book.id ? 'active' : ''}`;
+        item.innerHTML = `
+          <div class="book-mini-cover" style="background:linear-gradient(135deg,#1B4D8E,#2D6BC4)">
+            <i class="fas fa-file-pdf" style="color:#fff;font-size:14px"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div class="book-mini-title">${book.name}</div>
+            <div class="book-mini-pub">${book.pages}p · ${book.chunkCount}청크 · ${formatFileSize(book.size)}</div>
+          </div>
+          <button onclick="event.stopPropagation();deleteBook('${book.id}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px;font-size:12px" title="삭제">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        `;
+        item.addEventListener('click', () => loadSavedBook(book.id));
+        list.appendChild(item);
+      });
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + 'B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + 'MB';
+    }
+
+    // ==============================
+    //  Load saved book from IndexedDB
+    // ==============================
+    async function loadSavedBook(bookId) {
+      if (RAG.isProcessing) return;
+      RAG.isProcessing = true;
+
+      const uploadArea = document.getElementById('pdfUploadArea');
+      uploadArea.innerHTML = `
+        <div class="pdf-processing">
+          <i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--primary-light);margin-bottom:8px"></i>
+          <p id="pdfProgress">저장된 교재 불러오는 중...</p>
+          <div class="progress-bar-full" style="margin-top:8px"><div class="fill" id="pdfProgressBar" style="width:30%;background:linear-gradient(90deg,var(--primary-light),var(--accent))"></div></div>
+        </div>
+      `;
+
+      try {
+        const book = await getBookFromDB(bookId);
+        if (!book) throw new Error('저장된 교재를 찾을 수 없습니다');
+
+        // Restore chunks from stored data
+        RAG.chunks = book.chunks;
+        RAG.pdfName = book.name;
+        RAG.pdfPages = book.pages;
+        RAG.currentBookId = book.id;
+        RAG.conversationHistory = [];
+
+        document.getElementById('pdfProgressBar').style.width = '100%';
+
+        // Update UI
+        uploadArea.innerHTML = `
+          <div class="pdf-loaded">
+            <i class="fas fa-file-pdf"></i>
+            <div style="flex:1;min-width:0">
+              <div class="pdf-name">${book.name}</div>
+              <div class="pdf-info">${book.pages}p · ${book.chunkCount}청크 · 저장됨</div>
+            </div>
+            <button class="pdf-remove" onclick="unloadCurrentBook()" title="언로드"><i class="fas fa-times"></i></button>
+          </div>
+        `;
+
+        document.getElementById('ragInfo').style.display = 'block';
+        document.getElementById('chunkCount').textContent = RAG.chunks.length;
+        document.getElementById('ragBadge').style.display = 'inline-block';
+
+        updateChatState();
+        await renderSavedBooks(); await renderAiBooksList();
+
+        const bookTitle = book.name.replace('.pdf', '').replace(/[_+]/g, ' ');
+        addMessage(`📚 저장된 교재 <strong>'${bookTitle}'</strong>을(를) 불러왔습니다!<br><br><strong>${book.pages}페이지</strong> · <strong>${book.chunkCount}개</strong> 지식 청크 준비 완료.<br>교재에 대해 무엇이든 질문하세요! 💡`, 'ai');
+
+        showToast(`${book.name} 불러오기 완료!`, 'success');
+      } catch (err) {
+        console.error(err);
+        resetUploadArea();
+        showToast('교재 불러오기 실패: ' + err.message, 'error');
+      }
+
+      RAG.isProcessing = false;
+    }
+
+    async function deleteBook(bookId) {
+      if (!confirm('이 교재를 삭제하시겠습니까?')) return;
+      await deleteBookFromDB(bookId);
+      if (RAG.currentBookId === bookId) {
+        unloadCurrentBook();
+      }
+      await renderSavedBooks(); await renderAiBooksList();
+      showToast('교재가 삭제되었습니다', 'info');
+    }
+
+    // ==============================
+    //  API Key
+    // ==============================
+    function saveApiKey() {
+      const key = document.getElementById('apiKeyInput').value.trim();
+      if (!key) {
+        document.getElementById('apiKeyStatus').textContent = '✗ API 키를 입력하세요';
+        document.getElementById('apiKeyStatus').className = 'api-key-status error';
+        return;
+      }
+      RAG.apiKey = key;
+      localStorage.setItem('kai-gemini-key', key);
+      document.getElementById('apiKeyStatus').textContent = '✓ API 키 저장됨';
+      document.getElementById('apiKeyStatus').className = 'api-key-status connected';
+      showToast('Gemini API 키가 저장되었습니다', 'success');
+      updateChatState();
+    }
+
+    // ==============================
+    //  PDF Upload & Process
+    // ==============================
+    function handlePdfUpload(event) {
+      const file = event.target.files[0];
+      if (file && file.type === 'application/pdf') processPdf(file);
+    }
+
+    async function processPdf(file) {
+      if (RAG.isProcessing) return;
+      RAG.isProcessing = true;
+
+      const uploadArea = document.getElementById('pdfUploadArea');
+      uploadArea.innerHTML = `
+        <div class="pdf-processing">
+          <i class="fas fa-spinner fa-spin" style="font-size:24px;color:var(--primary-light);margin-bottom:8px"></i>
+          <p id="pdfProgress">PDF 로딩 중...</p>
+          <div class="progress-bar-full" style="margin-top:8px"><div class="fill" id="pdfProgressBar" style="width:0%;background:linear-gradient(90deg,var(--primary-light),var(--accent))"></div></div>
+        </div>
+      `;
+
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const totalPages = pdf.numPages;
+        RAG.pdfPages = totalPages;
+        RAG.pdfName = file.name;
+        RAG.chunks = [];
+
+        const pageTexts = [];
+        for (let i = 1; i <= totalPages; i++) {
+          document.getElementById('pdfProgress').textContent = `페이지 추출 중... ${i}/${totalPages}`;
+          document.getElementById('pdfProgressBar').style.width = `${(i / totalPages) * 90}%`;
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          pageTexts.push({ page: i, text: textContent.items.map(item => item.str).join(' ') });
+        }
+
+        // Chunk
+        document.getElementById('pdfProgress').textContent = '지식 베이스 구축 중...';
+        const PAGES_PER_CHUNK = 3;
+        for (let i = 0; i < pageTexts.length; i += PAGES_PER_CHUNK) {
+          const group = pageTexts.slice(i, i + PAGES_PER_CHUNK);
+          const chunkText = group.map(p => p.text).join('\n');
+          if (chunkText.trim().length > 50) {
+            RAG.chunks.push({
+              id: RAG.chunks.length,
+              text: chunkText,
+              startPage: group[0].page,
+              endPage: group[group.length - 1].page,
+              keywords: extractKeywords(chunkText)
+            });
+          }
+        }
+
+        // Save to IndexedDB
+        document.getElementById('pdfProgress').textContent = '브라우저에 저장 중...';
+        document.getElementById('pdfProgressBar').style.width = '95%';
+        const bookId = 'book_' + Date.now();
+        await saveBookToDB({
+          id: bookId,
+          name: file.name,
+          pages: totalPages,
+          size: file.size,
+          chunkCount: RAG.chunks.length,
+          chunks: RAG.chunks,
+          savedAt: new Date().toISOString()
+        });
+        RAG.currentBookId = bookId;
+
+        document.getElementById('pdfProgressBar').style.width = '100%';
+
+        // Update UI
+        uploadArea.innerHTML = `
+          <div class="pdf-loaded">
+            <i class="fas fa-file-pdf"></i>
+            <div style="flex:1;min-width:0">
+              <div class="pdf-name">${file.name}</div>
+              <div class="pdf-info">${totalPages}p · ${RAG.chunks.length}청크 · 저장됨 ✓</div>
+            </div>
+            <button class="pdf-remove" onclick="unloadCurrentBook()" title="언로드"><i class="fas fa-times"></i></button>
+          </div>
+        `;
+
+        document.getElementById('ragInfo').style.display = 'block';
+        document.getElementById('chunkCount').textContent = RAG.chunks.length;
+        document.getElementById('ragBadge').style.display = 'inline-block';
+
+        updateChatState();
+        await renderSavedBooks(); await renderAiBooksList();
+
+        const bookTitle = file.name.replace('.pdf', '').replace(/[_+]/g, ' ');
+        addMessage(`📚 <strong>'${bookTitle}'</strong>이(가) 저장되었습니다!<br><br>총 <strong>${totalPages}페이지</strong>에서 <strong>${RAG.chunks.length}개</strong>의 지식 청크를 생성했습니다.<br>📂 브라우저에 저장되어 다음에 다시 불러올 수 있습니다.<br><br>이제 교재에 대해 무엇이든 질문하세요! 💡`, 'ai');
+        showToast(`${file.name} 저장 완료!`, 'success');
+
+      } catch (err) {
+        console.error('PDF processing error:', err);
+        resetUploadArea();
+        showToast('PDF 처리 중 오류: ' + err.message, 'error');
+      }
+
+      RAG.isProcessing = false;
+    }
+
+    function unloadCurrentBook() {
+      RAG.chunks = [];
+      RAG.pdfName = '';
+      RAG.pdfPages = 0;
+      RAG.currentBookId = null;
+      RAG.conversationHistory = [];
+      resetUploadArea();
+      document.getElementById('ragInfo').style.display = 'none';
+      document.getElementById('ragBadge').style.display = 'none';
+      updateChatState();
+      renderSavedBooks(); renderAiBooksList();
+    }
+
+    function resetUploadArea() {
+      document.getElementById('pdfUploadArea').innerHTML = `
+        <div class="pdf-drop-zone" id="pdfDropZone" onclick="document.getElementById('pdfFileInput').click()">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>PDF 파일을 드래그하거나 클릭</p>
+          <p class="small">업로드 시 자동 저장됩니다</p>
+        </div>
+        <input type="file" id="pdfFileInput" accept=".pdf" style="display:none" onchange="handlePdfUpload(event)">
+      `;
+      setupDropZone();
+    }
+
+    // ==============================
+    //  Keyword Extraction
+    // ==============================
+    function extractKeywords(text) {
+      const cleaned = text.replace(/[^\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F\uA960-\uA97Fa-zA-Z0-9\s]/g, ' ');
+      const words = cleaned.split(/\s+/).filter(w => w.length > 1);
+      const freq = {};
+      words.forEach(w => { const l = w.toLowerCase(); freq[l] = (freq[l] || 0) + 1; });
+      return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 30).map(e => e[0]);
+    }
+
+    // ==============================
+    //  RAG Retrieval
+    // ==============================
+    function retrieveRelevantChunks(query, topK = 5) {
+      if (RAG.chunks.length === 0) return [];
+      const queryWords = query.toLowerCase().replace(/[^\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318Fa-zA-Z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length > 1);
+
+      const scored = RAG.chunks.map(chunk => {
+        let score = 0;
+        const chunkLower = chunk.text.toLowerCase();
+        queryWords.forEach(word => {
+          const matches = chunkLower.match(new RegExp(word, 'gi'));
+          if (matches) score += matches.length * 2;
+          if (chunk.keywords.some(k => k.includes(word) || word.includes(k))) score += 3;
+        });
+        if (query.length > 4) {
+          for (let i = 0; i < queryWords.length - 1; i++) {
+            if (chunkLower.includes(queryWords.slice(i, i + 2).join(' '))) score += 10;
+          }
+        }
+        return { ...chunk, score };
+      });
+
+      return scored.filter(c => c.score > 0).sort((a, b) => b.score - a.score).slice(0, topK);
+    }
+
+    // ==============================
+    //  Gemini API
+    // ==============================
+    async function callGemini(userMessage, context) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${RAG.apiKey}`;
+
+      const systemPrompt = `당신은 K-AI출판허브의 AI 북튜터입니다. 업로드된 교재 PDF의 내용을 기반으로 정확하게 답변합니다.
+
+## 규칙
+1. 반드시 제공된 [교재 내용]을 기반으로 답변하세요
+2. 교재에 없는 내용은 "교재에서 해당 내용을 찾지 못했습니다"라고 명시하세요
+3. 답변 시 관련 페이지 번호를 📖 p.XX 형태로 참조하세요
+4. 한국어로 답변하세요
+5. 핵심을 강조할 때 **굵게** 표시하세요
+6. 목록이 필요하면 번호나 불릿을 사용하세요
+7. 퀴즈를 요청받으면 객관식 문제를 만들고 정답과 해설을 포함하세요
+
+## 현재 교재
+파일명: ${RAG.pdfName}
+총 페이지: ${RAG.pdfPages}페이지`;
+
+      const contextText = context.length > 0
+        ? `\n\n[교재 내용 - 관련 부분]\n${context.map(c => `--- p.${c.startPage}~${c.endPage} ---\n${c.text.substring(0, 2000)}`).join('\n\n')}`
+        : '\n\n[교재 내용을 찾지 못했습니다. 일반적인 지식으로 답변하되, 교재 기반이 아님을 명시하세요.]';
+
+      const contents = [];
+      RAG.conversationHistory.slice(-6).forEach(h => {
+        contents.push({ role: h.role, parts: [{ text: h.text }] });
+      });
+      contents.push({ role: 'user', parts: [{ text: `${contextText}\n\n[사용자 질문]\n${userMessage}` }] });
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents,
+          generationConfig: { temperature: 0.3, topP: 0.8, topK: 40, maxOutputTokens: 2048 }
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error?.message || `API 오류: ${res.status}`);
+      }
+      const data = await res.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || '응답을 생성하지 못했습니다.';
+    }
+
+    // ==============================
+    //  Chat
+    // ==============================
+    function updateChatState() {
+      const hasKey = !!RAG.apiKey;
+      const hasPdf = RAG.chunks.length > 0;
+      document.getElementById('chatBookTitle').textContent = hasPdf ? RAG.pdfName.replace('.pdf', '').replace(/[_+]/g, ' ') : 'AI 북튜터';
+      document.getElementById('chatBookSub').innerHTML = hasKey && hasPdf
+        ? `RAG 활성 · <span style="color:var(--accent)">●</span> 온라인 · ${RAG.chunks.length}개 청크`
+        : hasKey ? 'PDF를 업로드하거나 저장된 교재를 선택하세요' : 'Gemini API 키를 입력하세요';
+      document.getElementById('chatInput').placeholder = hasKey && hasPdf ? '교재에 대해 질문하세요...' : hasKey ? '교재를 먼저 선택하세요...' : 'API 키를 먼저 입력하세요...';
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+      if (!RAG.apiKey) { showToast('Gemini API 키를 먼저 입력하세요', 'error'); return; }
+      if (RAG.chunks.length === 0) { showToast('교재를 먼저 업로드하거나 선택하세요', 'error'); return; }
+
+      addMessage(text, 'user');
+      input.value = '';
+      input.style.height = '44px';
+
+      const dots = document.getElementById('typingDots');
+      dots.classList.add('show');
+      scrollToBottom();
+      document.getElementById('sendBtn').disabled = true;
+
+      try {
+        const relevantChunks = retrieveRelevantChunks(text);
+        const response = await callGemini(text, relevantChunks);
+        dots.classList.remove('show');
+
+        let formatted = response
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n\n/g, '<br><br>')
+          .replace(/\n(\d+)\./g, '<br>$1.')
+          .replace(/\n- /g, '<br>• ')
+          .replace(/📖/g, '<span class="ref">📖')
+          .replace(/(p\.\d+[~-]?\d*)/g, '$1</span>');
+
+        if (relevantChunks.length > 0) {
+          const pages = [...new Set(relevantChunks.flatMap(c => [c.startPage, c.endPage]))].sort((a, b) => a - b);
+          formatted += `<br><br><span class="ref">📖 참조 페이지: p.${pages.length <= 4 ? pages.join(', ') : pages[0] + '~' + pages[pages.length-1]}</span>`;
+        }
+
+        addMessage(formatted, 'ai');
+        RAG.conversationHistory.push({ role: 'user', text });
+        RAG.conversationHistory.push({ role: 'model', text: response });
+      } catch (err) {
+        dots.classList.remove('show');
+        addMessage(`⚠️ 오류: ${err.message}<br>API 키를 확인하거나 다시 시도해주세요.`, 'ai');
+      }
+      document.getElementById('sendBtn').disabled = false;
+    }
+
+    function sendQuick(text) {
+      if (!RAG.apiKey) { showToast('Gemini API 키를 먼저 입력하세요', 'error'); return; }
+      if (RAG.chunks.length === 0) { showToast('교재를 먼저 선택하세요', 'error'); return; }
+      document.getElementById('chatInput').value = text;
+      sendMessage();
+    }
+
+    function addMessage(html, type) {
+      const area = document.getElementById('messagesArea');
+      const msg = document.createElement('div');
+      msg.className = `msg ${type}`;
+      msg.innerHTML = `<div class="bubble">${html}</div>`;
+      area.appendChild(msg);
+      scrollToBottom();
+    }
+
+    function scrollToBottom() {
+      const area = document.getElementById('messagesArea');
+      setTimeout(() => { area.scrollTop = area.scrollHeight; }, 50);
+    }
+
+    // Auto-resize textarea
+    document.getElementById('chatInput').addEventListener('input', function() {
+      this.style.height = '44px';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+  </script>
+</body>
+</html>

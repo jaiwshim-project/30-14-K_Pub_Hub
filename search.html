@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>검색 | K-AI출판허브</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .search-hero { text-align: center; padding: 48px 24px; margin-bottom: 32px; }
+    .search-hero h1 { font-size: 28px; margin-bottom: 8px; }
+    .search-hero p { color: var(--text-secondary); margin-bottom: 24px; }
+    .search-large { max-width: 640px; margin: 0 auto; position: relative; }
+    .search-large input { width: 100%; padding: 16px 24px 16px 48px; background: var(--bg-input); border: 2px solid var(--border-color); border-radius: var(--border-radius-xl); color: var(--text-primary); font-size: 16px; font-family: var(--font-primary); outline: none; transition: all var(--transition-fast); }
+    .search-large input:focus { border-color: var(--primary-light); box-shadow: 0 0 0 4px rgba(27,77,142,0.2); }
+    .search-large i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 18px; }
+    .search-large .search-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); }
+    .filters-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .filters-row select { padding: 8px 14px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); color: var(--text-primary); font-family: var(--font-primary); font-size: 13px; outline: none; }
+    .result-count { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+    .result-count strong { color: var(--text-primary); }
+    .search-result { display: flex; gap: 20px; padding: 20px; border: 1px solid var(--border-color); border-radius: var(--border-radius); margin-bottom: 12px; background: var(--bg-card); transition: all var(--transition-fast); cursor: pointer; }
+    .search-result:hover { background: var(--bg-card-hover); border-color: var(--primary-light); transform: translateX(4px); }
+    .search-result .result-cover { width: 80px; height: 110px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0; }
+    .search-result .result-info { flex: 1; }
+    .search-result .result-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .search-result .result-meta { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+    .search-result .result-excerpt { font-size: 13px; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .search-result .result-excerpt mark { background: rgba(255,107,53,0.3); color: var(--text-primary); padding: 0 2px; border-radius: 2px; }
+    .search-result .result-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .search-result .relevance { font-size: 12px; font-weight: 600; color: var(--accent); white-space: nowrap; align-self: flex-start; padding: 4px 10px; background: rgba(0,184,148,0.15); border-radius: 12px; }
+    .popular-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .popular-tags .ptag { padding: 6px 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); }
+    .popular-tags .ptag:hover { background: var(--bg-card-hover); color: var(--primary-light); border-color: var(--primary-light); }
+    .ai-answer-box { padding: 20px; background: linear-gradient(135deg, rgba(0,184,148,0.1), rgba(27,77,142,0.1)); border: 1px solid rgba(0,184,148,0.3); border-radius: var(--border-radius); margin-bottom: 24px; }
+    .ai-answer-box h3 { font-size: 14px; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .ai-answer-box p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    @media (max-width: 768px) { .search-result { flex-direction: column; } .search-result .result-cover { width: 100%; height: 80px; } }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="sidebar-header"><div class="logo"><span class="logo-icon">📚</span><span class="logo-text">K-AI출판허브</span></div></div>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i><span>홈</span></a></li>
+        <li class="nav-item"><a href="ai-library.html"><i class="fas fa-book-open"></i><span>AI 라이브러리</span></a></li>
+        <li class="nav-item"><a href="ai-book-tutor.html"><i class="fas fa-robot"></i><span>AI 북튜터</span></a></li>
+        <li class="nav-item"><a href="web-to-book.html"><i class="fas fa-rocket"></i><span>웹-투-북 퍼블리싱</span></a></li>
+        <li class="nav-item"><a href="publishers.html"><i class="fas fa-building"></i><span>출판사 연합관</span></a></li>
+        <li class="nav-item"><a href="community.html"><i class="fas fa-comments"></i><span>커뮤니티</span></a></li>
+        <li class="nav-item"><a href="b2b-solutions.html"><i class="fas fa-briefcase"></i><span>B2B 솔루션</span></a></li>
+        <li class="nav-item"><a href="dashboard.html"><i class="fas fa-chart-line"></i><span>대시보드</span></a></li>
+        <li class="nav-item"><a href="partner-center.html"><i class="fas fa-cogs"></i><span>파트너 센터</span></a></li>
+        <li class="nav-item"><a href="about.html"><i class="fas fa-info-circle"></i><span>소개</span></a></li>
+        <li class="nav-item"><a href="proposal.html"><i class="fas fa-file-contract"></i><span>제안서</span></a></li>
+      </ul>
+    </nav>
+    <div class="main-wrapper">
+      <header class="header">
+        <button class="hamburger-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="도서, 출판사, 지식을 검색하세요..."></div>
+        <div class="header-actions">
+          <button onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+          <button onclick="toggleLanguage()"><span class="lang-badge">KO</span></button>
+          <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+        </div>
+      </header>
+      <main class="main-content">
+        <div class="search-hero">
+          <h1><i class="fas fa-search" style="color:var(--primary-light);margin-right:8px"></i> 지능형 검색</h1>
+          <p>AI가 여러 출판사의 도서에서 정확한 답을 찾아드립니다</p>
+          <div class="search-large">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="무엇을 찾고 계신가요?" value="요양보호" autofocus>
+            <button class="btn btn-secondary btn-sm search-btn" onclick="performSearch()"><i class="fas fa-arrow-right"></i></button>
+          </div>
+          <div class="popular-tags" style="justify-content:center;margin-top:16px">
+            <span class="ptag" onclick="searchTag('요양보호사')">요양보호사</span>
+            <span class="ptag" onclick="searchTag('전기차')">전기차</span>
+            <span class="ptag" onclick="searchTag('Python')">Python</span>
+            <span class="ptag" onclick="searchTag('AI 머신러닝')">AI 머신러닝</span>
+            <span class="ptag" onclick="searchTag('드론')">드론</span>
+            <span class="ptag" onclick="searchTag('스마트팩토리')">스마트팩토리</span>
+          </div>
+        </div>
+
+        <div class="filters-row">
+          <select><option>전체 분야</option><option>의료/간호</option><option>공학</option><option>IT/프로그래밍</option></select>
+          <select><option>전체 출판사</option><option>진한엠앤비</option><option>한빛미디어</option><option>에이콘출판</option></select>
+          <select><option>관련도순</option><option>최신순</option><option>인기순</option><option>가격순</option></select>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+            <input type="checkbox" checked style="accent-color:var(--accent)"> AI 북튜터 도서만
+          </label>
+        </div>
+
+        <div id="searchResults">
+          <!-- AI Answer -->
+          <div class="ai-answer-box">
+            <h3><i class="fas fa-robot"></i> AI 답변</h3>
+            <p><strong>요양보호</strong>란 거동이 불편하거나 일상생활에 도움이 필요한 노인에게 신체적·정신적 돌봄 서비스를 제공하는 것입니다. 요양보호사 자격증은 보건복지부가 인증하는 국가자격증으로, 표준교재를 통한 이론 교육과 실습이 필수입니다.</p>
+            <a href="ai-book-tutor.html?book=book-001" class="btn btn-accent btn-sm" style="margin-top:12px"><i class="fas fa-robot"></i> AI 북튜터와 더 자세히 대화하기</a>
+          </div>
+
+          <div class="result-count">검색 결과 <strong>3</strong>건</div>
+
+          <div class="search-result" onclick="location.href='book-detail.html?id=book-001'">
+            <div class="result-cover" style="background:linear-gradient(135deg,#1B4D8E,#1B4D8E99)">🏥</div>
+            <div class="result-info">
+              <div class="result-title">요양보호사 양성 표준교재 2024</div>
+              <div class="result-meta">보건복지부 · 진한엠앤비 · 720페이지 · ₩35,000</div>
+              <div class="result-excerpt">...요양보호사 국가자격증 취득을 위한 공식 표준교재. <mark>요양보호</mark>의 기본 원리부터 치매 케어, 응급처치까지 체계적으로 학습할 수 있습니다...</div>
+              <div class="result-actions">
+                <span class="tag accent" style="font-size:11px"><i class="fas fa-robot"></i> AI 튜터</span>
+                <span class="star-rating" style="font-size:11px"><i class="fas fa-star"></i> 4.6</span>
+              </div>
+            </div>
+            <span class="relevance">98% 관련</span>
+          </div>
+
+          <div class="search-result" onclick="location.href='book-detail.html'">
+            <div class="result-cover" style="background:linear-gradient(135deg,#9B59B6,#9B59B699)">👴</div>
+            <div class="result-info">
+              <div class="result-title">노인 복지론 개정판</div>
+              <div class="result-meta">정희선 · 교문사 · 480페이지 · ₩28,000</div>
+              <div class="result-excerpt">...<mark>요양보호</mark> 서비스의 법적 체계와 노인복지 정책을 다루는 전문서적. 노인장기요양보험제도의 이해와 실무 적용 방법...</div>
+              <div class="result-actions">
+                <span class="tag accent" style="font-size:11px"><i class="fas fa-robot"></i> AI 튜터</span>
+                <span class="star-rating" style="font-size:11px"><i class="fas fa-star"></i> 4.3</span>
+              </div>
+            </div>
+            <span class="relevance">85% 관련</span>
+          </div>
+
+          <div class="search-result" onclick="location.href='book-detail.html'">
+            <div class="result-cover" style="background:linear-gradient(135deg,#27AE60,#27AE6099)">🩺</div>
+            <div class="result-info">
+              <div class="result-title">치매 돌봄 실무 가이드</div>
+              <div class="result-meta">한국치매협회 · 교문사 · 320페이지 · ₩25,000</div>
+              <div class="result-excerpt">...치매 환자를 위한 전문 <mark>요양보호</mark> 기술과 비약물적 중재 방법을 상세히 다루고 있습니다. 행동심리증상(BPSD) 대응 매뉴얼 포함...</div>
+              <div class="result-actions">
+                <span class="star-rating" style="font-size:11px"><i class="fas fa-star"></i> 4.5</span>
+              </div>
+            </div>
+            <span class="relevance">72% 관련</span>
+          </div>
+        </div>
+      </main>
+      <footer class="footer"><div class="footer-links"><a href="about.html">이용약관</a><a href="about.html">문의하기</a><a href="sitemap-page.html">구조도</a></div><p>© 2026 K-AI출판허브. All rights reserved.</p></footer>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function searchTag(tag) {
+      document.getElementById('searchInput').value = tag;
+      performSearch();
+    }
+    function performSearch() {
+      showToast('검색 결과를 불러오는 중...', 'info', 1500);
+    }
+    // Load query from URL
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('q')) {
+      document.getElementById('searchInput').value = params.get('q');
+    }
+  </script>
+</body>
+</html>

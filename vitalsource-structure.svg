@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 750" font-family="'Pretendard','Inter',sans-serif">
+  <defs>
+    <linearGradient id="vs1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF6B00"/><stop offset="100%" stop-color="#FF9500"/></linearGradient>
+    <linearGradient id="vs2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1B4D8E"/><stop offset="100%" stop-color="#2D6BC4"/></linearGradient>
+    <linearGradient id="vs3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00B894"/><stop offset="100%" stop-color="#00D9A7"/></linearGradient>
+    <linearGradient id="vs4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#9B59B6"/><stop offset="100%" stop-color="#8E44AD"/></linearGradient>
+    <linearGradient id="vs5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E74C3C"/><stop offset="100%" stop-color="#C0392B"/></linearGradient>
+    <linearGradient id="vs6" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3498DB"/><stop offset="100%" stop-color="#2980B9"/></linearGradient>
+    <filter id="sh" x="-4%" y="-4%" width="108%" height="116%"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.1"/></filter>
+    <filter id="shL" x="-6%" y="-6%" width="112%" height="120%"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="750" rx="16" fill="#F5F7FA"/>
+
+  <!-- Title -->
+  <text x="550" y="40" text-anchor="middle" font-size="20" font-weight="800" fill="#1A202C">VitalSource 플랫폼 구조도</text>
+  <text x="550" y="60" text-anchor="middle" font-size="11" fill="#4A5568">Global Digital Textbook Platform Architecture · vitalsource.com</text>
+
+  <!-- ====== ROOT ====== -->
+  <rect x="400" y="78" width="300" height="52" rx="26" fill="url(#vs1)" filter="url(#shL)"/>
+  <text x="550" y="110" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">VitalSource (Bookshelf)</text>
+
+  <!-- Vertical -->
+  <line x1="550" y1="130" x2="550" y2="160" stroke="#CBD5E0" stroke-width="2"/>
+  <!-- Horizontal -->
+  <line x1="110" y1="160" x2="990" y2="160" stroke="#CBD5E0" stroke-width="2"/>
+
+  <!-- ====== 5 Pillars ====== -->
+  <!-- Lines down -->
+  <line x1="110" y1="160" x2="110" y2="190" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="330" y1="160" x2="330" y2="190" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="550" y1="160" x2="550" y2="190" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="770" y1="160" x2="770" y2="190" stroke="#CBD5E0" stroke-width="2"/>
+  <line x1="990" y1="160" x2="990" y2="190" stroke="#CBD5E0" stroke-width="2"/>
+
+  <!-- === 1. Content Studio === -->
+  <rect x="30" y="190" width="160" height="46" rx="10" fill="url(#vs2)" filter="url(#sh)"/>
+  <text x="110" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Content Studio</text>
+  <line x1="110" y1="236" x2="110" y2="260" stroke="#7BADE0" stroke-width="1.5"/>
+  <rect x="18" y="260" width="184" height="32" rx="7" fill="#fff" stroke="#7BADE0" stroke-width="1" filter="url(#sh)"/>
+  <text x="110" y="280" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">ePub/PDF 변환 엔진</text>
+  <line x1="110" y1="292" x2="110" y2="306" stroke="#7BADE0" stroke-width="1.5"/>
+  <rect x="18" y="306" width="184" height="32" rx="7" fill="#fff" stroke="#7BADE0" stroke-width="1" filter="url(#sh)"/>
+  <text x="110" y="326" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">접근성 변환 (A11y)</text>
+  <line x1="110" y1="338" x2="110" y2="352" stroke="#7BADE0" stroke-width="1.5"/>
+  <rect x="18" y="352" width="184" height="32" rx="7" fill="#fff" stroke="#7BADE0" stroke-width="1" filter="url(#sh)"/>
+  <text x="110" y="372" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">DRM 저작권 보호</text>
+
+  <!-- === 2. Publisher Partnership === -->
+  <rect x="250" y="190" width="160" height="46" rx="10" fill="url(#vs3)" filter="url(#sh)"/>
+  <text x="330" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Publisher Partners</text>
+  <line x1="330" y1="236" x2="330" y2="260" stroke="#66D9C2" stroke-width="1.5"/>
+  <rect x="238" y="260" width="184" height="32" rx="7" fill="#fff" stroke="#66D9C2" stroke-width="1" filter="url(#sh)"/>
+  <text x="330" y="280" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">7,000+ 출판사 입점</text>
+  <line x1="330" y1="292" x2="330" y2="306" stroke="#66D9C2" stroke-width="1.5"/>
+  <rect x="238" y="306" width="184" height="32" rx="7" fill="#fff" stroke="#66D9C2" stroke-width="1" filter="url(#sh)"/>
+  <text x="330" y="326" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">원클릭 글로벌 유통</text>
+  <line x1="330" y1="338" x2="330" y2="352" stroke="#66D9C2" stroke-width="1.5"/>
+  <rect x="238" y="352" width="184" height="32" rx="7" fill="#fff" stroke="#66D9C2" stroke-width="1" filter="url(#sh)"/>
+  <text x="330" y="372" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">수익 정산 시스템</text>
+
+  <!-- === 3. Bookshelf Reader === -->
+  <rect x="470" y="190" width="160" height="46" rx="10" fill="url(#vs1)" filter="url(#sh)"/>
+  <text x="550" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Bookshelf Reader</text>
+  <line x1="550" y1="236" x2="550" y2="260" stroke="#FFB088" stroke-width="1.5"/>
+  <rect x="458" y="260" width="184" height="32" rx="7" fill="#fff" stroke="#FFB088" stroke-width="1" filter="url(#sh)"/>
+  <text x="550" y="280" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">멀티 디바이스 뷰어</text>
+  <line x1="550" y1="292" x2="550" y2="306" stroke="#FFB088" stroke-width="1.5"/>
+  <rect x="458" y="306" width="184" height="32" rx="7" fill="#fff" stroke="#FFB088" stroke-width="1" filter="url(#sh)"/>
+  <text x="550" y="326" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">하이라이트 / 노트 / 북마크</text>
+  <line x1="550" y1="338" x2="550" y2="352" stroke="#FFB088" stroke-width="1.5"/>
+  <rect x="458" y="352" width="184" height="32" rx="7" fill="#fff" stroke="#FFB088" stroke-width="1" filter="url(#sh)"/>
+  <text x="550" y="372" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">오프라인 읽기 지원</text>
+
+  <!-- === 4. Analytics === -->
+  <rect x="690" y="190" width="160" height="46" rx="10" fill="url(#vs4)" filter="url(#sh)"/>
+  <text x="770" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Analytics</text>
+  <line x1="770" y1="236" x2="770" y2="260" stroke="#C39BD3" stroke-width="1.5"/>
+  <rect x="678" y="260" width="184" height="32" rx="7" fill="#fff" stroke="#C39BD3" stroke-width="1" filter="url(#sh)"/>
+  <text x="770" y="280" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">학습 행동 분석</text>
+  <line x1="770" y1="292" x2="770" y2="306" stroke="#C39BD3" stroke-width="1.5"/>
+  <rect x="678" y="306" width="184" height="32" rx="7" fill="#fff" stroke="#C39BD3" stroke-width="1" filter="url(#sh)"/>
+  <text x="770" y="326" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">완독률 / 체류시간 리포트</text>
+  <line x1="770" y1="338" x2="770" y2="352" stroke="#C39BD3" stroke-width="1.5"/>
+  <rect x="678" y="352" width="184" height="32" rx="7" fill="#fff" stroke="#C39BD3" stroke-width="1" filter="url(#sh)"/>
+  <text x="770" y="372" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">출판사 대시보드 제공</text>
+
+  <!-- === 5. Distribution === -->
+  <rect x="910" y="190" width="160" height="46" rx="10" fill="url(#vs6)" filter="url(#sh)"/>
+  <text x="990" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Distribution</text>
+  <line x1="990" y1="236" x2="990" y2="260" stroke="#85C1E9" stroke-width="1.5"/>
+  <rect x="898" y="260" width="184" height="32" rx="7" fill="#fff" stroke="#85C1E9" stroke-width="1" filter="url(#sh)"/>
+  <text x="990" y="280" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">대학 / LMS 연동</text>
+  <line x1="990" y1="292" x2="990" y2="306" stroke="#85C1E9" stroke-width="1.5"/>
+  <rect x="898" y="306" width="184" height="32" rx="7" fill="#fff" stroke="#85C1E9" stroke-width="1" filter="url(#sh)"/>
+  <text x="990" y="326" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">기업 교육 채널</text>
+  <line x1="990" y1="338" x2="990" y2="352" stroke="#85C1E9" stroke-width="1.5"/>
+  <rect x="898" y="352" width="184" height="32" rx="7" fill="#fff" stroke="#85C1E9" stroke-width="1" filter="url(#sh)"/>
+  <text x="990" y="372" text-anchor="middle" font-size="10" font-weight="600" fill="#4A5568">170+ 국가 유통</text>
+
+  <!-- ====== Ecosystem Bar ====== -->
+  <text x="550" y="420" text-anchor="middle" font-size="10" fill="#A0AEC0">VitalSource 생태계</text>
+  <rect x="60" y="432" width="980" height="48" rx="12" fill="#EDF0F5" stroke="#CBD5E0" stroke-width="1" filter="url(#sh)"/>
+  <text x="160" y="461" text-anchor="middle" font-size="11" font-weight="600" fill="#4A5568">📚 100만+ 디지털 교재</text>
+  <text x="390" y="461" text-anchor="middle" font-size="11" font-weight="600" fill="#4A5568">🎓 대학 교재 시장 점유 1위</text>
+  <text x="620" y="461" text-anchor="middle" font-size="11" font-weight="600" fill="#4A5568">🌐 170+ 국가 서비스</text>
+  <text x="860" y="461" text-anchor="middle" font-size="11" font-weight="600" fill="#4A5568">🏢 7,000+ 출판 파트너</text>
+
+  <!-- ====== Comparison: VS vs K-AI ====== -->
+  <text x="550" y="520" text-anchor="middle" font-size="16" font-weight="800" fill="#1A202C">VitalSource vs K-AI출판허브 비교</text>
+  <text x="550" y="538" text-anchor="middle" font-size="11" fill="#A0AEC0">해외 선진 모델을 한국형으로 재해석</text>
+
+  <!-- Table Header -->
+  <rect x="100" y="555" width="300" height="36" rx="8" fill="url(#vs1)" filter="url(#sh)"/>
+  <text x="250" y="578" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">VitalSource</text>
+  <rect x="420" y="555" width="100" height="36" rx="8" fill="#EDF0F5"/>
+  <text x="470" y="578" text-anchor="middle" font-size="11" font-weight="700" fill="#4A5568">비교 항목</text>
+  <rect x="540" y="555" width="300" height="36" rx="8" fill="url(#vs2)" filter="url(#sh)"/>
+  <text x="690" y="578" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">K-AI출판허브</text>
+
+  <!-- Row 1 -->
+  <rect x="100" y="597" width="300" height="30" rx="0" fill="#fff" stroke="#eee" stroke-width="1"/>
+  <text x="250" y="616" text-anchor="middle" font-size="10" fill="#4A5568">전자책 뷰어 (Bookshelf)</text>
+  <rect x="420" y="597" width="100" height="30" rx="0" fill="#F8F9FA" stroke="#eee" stroke-width="1"/>
+  <text x="470" y="616" text-anchor="middle" font-size="10" font-weight="700" fill="#1A202C">핵심 기능</text>
+  <rect x="540" y="597" width="300" height="30" rx="0" fill="#EBF5FF" stroke="#DBEAFE" stroke-width="1"/>
+  <text x="690" y="616" text-anchor="middle" font-size="10" font-weight="600" fill="#1B4D8E">AI 북튜터 (RAG 채팅) ✨</text>
+
+  <!-- Row 2 -->
+  <rect x="100" y="627" width="300" height="30" rx="0" fill="#fff" stroke="#eee" stroke-width="1"/>
+  <text x="250" y="646" text-anchor="middle" font-size="10" fill="#4A5568">하이라이트 / 노트</text>
+  <rect x="420" y="627" width="100" height="30" rx="0" fill="#F8F9FA" stroke="#eee" stroke-width="1"/>
+  <text x="470" y="646" text-anchor="middle" font-size="10" font-weight="700" fill="#1A202C">학습 도구</text>
+  <rect x="540" y="627" width="300" height="30" rx="0" fill="#EBF5FF" stroke="#DBEAFE" stroke-width="1"/>
+  <text x="690" y="646" text-anchor="middle" font-size="10" font-weight="600" fill="#1B4D8E">AI 퀴즈 + 요약 + 대화 ✨</text>
+
+  <!-- Row 3 -->
+  <rect x="100" y="657" width="300" height="30" rx="0" fill="#fff" stroke="#eee" stroke-width="1"/>
+  <text x="250" y="676" text-anchor="middle" font-size="10" fill="#4A5568">학습 행동 분석</text>
+  <rect x="420" y="657" width="100" height="30" rx="0" fill="#F8F9FA" stroke="#eee" stroke-width="1"/>
+  <text x="470" y="676" text-anchor="middle" font-size="10" font-weight="700" fill="#1A202C">데이터</text>
+  <rect x="540" y="657" width="300" height="30" rx="0" fill="#EBF5FF" stroke="#DBEAFE" stroke-width="1"/>
+  <text x="690" y="676" text-anchor="middle" font-size="10" font-weight="600" fill="#1B4D8E">AI 질의 분석 + 인사이트 ✨</text>
+
+  <!-- Row 4 -->
+  <rect x="100" y="687" width="300" height="30" rx="0" fill="#fff" stroke="#eee" stroke-width="1"/>
+  <text x="250" y="706" text-anchor="middle" font-size="10" fill="#4A5568">글로벌 170+ 국가</text>
+  <rect x="420" y="687" width="100" height="30" rx="0" fill="#F8F9FA" stroke="#eee" stroke-width="1"/>
+  <text x="470" y="706" text-anchor="middle" font-size="10" font-weight="700" fill="#1A202C">시장</text>
+  <rect x="540" y="687" width="300" height="30" rx="0" fill="#EBF5FF" stroke="#DBEAFE" stroke-width="1"/>
+  <text x="690" y="706" text-anchor="middle" font-size="10" font-weight="600" fill="#1B4D8E">한국 특화 + K-출판 해외 진출</text>
+
+  <!-- Footer -->
+  <text x="550" y="742" text-anchor="middle" font-size="9" fill="#CBD5E0">© 2026 K-AI출판허브 · VitalSource 벤치마킹 분석 자료</text>
+</svg>
