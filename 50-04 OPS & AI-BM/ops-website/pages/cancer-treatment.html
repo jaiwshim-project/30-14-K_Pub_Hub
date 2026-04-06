@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OPS & AI-Buckingham Machine - 물리 기반 AI 암 치료 혁명, 중입자 가속기 치료와 OPS 엔진의 융합">
+  <title>OPS & AI-BM | Cancer Treatment</title>
+  <link rel="stylesheet" href="../css/main.css?v=6">
+  <style>
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .comparison-table th,
+    .comparison-table td {
+      padding: 1rem 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .comparison-table thead th {
+      background: linear-gradient(135deg, #1a237e, #0d47a1);
+      color: white;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .comparison-table tbody tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+    .comparison-table tbody tr:hover {
+      background: #e3f2fd;
+    }
+    .comparison-table td:first-child {
+      font-weight: 600;
+      color: #1a237e;
+      text-align: left;
+    }
+    .highlight-cell {
+      color: #1a237e;
+      font-weight: 700;
+    }
+    .bragg-peak-visual {
+      background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 100%);
+      border-radius: 12px;
+      padding: 2.5rem;
+      color: white;
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .bragg-peak-visual h3 {
+      color: #64b5f6;
+      margin-bottom: 1.5rem;
+    }
+    .bragg-peak-chart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 3px;
+      height: 200px;
+      margin: 1.5rem auto;
+      max-width: 500px;
+    }
+    .bragg-bar {
+      width: 8px;
+      border-radius: 4px 4px 0 0;
+      transition: all 0.3s;
+    }
+    .bragg-label {
+      display: flex;
+      justify-content: space-between;
+      max-width: 500px;
+      margin: 0.5rem auto;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+    }
+    .pipeline-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      justify-content: center;
+      align-items: center;
+      margin: 2rem 0;
+    }
+    .pipeline-step {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      flex: 1;
+      min-width: 160px;
+      max-width: 200px;
+    }
+    .pipeline-step .step-number {
+      background: linear-gradient(135deg, #1a237e, #2196f3);
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.75rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .pipeline-step h4 {
+      color: #1a237e;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+    .pipeline-step p {
+      font-size: 0.85rem;
+      color: #555;
+    }
+    .pipeline-arrow {
+      font-size: 1.5rem;
+      color: #2196f3;
+      padding: 0 0.5rem;
+      font-weight: bold;
+    }
+    .saas-tier {
+      border-left: 4px solid;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background: white;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .saas-tier.b2b { border-color: #1a237e; }
+    .saas-tier.api { border-color: #2196f3; }
+    .saas-tier.b2c { border-color: #4caf50; }
+    .saas-tier h4 {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    .saas-tier.b2b h4 { color: #1a237e; }
+    .saas-tier.api h4 { color: #2196f3; }
+    .saas-tier.b2c h4 { color: #4caf50; }
+    .saas-tier ul {
+      margin-top: 0.5rem;
+      padding-left: 1.2rem;
+    }
+    .saas-tier ul li {
+      margin-bottom: 0.3rem;
+      color: #444;
+    }
+    .roadmap-timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 2rem 0;
+    }
+    .roadmap-timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, #1a237e, #2196f3, #4caf50);
+      border-radius: 2px;
+    }
+    .roadmap-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+    .roadmap-item::before {
+      content: '';
+      position: absolute;
+      left: -1.75rem;
+      top: 0.25rem;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #1a237e;
+      border: 3px solid white;
+      box-shadow: 0 0 0 2px #1a237e;
+    }
+    .roadmap-item .roadmap-period {
+      font-size: 0.85rem;
+      color: #2196f3;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .roadmap-item h4 {
+      color: #1a237e;
+      margin-bottom: 0.25rem;
+    }
+    .roadmap-item p {
+      color: #555;
+      font-size: 0.9rem;
+    }
+    .cancer-image-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem auto;
+      max-width: 70%;
+    }
+    .cancer-image-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .cancer-image-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .cancer-image-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .cancer-image-card .image-caption {
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #555;
+      text-align: center;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+    }
+    .cancer-image-full {
+      margin: 2rem auto;
+      max-width: 70%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .cancer-image-full img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .cancer-image-full .image-caption {
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #555;
+      text-align: center;
+      background: #f8f9fa;
+    }
+    @media (max-width: 768px) {
+      .pipeline-flow {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .pipeline-arrow {
+        transform: rotate(90deg);
+      }
+      .pipeline-step {
+        max-width: 100%;
+      }
+      .comparison-table {
+        font-size: 0.85rem;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 0.6rem 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header & Navigation -->
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <h1><a href="../index.html" style="text-decoration: none;"><img src="../images/logo.png" alt="OPS & AI-BM" style="height: 50px;"></a></h1>
+        <p class="ko-only">계산 문명의 새로운 시작</p>
+        <p class="en-only">A New Era of Computational Civilization</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="../index.html" class="ko-only">홈</a><a href="../index.html" class="en-only">Home</a></li>
+          <li><a href="theory.html" class="ko-only">이론</a><a href="theory.html" class="en-only">Theory</a></li>
+          <li><a href="book.html" class="ko-only">점의 반란</a><a href="book.html" class="en-only">The Book</a></li>
+          <li><a href="superintelligence.html" class="ko-only">초지능</a><a href="superintelligence.html" class="en-only">Superintelligence</a></li>
+          <li><a href="validation.html" class="ko-only">검증</a><a href="validation.html" class="en-only">Validation</a></li>
+          <li><a href="applications.html" class="ko-only">응용분야</a><a href="applications.html" class="en-only">Applications</a></li>
+          <li><a href="cancer-treatment.html" class="ko-only">암치료</a><a href="cancer-treatment.html" class="en-only">Cancer AI</a></li>
+          <li><a href="k-science.html" class="ko-only">K-사이언스</a><a href="k-science.html" class="en-only">K-Science</a></li>
+          <li><a href="media.html" class="ko-only">미디어</a><a href="media.html" class="en-only">Media</a></li>
+          <li><a href="about.html" class="ko-only">소개</a><a href="about.html" class="en-only">About</a></li>
+        </ul>
+      </nav>
+      <div class="lang-toggle">
+        <button class="lang-btn" data-lang="ko">한국어</button>
+        <button class="lang-btn" data-lang="en">English</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="ko-only">암 치료를 계산하는 시대<br>OPS 기반 물리 AI 의료 혁명</h1>
+      <h1 class="en-only">The Era of Computed Cancer Treatment<br>OPS-Based Physics AI Medical Revolution</h1>
+      <p class="ko-only">중입자 가속기 치료와 OPS AI 버킹엄 머신의 융합 — 암 치료의 본질은 생물학이 아니라 물리학 문제다</p>
+      <p class="en-only">Fusion of Heavy Ion Therapy and OPS AI-Buckingham Machine — Cancer treatment is fundamentally a physics problem, not biology</p>
+    </div>
+  </section>
+
+  <!-- Section 1: 중입자 가속기 치료란 -->
+  <section id="what-is-hit">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">중입자 가속기 치료란 무엇인가</h2>
+        <h2 class="en-only">What is Heavy Ion Therapy?</h2>
+        <p class="ko-only">탄소 이온을 빛에 가까운 속도로 가속하여 암세포를 직접 파괴하는 최첨단 치료</p>
+        <p class="en-only">Cutting-edge treatment that destroys cancer cells by accelerating carbon ions to near-light speed</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3 class="ko-only">핵심 정의</h3>
+        <h3 class="en-only">Core Definition</h3>
+        <p class="ko-only">
+          중입자 가속기 치료는 <strong>탄소 이온(Carbon ion) 같은 무거운 입자를 빛에 가까운 속도로 가속하여 암세포를 직접 파괴</strong>하는 치료입니다.
+          기존 방사선 치료(엑스선, 감마선)와 달리 <strong>"입자"를 쏜다는 것이 핵심</strong>이며,
+          이는 현재 의료계에서 가장 정밀하고 효과적인 암 치료 기술 중 하나로 평가받고 있습니다.
+        </p>
+        <p class="en-only">
+          Heavy ion therapy <strong>destroys cancer cells by accelerating heavy particles like carbon ions to near-light speed</strong>.
+          Unlike conventional radiation therapy (X-rays, gamma rays), the key is <strong>shooting "particles"</strong>,
+          making it one of the most precise and effective cancer treatment technologies available today.
+        </p>
+      </div>
+
+      <!-- Equipment & Facility Images -->
+      <div class="cancer-image-gallery">
+        <div class="cancer-image-card">
+          <img src="../images/cancer-synchrotron.png" alt="Synchrotron accelerator equipment" loading="lazy">
+          <div class="image-caption ko-only">싱크로트론 가속기 — 탄소 이온을 빛의 70% 속도로 가속</div>
+          <div class="image-caption en-only">Synchrotron Accelerator — Accelerates carbon ions to 70% light speed</div>
+        </div>
+        <div class="cancer-image-card">
+          <img src="../images/cancer-gantry-room.png" alt="Gantry treatment room with robotic patient positioning system" loading="lazy">
+          <div class="image-caption ko-only">갠트리 치료실 — 360도 회전 조사 및 로봇 환자 위치 시스템</div>
+          <div class="image-caption en-only">Gantry Treatment Room — 360° rotational irradiation & robotic patient positioning</div>
+        </div>
+        <div class="cancer-image-card">
+          <img src="../images/cancer-compact-gantry.png" alt="Compact superconducting gantry system" loading="lazy">
+          <div class="image-caption ko-only">소형 초전도 갠트리 시스템 — 차세대 컴팩트 설계</div>
+          <div class="image-caption en-only">Compact Superconducting Gantry — Next-gen compact design</div>
+        </div>
+      </div>
+
+      <div class="cancer-image-full">
+        <img src="../images/cancer-facility-overview.png" alt="Heavy ion therapy facility overview" loading="lazy">
+        <div class="image-caption ko-only">중입자 치료 시설 전체 구성도 — 이온 생성부터 환자 치료실까지의 빔라인</div>
+        <div class="image-caption en-only">Heavy Ion Therapy Facility Overview — Complete beamline from ion source to treatment rooms</div>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <h3 class="ko-only">장비 구조 4단계</h3>
+          <h3 class="en-only">4-Stage Equipment Structure</h3>
+          <ul class="ko-only">
+            <li><strong>이온 생성</strong> — 탄소 원자에서 이온 추출</li>
+            <li><strong>가속기 (싱크로트론)</strong> — 빛의 70% 속도로 가속</li>
+            <li><strong>빔 조절 시스템</strong> — 에너지·방향 정밀 제어</li>
+            <li><strong>환자 조사 장치 (Gantry)</strong> — 다각도 정밀 조사</li>
+          </ul>
+          <ul class="en-only">
+            <li><strong>Ion Generation</strong> — Extract ions from carbon atoms</li>
+            <li><strong>Accelerator (Synchrotron)</strong> — Accelerate to 70% light speed</li>
+            <li><strong>Beam Control System</strong> — Precise energy & direction control</li>
+            <li><strong>Patient Irradiation (Gantry)</strong> — Multi-angle precision irradiation</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 class="ko-only">대표 치료 대상</h3>
+          <h3 class="en-only">Key Treatment Targets</h3>
+          <ul class="ko-only">
+            <li>췌장암 — 기존 치료 난이도 최상</li>
+            <li>간암 — 깊은 위치의 정밀 치료</li>
+            <li>폐암 — 정상 조직 보존</li>
+            <li>전립선암 — 부작용 최소화</li>
+            <li>방사선 저항성 암 — 기존 치료 실패 케이스</li>
+            <li>재발암 — 재치료 가능</li>
+          </ul>
+          <ul class="en-only">
+            <li>Pancreatic Cancer — Most difficult conventional treatment</li>
+            <li>Liver Cancer — Deep-seated precision treatment</li>
+            <li>Lung Cancer — Normal tissue preservation</li>
+            <li>Prostate Cancer — Minimized side effects</li>
+            <li>Radio-resistant Cancer — Failed conventional cases</li>
+            <li>Recurrent Cancer — Re-treatment possible</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 class="ko-only">글로벌 선도 기관</h3>
+          <h3 class="en-only">Global Leading Institutions</h3>
+          <ul class="ko-only">
+            <li><strong>일본</strong> — NIRS, QST Hospital (세계 선도)</li>
+            <li><strong>독일</strong> — Heidelberg Ion-Beam Therapy Center</li>
+            <li><strong>한국</strong> — 연세의료원 (국내 최초 도입)</li>
+          </ul>
+          <ul class="en-only">
+            <li><strong>Japan</strong> — NIRS, QST Hospital (World leader)</li>
+            <li><strong>Germany</strong> — Heidelberg Ion-Beam Therapy Center</li>
+            <li><strong>Korea</strong> — Yonsei Medical Center (First in Korea)</li>
+          </ul>
+          <div style="margin-top: 1rem; padding: 0.75rem; background: #fff3e0; border-radius: 6px;">
+            <p class="ko-only" style="font-size: 0.9rem; color: #e65100; margin: 0;"><strong>현실:</strong> 장비 구축 비용 3,000~5,000억원, 1회 치료 3,000~5,000만원 — 국가 단위 의료 인프라 수준</p>
+            <p class="en-only" style="font-size: 0.9rem; color: #e65100; margin: 0;"><strong>Reality:</strong> Equipment cost $250-400M, per treatment $25-40K — National-level medical infrastructure</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: 브래그 피크 원리 -->
+  <section id="bragg-peak">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">치료 원리: 브래그 피크 (Bragg Peak)</h2>
+        <h2 class="en-only">Treatment Principle: Bragg Peak</h2>
+        <p class="ko-only">중입자 치료의 핵심 — 특정 깊이에서 에너지가 폭발적으로 집중</p>
+        <p class="en-only">The core of heavy ion therapy — explosive energy concentration at a specific depth</p>
+      </div>
+
+      <!-- Bragg Peak Scientific Images -->
+      <div class="cancer-image-gallery" style="margin-bottom: 2rem;">
+        <div class="cancer-image-card">
+          <img src="../images/cancer-bragg-peak.png" alt="Bragg Peak energy deposition graph - Carbon ion vs Photon vs X-ray" loading="lazy">
+          <div class="image-caption ko-only">브래그 피크 에너지 분포 — 탄소 이온(파랑) vs 광자(빨강) vs X-ray(초록) 비교</div>
+          <div class="image-caption en-only">Bragg Peak Energy Deposition — Carbon ion (blue) vs Photon (red) vs X-ray (green)</div>
+        </div>
+        <div class="cancer-image-card">
+          <img src="../images/cancer-beam-delivery.png" alt="Beam delivery dose distribution visualization" loading="lazy">
+          <div class="image-caption ko-only">빔 전달 선량 분포 — 정밀 에너지 집중 시각화</div>
+          <div class="image-caption en-only">Beam Delivery Dose Distribution — Precision energy concentration visualization</div>
+        </div>
+      </div>
+
+      <div class="bragg-peak-visual">
+        <h3 class="ko-only">에너지 전달 비교: 일반 방사선 vs 중입자</h3>
+        <h3 class="en-only">Energy Delivery Comparison: Conventional Radiation vs Heavy Ion</h3>
+        <div class="bragg-peak-chart">
+          <!-- X-ray: gradually decreasing energy -->
+          <div class="bragg-bar" style="height: 90%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.8));"></div>
+          <div class="bragg-bar" style="height: 85%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.75));"></div>
+          <div class="bragg-bar" style="height: 80%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.7));"></div>
+          <div class="bragg-bar" style="height: 75%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.65));"></div>
+          <div class="bragg-bar" style="height: 70%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.6));"></div>
+          <div class="bragg-bar" style="height: 65%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.55));"></div>
+          <div class="bragg-bar" style="height: 60%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.5));"></div>
+          <div class="bragg-bar" style="height: 55%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.45));"></div>
+          <div class="bragg-bar" style="height: 50%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.4));"></div>
+          <div class="bragg-bar" style="height: 45%; background: linear-gradient(to top, rgba(244,67,54,0.3), rgba(244,67,54,0.35));"></div>
+          <!-- Separator -->
+          <div style="width: 30px;"></div>
+          <!-- Heavy ion: Bragg peak pattern -->
+          <div class="bragg-bar" style="height: 15%; background: linear-gradient(to top, rgba(33,150,243,0.3), rgba(33,150,243,0.4));"></div>
+          <div class="bragg-bar" style="height: 18%; background: linear-gradient(to top, rgba(33,150,243,0.3), rgba(33,150,243,0.45));"></div>
+          <div class="bragg-bar" style="height: 20%; background: linear-gradient(to top, rgba(33,150,243,0.3), rgba(33,150,243,0.5));"></div>
+          <div class="bragg-bar" style="height: 22%; background: linear-gradient(to top, rgba(33,150,243,0.3), rgba(33,150,243,0.55));"></div>
+          <div class="bragg-bar" style="height: 28%; background: linear-gradient(to top, rgba(33,150,243,0.4), rgba(33,150,243,0.6));"></div>
+          <div class="bragg-bar" style="height: 40%; background: linear-gradient(to top, rgba(33,150,243,0.5), rgba(33,150,243,0.7));"></div>
+          <div class="bragg-bar" style="height: 65%; background: linear-gradient(to top, rgba(33,150,243,0.6), rgba(33,150,243,0.85));"></div>
+          <div class="bragg-bar" style="height: 100%; background: linear-gradient(to top, rgba(33,150,243,0.8), #2196f3);"></div>
+          <div class="bragg-bar" style="height: 45%; background: linear-gradient(to top, rgba(33,150,243,0.4), rgba(33,150,243,0.6));"></div>
+          <div class="bragg-bar" style="height: 5%; background: linear-gradient(to top, rgba(33,150,243,0.1), rgba(33,150,243,0.2));"></div>
+        </div>
+        <div class="bragg-label">
+          <span class="ko-only" style="color: #ef5350;">← 일반 방사선 (계속 에너지 방출) →</span>
+          <span class="en-only" style="color: #ef5350;">← X-ray (continuous energy release) →</span>
+          <span style="width: 30px;"></span>
+          <span class="ko-only" style="color: #42a5f5;">← 중입자 (브래그 피크) →</span>
+          <span class="en-only" style="color: #42a5f5;">← Heavy Ion (Bragg Peak) →</span>
+        </div>
+        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 8px;">
+          <p class="ko-only" style="margin: 0; color: rgba(255,255,255,0.9);">
+            일반 방사선은 몸을 통과하면서 <strong style="color: #ef5350;">계속 에너지를 방출</strong>하지만,
+            중입자는 <strong style="color: #42a5f5;">특정 깊이에서 에너지가 폭발</strong>합니다.
+            → 정상 조직 손상 최소화, 종양 부위에만 집중 공격
+          </p>
+          <p class="en-only" style="margin: 0; color: rgba(255,255,255,0.9);">
+            Conventional radiation <strong style="color: #ef5350;">continuously releases energy</strong> as it passes through the body,
+            while heavy ions <strong style="color: #42a5f5;">explode energy at a specific depth</strong>.
+            → Minimized normal tissue damage, concentrated attack on tumor only
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: 기존 치료와 비교 -->
+  <section id="comparison">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">기존 치료 vs 중입자 치료</h2>
+        <h2 class="en-only">Conventional Treatment vs Heavy Ion Therapy</h2>
+        <p class="ko-only">물리적 + 생물학적 파괴력이 모두 강한 유일한 치료</p>
+        <p class="en-only">The only treatment with superior physical AND biological destructive power</p>
+      </div>
+
+      <div class="cancer-image-full" style="margin-bottom: 2rem;">
+        <img src="../images/cancer-proton-comparison.png" alt="Proton beam vs other radiation comparison and system architecture" loading="lazy">
+        <div class="image-caption ko-only">양성자 빔 vs 기존 방사선 비교 및 치료 시스템 구성</div>
+        <div class="image-caption en-only">Proton Beam vs Conventional Radiation Comparison & Treatment System Architecture</div>
+      </div>
+
+      <table class="comparison-table ko-only">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>기존 방사선</th>
+            <th>양성자 치료</th>
+            <th>중입자 치료</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>입자 종류</td>
+            <td>X-ray</td>
+            <td>양성자 (Proton)</td>
+            <td class="highlight-cell">탄소 이온 (Carbon)</td>
+          </tr>
+          <tr>
+            <td>에너지 집중도</td>
+            <td>낮음</td>
+            <td>중간</td>
+            <td class="highlight-cell">매우 높음</td>
+          </tr>
+          <tr>
+            <td>정밀도</td>
+            <td>낮음</td>
+            <td>높음</td>
+            <td class="highlight-cell">최고</td>
+          </tr>
+          <tr>
+            <td>DNA 파괴력</td>
+            <td>약함 (간접 손상)</td>
+            <td>중간</td>
+            <td class="highlight-cell">매우 강함 (직접 파괴)</td>
+          </tr>
+          <tr>
+            <td>정상조직 손상</td>
+            <td>많음</td>
+            <td>적음</td>
+            <td class="highlight-cell">최소</td>
+          </tr>
+          <tr>
+            <td>난치암 효과</td>
+            <td>제한적</td>
+            <td>제한적</td>
+            <td class="highlight-cell">높음</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="comparison-table en-only">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Conventional Radiation</th>
+            <th>Proton Therapy</th>
+            <th>Heavy Ion Therapy</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Particle Type</td>
+            <td>X-ray</td>
+            <td>Proton</td>
+            <td class="highlight-cell">Carbon Ion</td>
+          </tr>
+          <tr>
+            <td>Energy Concentration</td>
+            <td>Low</td>
+            <td>Medium</td>
+            <td class="highlight-cell">Very High</td>
+          </tr>
+          <tr>
+            <td>Precision</td>
+            <td>Low</td>
+            <td>High</td>
+            <td class="highlight-cell">Highest</td>
+          </tr>
+          <tr>
+            <td>DNA Destruction</td>
+            <td>Weak (Indirect)</td>
+            <td>Medium</td>
+            <td class="highlight-cell">Very Strong (Direct)</td>
+          </tr>
+          <tr>
+            <td>Normal Tissue Damage</td>
+            <td>High</td>
+            <td>Low</td>
+            <td class="highlight-cell">Minimal</td>
+          </tr>
+          <tr>
+            <td>Intractable Cancer</td>
+            <td>Limited</td>
+            <td>Limited</td>
+            <td class="highlight-cell">Effective</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Section 4: OPS AI 버킹엄 머신과의 연결 -->
+  <section id="ops-connection">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">왜 OPS AI 버킹엄 머신인가</h2>
+        <h2 class="en-only">Why OPS AI-Buckingham Machine?</h2>
+        <p class="ko-only">암 치료의 본질은 생물학이 아니라 에너지 전달 — 즉, 물리학 문제다</p>
+        <p class="en-only">Cancer treatment is fundamentally about energy delivery — a physics problem</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 2rem; border-left: 4px solid #1a237e; padding: 2rem;">
+        <h3 class="ko-only" style="color: #1a237e;">핵심 인사이트</h3>
+        <h3 class="en-only" style="color: #1a237e;">Core Insight</h3>
+        <p class="ko-only" style="font-size: 1.1rem; line-height: 1.8;">
+          기존 AI 바이오 접근(AlphaFold 등)은 단백질 기반으로 <strong>너무 복잡</strong>합니다.
+          양동봉 원장의 통찰 — <strong>"그 아래로 내려가야 한다"</strong> — 원자 수준 이하, 플랑크 이하, 최소 에너지 양자 수준에서
+          암의 본질이 결정됩니다. 중입자 치료는 바로 이 물리적 계산의 영역이며,
+          <strong>OPS AI 버킹엄 머신은 이 계산을 가능하게 하는 유일한 엔진</strong>입니다.
+        </p>
+        <p class="en-only" style="font-size: 1.1rem; line-height: 1.8;">
+          Existing AI bio approaches (AlphaFold, etc.) are <strong>too complex</strong> with protein-based modeling.
+          Dr. Yang's insight — <strong>"We need to go deeper"</strong> — at sub-atomic, sub-Planck, minimum energy quantum levels,
+          the essence of cancer is determined. Heavy ion therapy operates in this realm of physical calculation,
+          and <strong>the OPS AI-Buckingham Machine is the only engine that makes this computation possible</strong>.
+        </p>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <h3 class="ko-only">기존 AI 접근 (데이터 기반)</h3>
+          <h3 class="en-only">Conventional AI (Data-Based)</h3>
+          <ul class="ko-only">
+            <li>패턴 학습 → 통계 기반 예측</li>
+            <li>블랙박스 문제 (설명 불가)</li>
+            <li>실험 데이터 의존</li>
+            <li>단백질 복잡성의 한계</li>
+          </ul>
+          <ul class="en-only">
+            <li>Pattern learning → Statistical prediction</li>
+            <li>Black box problem (unexplainable)</li>
+            <li>Dependent on experimental data</li>
+            <li>Protein complexity limitations</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border: 2px solid #1a237e;">
+          <h3 class="ko-only" style="color: #1a237e;">OPS AI (물리 기반)</h3>
+          <h3 class="en-only" style="color: #1a237e;">OPS AI (Physics-Based)</h3>
+          <ul class="ko-only">
+            <li><strong>물리 법칙 기반 계산</strong></li>
+            <li><strong>인과 관계 이해 (화이트박스)</strong></li>
+            <li><strong>실험 없이 결과 도출</strong></li>
+            <li><strong>차원 분석으로 단순화</strong></li>
+          </ul>
+          <ul class="en-only">
+            <li><strong>Physics law-based calculation</strong></li>
+            <li><strong>Causal understanding (white box)</strong></li>
+            <li><strong>Results without experiments</strong></li>
+            <li><strong>Simplification through dimensional analysis</strong></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 class="ko-only">중입자 치료 적용</h3>
+          <h3 class="en-only">Heavy Ion Treatment Application</h3>
+          <ul class="ko-only">
+            <li>입자 경로 → 단일 함수화 (OPS)</li>
+            <li>에너지 전달 → 최적화 계산</li>
+            <li>치료 경로 → 자동 계산</li>
+            <li>핵종 변화 → 시뮬레이션</li>
+          </ul>
+          <ul class="en-only">
+            <li>Particle trajectory → Single function (OPS)</li>
+            <li>Energy delivery → Optimization calculation</li>
+            <li>Treatment path → Auto-computation</li>
+            <li>Nuclear transmutation → Simulation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: AI 버킹엄 머신 3대 기능 -->
+  <section id="ai-functions">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">AI 버킹엄 머신의 의료 적용 3대 기능</h2>
+        <h2 class="en-only">3 Core Medical Functions of AI-Buckingham Machine</h2>
+        <p class="ko-only">검증 → 생성 → 예측 — 9억 개 이상의 물리 공식 기반 계산 구조</p>
+        <p class="en-only">Verification → Generation → Prediction — Calculation engine based on 900M+ physics formulas</p>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <h3 class="ko-only">검증 (Verification)</h3>
+          <h3 class="en-only">Verification</h3>
+          <p class="ko-only">
+            기존 물리 법칙의 정합성을 AI가 자동 검증합니다.
+            치료 프로토콜의 물리적 타당성을 수학적으로 확인하여
+            <strong>오류 없는 치료 계획</strong>을 보장합니다.
+          </p>
+          <p class="en-only">
+            AI automatically verifies the consistency of existing physical laws.
+            Mathematically confirms physical validity of treatment protocols,
+            ensuring <strong>error-free treatment planning</strong>.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="ko-only">생성 (Generation)</h3>
+          <h3 class="en-only">Generation</h3>
+          <p class="ko-only">
+            차원 분석을 통해 새로운 물리 법칙을 자동 생성합니다.
+            환자 개인의 조직 특성에 맞는 <strong>맞춤형 에너지 전달 공식</strong>을
+            실시간으로 도출합니다.
+          </p>
+          <p class="en-only">
+            Automatically generates new physical laws through dimensional analysis.
+            Derives <strong>customized energy delivery formulas</strong> tailored to
+            each patient's tissue characteristics in real-time.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="ko-only">예측 (Prediction)</h3>
+          <h3 class="en-only">Prediction</h3>
+          <p class="ko-only">
+            실험 없이 치료 결과를 계산합니다.
+            디지털 트윈 기반으로 환자 몸을 시뮬레이션하여
+            <strong>치료 전 최적 결과를 예측</strong>합니다.
+          </p>
+          <p class="en-only">
+            Calculates treatment outcomes without experiments.
+            Simulates patient body via digital twin to
+            <strong>predict optimal results before treatment</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: 점의 반란과 연결 -->
+  <section id="rebellion-of-point">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">점의 반란 — 암 치료의 새로운 세계관</h2>
+        <h2 class="en-only">Rebellion of the Point — A New Worldview for Cancer Treatment</h2>
+        <p class="ko-only">심재우 대표 · 양동봉 원장 공저 『점의 반란』의 철학이 의료에 적용되다</p>
+        <p class="en-only">The philosophy of "Rebellion of the Point" by CEO Shim & Dr. Yang applied to medicine</p>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <h3 class="ko-only">기존 세계관</h3>
+          <h3 class="en-only">Conventional Worldview</h3>
+          <p class="ko-only" style="font-size: 1.1rem; text-align: center; color: #757575; padding: 1rem 0;">
+            선 → 면 → 구조 → 시스템<br>
+            <strong>위에서 아래로 (Top-down)</strong><br><br>
+            암 치료도 마찬가지:<br>
+            장기 → 세포 → 분자 → ?
+          </p>
+          <p class="en-only" style="font-size: 1.1rem; text-align: center; color: #757575; padding: 1rem 0;">
+            Line → Surface → Structure → System<br>
+            <strong>Top-down approach</strong><br><br>
+            Cancer treatment likewise:<br>
+            Organ → Cell → Molecule → ?
+          </p>
+        </div>
+
+        <div class="card" style="border: 2px solid #1a237e;">
+          <h3 class="ko-only" style="color: #1a237e;">점의 반란 세계관</h3>
+          <h3 class="en-only" style="color: #1a237e;">Rebellion of the Point</h3>
+          <p class="ko-only" style="font-size: 1.1rem; text-align: center; padding: 1rem 0;">
+            점 → 연결 → 패턴 → 질서<br>
+            <strong style="color: #1a237e;">아래에서 위로 (Bottom-up)</strong><br><br>
+            암 치료의 본질:<br>
+            <strong>점(최소 에너지) → 물리 계산 → 치료</strong>
+          </p>
+          <p class="en-only" style="font-size: 1.1rem; text-align: center; padding: 1rem 0;">
+            Point → Connection → Pattern → Order<br>
+            <strong style="color: #1a237e;">Bottom-up approach</strong><br><br>
+            Essence of cancer treatment:<br>
+            <strong>Point(minimum energy) → Physics calculation → Cure</strong>
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 class="ko-only">통합 구조</h3>
+          <h3 class="en-only">Unified Structure</h3>
+          <p class="ko-only" style="line-height: 2;">
+            <strong style="color: #1a237e;">점의 반란</strong> → 존재 정의<br>
+            <strong style="color: #0d47a1;">OPS</strong> → 물리적 통합<br>
+            <strong style="color: #2196f3;">AI 버킹엄 머신</strong> → 계산 엔진<br>
+            <strong style="color: #4caf50;">중입자 치료</strong> → 실행 도구<br><br>
+            <em>"우주의 법칙으로 암을 계산한다"</em>
+          </p>
+          <p class="en-only" style="line-height: 2;">
+            <strong style="color: #1a237e;">Rebellion of Point</strong> → Define existence<br>
+            <strong style="color: #0d47a1;">OPS</strong> → Physical unification<br>
+            <strong style="color: #2196f3;">AI-Buckingham Machine</strong> → Compute engine<br>
+            <strong style="color: #4caf50;">Heavy Ion Therapy</strong> → Execution tool<br><br>
+            <em>"Computing cancer with the laws of the universe"</em>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: AI와 결합될 미래 -->
+  <section id="ai-future">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">AI 융합 미래 — 암 치료의 게임 체인저</h2>
+        <h2 class="en-only">AI Fusion Future — Game Changer in Cancer Treatment</h2>
+        <p class="ko-only">OPS + AI = 의료 물리 최적화 엔진</p>
+        <p class="en-only">OPS + AI = Medical Physics Optimization Engine</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <h3 class="ko-only">AI 치료 계획 최적화</h3>
+          <h3 class="en-only">AI Treatment Plan Optimization</h3>
+          <p class="ko-only">종양 위치 자동 분석 → 최적 빔 경로 계산 → 개인 맞춤 치료. OPS 엔진이 수천 변수를 단일 함수로 압축하여 실시간 최적화 실행</p>
+          <p class="en-only">Auto tumor location analysis → Optimal beam path calculation → Personalized treatment. OPS engine compresses thousands of variables into a single function for real-time optimization</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">🧬</div>
+          <h3 class="ko-only">디지털 트윈 의료</h3>
+          <h3 class="en-only">Digital Twin Medicine</h3>
+          <p class="ko-only">환자 몸을 완벽히 시뮬레이션. 치료 결과를 사전 예측하고 부작용을 최소화하는 가상 치료 환경 구축</p>
+          <p class="en-only">Complete patient body simulation. Build virtual treatment environment that predicts outcomes and minimizes side effects</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <h3 class="ko-only">실시간 적응형 치료</h3>
+          <h3 class="en-only">Real-time Adaptive Treatment</h3>
+          <p class="ko-only">치료 중 종양 위치 변화를 실시간 반영. 호흡, 장기 이동 등을 물리 엔진이 자동 보정하여 정밀도 극대화</p>
+          <p class="en-only">Real-time reflection of tumor position changes during treatment. Physics engine auto-corrects for breathing, organ movement to maximize precision</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: 전체 시스템 설계 -->
+  <section id="system-design">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">OPS 기반 암 치료 AI 시스템 — 5 Layer 아키텍처</h2>
+        <h2 class="en-only">OPS-Based Cancer Treatment AI System — 5 Layer Architecture</h2>
+        <p class="ko-only">"데이터 → 구조 → 물리 계산 → 최적화 → 실행"</p>
+        <p class="en-only">"Data → Structure → Physics Calculation → Optimization → Execution"</p>
+      </div>
+
+      <div class="pipeline-flow">
+        <div class="pipeline-step">
+          <div class="step-number">1</div>
+          <h4 class="ko-only">Data Layer</h4>
+          <h4 class="en-only">Data Layer</h4>
+          <p class="ko-only">CT/MRI 영상, 환자 조직 데이터, 종양 위치/크기, 치료 이력</p>
+          <p class="en-only">CT/MRI images, patient tissue data, tumor location/size, treatment history</p>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-number">2</div>
+          <h4 class="ko-only">Ontology Layer</h4>
+          <h4 class="en-only">Ontology Layer</h4>
+          <p class="ko-only">종양 타입 분류, 조직 특성 구조화, 물리 변수 매핑</p>
+          <p class="en-only">Tumor type classification, tissue characterization, physics variable mapping</p>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step" style="border: 2px solid #1a237e;">
+          <div class="step-number">3</div>
+          <h4 class="ko-only">OPS Physics Engine</h4>
+          <h4 class="en-only">OPS Physics Engine</h4>
+          <p class="ko-only">차원분석, 물리 모델 생성, 에너지 전달 계산</p>
+          <p class="en-only">Dimensional analysis, physics model generation, energy transfer calculation</p>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-number">4</div>
+          <h4 class="ko-only">AI Optimization</h4>
+          <h4 class="en-only">AI Optimization</h4>
+          <p class="ko-only">최적 빔 경로, 최소 손상 탐색, 치료 시뮬레이션</p>
+          <p class="en-only">Optimal beam path, minimum damage search, treatment simulation</p>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-number">5</div>
+          <h4 class="ko-only">Execution Layer</h4>
+          <h4 class="en-only">Execution Layer</h4>
+          <p class="ko-only">중입자 치료기 연동, 치료 계획 출력, 실시간 제어</p>
+          <p class="en-only">Heavy ion therapy integration, treatment plan output, real-time control</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 9: Cancer Physics AI Cloud SaaS -->
+  <section id="saas-model">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">Cancer Physics AI Cloud — SaaS 구조</h2>
+        <h2 class="en-only">Cancer Physics AI Cloud — SaaS Structure</h2>
+        <p class="ko-only">물리 기반 암 치료 플랫폼의 비즈니스 모델</p>
+        <p class="en-only">Business model for physics-based cancer treatment platform</p>
+      </div>
+
+      <div class="saas-tier b2b">
+        <h4 class="ko-only">Tier 1 — 병원용 SaaS (B2B)</h4>
+        <h4 class="en-only">Tier 1 — Hospital SaaS (B2B)</h4>
+        <p class="ko-only">대학병원·암센터 대상 — 환자 데이터 업로드 → 자동 치료 계획 생성 → 3D 시뮬레이션 리포트</p>
+        <p class="en-only">For university hospitals & cancer centers — Patient data upload → Auto treatment plan → 3D simulation report</p>
+        <ul class="ko-only">
+          <li>3D 종양 위치 시각화 및 에너지 분포 맵</li>
+          <li>최적 치료 경로 자동 계산</li>
+          <li>치료 결과 예측 리포트</li>
+        </ul>
+        <ul class="en-only">
+          <li>3D tumor location visualization & energy distribution map</li>
+          <li>Optimal treatment path auto-calculation</li>
+          <li>Treatment outcome prediction report</li>
+        </ul>
+      </div>
+
+      <div class="saas-tier api">
+        <h4 class="ko-only">Tier 2 — 물리 엔진 API (B2B2B)</h4>
+        <h4 class="en-only">Tier 2 — Physics Engine API (B2B2B)</h4>
+        <p class="ko-only">의료 장비 회사·연구소 대상 — 에너지 계산, 경로 최적화, 시뮬레이션 API 제공</p>
+        <p class="en-only">For medical equipment companies & research labs — Energy calculation, path optimization, simulation API</p>
+        <ul class="ko-only">
+          <li>에너지 계산 API / 경로 최적화 API</li>
+          <li>시뮬레이션 API / 디지털 트윈 API</li>
+          <li>호출당 과금 모델</li>
+        </ul>
+        <ul class="en-only">
+          <li>Energy calculation API / Path optimization API</li>
+          <li>Simulation API / Digital twin API</li>
+          <li>Pay-per-call pricing model</li>
+        </ul>
+      </div>
+
+      <div class="saas-tier b2c">
+        <h4 class="ko-only">Tier 3 — 환자용 AI 서비스 (B2C)</h4>
+        <h4 class="en-only">Tier 3 — Patient AI Service (B2C)</h4>
+        <p class="ko-only">치료 결과 예측, 생존 확률 분석, 맞춤 치료 추천 — 개인 AI 의료 어시스턴트</p>
+        <p class="en-only">Treatment outcome prediction, survival probability analysis, personalized treatment recommendation — Personal AI Medical Assistant</p>
+        <ul class="ko-only">
+          <li>개인 맞춤 치료 옵션 비교</li>
+          <li>치료 경과 모니터링</li>
+          <li>글로벌 치료 기관 매칭</li>
+        </ul>
+        <ul class="en-only">
+          <li>Personalized treatment option comparison</li>
+          <li>Treatment progress monitoring</li>
+          <li>Global treatment facility matching</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 10: 실행 로드맵 -->
+  <section id="roadmap">
+    <div class="container">
+      <div class="section-title">
+        <h2 class="ko-only">실행 로드맵</h2>
+        <h2 class="en-only">Execution Roadmap</h2>
+        <p class="ko-only">이론 → 시뮬레이션 → 병원 검증 → 글로벌 확장</p>
+        <p class="en-only">Theory → Simulation → Hospital Validation → Global Expansion</p>
+      </div>
+
+      <div class="roadmap-timeline">
+        <div class="roadmap-item">
+          <div class="roadmap-period ko-only">Phase 1 — 1~3개월</div>
+          <div class="roadmap-period en-only">Phase 1 — Month 1-3</div>
+          <h4 class="ko-only">기반 구축</h4>
+          <h4 class="en-only">Foundation Building</h4>
+          <p class="ko-only">중입자 치료 데이터 수집 · OPS 의료 온톨로지 구조화 · 양동봉 원장 이론 수학화</p>
+          <p class="en-only">Heavy ion therapy data collection · OPS medical ontology structuring · Dr. Yang's theory mathematization</p>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-period ko-only">Phase 2 — 3~6개월</div>
+          <div class="roadmap-period en-only">Phase 2 — Month 3-6</div>
+          <h4 class="ko-only">시뮬레이션 MVP</h4>
+          <h4 class="en-only">Simulation MVP</h4>
+          <p class="ko-only">OPS 물리 엔진 프로토타입 · 에너지 전달 시뮬레이터 · 브래그 피크 계산 모듈</p>
+          <p class="en-only">OPS physics engine prototype · Energy delivery simulator · Bragg peak calculation module</p>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-period ko-only">Phase 3 — 6~12개월</div>
+          <div class="roadmap-period en-only">Phase 3 — Month 6-12</div>
+          <h4 class="ko-only">병원 PoC (Proof of Concept)</h4>
+          <h4 class="en-only">Hospital PoC (Proof of Concept)</h4>
+          <p class="ko-only">연세의료원 등 파일럿 · 실제 치료 데이터 검증 · 임상 피드백 반영</p>
+          <p class="en-only">Pilot with Yonsei Medical Center etc. · Real treatment data validation · Clinical feedback integration</p>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-period ko-only">Phase 4 — 12개월+</div>
+          <div class="roadmap-period en-only">Phase 4 — Month 12+</div>
+          <h4 class="ko-only">Cancer Physics AI Cloud 출시 · 글로벌 확장</h4>
+          <h4 class="en-only">Cancer Physics AI Cloud Launch · Global Expansion</h4>
+          <p class="ko-only">SaaS 플랫폼 출시 · 일본/독일 파트너십 · 글로벌 의료 네트워크 구축</p>
+          <p class="en-only">SaaS platform launch · Japan/Germany partnerships · Global medical network building</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 11: 핵심 요약 + 비전 -->
+  <section id="vision" style="background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #0d47a1 100%); color: white; padding: 4rem 0;">
+    <div class="container text-center">
+      <h2 class="ko-only" style="color: white; font-size: 2rem; margin-bottom: 1.5rem;">암 치료를 경험이 아니라 계산으로 바꾸는 플랫폼</h2>
+      <h2 class="en-only" style="color: white; font-size: 2rem; margin-bottom: 1.5rem;">A Platform That Transforms Cancer Treatment from Experience to Calculation</h2>
+
+      <div class="stats-grid" style="margin: 2.5rem 0;">
+        <div class="stat-card" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+          <div class="stat-icon">⚛️</div>
+          <div class="stat-number" style="color: #64b5f6;">1</div>
+          <div class="stat-label ko-only" style="color: white;">단일 파라미터</div>
+          <div class="stat-label en-only" style="color: white;">One Parameter</div>
+          <div class="stat-description ko-only" style="color: rgba(255,255,255,0.7);">OPS: 모든 물리 현상을 하나의 변수로 통합</div>
+          <div class="stat-description en-only" style="color: rgba(255,255,255,0.7);">OPS: All physics unified in one variable</div>
+        </div>
+
+        <div class="stat-card" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-number" style="color: #64b5f6;">31</div>
+          <div class="stat-label ko-only" style="color: white;">자리 정밀도</div>
+          <div class="stat-label en-only" style="color: white;">Digit Precision</div>
+          <div class="stat-description ko-only" style="color: rgba(255,255,255,0.7);">검증된 계산 정확도로 치료 정밀도 극대화</div>
+          <div class="stat-description en-only" style="color: rgba(255,255,255,0.7);">Maximized treatment precision with verified accuracy</div>
+        </div>
+
+        <div class="stat-card" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+          <div class="stat-icon">🌍</div>
+          <div class="stat-number" style="color: #64b5f6;">∞</div>
+          <div class="stat-label ko-only" style="color: white;">확장 가능성</div>
+          <div class="stat-label en-only" style="color: white;">Scalability</div>
+          <div class="stat-description ko-only" style="color: rgba(255,255,255,0.7);">반도체, 신약, 항공우주, 로봇까지 무한 확장</div>
+          <div class="stat-description en-only" style="color: rgba(255,255,255,0.7);">Infinite expansion: semiconductor, pharma, aerospace, robotics</div>
+        </div>
+      </div>
+
+      <p class="ko-only" style="font-size: 1.2rem; color: rgba(255,255,255,0.9); max-width: 700px; margin: 0 auto 2rem; line-height: 1.8;">
+        데이터 AI가 패턴을 인식할 때,<br>
+        <strong style="color: #64b5f6;">OPS AI는 우주의 문법으로 계산합니다.</strong><br>
+        이것이 암 치료의 미래이며, 계산 문명의 시작입니다.
+      </p>
+      <p class="en-only" style="font-size: 1.2rem; color: rgba(255,255,255,0.9); max-width: 700px; margin: 0 auto 2rem; line-height: 1.8;">
+        While data AI recognizes patterns,<br>
+        <strong style="color: #64b5f6;">OPS AI computes with the grammar of the universe.</strong><br>
+        This is the future of cancer treatment and the dawn of computational civilization.
+      </p>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section id="cta" style="background: linear-gradient(135deg, #030620 0%, #051d42 100%); color: white;">
+    <div class="container text-center">
+      <h2 class="ko-only" style="color: white;">암 치료의 새로운 시대, 함께하시겠습니까?</h2>
+      <h2 class="en-only" style="color: white;">Join the New Era of Cancer Treatment</h2>
+      <div class="cta-buttons mt-2">
+        <a href="theory.html" class="btn btn-primary ko-only">OPS 이론 보기</a>
+        <a href="theory.html" class="btn btn-primary en-only">View OPS Theory</a>
+        <a href="applications.html" class="btn btn-outline ko-only">응용분야 탐색</a>
+        <a href="applications.html" class="btn btn-outline en-only">Explore Applications</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="../index.html" class="ko-only">홈</a>
+        <a href="../index.html" class="en-only">Home</a>
+        <a href="book.html" class="ko-only">점의 반란</a>
+        <a href="book.html" class="en-only">The Book</a>
+        <a href="superintelligence.html" class="ko-only">초지능</a>
+        <a href="superintelligence.html" class="en-only">Superintelligence</a>
+        <a href="validation.html" class="ko-only">검증</a>
+        <a href="validation.html" class="en-only">Validation</a>
+        <a href="applications.html" class="ko-only">응용분야</a>
+        <a href="applications.html" class="en-only">Applications</a>
+        <a href="cancer-treatment.html" class="ko-only">암치료</a>
+        <a href="cancer-treatment.html" class="en-only">Cancer AI</a>
+        <a href="media.html" class="ko-only">미디어</a>
+        <a href="media.html" class="en-only">Media</a>
+      </div>
+
+      <div style="margin-top: 1rem; padding: 1rem 0; border-top: 1px solid rgba(255,255,255,0.2);">
+        <p class="ko-only" style="margin-bottom: 0.5rem;">
+          <strong>문의 하기</strong> ⇒ 양동봉 원장 010-8820-7103 | <a href="mailto:dongbongyang@hanmail.net" style="color: #2196f3; text-decoration: none;">dongbongyang@hanmail.net</a><br>
+          심재우 대표 010-2397-5734 | <a href="mailto:jaiwshim@gmail.com" style="color: #2196f3; text-decoration: none;">jaiwshim@gmail.com</a>
+        </p>
+        <p class="en-only" style="margin-bottom: 0.5rem;">
+          <strong>Contact</strong> ⇒ Dr. Dongbong Yang 010-8820-7103 | <a href="mailto:dongbongyang@hanmail.net" style="color: #2196f3; text-decoration: none;">dongbongyang@hanmail.net</a><br>
+          CEO Jaiwoo Shim 010-2397-5734 | <a href="mailto:jaiwshim@gmail.com" style="color: #2196f3; text-decoration: none;">jaiwshim@gmail.com</a>
+        </p>
+      </div>
+
+      <p class="ko-only">&copy; 2026 OPS & AI-Buckingham Machine. All rights reserved.</p>
+      <p class="en-only">&copy; 2026 OPS & AI-Buckingham Machine. All rights reserved.</p>
+      <p class="ko-only" style="margin-top: 1rem; font-size: 0.875rem; color: #fbbf24; font-weight: bold;">
+        계산 문명의 새로운 시작 | 실험 없이 진리를 계산하다
+      </p>
+      <p class="en-only" style="margin-top: 1rem; font-size: 0.875rem; color: #fbbf24; font-weight: bold;">
+        A New Era of Computational Civilization | Calculating Truth Without Experiments
+      </p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+
+  <!-- Talker SDK Chatbot -->
+  <script src="https://chatbot-sdk.aitalker.co.kr/talker-sdk.umd.js"></script>
+  <script>
+    TalkerSDK.initializeTalkerSDK({ code: "book001", position: "right" });
+  </script>
+</body>
+</html>
