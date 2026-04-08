@@ -529,10 +529,17 @@ async function checkPassword() {
 }
 
 // ========== ADMIN ==========
+const ADMIN_PW = '9633';
+
 function showAdminPanel() {
+  const pw = prompt('관리자 비밀번호를 입력하세요');
+  if (pw !== ADMIN_PW) {
+    if (pw !== null) alert('비밀번호가 틀립니다');
+    return;
+  }
   const panel = document.getElementById('adminPanel');
-  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-  if (panel.style.display === 'block') loadAdminSessionList();
+  panel.style.display = 'block';
+  loadAdminSessionList();
 }
 
 async function handleCreateSession() {
@@ -706,10 +713,10 @@ document.addEventListener('DOMContentLoaded', function() {
   showStep('stepSession');
   loadSessionList();
 
-  // 푸터 관리자 버튼에서 온 경우 자동으로 관리자 패널 열기
+  // 푸터 관리자 버튼에서 온 경우 비밀번호 확인 후 관리자 패널 열기
   if (localStorage.getItem('spin_open_admin') === '1') {
     localStorage.removeItem('spin_open_admin');
-    setTimeout(() => showAdminPanel(), 300);
+    setTimeout(() => showAdminPanel(), 500);
   }
 });
 </script>
