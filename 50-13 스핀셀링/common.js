@@ -464,9 +464,9 @@ function getFooterHTML() {
     <div class="footer-top">
       <div class="footer-brand">
         <div class="footer-logo">
-          <img src="logo-huthwaite.svg" alt="Huthwaite" class="footer-logo-img">
+          <img src="logo-kornferry.svg" alt="Korn Ferry" class="footer-logo-img">
         </div>
-        <p class="footer-desc">Huthwaite 35,000건 영업 연구 기반<br>세계 최고의 B2B 영업 방법론을 AI와 함께 체화하는 실전형 훈련 플랫폼</p>
+        <p class="footer-desc">Korn Ferry(Huthwaite) 35,000건 영업 연구 기반<br>세계 최고의 B2B 영업 방법론을 AI와 함께 체화하는 실전형 훈련 플랫폼</p>
       </div>
       <div class="footer-links">
         <div class="footer-col">
@@ -495,14 +495,14 @@ function getFooterHTML() {
     <div class="footer-divider"></div>
     <div class="footer-bottom">
       <div class="footer-copy">
-        <span>&copy; 2024 Huthwaite SPIN 2.0 & 3.0 Official Program</span>
+        <span>&copy; 2024 Korn Ferry SPIN 2.0 & 3.0 Official Program</span>
         <span class="footer-sep">|</span>
         <span>심재우 대표 &middot; SB Consulting</span>
         <span class="footer-sep">|</span>
         <span>Global Certified SPIN Master Trainer (국제공인 마스터트레이너)</span>
       </div>
       <div class="footer-badges">
-        <span class="footer-badge">Huthwaite Certified</span>
+        <span class="footer-badge">Korn Ferry Certified</span>
         <span class="footer-badge accent">AI-Enhanced</span>
         <a href="index.html#admin" onclick="localStorage.setItem('spin_open_admin','1')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.4); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">🔧 관리자</a>
       </div>

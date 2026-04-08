@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 50" fill="none">
+  <!-- KF icon mark -->
+  <g transform="translate(2, 5)">
+    <!-- Bracket shape -->
+    <path d="M0 0 L12 0 L12 4 L4 4 L4 18 L12 18 L6 22 L0 18 Z" fill="#ffffff" opacity="0.9"/>
+    <path d="M16 0 L28 0 L28 18 L22 22 L16 18 L24 18 L24 4 L16 4 Z" fill="#ffffff" opacity="0.9"/>
+    <!-- Vertical line -->
+    <rect x="12" y="0" width="4" height="40" fill="#ffffff" opacity="0.7"/>
+    <!-- Lower bracket -->
+    <path d="M0 24 L0 40 L12 40 L12 36 L4 36 L4 24 Z" fill="#ffffff" opacity="0.9"/>
+    <path d="M16 24 L24 24 L24 36 L16 36 L16 40 L28 40 L28 24 Z" fill="#ffffff" opacity="0.9"/>
+  </g>
+  <!-- KORN FERRY text -->
+  <text x="42" y="22" font-family="'Inter','Helvetica Neue','Arial',sans-serif" font-size="18" font-weight="300" fill="#ffffff" letter-spacing="4">KORN</text>
+  <text x="42" y="42" font-family="'Inter','Helvetica Neue','Arial',sans-serif" font-size="18" font-weight="300" fill="#ffffff" letter-spacing="4">FERRY</text>
+</svg>
