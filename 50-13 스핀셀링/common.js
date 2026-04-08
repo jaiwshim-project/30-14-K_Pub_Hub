@@ -372,7 +372,7 @@ const FLOW_ORDER = [
   { page: 'team-setup.html', label: '팀 편성', icon: '👥' },
   { page: 'quiz.html', label: '개념 퀴즈', icon: '📝' },
   { page: 'needs.html', label: '니즈 구분', icon: '🎯' },
-  { page: 'scenario.html', label: '시나리오 분석', icon: '🔍' },
+  { page: 'scenario.html', label: 'SPIN 질문구분', icon: '🔍' },
   { page: 'practice.html', label: '질문 연습', icon: '💬' },
   { page: 'roleplay.html', label: 'AI 롤플레이', icon: '🎭' },
   { page: 'fab.html', label: 'FAB/BAF', icon: '🧩' },
@@ -429,7 +429,7 @@ function getNavHTML(activePage) {
     { page: 'team-setup.html', section: 'team-setup', icon: '👥', label: '팀 편성' },
     { page: 'quiz.html', section: 'quiz', icon: '📝', label: '퀴즈' },
     { page: 'needs.html', section: 'needs', icon: '🎯', label: '니즈 구분' },
-    { page: 'scenario.html', section: 'scenario', icon: '🔍', label: '시나리오 분석' },
+    { page: 'scenario.html', section: 'scenario', icon: '🔍', label: 'SPIN 질문구분' },
     { page: 'practice.html', section: 'practice', icon: '💬', label: '질문 연습' },
     { page: 'roleplay.html', section: 'roleplay', icon: '🎭', label: '롤플레이' },
     { page: 'fab.html', section: 'fab', icon: '🧩', label: 'FAB/BAF' },
@@ -469,7 +469,7 @@ function getFooterHTML() {
           <h4>교육 프로그램</h4>
           <a href="quiz.html">개념 퀴즈</a>
           <a href="needs.html">IN/EN 구분 실습</a>
-          <a href="scenario.html">시나리오 분석</a>
+          <a href="scenario.html">SPIN 질문구분</a>
           <a href="practice.html">질문 연습</a>
         </div>
         <div class="footer-col">
