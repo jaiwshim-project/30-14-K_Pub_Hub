@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling 2.0 - SPIN질문&니즈 구분</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-huthwaite.svg" alt="Huthwaite" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling 2.0</div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="spin-needs"></div>
+
+<div class="main">
+<div class="section">
+  <div class="card">
+    <div class="card-title"><span class="icon">🔎</span> SPIN질문 & 니즈 구분</div>
+    <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 13px;">
+      비브라디페랑스 시나리오의 영업 대화를 읽고, 각 질문의 SPIN 유형(S/P/I/N)을 분류하세요.<br>
+      또한 고객 응답에서 잠재니즈(IN)와 현재니즈(EN)를 구분하세요.
+    </p>
+
+    <div id="snContent"></div>
+    <div style="margin-top: 16px; display: flex; gap: 8px;">
+      <button class="btn btn-primary" onclick="checkAnswers()">정답 확인</button>
+      <button class="btn btn-secondary" onclick="resetAll()">다시 하기</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="flowNavPlaceholder"></div>
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+// ========== 비브라디페랑스 시나리오 데이터 ==========
+const scenarioLines = [
+  { num: 1, speaker: "판매", text: "현재 3개 지점에서 비브라디페랑스를 운영하고 계신다고 들었습니다. 맞습니까?", type: "S" },
+  { num: 3, speaker: "판매", text: "3개 지점 모두 숙박 예약이 있는 겁니까?", type: "S" },
+  { num: 5, speaker: "판매", text: "투숙객들의 오락/여가 활동에 어떤 어려움이 있습니까?", type: "P" },
+  { num: 7, speaker: "판매", text: "현재 어떤 TV 서비스를 제공하고 계십니까?", type: "S" },
+  { num: 9, speaker: "판매", text: "투숙객들이 TV 채널에 대해 불만을 표시하는 경우가 있습니까?", type: "P" },
+  { num: 11, speaker: "판매", text: "그런 불만족이 재방문율에 영향을 미치지 않겠습니까?", type: "I" },
+  { num: 15, speaker: "판매", text: "만약 다양한 채널을 합리적인 비용에 제공할 수 있다면 도움이 되겠습니까?", type: "N" },
+  { num: 17, speaker: "판매", text: "현재 TV 관련 유지비용은 어느 정도입니까?", type: "S" },
+  { num: 19, speaker: "판매", text: "그 비용이 부담스럽지 않으십니까?", type: "P" },
+  { num: 21, speaker: "판매", text: "유지비용 증가가 전체 운영비에 미치는 영향은 어떻습니까?", type: "I" },
+  { num: 25, speaker: "판매", text: "투숙객 만족도를 높이면서 비용도 절감할 수 있다면 관심이 있으시겠습니까?", type: "N" },
+  { num: 27, speaker: "판매", text: "경쟁 숙소들은 어떤 서비스를 제공하고 있습니까?", type: "S" },
+  { num: 29, speaker: "판매", text: "경쟁사 대비 서비스 차별화가 어렵다면, 고객 유치에 문제가 되지 않겠습니까?", type: "I" },
+  { num: 31, speaker: "판매", text: "차별화된 엔터테인먼트가 고객 유치에 도움이 된다면, 그 가치가 어느 정도라고 보십니까?", type: "N" }
+];
+
+function renderContent() {
+  const container = document.getElementById('snContent');
+  let html = '<h3 style="margin-bottom:12px;">비브라디페랑스 - 케이블 TV 솔루션 (14문제)</h3>';
+  html += '<div class="scenario-dialogue">';
+
+  scenarioLines.forEach((line, i) => {
+    html += `
+      <div class="dialogue-line" id="snLine${i}">
+        <div class="dialogue-num">${line.num}</div>
+        <span class="dialogue-speaker">${line.speaker}:</span>
+        <div style="flex:1;">
+          <span>${line.text}</span>
+          <div class="spin-classify-btns" data-answer="${line.type}" data-idx="${i}">
+            <button class="spin-btn S" onclick="classify(${i},'S')">S</button>
+            <button class="spin-btn P" onclick="classify(${i},'P')">P</button>
+            <button class="spin-btn I" onclick="classify(${i},'I')">I</button>
+            <button class="spin-btn N" onclick="classify(${i},'N')">N</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function classify(idx, type) {
+  const btns = document.querySelector(`[data-idx="${idx}"]`);
+  btns.querySelectorAll('.spin-btn').forEach(b => b.classList.remove('active'));
+  btns.querySelector(`.spin-btn.${type}`).classList.add('active');
+  btns.dataset.selected = type;
+}
+
+function checkAnswers() {
+  let correct = 0;
+  let total = 0;
+
+  document.querySelectorAll('.spin-classify-btns').forEach(group => {
+    const answer = group.dataset.answer;
+    const selected = group.dataset.selected;
+    total++;
+
+    group.querySelectorAll('.spin-btn').forEach(btn => btn.style.opacity = '0.4');
+
+    if (selected === answer) {
+      correct++;
+      group.querySelector(`.spin-btn.${answer}`).style.opacity = '1';
+      group.querySelector(`.spin-btn.${answer}`).style.boxShadow = '0 0 12px rgba(39,174,96,0.5)';
+    } else {
+      if (selected) {
+        group.querySelector(`.spin-btn.${selected}`).style.opacity = '1';
+        group.querySelector(`.spin-btn.${selected}`).style.background = 'rgba(231,76,60,0.3)';
+      }
+      group.querySelector(`.spin-btn.${answer}`).style.opacity = '1';
+      group.querySelector(`.spin-btn.${answer}`).classList.add('active');
+    }
+  });
+
+  if (correct > 0) addScore(correct * 5, 'scenario');
+  addActivity(`SPIN질문&니즈 구분: ${correct}/${total}`);
+  alert(`${total}문제 중 ${correct}문제 정답! (+${correct * 5}점)`);
+}
+
+function resetAll() {
+  renderContent();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => renderContent(), 100);
+});
+</script>
+</body>
+</html>

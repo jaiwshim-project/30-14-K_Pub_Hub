@@ -1,25 +1,6 @@
 // ========== SCENARIO DATA ==========
 const scenarios = [
   {
-    title: "비브라디페랑스 - 케이블 TV 솔루션",
-    lines: [
-      { num: 1, speaker: "판매", text: "현재 3개 지점에서 비브라디페랑스를 운영하고 계신다고 들었습니다. 맞습니까?", type: "S" },
-      { num: 3, speaker: "판매", text: "3개 지점 모두 숙박 예약이 있는 겁니까?", type: "S" },
-      { num: 5, speaker: "판매", text: "투숙객들의 오락/여가 활동에 어떤 어려움이 있습니까?", type: "P" },
-      { num: 7, speaker: "판매", text: "현재 어떤 TV 서비스를 제공하고 계십니까?", type: "S" },
-      { num: 9, speaker: "판매", text: "투숙객들이 TV 채널에 대해 불만을 표시하는 경우가 있습니까?", type: "P" },
-      { num: 11, speaker: "판매", text: "그런 불만족이 재방문율에 영향을 미치지 않겠습니까?", type: "I" },
-      { num: 15, speaker: "판매", text: "만약 다양한 채널을 합리적인 비용에 제공할 수 있다면 도움이 되겠습니까?", type: "N" },
-      { num: 17, speaker: "판매", text: "현재 TV 관련 유지비용은 어느 정도입니까?", type: "S" },
-      { num: 19, speaker: "판매", text: "그 비용이 부담스럽지 않으십니까?", type: "P" },
-      { num: 21, speaker: "판매", text: "유지비용 증가가 전체 운영비에 미치는 영향은 어떻습니까?", type: "I" },
-      { num: 25, speaker: "판매", text: "투숙객 만족도를 높이면서 비용도 절감할 수 있다면 관심이 있으시겠습니까?", type: "N" },
-      { num: 27, speaker: "판매", text: "경쟁 숙소들은 어떤 서비스를 제공하고 있습니까?", type: "S" },
-      { num: 29, speaker: "판매", text: "경쟁사 대비 서비스 차별화가 어렵다면, 고객 유치에 문제가 되지 않겠습니까?", type: "I" },
-      { num: 31, speaker: "판매", text: "차별화된 엔터테인먼트가 고객 유치에 도움이 된다면, 그 가치가 어느 정도라고 보십니까?", type: "N" }
-    ]
-  },
-  {
     title: "Riprock Rooftops - 태양광 패널",
     lines: [
       { num: 1, speaker: "판매", text: "현재 건물의 지붕 상태는 어떻습니까?", type: "S" },

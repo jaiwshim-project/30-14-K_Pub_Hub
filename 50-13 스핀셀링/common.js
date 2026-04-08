@@ -374,6 +374,7 @@ const FLOW_ORDER = [
   { page: 'needs.html', label: '니즈 구분', icon: '🎯' },
   { page: 'scenario.html', label: 'SPIN 질문구분', icon: '🔍' },
   { page: 'practice.html', label: '질문 연습', icon: '💬' },
+  { page: 'spin-needs.html', label: 'SPIN질문&니즈', icon: '🔎' },
   { page: 'roleplay.html', label: 'AI 롤플레이', icon: '🎭' },
   { page: 'fab.html', label: 'FAB/BAF', icon: '🧩' },
   { page: 'scoreboard.html', label: '최종 결과', icon: '🏆' }
@@ -431,6 +432,7 @@ function getNavHTML(activePage) {
     { page: 'needs.html', section: 'needs', icon: '🎯', label: '니즈 구분' },
     { page: 'scenario.html', section: 'scenario', icon: '🔍', label: 'SPIN 질문구분' },
     { page: 'practice.html', section: 'practice', icon: '💬', label: '질문 연습' },
+    { page: 'spin-needs.html', section: 'spin-needs', icon: '🔎', label: 'SPIN질문&니즈' },
     { page: 'roleplay.html', section: 'roleplay', icon: '🎭', label: '롤플레이' },
     { page: 'fab.html', section: 'fab', icon: '🧩', label: 'FAB/BAF' },
     { page: 'scoreboard.html', section: 'scoreboard', icon: '🏆', label: '스코어보드' },
