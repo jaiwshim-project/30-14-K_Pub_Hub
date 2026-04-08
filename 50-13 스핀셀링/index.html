@@ -671,19 +671,13 @@ function goToDashboard() {
 
 // ========== INIT ==========
 document.addEventListener('DOMContentLoaded', function() {
-  const session = getSavedSession();
-  const role = getSavedRole();
-  const user = getSavedUser();
-
-  if (session && (role === 'trainer' || role === 'trainee') && user) {
-    updateHeaderUser(user);
-    goToDashboard();
-  } else if (session && !role) {
-    goToIdentityStep();
-  } else {
-    showStep('stepSession');
-    loadSessionList();
-  }
+  // index.html 접속 시 항상 랜딩(세션 선택)부터 시작
+  clearSessionId();
+  clearUser();
+  clearRole();
+  updateHeaderUser(null);
+  showStep('stepSession');
+  loadSessionList();
 });
 </script>
 </body>
