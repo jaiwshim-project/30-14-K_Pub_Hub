@@ -121,8 +121,9 @@ function getMemberCode(memberId) {
 }
 
 // ========== ROLE MANAGEMENT ==========
+// roles: 'admin', 'trainer', 'trainee'
 function getSavedRole() {
-  return localStorage.getItem('spin_role') || null; // 'trainer' or 'trainee'
+  return localStorage.getItem('spin_role') || null;
 }
 
 function saveRole(role) {
@@ -135,6 +136,10 @@ function clearRole() {
 
 function isTrainer() {
   return getSavedRole() === 'trainer';
+}
+
+function isAdmin() {
+  return getSavedRole() === 'admin';
 }
 
 // ========== USER IDENTITY ==========
@@ -210,32 +215,44 @@ function getUserBarHTML() {
   const role = getSavedRole();
   const user = getSavedUser();
 
-  if (role === 'trainer') {
+  if (role === 'admin') {
+    return `
+<div id="userIdentityBar" style="display:none; background:linear-gradient(135deg, #0f172a, #1e293b); border-bottom:1px solid rgba(255,255,255,0.1); padding:8px 24px;">
+  <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span style="background:#e74c3c; color:white; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px;">ADMIN</span>
+      <span style="color:rgba(255,255,255,0.7); font-size:13px; font-weight:600;">시스템 관리자</span>
+    </div>
+    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.5); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">로그아웃</button>
+  </div>
+</div>`;
+  }
+
+  if (role === 'trainer' && user) {
     return `
 <div id="userIdentityBar" style="display:none; background:linear-gradient(135deg, #1a1a2e, #16213e); border-bottom:1px solid rgba(255,255,255,0.1); padding:8px 24px;">
   <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
     <div style="display:flex; align-items:center; gap:10px;">
       <span style="background:var(--gold); color:#1a1a2e; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px;">TRAINER</span>
-      <span style="color:rgba(255,255,255,0.7); font-size:13px; font-weight:600;">강사 모드 — 모든 기능 접근 가능</span>
+      <span style="color:rgba(255,255,255,0.9); font-size:14px; font-weight:700;">${user.name}</span>
     </div>
-    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.5); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">역할 변경</button>
+    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.5); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">변경</button>
   </div>
 </div>`;
   }
 
-  if (user) {
+  if (role === 'trainee' && user) {
     return `
 <div id="userIdentityBar" style="display:none; background:var(--card); border-bottom:1px solid var(--border); padding:10px 24px;">
   <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:12px;">
-    <span style="font-size:13px; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:6px;">
-      <span>팀 ${user.team_id} | ${user.name}</span>
-    </span>
+    <span style="background:rgba(192,57,43,0.08); color:var(--accent); padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700;">팀 ${user.team_id}</span>
+    <span style="font-size:14px; font-weight:700; color:var(--text);">${user.name}</span>
     <button onclick="changeUser()" style="background:none; border:1px solid var(--border); border-radius:6px; padding:3px 10px; font-size:11px; cursor:pointer; color:var(--text-muted); font-family:inherit;">변경</button>
   </div>
 </div>`;
   }
 
-  // 미로그인 상태: 홈으로 이동 유도
+  // 미로그인 상태
   return `
 <div id="userIdentityBar" style="display:none; background:rgba(192,57,43,0.04); border-bottom:1px solid var(--border); padding:10px 24px;">
   <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:12px;">
@@ -256,13 +273,23 @@ function changeUser() {
 
 function updateHeaderUser(user) {
   const headerTeam = document.getElementById('headerTeam');
-  if (headerTeam) {
-    if (user) {
-      headerTeam.textContent = `팀 ${user.team_id} | ${user.name}`;
-      headerTeam.style.display = 'block';
-    } else {
-      headerTeam.style.display = 'none';
-    }
+  if (!headerTeam) return;
+
+  const role = getSavedRole();
+  if (!user && !role) {
+    headerTeam.style.display = 'none';
+    return;
+  }
+
+  headerTeam.style.display = 'block';
+  if (role === 'admin') {
+    headerTeam.textContent = '관리자';
+  } else if (role === 'trainer' && user) {
+    headerTeam.textContent = `강사 | ${user.name}`;
+  } else if (role === 'trainee' && user) {
+    headerTeam.textContent = `팀 ${user.team_id} | ${user.name}`;
+  } else {
+    headerTeam.style.display = 'none';
   }
 }
 
@@ -271,10 +298,8 @@ function restoreUser() {
   const role = getSavedRole();
   if (user) {
     state.user = user;
-    updateHeaderUser(user);
-  } else if (role === 'trainer') {
-    updateHeaderUser({ team_id: '', name: '강사' });
   }
+  updateHeaderUser(user);
 }
 
 // ========== SCORE MANAGEMENT ==========
@@ -368,7 +393,8 @@ function checkAutoLogin() {}
 // ========== COMMON HTML GENERATORS ==========
 function getNavHTML(activePage) {
   const role = getSavedRole();
-  const trainerOnly = ['team-setup', 'scoreboard', 'coaching'];
+  const adminOnly = ['team-setup'];
+  const adminTrainer = ['scoreboard', 'coaching'];
 
   const items = [
     { page: 'index.html', section: 'home', icon: '🏠', label: '홈' },
@@ -383,7 +409,14 @@ function getNavHTML(activePage) {
     { page: 'coaching.html', section: 'coaching', icon: '📊', label: '코칭 리포트' }
   ];
 
-  const filtered = role === 'trainer' ? items : items.filter(i => !trainerOnly.includes(i.section));
+  let filtered;
+  if (role === 'admin') {
+    filtered = items;
+  } else if (role === 'trainer') {
+    filtered = items.filter(i => !adminOnly.includes(i.section));
+  } else {
+    filtered = items.filter(i => !adminOnly.includes(i.section) && !adminTrainer.includes(i.section));
+  }
 
   return '<div class="nav" id="mainNav">' +
     filtered.map(item =>

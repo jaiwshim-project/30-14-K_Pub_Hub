@@ -10,73 +10,92 @@
 .step-screen { display: none; }
 .step-screen.active { display: block; }
 
-/* ========== ROLE SELECTION ========== */
-.role-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.role-card {
+/* ========== SESSION CARDS ========== */
+.session-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
   background: var(--card);
   border: 2px solid var(--border);
-  border-radius: 18px;
-  padding: 40px 28px;
-  text-align: center;
+  border-radius: 14px;
+  margin-bottom: 10px;
   cursor: pointer;
-  transition: all 0.25s;
-  text-decoration: none;
-  color: inherit;
+  transition: all 0.2s;
 }
 
-.role-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+.session-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-hover);
+  transform: translateX(4px);
 }
 
-.role-card.trainer:hover { border-color: var(--gold); }
-.role-card.trainee:hover { border-color: var(--accent); }
-
-.role-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  display: block;
-}
-
-.role-title {
-  font-size: 20px;
+.session-card-name {
+  font-size: 18px;
   font-weight: 800;
   color: var(--text);
-  margin-bottom: 8px;
 }
 
-.role-desc {
+.session-card-date {
   font-size: 13px;
-  color: var(--text-tertiary);
-  line-height: 1.6;
+  color: var(--text-muted);
+  margin-top: 2px;
 }
 
-.role-badge {
-  display: inline-block;
-  margin-top: 16px;
-  padding: 5px 16px;
-  border-radius: 20px;
-  font-size: 11px;
+.session-card-arrow {
+  font-size: 24px;
+  color: var(--accent);
   font-weight: 700;
-  letter-spacing: 0.5px;
 }
 
-.role-card.trainer .role-badge { background: rgba(212,136,15,0.1); color: var(--gold); }
-.role-card.trainee .role-badge { background: rgba(192,57,43,0.08); color: var(--accent); }
+/* ========== IDENTITY SELECTION ========== */
+.id-section {
+  margin-bottom: 32px;
+}
 
-/* ========== TRAINEE NAME GRID ========== */
+.id-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+/* Trainer card */
+.trainer-card {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.trainer-card input {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+}
+
+.trainer-card input::placeholder { color: rgba(255,255,255,0.35); }
+.trainer-card input:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,0.12); }
+
+/* Name grid */
 .name-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 14px;
-  margin-bottom: 24px;
 }
 
 .name-team-card {
@@ -144,6 +163,22 @@
 }
 
 /* ========== DASHBOARD ========== */
+.session-strip {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 0 0 14px 14px;
+  padding: 14px 24px;
+  margin: 0 -24px 24px -24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  position: sticky;
+  top: 74px;
+  z-index: 98;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
 .dash-activity-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -183,32 +218,32 @@
 .dash-activity-badge.day1 { background: rgba(36,113,163,0.08); color: var(--blue); }
 .dash-activity-badge.day2 { background: rgba(192,57,43,0.08); color: var(--accent); }
 
-/* Session info strip */
-.session-strip {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 0 0 14px 14px;
-  padding: 14px 24px;
-  margin: 0 -24px 24px -24px;
-  display: flex;
+/* Admin link */
+.admin-link {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  position: sticky;
-  top: 74px;
-  z-index: 98;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  gap: 6px;
+  margin-top: 24px;
+  padding: 10px 20px;
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
 }
 
-.session-strip-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.admin-link:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+  background: var(--card);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .role-cards { grid-template-columns: 1fr; max-width: 360px; }
   .name-grid { grid-template-columns: repeat(2, 1fr); }
   .dash-activity-grid { grid-template-columns: 1fr; }
 }
@@ -242,94 +277,82 @@
 <div class="main">
 <div class="section">
 
-<!-- ========== STEP 1: 회사 선택 ========== -->
+<!-- ========== STEP 1: 현재교육 선택 ========== -->
 <div class="step-screen" id="stepSession">
 
   <div class="hero">
     <div class="hero-badge">Huthwaite SPIN 2.0 Official Program</div>
     <h1>SPIN Selling AI 실습 플랫폼</h1>
-    <p>세계 최고의 B2B 영업 방법론을 AI와 함께 체화하세요</p>
+    <p>진행 중인 교육을 선택하여 참가하세요</p>
   </div>
 
   <div class="card">
-    <div class="card-title"><span class="icon">🏢</span> 교육 세션 선택</div>
+    <div class="card-title"><span class="icon">🏢</span> 현재 진행 중인 교육</div>
+    <div id="sessionList" style="font-size:13px; color:var(--text-tertiary);">불러오는 중...</div>
+  </div>
 
-    <div id="sessionNew" style="margin-bottom:24px;">
-      <p style="color:var(--text-tertiary); margin-bottom:16px; font-size:14px; line-height:1.6;">
-        교육을 시작하려면 고객사 정보를 입력하거나, 기존 교육을 선택하세요.
-      </p>
-      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
-        <input type="text" id="newCompanyName" placeholder="고객사명 (예: 현대자동차)" style="flex:2; min-width:200px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text);">
-        <input type="text" id="newTrainingDate" placeholder="교육일 (예: 2026.04.07~08)" style="flex:1; min-width:160px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text);">
-        <button class="btn btn-primary" onclick="handleCreateSession()" style="white-space:nowrap;">새 교육 시작</button>
-      </div>
+  <!-- 관리자 영역 -->
+  <div style="text-align:center;">
+    <div class="admin-link" onclick="showAdminPanel()">
+      <span>🔧</span> 시스템 관리자 (교육 생성 / 교육생 등록)
     </div>
+  </div>
 
-    <div>
-      <div style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">기존 교육 이어하기</div>
-      <div id="sessionList" style="font-size:13px; color:var(--text-tertiary);">불러오는 중...</div>
+  <!-- 관리자 패널 (숨김) -->
+  <div id="adminPanel" style="display:none; margin-top:24px;">
+    <div class="card" style="border-left:4px solid #e74c3c;">
+      <div class="card-title"><span class="icon">🔧</span> 시스템 관리자</div>
+      <p style="color:var(--text-tertiary); margin-bottom:16px; font-size:13px;">
+        새 교육 세션을 생성하고 교육생 명단을 등록합니다.
+      </p>
+
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+        <input type="text" id="newCompanyName" placeholder="교육 회사명 (예: 현대자동차)" style="flex:2; min-width:200px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text);">
+        <input type="text" id="newTrainingDate" placeholder="교육일 (예: 2026.04.14~15)" style="flex:1; min-width:160px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text);">
+        <button class="btn btn-primary" onclick="handleCreateSession()">교육 생성</button>
+      </div>
+
+      <div id="adminSessionList" style="margin-top:16px;"></div>
     </div>
   </div>
 </div>
 
-<!-- ========== STEP 2: 역할 선택 ========== -->
-<div class="step-screen" id="stepRole">
+<!-- ========== STEP 2: 본인 선택 (강사/교육생) ========== -->
+<div class="step-screen" id="stepIdentity">
 
   <div class="session-strip">
-    <div class="session-strip-info">
+    <div style="display:flex; align-items:center; gap:12px;">
       <span style="color:rgba(255,255,255,0.5); font-size:12px;">현재 교육</span>
-      <span style="color:var(--gold-light); font-size:18px; font-weight:800;" id="roleSessionName"></span>
+      <span style="color:var(--gold-light); font-size:18px; font-weight:800;" id="idSessionName"></span>
+      <span style="color:rgba(255,255,255,0.3); font-size:12px;" id="idSessionDate"></span>
     </div>
     <button onclick="goBackToSession()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.6); padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer; font-family:inherit;">세션 변경</button>
   </div>
 
-  <div style="text-align:center; margin-bottom:32px;">
-    <h2 style="font-size:22px; font-weight:800; color:var(--text); margin-bottom:8px;">역할을 선택하세요</h2>
-    <p style="font-size:14px; color:var(--text-tertiary);">강사 또는 교육생으로 접속합니다</p>
+  <!-- 강사 선택 -->
+  <div class="id-section">
+    <div class="id-section-title">🎓 강사로 접속</div>
+    <div class="trainer-card">
+      <span style="color:var(--gold-light); font-size:14px; font-weight:700; white-space:nowrap;">강사 이름</span>
+      <input type="text" id="trainerNameInput" placeholder="강사명을 입력하세요" onfocus="this.select()">
+      <button onclick="loginAsTrainer()" style="padding:12px 28px; background:var(--gold); color:#1a1a2e; border:none; border-radius:10px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; white-space:nowrap; transition:all 0.2s;">강사 접속</button>
+    </div>
   </div>
 
-  <div class="role-cards">
-    <div class="role-card trainer" onclick="selectRole('trainer')">
-      <span class="role-icon">🎓</span>
-      <div class="role-title">강사</div>
-      <div class="role-desc">팀 편성, 점수 관리, 스코어보드 등<br>모든 기능에 접근할 수 있습니다</div>
-      <span class="role-badge">FULL ACCESS</span>
-    </div>
-    <div class="role-card trainee" onclick="selectRole('trainee')">
-      <span class="role-icon">🙋</span>
-      <div class="role-title">교육생</div>
-      <div class="role-desc">퀴즈, 실습, 롤플레이 등<br>교육 활동에 참여합니다</div>
-      <span class="role-badge">TRAINEE</span>
+  <!-- 교육생 선택 -->
+  <div class="id-section">
+    <div class="id-section-title">🙋 교육생 — 본인 이름을 클릭하세요</div>
+    <div class="name-grid" id="nameGrid">
+      <div style="text-align:center; color:var(--text-muted); padding:40px; grid-column:1/-1;">불러오는 중...</div>
     </div>
   </div>
 </div>
 
-<!-- ========== STEP 3A: 교육생 이름 선택 ========== -->
-<div class="step-screen" id="stepName">
-
-  <div class="session-strip">
-    <div class="session-strip-info">
-      <span style="color:rgba(255,255,255,0.5); font-size:12px;">현재 교육</span>
-      <span style="color:var(--gold-light); font-size:18px; font-weight:800;" id="nameSessionName"></span>
-    </div>
-    <button onclick="goBackToRole()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.6); padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer; font-family:inherit;">역할 변경</button>
-  </div>
-
-  <div style="text-align:center; margin-bottom:24px;">
-    <h2 style="font-size:22px; font-weight:800; color:var(--text); margin-bottom:8px;">본인의 이름을 선택하세요</h2>
-    <p style="font-size:14px; color:var(--text-tertiary);">선택하면 모든 활동 점수가 본인에게 기록됩니다</p>
-  </div>
-
-  <div class="name-grid" id="nameGrid">
-    <div style="text-align:center; color:var(--text-muted); padding:40px;">불러오는 중...</div>
-  </div>
-</div>
-
-<!-- ========== STEP 4: 대시보드 ========== -->
+<!-- ========== STEP 3: 대시보드 ========== -->
 <div class="step-screen" id="stepDashboard">
 
   <div class="session-strip">
-    <div class="session-strip-info">
+    <div style="display:flex; align-items:center; gap:12px;">
       <span style="color:rgba(255,255,255,0.5); font-size:12px;">현재 교육</span>
       <span style="color:var(--gold-light); font-size:18px; font-weight:800;" id="dashSessionName"></span>
       <span style="color:rgba(255,255,255,0.3); font-size:12px;" id="dashSessionDate"></span>
@@ -345,7 +368,6 @@
     <div class="card" style="border-left:4px solid var(--gold); margin-bottom:16px;">
       <div class="card-title"><span class="icon">🎓</span> 강사 관리</div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a href="team-setup.html" class="btn btn-secondary" style="font-size:13px;">👥 팀 편성</a>
         <a href="scoreboard.html" class="btn btn-secondary" style="font-size:13px;">🏆 스코어보드</a>
         <a href="coaching.html" class="btn btn-secondary" style="font-size:13px;">📊 코칭 리포트</a>
       </div>
@@ -417,93 +439,108 @@ function goBackToSession() {
   clearSessionId();
   clearUser();
   clearRole();
+  updateHeaderUser(null);
   showStep('stepSession');
   loadSessionList();
-  updateHeaderUser(null);
 }
 
-function goBackToRole() {
-  clearUser();
-  clearRole();
-  showStep('stepRole');
-  updateHeaderUser(null);
-}
+// ========== STEP 1: SESSION LIST ==========
+async function loadSessionList() {
+  const sessions = await fetchSessions();
+  const listEl = document.getElementById('sessionList');
 
-// ========== STEP 1: SESSION ==========
-async function handleCreateSession() {
-  const name = document.getElementById('newCompanyName').value.trim();
-  const date = document.getElementById('newTrainingDate').value.trim();
-  if (!name) { alert('고객사명을 입력하세요.'); return; }
+  if (sessions.length === 0) {
+    listEl.innerHTML = '<p style="color:var(--text-disabled); text-align:center; padding:24px;">진행 중인 교육이 없습니다.<br>시스템 관리자에게 교육 생성을 요청하세요.</p>';
+    return;
+  }
 
-  const btn = event.target;
-  btn.textContent = '생성 중...';
-  btn.disabled = true;
-
-  const session = await createSession(name, date);
-  saveSessionId({ id: session.id, company_name: session.company_name, training_date: session.training_date });
-
-  btn.textContent = '새 교육 시작';
-  btn.disabled = false;
-
-  goToRoleStep();
+  listEl.innerHTML = sessions.map(s => {
+    const date = s.training_date || '';
+    return `
+      <div class="session-card" onclick="selectSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}', '${date.replace(/'/g,"\\'")}')">
+        <div>
+          <div class="session-card-name">${s.company_name}</div>
+          ${date ? `<div class="session-card-date">${date}</div>` : ''}
+        </div>
+        <span class="session-card-arrow">&#8250;</span>
+      </div>
+    `;
+  }).join('');
 }
 
 function selectSession(id, companyName, trainingDate) {
   saveSessionId({ id, company_name: companyName, training_date: trainingDate });
   clearUser();
   clearRole();
-  goToRoleStep();
+  goToIdentityStep();
 }
 
-async function loadSessionList() {
-  const sessions = await fetchSessions();
-  const listEl = document.getElementById('sessionList');
+// ========== ADMIN ==========
+function showAdminPanel() {
+  const panel = document.getElementById('adminPanel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  if (panel.style.display === 'block') loadAdminSessionList();
+}
 
+async function handleCreateSession() {
+  const name = document.getElementById('newCompanyName').value.trim();
+  const date = document.getElementById('newTrainingDate').value.trim();
+  if (!name) { alert('교육 회사명을 입력하세요.'); return; }
+
+  const btn = event.target;
+  btn.textContent = '생성 중...';
+  btn.disabled = true;
+
+  const session = await createSession(name, date);
+  btn.textContent = '교육 생성';
+  btn.disabled = false;
+
+  document.getElementById('newCompanyName').value = '';
+  document.getElementById('newTrainingDate').value = '';
+
+  alert(`"${name}" 교육이 생성되었습니다.\n팀 편성 페이지에서 교육생 명단을 등록하세요.`);
+
+  // 관리자로 바로 팀 편성 이동
+  saveSessionId({ id: session.id, company_name: session.company_name, training_date: session.training_date });
+  saveRole('admin');
+  location.href = 'team-setup.html';
+}
+
+async function loadAdminSessionList() {
+  const sessions = await fetchSessions();
+  const el = document.getElementById('adminSessionList');
   if (sessions.length === 0) {
-    listEl.innerHTML = '<p style="color:var(--text-disabled);">아직 생성된 교육이 없습니다.</p>';
+    el.innerHTML = '<p style="color:var(--text-disabled);">생성된 교육이 없습니다.</p>';
     return;
   }
 
-  listEl.innerHTML = sessions.map(s => {
-    const date = s.training_date || '';
-    const created = new Date(s.created_at).toLocaleDateString('ko-KR');
-    return `
-      <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; margin-bottom:8px; cursor:pointer; transition:all 0.2s;"
-        onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'"
-        onclick="selectSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}', '${date.replace(/'/g,"\\'")}')">
+  el.innerHTML = '<div style="font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:8px;">기존 교육 관리</div>' +
+    sessions.map(s => `
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:8px; margin-bottom:6px;">
         <div>
-          <span style="font-weight:700; color:var(--text); font-size:14px;">${s.company_name}</span>
-          ${date ? `<span style="color:var(--text-muted); margin-left:8px; font-size:12px;">${date}</span>` : ''}
-          <span style="color:var(--text-disabled); margin-left:8px; font-size:11px;">생성: ${created}</span>
+          <span style="font-weight:700; font-size:13px;">${s.company_name}</span>
+          <span style="color:var(--text-muted); font-size:11px; margin-left:8px;">${s.training_date || ''}</span>
         </div>
-        <span style="color:var(--accent); font-size:16px;">&#8250;</span>
+        <button onclick="adminEnterSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}', '${(s.training_date||'').replace(/'/g,"\\'")}')"
+          class="btn btn-secondary" style="font-size:11px; padding:4px 12px;">팀 편성</button>
       </div>
-    `;
-  }).join('');
+    `).join('');
 }
 
-// ========== STEP 2: ROLE ==========
-function goToRoleStep() {
+function adminEnterSession(id, name, date) {
+  saveSessionId({ id, company_name: name, training_date: date });
+  saveRole('admin');
+  location.href = 'team-setup.html';
+}
+
+// ========== STEP 2: IDENTITY (강사/교육생) ==========
+async function goToIdentityStep() {
   const session = getSavedSession();
-  document.getElementById('roleSessionName').textContent = session.company_name;
-  showStep('stepRole');
-}
+  document.getElementById('idSessionName').textContent = session.company_name;
+  document.getElementById('idSessionDate').textContent = session.training_date || '';
+  showStep('stepIdentity');
 
-function selectRole(role) {
-  saveRole(role);
-  if (role === 'trainer') {
-    goToDashboard();
-  } else {
-    goToNameStep();
-  }
-}
-
-// ========== STEP 3: NAME SELECTION (trainee only) ==========
-async function goToNameStep() {
-  const session = getSavedSession();
-  document.getElementById('nameSessionName').textContent = session.company_name;
-  showStep('stepName');
-
+  // 이름 그리드 로드
   const members = await fetchAllMembers();
   const teamNames = await fetchTeamNames();
   const grid = document.getElementById('nameGrid');
@@ -515,10 +552,8 @@ async function goToNameStep() {
   grid.innerHTML = ['A','B','C','D','E'].map(t => {
     const tName = teamNames[t] || `팀 ${t}`;
     const btns = grouped[t].map(m => {
-      if (!m.name) {
-        return `<button class="name-btn empty" disabled>미등록</button>`;
-      }
-      return `<button class="name-btn" onclick="selectMember(${m.id}, '${m.team_id}', '${m.name.replace(/'/g,"\\'")}', ${m.slot})">${m.name}</button>`;
+      if (!m.name) return `<button class="name-btn empty" disabled>미등록</button>`;
+      return `<button class="name-btn" onclick="loginAsTrainee(${m.id}, '${m.team_id}', '${m.name.replace(/'/g,"\\'")}', ${m.slot})">${m.name}</button>`;
     }).join('');
 
     return `
@@ -530,14 +565,25 @@ async function goToNameStep() {
   }).join('');
 }
 
-function selectMember(id, teamId, name, slot) {
-  const user = { id, team_id: teamId, name, slot };
-  saveUser(user);
-  updateHeaderUser(user);
+function loginAsTrainer() {
+  const nameInput = document.getElementById('trainerNameInput');
+  const name = nameInput.value.trim();
+  if (!name) { nameInput.focus(); nameInput.style.borderColor = '#e74c3c'; return; }
+
+  saveRole('trainer');
+  saveUser({ id: null, team_id: null, name: name, slot: null });
+  updateHeaderUser({ name });
   goToDashboard();
 }
 
-// ========== STEP 4: DASHBOARD ==========
+function loginAsTrainee(id, teamId, name, slot) {
+  saveRole('trainee');
+  saveUser({ id, team_id: teamId, name, slot });
+  updateHeaderUser({ team_id: teamId, name });
+  goToDashboard();
+}
+
+// ========== STEP 3: DASHBOARD ==========
 function goToDashboard() {
   const session = getSavedSession();
   const role = getSavedRole();
@@ -546,16 +592,13 @@ function goToDashboard() {
   document.getElementById('dashSessionName').textContent = session.company_name;
   document.getElementById('dashSessionDate').textContent = session.training_date || '';
 
-  // 사용자 배지
   const badge = document.getElementById('dashUserBadge');
   if (role === 'trainer') {
-    badge.innerHTML = '<span style="background:var(--gold); color:#1a1a2e; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800;">TRAINER</span>';
+    badge.innerHTML = `<span style="background:var(--gold); color:#1a1a2e; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800;">TRAINER</span> <span style="margin-left:4px;">${user ? user.name : ''}</span>`;
     document.getElementById('dashTrainerSection').style.display = 'block';
-    updateHeaderUser({ team_id: '', name: '강사' });
-  } else if (user) {
-    badge.textContent = `팀 ${user.team_id} | ${user.name}`;
+  } else {
+    badge.innerHTML = `<span style="background:rgba(255,255,255,0.15); padding:3px 10px; border-radius:6px; font-size:11px;">팀 ${user.team_id}</span> <span style="margin-left:4px;">${user.name}</span>`;
     document.getElementById('dashTrainerSection').style.display = 'none';
-    updateHeaderUser(user);
   }
 
   showStep('stepDashboard');
@@ -567,14 +610,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const role = getSavedRole();
   const user = getSavedUser();
 
-  if (session && role === 'trainer') {
+  if (session && (role === 'trainer' || role === 'trainee') && user) {
+    updateHeaderUser(user);
     goToDashboard();
-  } else if (session && role === 'trainee' && user) {
-    goToDashboard();
-  } else if (session && role === 'trainee' && !user) {
-    goToNameStep();
   } else if (session && !role) {
-    goToRoleStep();
+    goToIdentityStep();
   } else {
     showStep('stepSession');
     loadSessionList();
