@@ -5,6 +5,136 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPIN Selling 2.0 - SPIN질문&니즈 구분</title>
 <link rel="stylesheet" href="common.css">
+<style>
+.conv-line {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-light);
+  align-items: flex-start;
+}
+.conv-line:last-child { border-bottom: none; }
+
+.conv-num {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: white;
+  margin-top: 2px;
+}
+
+.conv-num.seller { background: var(--blue); }
+.conv-num.customer { background: var(--green); }
+
+.conv-speaker {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.conv-speaker.seller { color: var(--blue); }
+.conv-speaker.customer { color: var(--green); }
+
+.conv-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.conv-btns {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.conv-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.conv-btn:hover { border-color: var(--text-muted); }
+.conv-btn.active { color: white; border-color: transparent; }
+
+/* SPIN colors */
+.conv-btn.S.active { background: #2471a3; }
+.conv-btn.P.active { background: #c0392b; }
+.conv-btn.I.active { background: #7d3c98; }
+.conv-btn.N.active { background: #1e8449; }
+
+/* Needs colors */
+.conv-btn.IN.active { background: #d4880f; }
+.conv-btn.EN.active { background: #27ae60; }
+.conv-btn.NONE.active { background: #95a5a6; }
+
+/* Legend */
+.legend-bar {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.score-summary {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--bg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.score-summary-item {
+  text-align: center;
+  flex: 1;
+}
+
+.score-summary-value {
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.score-summary-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+</style>
 </head>
 <body>
 
@@ -36,15 +166,32 @@
   <div class="card">
     <div class="card-title"><span class="icon">🔎</span> SPIN질문 & 니즈 구분</div>
     <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 13px;">
-      비브라디페랑스 시나리오의 영업 대화를 읽고, 각 질문의 SPIN 유형(S/P/I/N)을 분류하세요.<br>
-      또한 고객 응답에서 잠재니즈(IN)와 현재니즈(EN)를 구분하세요.
+      비브라디페랑스 시나리오의 영업 대화를 읽고 분류하세요.<br>
+      <strong style="color:var(--blue);">판매원 질문</strong> → S/P/I/N 유형 분류 &nbsp;|&nbsp;
+      <strong style="color:var(--green);">고객 응답</strong> → IN(잠재니즈) / EN(현재니즈) / 일반응답 구분
     </p>
 
+    <div class="legend-bar">
+      <div class="legend-item"><div class="legend-dot" style="background:#2471a3;"></div> S 상황질문</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#c0392b;"></div> P 문제질문</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7d3c98;"></div> I 시사질문</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1e8449;"></div> N 해결질문</div>
+      <div style="width:1px; background:var(--border); margin:0 4px;"></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#d4880f;"></div> IN 잠재니즈</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#27ae60;"></div> EN 현재니즈</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#95a5a6;"></div> 일반응답</div>
+    </div>
+
+    <h3 style="margin-bottom:12px; font-size:15px;">비브라디페랑스 - 케이블 TV 솔루션</h3>
+
     <div id="snContent"></div>
-    <div style="margin-top: 16px; display: flex; gap: 8px;">
+
+    <div style="margin-top: 20px; display: flex; gap: 8px;">
       <button class="btn btn-primary" onclick="checkAnswers()">정답 확인</button>
       <button class="btn btn-secondary" onclick="resetAll()">다시 하기</button>
     </div>
+
+    <div id="scoreResult" style="display:none;"></div>
   </div>
 </div>
 </div>
@@ -55,86 +202,149 @@
 
 <script src="common.js"></script>
 <script>
-// ========== 비브라디페랑스 시나리오 데이터 ==========
-const scenarioLines = [
-  { num: 1, speaker: "판매", text: "현재 3개 지점에서 비브라디페랑스를 운영하고 계신다고 들었습니다. 맞습니까?", type: "S" },
-  { num: 3, speaker: "판매", text: "3개 지점 모두 숙박 예약이 있는 겁니까?", type: "S" },
-  { num: 5, speaker: "판매", text: "투숙객들의 오락/여가 활동에 어떤 어려움이 있습니까?", type: "P" },
-  { num: 7, speaker: "판매", text: "현재 어떤 TV 서비스를 제공하고 계십니까?", type: "S" },
-  { num: 9, speaker: "판매", text: "투숙객들이 TV 채널에 대해 불만을 표시하는 경우가 있습니까?", type: "P" },
-  { num: 11, speaker: "판매", text: "그런 불만족이 재방문율에 영향을 미치지 않겠습니까?", type: "I" },
-  { num: 15, speaker: "판매", text: "만약 다양한 채널을 합리적인 비용에 제공할 수 있다면 도움이 되겠습니까?", type: "N" },
-  { num: 17, speaker: "판매", text: "현재 TV 관련 유지비용은 어느 정도입니까?", type: "S" },
-  { num: 19, speaker: "판매", text: "그 비용이 부담스럽지 않으십니까?", type: "P" },
-  { num: 21, speaker: "판매", text: "유지비용 증가가 전체 운영비에 미치는 영향은 어떻습니까?", type: "I" },
-  { num: 25, speaker: "판매", text: "투숙객 만족도를 높이면서 비용도 절감할 수 있다면 관심이 있으시겠습니까?", type: "N" },
-  { num: 27, speaker: "판매", text: "경쟁 숙소들은 어떤 서비스를 제공하고 있습니까?", type: "S" },
-  { num: 29, speaker: "판매", text: "경쟁사 대비 서비스 차별화가 어렵다면, 고객 유치에 문제가 되지 않겠습니까?", type: "I" },
-  { num: 31, speaker: "판매", text: "차별화된 엔터테인먼트가 고객 유치에 도움이 된다면, 그 가치가 어느 정도라고 보십니까?", type: "N" }
+// ========== 비브라디페랑스 대화 데이터 ==========
+// role: 'seller' = SPIN 분류, 'customer' = IN/EN 분류
+const conversation = [
+  { num: 1, role: 'seller', text: "현재 3개 지점에서 비브라디페랑스를 운영하고 계신다고 들었습니다. 맞습니까?", answer: "S" },
+  { num: 2, role: 'customer', text: "네, 맞습니다. 파리 근교에 3곳을 운영하고 있습니다.", answer: "NONE" },
+  { num: 3, role: 'seller', text: "3개 지점 모두 숙박 예약이 있는 겁니까?", answer: "S" },
+  { num: 4, role: 'customer', text: "네, 모두 캠핑장과 숙박 시설을 갖추고 있습니다.", answer: "NONE" },
+  { num: 5, role: 'seller', text: "투숙객들의 오락/여가 활동에 어떤 어려움이 있습니까?", answer: "P" },
+  { num: 6, role: 'customer', text: "비 오는 날 투숙객들이 할 게 없어서 불만이 꽤 많습니다.", answer: "IN" },
+  { num: 7, role: 'seller', text: "현재 어떤 TV 서비스를 제공하고 계십니까?", answer: "S" },
+  { num: 8, role: 'customer', text: "기본 공중파 5개 채널만 나옵니다.", answer: "NONE" },
+  { num: 9, role: 'seller', text: "투숙객들이 TV 채널에 대해 불만을 표시하는 경우가 있습니까?", answer: "P" },
+  { num: 10, role: 'customer', text: "네, 채널이 너무 적다는 컴플레인이 자주 들어옵니다.", answer: "IN" },
+  { num: 11, role: 'seller', text: "그런 불만족이 재방문율에 영향을 미치지 않겠습니까?", answer: "I" },
+  { num: 12, role: 'customer', text: "사실 그게 걱정입니다. 리뷰 점수도 떨어지고 있어요.", answer: "IN" },
+  { num: 13, role: 'seller', text: "리뷰 점수 하락이 신규 고객 유치에도 악영향을 주지 않겠습니까?", answer: "I" },
+  { num: 14, role: 'customer', text: "맞습니다. 온라인 예약이 줄어드는 추세라 심각하게 생각하고 있습니다.", answer: "IN" },
+  { num: 15, role: 'seller', text: "만약 다양한 채널을 합리적인 비용에 제공할 수 있다면 도움이 되겠습니까?", answer: "N" },
+  { num: 16, role: 'customer', text: "당연하죠. 투숙객 만족도를 높일 수 있는 방법이라면 적극 검토하고 싶습니다.", answer: "EN" },
+  { num: 17, role: 'seller', text: "현재 TV 관련 유지비용은 어느 정도입니까?", answer: "S" },
+  { num: 18, role: 'customer', text: "연간 약 1만 2천 유로 정도 들고 있습니다.", answer: "NONE" },
+  { num: 19, role: 'seller', text: "그 비용이 부담스럽지 않으십니까?", answer: "P" },
+  { num: 20, role: 'customer', text: "솔직히 서비스 대비 비용이 너무 높다고 느끼고 있습니다.", answer: "IN" },
+  { num: 21, role: 'seller', text: "유지비용 증가가 전체 운영비에 미치는 영향은 어떻습니까?", answer: "I" },
+  { num: 22, role: 'customer', text: "다른 시설 투자를 못 하게 되니까 전체적으로 경쟁력이 떨어지고 있어요.", answer: "IN" },
+  { num: 23, role: 'seller', text: "비용을 절감하면서 채널 수를 늘릴 수 있다면 어떤 효과가 있겠습니까?", answer: "N" },
+  { num: 24, role: 'customer', text: "비용 절감분을 다른 시설 개선에 투자할 수 있으니 큰 도움이 될 겁니다.", answer: "EN" },
+  { num: 25, role: 'seller', text: "투숙객 만족도를 높이면서 비용도 절감할 수 있다면 관심이 있으시겠습니까?", answer: "N" },
+  { num: 26, role: 'customer', text: "네, 구체적인 제안을 받아보고 싶습니다. 빨리 도입하고 싶어요.", answer: "EN" },
+  { num: 27, role: 'seller', text: "경쟁 숙소들은 어떤 서비스를 제공하고 있습니까?", answer: "S" },
+  { num: 28, role: 'customer', text: "근처 캠핑장들은 이미 50개 이상 채널을 제공하고 있더라고요.", answer: "NONE" },
+  { num: 29, role: 'seller', text: "경쟁사 대비 서비스 차별화가 어렵다면, 고객 유치에 문제가 되지 않겠습니까?", answer: "I" },
+  { num: 30, role: 'customer', text: "이미 고객들이 경쟁사로 이탈하는 게 눈에 보입니다. 정말 걱정됩니다.", answer: "IN" },
+  { num: 31, role: 'seller', text: "차별화된 엔터테인먼트가 고객 유치에 도움이 된다면, 그 가치가 어느 정도라고 보십니까?", answer: "N" },
+  { num: 32, role: 'customer', text: "재방문율만 10% 올라도 연간 수만 유로의 가치가 있습니다. 꼭 필요합니다.", answer: "EN" }
 ];
 
+// ========== RENDER ==========
 function renderContent() {
   const container = document.getElementById('snContent');
-  let html = '<h3 style="margin-bottom:12px;">비브라디페랑스 - 케이블 TV 솔루션 (14문제)</h3>';
-  html += '<div class="scenario-dialogue">';
+  const spinCount = conversation.filter(c => c.role === 'seller').length;
+  const needsCount = conversation.filter(c => c.role === 'customer').length;
 
-  scenarioLines.forEach((line, i) => {
+  let html = `<div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+    판매원 질문 <strong>${spinCount}개</strong> (SPIN 분류) + 고객 응답 <strong>${needsCount}개</strong> (IN/EN 분류) = 총 <strong>${conversation.length}문제</strong>
+  </div>`;
+
+  conversation.forEach((line, i) => {
+    const isSeller = line.role === 'seller';
     html += `
-      <div class="dialogue-line" id="snLine${i}">
-        <div class="dialogue-num">${line.num}</div>
-        <span class="dialogue-speaker">${line.speaker}:</span>
+      <div class="conv-line">
+        <div class="conv-num ${line.role}">${line.num}</div>
         <div style="flex:1;">
-          <span>${line.text}</span>
-          <div class="spin-classify-btns" data-answer="${line.type}" data-idx="${i}">
-            <button class="spin-btn S" onclick="classify(${i},'S')">S</button>
-            <button class="spin-btn P" onclick="classify(${i},'P')">P</button>
-            <button class="spin-btn I" onclick="classify(${i},'I')">I</button>
-            <button class="spin-btn N" onclick="classify(${i},'N')">N</button>
+          <div class="conv-speaker ${line.role}">${isSeller ? '판매원' : '고객'}</div>
+          <div class="conv-text">"${line.text}"</div>
+          <div class="conv-btns" data-answer="${line.answer}" data-idx="${i}">
+            ${isSeller ? `
+              <button class="conv-btn S" onclick="pick(${i},'S')">S</button>
+              <button class="conv-btn P" onclick="pick(${i},'P')">P</button>
+              <button class="conv-btn I" onclick="pick(${i},'I')">I</button>
+              <button class="conv-btn N" onclick="pick(${i},'N')">N</button>
+            ` : `
+              <button class="conv-btn IN" onclick="pick(${i},'IN')">IN 잠재니즈</button>
+              <button class="conv-btn EN" onclick="pick(${i},'EN')">EN 현재니즈</button>
+              <button class="conv-btn NONE" onclick="pick(${i},'NONE')">일반응답</button>
+            `}
           </div>
         </div>
       </div>
     `;
   });
 
-  html += '</div>';
   container.innerHTML = html;
+  document.getElementById('scoreResult').style.display = 'none';
 }
 
-function classify(idx, type) {
-  const btns = document.querySelector(`[data-idx="${idx}"]`);
-  btns.querySelectorAll('.spin-btn').forEach(b => b.classList.remove('active'));
-  btns.querySelector(`.spin-btn.${type}`).classList.add('active');
-  btns.dataset.selected = type;
+function pick(idx, type) {
+  const group = document.querySelector(`[data-idx="${idx}"]`);
+  group.querySelectorAll('.conv-btn').forEach(b => b.classList.remove('active'));
+  group.querySelector(`.conv-btn.${type}`).classList.add('active');
+  group.dataset.selected = type;
 }
 
 function checkAnswers() {
-  let correct = 0;
-  let total = 0;
+  let spinCorrect = 0, spinTotal = 0;
+  let needsCorrect = 0, needsTotal = 0;
 
-  document.querySelectorAll('.spin-classify-btns').forEach(group => {
+  document.querySelectorAll('.conv-btns').forEach((group, i) => {
     const answer = group.dataset.answer;
     const selected = group.dataset.selected;
-    total++;
+    const isSeller = conversation[i].role === 'seller';
 
-    group.querySelectorAll('.spin-btn').forEach(btn => btn.style.opacity = '0.4');
+    if (isSeller) spinTotal++; else needsTotal++;
+
+    group.querySelectorAll('.conv-btn').forEach(btn => {
+      btn.style.opacity = '0.3';
+      btn.style.pointerEvents = 'none';
+    });
 
     if (selected === answer) {
-      correct++;
-      group.querySelector(`.spin-btn.${answer}`).style.opacity = '1';
-      group.querySelector(`.spin-btn.${answer}`).style.boxShadow = '0 0 12px rgba(39,174,96,0.5)';
+      if (isSeller) spinCorrect++; else needsCorrect++;
+      const correct = group.querySelector(`.conv-btn.${answer}`);
+      correct.classList.add('active');
+      correct.style.opacity = '1';
+      correct.style.boxShadow = '0 0 10px rgba(39,174,96,0.4)';
     } else {
       if (selected) {
-        group.querySelector(`.spin-btn.${selected}`).style.opacity = '1';
-        group.querySelector(`.spin-btn.${selected}`).style.background = 'rgba(231,76,60,0.3)';
+        const wrong = group.querySelector(`.conv-btn.${selected}`);
+        wrong.style.opacity = '1';
+        wrong.style.background = 'rgba(231,76,60,0.2)';
+        wrong.style.borderColor = 'rgba(231,76,60,0.4)';
+        wrong.style.color = '#c0392b';
       }
-      group.querySelector(`.spin-btn.${answer}`).style.opacity = '1';
-      group.querySelector(`.spin-btn.${answer}`).classList.add('active');
+      const right = group.querySelector(`.conv-btn.${answer}`);
+      right.classList.add('active');
+      right.style.opacity = '1';
     }
   });
 
-  if (correct > 0) addScore(correct * 5, 'scenario');
-  addActivity(`SPIN질문&니즈 구분: ${correct}/${total}`);
-  alert(`${total}문제 중 ${correct}문제 정답! (+${correct * 5}점)`);
+  const totalCorrect = spinCorrect + needsCorrect;
+  const totalAll = spinTotal + needsTotal;
+  const points = totalCorrect * 5;
+
+  if (totalCorrect > 0) addScore(points, 'scenario');
+  addActivity(`SPIN질문&니즈 구분: ${totalCorrect}/${totalAll}`);
+
+  document.getElementById('scoreResult').style.display = 'block';
+  document.getElementById('scoreResult').innerHTML = `
+    <div class="score-summary">
+      <div class="score-summary-item">
+        <div class="score-summary-value" style="color:var(--blue);">${spinCorrect}/${spinTotal}</div>
+        <div class="score-summary-label">SPIN 질문 분류</div>
+      </div>
+      <div class="score-summary-item">
+        <div class="score-summary-value" style="color:var(--green);">${needsCorrect}/${needsTotal}</div>
+        <div class="score-summary-label">IN/EN 니즈 구분</div>
+      </div>
+      <div class="score-summary-item">
+        <div class="score-summary-value" style="color:var(--gold);">${totalCorrect}/${totalAll}</div>
+        <div class="score-summary-label">종합 (+ ${points}점)</div>
+      </div>
+    </div>
+  `;
 }
 
 function resetAll() {
