@@ -370,6 +370,7 @@ function closeModal(id) {
 // ========== FLOW NAVIGATION ==========
 const FLOW_ORDER = [
   { page: 'team-setup.html', label: '팀 편성', icon: '👥' },
+  { page: 'prereading.html', label: '프리리딩', icon: '📖' },
   { page: 'quiz.html', label: '개념 퀴즈', icon: '📝' },
   { page: 'needs.html', label: '니즈 구분', icon: '🎯' },
   { page: 'scenario.html', label: 'SPIN 질문구분', icon: '🔍' },
@@ -428,6 +429,7 @@ function getNavHTML(activePage) {
   const items = [
     { page: 'index.html', section: 'home', icon: '🏠', label: '홈' },
     { page: 'team-setup.html', section: 'team-setup', icon: '👥', label: '팀 편성' },
+    { page: 'prereading.html', section: 'prereading', icon: '📖', label: '프리리딩' },
     { page: 'quiz.html', section: 'quiz', icon: '📝', label: '퀴즈' },
     { page: 'needs.html', section: 'needs', icon: '🎯', label: '니즈 구분' },
     { page: 'scenario.html', section: 'scenario', icon: '🔍', label: 'SPIN 질문구분' },

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling 2.0 - 프리리딩</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.pdf-container {
+  width: 100%;
+  height: 80vh;
+  min-height: 600px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #525659;
+}
+
+.pdf-container embed,
+.pdf-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.pdf-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  margin-top: 12px;
+}
+
+.pdf-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(192,57,43,0.3);
+}
+
+@media (max-width: 768px) {
+  .pdf-container { height: 60vh; min-height: 400px; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-huthwaite.svg" alt="Huthwaite" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling 2.0</div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore" style="display:none;">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="prereading"></div>
+
+<div class="main">
+<div class="section">
+  <div class="card">
+    <div class="card-title"><span class="icon">📖</span> 1. 프리리딩</div>
+    <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 13px; line-height: 1.6;">
+      SPIN Selling 2.0 교육에 앞서 반드시 읽어야 할 사전 학습 자료입니다.<br>
+      <strong>SPIN 2.0 판매의 발전</strong> — 참가자 통합 문서 (28페이지)
+    </p>
+
+    <div class="pdf-container">
+      <embed src="prereading.pdf" type="application/pdf">
+    </div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:16px;">
+      <a href="prereading.pdf" download class="pdf-download">
+        <span>📥</span> PDF 다운로드
+      </a>
+      <a href="quiz.html" class="btn btn-primary" style="font-size:14px;">프리리딩 완료 — 퀴즈 시작하기 &#8250;</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="flowNavPlaceholder"></div>
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+</body>
+</html>
