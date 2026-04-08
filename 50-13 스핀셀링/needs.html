@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling 2.0 - 니즈 구분</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-huthwaite.svg" alt="Huthwaite" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling 2.0</div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="needs"></div>
+
+<div class="main">
+<div class="section">
+  <div class="card">
+    <div class="card-title"><span class="icon">🎯</span> 잠재니즈(IN) vs 현재니즈(EN) 구분</div>
+    <p style="color: var(--text-muted); margin-bottom: 8px; font-size: 13px;">
+      <strong>잠재니즈(IN)</strong>: 문제, 어려움, 불만족의 표현 (예: "~가 걱정이다", "~가 불편하다")<br>
+      <strong>현재니즈(EN)</strong>: 바람, 욕구, 의도의 표현 (예: "~를 원한다", "~가 필요하다")
+    </p>
+    <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 13px;">
+      고객의 말을 읽고 잠재니즈(IN)인지 현재니즈(EN)인지 구분하세요.
+    </p>
+    <div id="needsCards"></div>
+    <div id="needsResult" style="display:none; margin-top:20px;"></div>
+    <div style="margin-top: 16px;">
+      <button class="btn btn-primary" onclick="startNeeds()">새로운 문제</button>
+      <button class="btn btn-secondary" onclick="showNeedsAnswers()">정답 확인</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="flowNavPlaceholder"></div>
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="needs.js"></script>
+</body>
+</html>

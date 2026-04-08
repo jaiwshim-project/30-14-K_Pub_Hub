@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling 2.0 - 코칭 리포트</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-huthwaite.svg" alt="Huthwaite" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling 2.0</div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="coaching"></div>
+
+<div class="main">
+<div class="section">
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> 개인 코칭 리포트</div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--blue);" id="statS">0</div>
+        <div class="stat-label">상황질문 (S)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--accent);" id="statP">0</div>
+        <div class="stat-label">문제질문 (P)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--purple);" id="statI">0</div>
+        <div class="stat-label">시사질문 (I)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--gold);" id="statN">0</div>
+        <div class="stat-label">해결질문 (N)</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="card-title"><span class="icon">🎯</span> SPIN 질문 비율</div>
+      <div id="spinBarChart" style="margin-top: 12px;"></div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="card-title"><span class="icon">💡</span> AI 코칭 조언</div>
+      <div class="ai-feedback" id="coachingAdvice" style="display:block;">
+        <div class="ai-label">🤖 AI 코치</div>
+        <p>아직 활동 데이터가 부족합니다. 퀴즈를 풀고, 질문 연습과 롤플레이를 진행하면 맞춤형 코칭을 받을 수 있습니다.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="card-title"><span class="icon">📈</span> 활동 이력</div>
+      <div id="activityLog" style="font-size: 13px; color: var(--text-muted);"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="coaching.js"></script>
+</body>
+</html>

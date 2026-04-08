@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling 2.0 - AI 롤플레이</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-huthwaite.svg" alt="Huthwaite" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling 2.0</div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="roleplay"></div>
+
+<div class="main">
+<div class="section">
+  <div class="card">
+    <div class="card-title"><span class="icon">🎭</span> AI 고객 롤플레이</div>
+    <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 13px;">
+      AI가 고객 역할을 합니다. SPIN 질문을 활용하여 고객의 니즈를 파악하세요.
+    </p>
+
+    <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+      <button class="btn btn-sm btn-secondary" onclick="startRoleplay('riprock')">Riprock Rooftops</button>
+      <button class="btn btn-sm btn-secondary" onclick="startRoleplay('manufacturing')">제조업 고객</button>
+      <button class="btn btn-sm btn-secondary" onclick="startRoleplay('shopnsave')">Shop N Save</button>
+    </div>
+
+    <div class="chat-container" id="chatContainer"></div>
+
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chatInput" placeholder="질문을 입력하세요..." onkeypress="if(event.key==='Enter')sendChat()">
+      <button class="btn btn-primary" onclick="sendChat()">전송</button>
+    </div>
+
+    <div id="roleplayAnalysis" style="margin-top: 16px; display:none;">
+      <div class="ai-feedback">
+        <div class="ai-label">🤖 AI 상담 분석</div>
+        <div id="roleplayAnalysisContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="flowNavPlaceholder"></div>
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="roleplay.js"></script>
+</body>
+</html>

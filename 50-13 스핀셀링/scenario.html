@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling 2.0 - 시나리오 분석</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-huthwaite.svg" alt="Huthwaite" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling 2.0</div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="scenario"></div>
+
+<div class="main">
+<div class="section">
+  <div class="card">
+    <div class="card-title"><span class="icon">🔍</span> 비브라디페랑스 시나리오 분석</div>
+    <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 13px;">
+      영업사원과 고객의 대화를 읽고, 각 질문이 S(상황), P(문제), I(시사), N(해결) 중 어떤 유형인지 분류하세요.
+    </p>
+
+    <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+      <button class="btn btn-sm btn-secondary active" onclick="loadScenario(0)">시나리오 1</button>
+      <button class="btn btn-sm btn-secondary" onclick="loadScenario(1)">시나리오 2</button>
+      <button class="btn btn-sm btn-secondary" onclick="loadScenario(2)">시나리오 3</button>
+    </div>
+
+    <div id="scenarioContent"></div>
+    <div style="margin-top: 16px; display: flex; gap: 8px;">
+      <button class="btn btn-primary" onclick="checkScenarioAnswers()">정답 확인</button>
+      <button class="btn btn-secondary" onclick="resetScenario()">다시 하기</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="flowNavPlaceholder"></div>
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="scenario.js"></script>
+</body>
+</html>

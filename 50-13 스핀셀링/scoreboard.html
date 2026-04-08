@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling 2.0 - 스코어보드</title>
+<link rel="stylesheet" href="common.css">
+<style>
+/* ========== SCOREBOARD ENHANCED ========== */
+.sb-setup {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.sb-team-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sb-team-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.sb-team-card.team-A::before { background: var(--accent); }
+.sb-team-card.team-B::before { background: var(--blue); }
+.sb-team-card.team-C::before { background: var(--green); }
+.sb-team-card.team-D::before { background: var(--gold); }
+.sb-team-card.team-E::before { background: var(--purple); }
+
+.sb-team-name {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.sb-team-score {
+  font-size: 24px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.sb-team-card.team-A .sb-team-score { color: var(--accent); }
+.sb-team-card.team-B .sb-team-score { color: var(--blue); }
+.sb-team-card.team-C .sb-team-score { color: var(--green); }
+.sb-team-card.team-D .sb-team-score { color: var(--gold); }
+.sb-team-card.team-E .sb-team-score { color: var(--purple); }
+
+.sb-member-input {
+  width: 100%;
+  padding: 7px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 6px;
+  transition: border-color 0.2s;
+}
+
+.sb-member-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(192,57,43,0.06);
+  background: #fff;
+}
+
+.sb-member-input::placeholder {
+  color: var(--text-disabled);
+}
+
+.sb-member-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Score input table */
+.score-input-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.score-input-table th {
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.score-input-table th:first-child,
+.score-input-table td:first-child {
+  text-align: left;
+  padding-left: 16px;
+}
+
+.score-input-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: center;
+  font-size: 14px;
+}
+
+.score-input-table tr:hover td {
+  background: var(--bg);
+}
+
+.score-cell-input {
+  width: 60px;
+  padding: 6px 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+
+.score-cell-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(192,57,43,0.06);
+  background: #fff;
+}
+
+.score-total {
+  font-weight: 900;
+  color: var(--gold);
+  font-size: 16px;
+}
+
+.member-name-cell {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.team-label-cell {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.team-label-cell.A { background: rgba(192,57,43,0.08); color: var(--accent); }
+.team-label-cell.B { background: rgba(36,113,163,0.08); color: var(--blue); }
+.team-label-cell.C { background: rgba(30,132,73,0.08); color: var(--green); }
+.team-label-cell.D { background: rgba(212,136,15,0.08); color: var(--gold); }
+.team-label-cell.E { background: rgba(125,60,152,0.08); color: var(--purple); }
+
+.sb-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+
+.sb-summary-row td {
+  font-weight: 700;
+  border-top: 2px solid var(--border);
+  background: var(--bg) !important;
+  color: var(--text);
+}
+
+.sb-tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: var(--bg);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.sb-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+}
+
+.sb-tab:hover { color: var(--text-secondary); }
+.sb-tab.active {
+  background: var(--card);
+  color: var(--accent);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sb-setup { grid-template-columns: repeat(2, 1fr); }
+  .score-cell-input { width: 50px; }
+}
+@media (max-width: 480px) {
+  .sb-setup { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-huthwaite.svg" alt="Huthwaite" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling 2.0</div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="scoreboard"></div>
+
+<div class="main">
+<div class="section">
+
+  <!-- Tab Bar -->
+  <div class="sb-tab-bar">
+    <button class="sb-tab active" onclick="switchTab('team')">팀 편성 & 점수</button>
+    <button class="sb-tab" onclick="switchTab('individual')">개인별 점수</button>
+    <button class="sb-tab" onclick="switchTab('ranking')">종합 순위</button>
+  </div>
+
+  <!-- TAB 1: 팀 편성 -->
+  <div id="tabTeam">
+    <div class="card">
+      <div class="card-title"><span class="icon">👥</span> 팀 편성 (5팀 x 4명 = 20명)</div>
+      <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 13px;">
+        각 팀의 팀원 이름을 입력하세요. 입력한 내용은 자동 저장됩니다.
+      </p>
+      <div class="sb-setup" id="teamSetup"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🏆</span> 팀별 점수 현황</div>
+      <table class="scoreboard-table">
+        <thead>
+          <tr>
+            <th>순위</th>
+            <th>팀</th>
+            <th>퀴즈</th>
+            <th>니즈구분</th>
+            <th>시나리오</th>
+            <th>질문연습</th>
+            <th>롤플레이</th>
+            <th>FAB</th>
+            <th>합계</th>
+            <th>진행률</th>
+          </tr>
+        </thead>
+        <tbody id="teamScoreBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 2: 개인별 점수 입력 -->
+  <div id="tabIndividual" style="display:none;">
+    <div class="card">
+      <div class="card-title"><span class="icon">📝</span> 개인별 점수 입력</div>
+      <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 13px;">
+        각 팀원의 활동별 점수를 입력하세요. 팀 점수는 팀원 점수의 합계로 자동 계산됩니다.
+      </p>
+      <div style="overflow-x: auto;">
+        <table class="score-input-table" id="individualScoreTable">
+          <thead>
+            <tr>
+              <th style="min-width:120px;">이름</th>
+              <th>팀</th>
+              <th style="min-width:70px;">퀴즈</th>
+              <th style="min-width:70px;">니즈구분</th>
+              <th style="min-width:70px;">시나리오</th>
+              <th style="min-width:70px;">질문연습</th>
+              <th style="min-width:70px;">롤플레이</th>
+              <th style="min-width:70px;">FAB</th>
+              <th style="min-width:70px;">합계</th>
+            </tr>
+          </thead>
+          <tbody id="individualScoreBody"></tbody>
+        </table>
+      </div>
+      <div class="sb-actions">
+        <button class="btn btn-secondary" onclick="resetAllScores()">점수 초기화</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🏅</span> 개인 순위</div>
+      <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 13px;">
+        합계 점수 기준 개인 순위입니다. 활동 점수가 반영되면 자동으로 갱신됩니다.
+      </p>
+      <div style="overflow-x: auto;">
+        <table class="scoreboard-table">
+          <thead>
+            <tr>
+              <th>순위</th>
+              <th>이름</th>
+              <th>팀</th>
+              <th>퀴즈</th>
+              <th>니즈구분</th>
+              <th>시나리오</th>
+              <th>질문연습</th>
+              <th>롤플레이</th>
+              <th>FAB</th>
+              <th>합계</th>
+            </tr>
+          </thead>
+          <tbody id="individualRankBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: 종합 순위 -->
+  <div id="tabRanking" style="display:none;">
+    <div class="card">
+      <div class="card-title"><span class="icon">🥇</span> 팀 종합 순위</div>
+      <div id="teamRankingCards"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🏅</span> 개인 순위 (전체)</div>
+      <div style="overflow-x: auto;">
+        <table class="scoreboard-table">
+          <thead>
+            <tr>
+              <th>순위</th>
+              <th>이름</th>
+              <th>팀</th>
+              <th>퀴즈</th>
+              <th>니즈구분</th>
+              <th>시나리오</th>
+              <th>질문연습</th>
+              <th>롤플레이</th>
+              <th>FAB</th>
+              <th>합계</th>
+            </tr>
+          </thead>
+          <tbody id="personalRankBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="scoreboard.js"></script>
+</body>
+</html>
