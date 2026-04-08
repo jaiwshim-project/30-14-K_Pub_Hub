@@ -42,15 +42,15 @@ function clearSessionId() {
 }
 
 // Create new training session + 20 members
-async function createSession(companyName, trainingDate, memo) {
-  // 1. Create session
+async function createSession(companyName, trainingDate, password) {
+  // 1. Create session (memo에 비밀번호 저장)
   const res = await fetch(`${SUPABASE_URL}/rest/v1/spin_sessions`, {
     method: 'POST',
     headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
     body: JSON.stringify({
       company_name: companyName,
       training_date: trainingDate || '',
-      memo: memo || '',
+      memo: password || '',
       team_names: { A: '팀 A', B: '팀 B', C: '팀 C', D: '팀 D', E: '팀 E' }
     })
   });
@@ -88,6 +88,16 @@ async function fetchSessions() {
     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
   );
   return await res.json();
+}
+
+// Fetch session password (stored in memo)
+async function fetchSessionPassword(sessionId) {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${sessionId}&select=memo`,
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+  );
+  const data = await res.json();
+  return (data && data[0] && data[0].memo) || '';
 }
 
 // Fetch current session's team names

@@ -309,6 +309,7 @@
       <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
         <input type="text" id="newCompanyName" placeholder="교육 회사명 (예: 현대자동차)" style="flex:2; min-width:200px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text);">
         <input type="text" id="newTrainingDate" placeholder="교육일 (예: 2026.04.14~15)" style="flex:1; min-width:160px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text);">
+        <input type="text" id="newPassword" placeholder="입장 비밀번호 (숫자)" style="flex:1; min-width:120px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text); letter-spacing:2px;">
         <button class="btn btn-primary" onclick="handleCreateSession()">교육 생성</button>
       </div>
 
@@ -423,6 +424,22 @@
 </div>
 </div>
 
+<!-- 비밀번호 확인 모달 -->
+<div class="modal-overlay" id="pwModal">
+  <div class="modal" style="max-width:360px; text-align:center;">
+    <h2 style="font-size:18px; margin-bottom:4px;">입장 비밀번호</h2>
+    <p style="font-size:13px; color:var(--text-tertiary); margin-bottom:20px;" id="pwModalSession"></p>
+    <input type="password" id="pwInput" inputmode="numeric" maxlength="10" placeholder="비밀번호 입력"
+      style="width:100%; padding:14px; border:2px solid var(--border); border-radius:12px; font-family:inherit; font-size:20px; font-weight:700; text-align:center; letter-spacing:6px; color:var(--text); background:var(--bg); transition:border-color 0.2s; margin-bottom:8px;"
+      onkeyup="if(event.key==='Enter') checkPassword()">
+    <div id="pwError" style="display:none; font-size:12px; color:var(--accent); font-weight:600; margin-bottom:12px;"></div>
+    <div style="display:flex; gap:8px;">
+      <button onclick="closeModal('pwModal')" class="btn btn-secondary" style="flex:1;">취소</button>
+      <button onclick="checkPassword()" class="btn btn-primary" style="flex:1;">입장</button>
+    </div>
+  </div>
+</div>
+
 <div id="footerPlaceholder"></div>
 
 </div><!-- /mainApp -->
@@ -468,8 +485,44 @@ async function loadSessionList() {
   }).join('');
 }
 
+// 비밀번호 확인 후 입장
+let pendingSession = null;
+
 function selectSession(id, companyName, trainingDate) {
-  saveSessionId({ id, company_name: companyName, training_date: trainingDate });
+  pendingSession = { id, company_name: companyName, training_date: trainingDate };
+  document.getElementById('pwModalSession').textContent = companyName;
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwError').style.display = 'none';
+  document.getElementById('pwInput').style.borderColor = 'var(--border)';
+  document.getElementById('pwModal').classList.add('active');
+  setTimeout(() => document.getElementById('pwInput').focus(), 100);
+}
+
+async function checkPassword() {
+  const input = document.getElementById('pwInput');
+  const errorEl = document.getElementById('pwError');
+  const entered = input.value.trim();
+
+  if (!entered) {
+    errorEl.textContent = '비밀번호를 입력하세요';
+    errorEl.style.display = 'block';
+    input.style.borderColor = 'var(--accent)';
+    return;
+  }
+
+  const savedPw = await fetchSessionPassword(pendingSession.id);
+
+  if (savedPw && entered !== savedPw) {
+    errorEl.textContent = '비밀번호가 틀립니다';
+    errorEl.style.display = 'block';
+    input.style.borderColor = 'var(--accent)';
+    input.select();
+    return;
+  }
+
+  // 비밀번호 일치 또는 비밀번호 미설정
+  closeModal('pwModal');
+  saveSessionId(pendingSession);
   clearUser();
   clearRole();
   goToIdentityStep();
@@ -485,20 +538,23 @@ function showAdminPanel() {
 async function handleCreateSession() {
   const name = document.getElementById('newCompanyName').value.trim();
   const date = document.getElementById('newTrainingDate').value.trim();
+  const password = document.getElementById('newPassword').value.trim();
   if (!name) { alert('교육 회사명을 입력하세요.'); return; }
+  if (!password) { alert('입장 비밀번호를 설정하세요.'); document.getElementById('newPassword').focus(); return; }
 
   const btn = event.target;
   btn.textContent = '생성 중...';
   btn.disabled = true;
 
-  const session = await createSession(name, date);
+  const session = await createSession(name, date, password);
   btn.textContent = '교육 생성';
   btn.disabled = false;
 
   document.getElementById('newCompanyName').value = '';
   document.getElementById('newTrainingDate').value = '';
+  document.getElementById('newPassword').value = '';
 
-  alert(`"${name}" 교육이 생성되었습니다.\n팀 편성 페이지에서 교육생 명단을 등록하세요.`);
+  alert(`"${name}" 교육이 생성되었습니다.\n입장 비밀번호: ${password}\n팀 편성 페이지에서 교육생 명단을 등록하세요.`);
 
   // 관리자로 바로 팀 편성 이동
   saveSessionId({ id: session.id, company_name: session.company_name, training_date: session.training_date });
