@@ -141,11 +141,11 @@ body::before {
 /* Navigation */
 .nav {
   display: flex;
-  background: #e0f2fe;
-  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 50%, #e0f2fe 100%);
+  border-bottom: 2px solid rgba(36,113,163,0.15);
   overflow-x: auto;
   scrollbar-width: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(36,113,163,0.08);
   position: sticky;
   top: 74px;
   z-index: 99;
@@ -168,12 +168,13 @@ body::before {
   text-decoration: none;
 }
 
-.nav-item:hover { color: var(--text-secondary); background: var(--bg); }
+.nav-item:hover { color: var(--text-secondary); background: rgba(255,255,255,0.6); }
 .nav-item.active {
   color: var(--accent);
   border-bottom-color: var(--accent);
-  background: transparent;
+  background: rgba(255,255,255,0.7);
   font-weight: 600;
+  box-shadow: inset 0 -3px 0 var(--accent);
 }
 
 .nav-icon { font-size: 15px; }
@@ -182,7 +183,13 @@ body::before {
 .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
 
 /* Section */
-.section { display: block; animation: fadeIn 0.4s ease; }
+.section {
+  display: block;
+  animation: fadeIn 0.4s ease;
+  background: linear-gradient(180deg, rgba(36,113,163,0.02) 0%, transparent 40%);
+  border-radius: 20px;
+  padding: 8px;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(12px); }
@@ -191,12 +198,19 @@ body::before {
 
 /* Cards */
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
+  border: 1px solid rgba(36,113,163,0.12);
+  border-top: 3px solid var(--blue);
   border-radius: var(--radius);
   padding: 28px 32px;
   margin-bottom: 20px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 2px 12px rgba(26,58,107,0.06), 0 0 0 1px rgba(36,113,163,0.04);
+  transition: all 0.25s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(26,58,107,0.1), 0 0 0 1px rgba(36,113,163,0.08);
+  border-color: rgba(36,113,163,0.2);
 }
 
 .card-title {
@@ -207,6 +221,8 @@ body::before {
   align-items: center;
   gap: 10px;
   color: var(--text);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .card-title .icon { font-size: 20px; }
@@ -228,36 +244,41 @@ body::before {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
   color: white;
-  box-shadow: 0 2px 8px rgba(192,57,43,0.2);
+  box-shadow: 0 2px 8px rgba(192,57,43,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+  border: 1px solid rgba(192,57,43,0.3);
 }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(192,57,43,0.25); background: var(--accent-light); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(192,57,43,0.3), inset 0 1px 0 rgba(255,255,255,0.2); }
 
 .btn-secondary {
-  background: var(--bg);
+  background: linear-gradient(135deg, #ffffff, var(--bg));
   color: var(--text-tertiary);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.btn-secondary:hover { background: var(--border-light); color: var(--text-secondary); border-color: #cbd5e0; }
-.btn-secondary.active { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-secondary:hover { background: linear-gradient(135deg, #ffffff, #edf2f7); color: var(--text-secondary); border-color: var(--blue); box-shadow: 0 2px 8px rgba(36,113,163,0.1); }
+.btn-secondary.active { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; border-color: var(--accent); }
 
 .btn-gold {
-  background: var(--gold);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
   color: white;
-  box-shadow: 0 2px 8px rgba(212,136,15,0.2);
+  box-shadow: 0 2px 8px rgba(212,136,15,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  border: 1px solid rgba(212,136,15,0.3);
 }
 
 .btn-blue {
-  background: var(--blue);
+  background: linear-gradient(135deg, var(--blue), var(--blue-light));
   color: white;
-  box-shadow: 0 2px 8px rgba(36,113,163,0.2);
+  box-shadow: 0 2px 8px rgba(36,113,163,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  border: 1px solid rgba(36,113,163,0.3);
 }
 
 .btn-green {
-  background: var(--green);
+  background: linear-gradient(135deg, var(--green), var(--green-light));
   color: white;
-  box-shadow: 0 2px 8px rgba(30,132,73,0.2);
+  box-shadow: 0 2px 8px rgba(30,132,73,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  border: 1px solid rgba(30,132,73,0.3);
 }
 
 .btn-sm { padding: 7px 15px; font-size: 12px; border-radius: 8px; }
@@ -320,8 +341,9 @@ body::before {
 }
 
 .feature-card {
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+  border: 1px solid rgba(36,113,163,0.1);
+  border-left: 3px solid var(--blue);
   border-radius: 14px;
   padding: 24px;
   cursor: pointer;
@@ -333,8 +355,8 @@ body::before {
 }
 .feature-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-hover);
-  border-color: #cbd5e0;
+  box-shadow: 0 8px 28px rgba(26,58,107,0.12);
+  border-color: rgba(36,113,163,0.25);
 }
 
 .feature-icon { font-size: 28px; margin-bottom: 12px; }
@@ -426,20 +448,23 @@ body::before {
 
 .quiz-option {
   padding: 14px 20px;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
+  background: linear-gradient(135deg, #ffffff, #fafbff);
+  border: 1.5px solid rgba(36,113,163,0.1);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-secondary);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
 }
 
 .quiz-option:hover {
   background: #fff;
   border-color: var(--accent);
   color: var(--text);
+  box-shadow: 0 2px 8px rgba(192,57,43,0.08);
+  transform: translateX(3px);
 }
 
 .quiz-option.correct {
@@ -478,13 +503,14 @@ body::before {
 
 /* ========== SCENARIO ========== */
 .scenario-dialogue {
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #fafcff 0%, #f5f6fa 100%);
+  border: 1.5px solid rgba(36,113,163,0.1);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
   max-height: 420px;
   overflow-y: auto;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .dialogue-line {
@@ -629,8 +655,9 @@ body::before {
 .ai-feedback {
   margin-top: 16px;
   padding: 20px;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: linear-gradient(135deg, #fef9f0, #fff8f0);
+  border: 1px solid rgba(212,136,15,0.15);
+  border-left: 3px solid var(--gold);
   border-radius: 12px;
   font-size: 14px;
   line-height: 1.7;
@@ -649,13 +676,14 @@ body::before {
 
 /* ========== ROLEPLAY ========== */
 .chat-container {
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #fafcff 0%, #f5f6fa 100%);
+  border: 1.5px solid rgba(36,113,163,0.1);
   border-radius: 12px;
   height: 400px;
   overflow-y: auto;
   padding: 20px;
   margin-bottom: 16px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .chat-msg {
@@ -791,11 +819,19 @@ body::before {
 }
 
 .stat-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: linear-gradient(135deg, #ffffff, #f8faff);
+  border: 1px solid rgba(36,113,163,0.1);
+  border-bottom: 3px solid var(--gold);
   border-radius: 12px;
   padding: 20px;
   text-align: center;
+  transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 16px rgba(212,136,15,0.1);
+  border-color: rgba(212,136,15,0.2);
 }
 
 .stat-value {
@@ -812,16 +848,17 @@ body::before {
 
 /* ========== IN/EN Practice ========== */
 .need-card {
-  background: #fff;
-  border: 1px solid var(--border);
+  background: linear-gradient(135deg, #ffffff 0%, #fafcff 100%);
+  border: 1.5px solid rgba(36,113,163,0.1);
   border-radius: 12px;
   padding: 18px 20px;
   margin-bottom: 10px;
   cursor: pointer;
   transition: all 0.25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
 }
 
-.need-card:hover { border-color: #cbd5e0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.need-card:hover { border-color: var(--blue); box-shadow: 0 4px 12px rgba(36,113,163,0.08); }
 
 .need-btns {
   display: flex;
