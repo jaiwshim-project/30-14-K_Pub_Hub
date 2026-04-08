@@ -429,14 +429,14 @@ function getNavHTML(activePage) {
   const items = [
     { page: 'index.html', section: 'home', icon: '🏠', label: '홈' },
     { page: 'team-setup.html', section: 'team-setup', icon: '👥', label: '팀 편성' },
-    { page: 'prereading.html', section: 'prereading', icon: '📖', label: '프리리딩' },
-    { page: 'quiz.html', section: 'quiz', icon: '📝', label: '퀴즈' },
-    { page: 'needs.html', section: 'needs', icon: '🎯', label: '니즈 구분' },
-    { page: 'scenario.html', section: 'scenario', icon: '🔍', label: 'SPIN 질문구분' },
-    { page: 'practice.html', section: 'practice', icon: '💬', label: '질문 연습' },
-    { page: 'spin-needs.html', section: 'spin-needs', icon: '🔎', label: 'SPIN질문&니즈 구분' },
-    { page: 'roleplay.html', section: 'roleplay', icon: '🎭', label: '롤플레이' },
-    { page: 'fab.html', section: 'fab', icon: '🧩', label: 'FAB/BAF' },
+    { page: 'prereading.html', section: 'prereading', icon: '📖', label: '1.프리리딩' },
+    { page: 'quiz.html', section: 'quiz', icon: '📝', label: '2.퀴즈' },
+    { page: 'needs.html', section: 'needs', icon: '🎯', label: '3.니즈 구분' },
+    { page: 'scenario.html', section: 'scenario', icon: '🔍', label: '4.SPIN 질문구분' },
+    { page: 'practice.html', section: 'practice', icon: '💬', label: '5.질문 연습' },
+    { page: 'spin-needs.html', section: 'spin-needs', icon: '🔎', label: '6.SPIN질문&니즈 구분' },
+    { page: 'roleplay.html', section: 'roleplay', icon: '🎭', label: '7.롤플레이' },
+    { page: 'fab.html', section: 'fab', icon: '🧩', label: '8.FAB/BAF' },
     { page: 'scoreboard.html', section: 'scoreboard', icon: '🏆', label: '스코어보드' },
     { page: 'coaching.html', section: 'coaching', icon: '📊', label: '코칭 리포트' }
   ];
