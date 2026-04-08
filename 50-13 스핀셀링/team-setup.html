@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPIN Selling 2.0 - 팀 편성</title>
+<title>SPIN Selling 2.0 & 3.0 - 팀 편성</title>
 <link rel="stylesheet" href="common.css">
 <style>
 .ts-grid {
@@ -133,7 +133,7 @@
     <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
       <img src="logo-huthwaite.svg" alt="Huthwaite" class="logo-img">
       <div>
-        <div class="logo-text">SPIN Selling 2.0</div>
+        <div class="logo-text">SPIN Selling 2.0 & 3.0</div>
         <div class="logo-sub">AI-Powered Training</div>
       </div>
     </a>
@@ -288,7 +288,7 @@ async function copyAllCodes() {
   ['A','B','C','D','E'].forEach(t => { grouped[t] = []; });
   registered.forEach(m => { if (grouped[m.team_id]) grouped[m.team_id].push(m); });
 
-  let text = '[ SPIN Selling 2.0 - 개인 접속 코드 ]\n\n';
+  let text = '[ SPIN Selling 2.0 & 3.0 - 개인 접속 코드 ]\n\n';
   ['A','B','C','D','E'].forEach(t => {
     if (grouped[t].length === 0) return;
     const tName = teamNames[t] || `팀 ${t}`;

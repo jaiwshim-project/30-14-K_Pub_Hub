@@ -495,7 +495,7 @@ function getFooterHTML() {
     <div class="footer-divider"></div>
     <div class="footer-bottom">
       <div class="footer-copy">
-        <span>&copy; 2024 Huthwaite SPIN 2.0 Official Program</span>
+        <span>&copy; 2024 Huthwaite SPIN 2.0 & 3.0 Official Program</span>
         <span class="footer-sep">|</span>
         <span>심재우 대표 &middot; SB Consulting</span>
         <span class="footer-sep">|</span>
