@@ -578,21 +578,44 @@ async function loadAdminSessionList() {
   }
 
   el.innerHTML = '<div style="font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:8px;">기존 교육 관리</div>' +
-    sessions.map(s => `
-      <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:8px; margin-bottom:6px;">
-        <div>
-          <span style="font-weight:700; font-size:13px;">${s.company_name}</span>
-          <span style="color:var(--text-muted); font-size:11px; margin-left:8px;">${s.training_date || ''}</span>
+    sessions.map(s => {
+      const isEnded = s.team_names && s.team_names.ended;
+      return `
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:${isEnded ? 'rgba(192,57,43,0.03)' : 'var(--bg)'}; border:1px solid ${isEnded ? 'rgba(192,57,43,0.15)' : 'var(--border)'}; border-radius:8px; margin-bottom:6px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-weight:700; font-size:13px; ${isEnded ? 'color:var(--text-muted);' : ''}">${s.company_name}</span>
+          ${isEnded ? '<span style="color:#c0392b; font-size:11px; font-weight:800;">교육종료</span>' : ''}
+          <span style="color:var(--text-muted); font-size:11px;">${s.training_date || ''}</span>
         </div>
         <div style="display:flex; gap:6px;">
+          <button onclick="adminToggleEnded('${s.id}', ${!isEnded})"
+            style="font-size:11px; padding:4px 12px; background:${isEnded ? 'rgba(30,132,73,0.08)' : 'rgba(212,136,15,0.08)'}; color:${isEnded ? 'var(--green)' : 'var(--gold)'}; border:1px solid ${isEnded ? 'rgba(30,132,73,0.2)' : 'rgba(212,136,15,0.2)'}; border-radius:6px; cursor:pointer; font-family:inherit; font-weight:600;">${isEnded ? '재개' : '종료'}</button>
           <button onclick="adminEnterSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}', '${(s.training_date||'').replace(/'/g,"\\'")}')"
             class="btn btn-secondary" style="font-size:11px; padding:4px 12px;">팀 편성</button>
           <button onclick="adminDeleteSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}')"
             style="font-size:11px; padding:4px 12px; background:rgba(192,57,43,0.08); color:var(--accent); border:1px solid rgba(192,57,43,0.2); border-radius:6px; cursor:pointer; font-family:inherit; font-weight:600; transition:all 0.2s;"
             onmouseover="this.style.background='var(--accent)';this.style.color='white'" onmouseout="this.style.background='rgba(192,57,43,0.08)';this.style.color='var(--accent)'">삭제</button>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
+}
+
+async function adminToggleEnded(sessionId, ended) {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${sessionId}&select=team_names`,
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+  );
+  const data = await res.json();
+  const teamNames = (data && data[0] && data[0].team_names) || {};
+  teamNames.ended = ended;
+
+  await fetch(`${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${sessionId}`, {
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({ team_names: teamNames })
+  });
+
+  loadAdminSessionList();
 }
 
 async function adminDeleteSession(id, name) {
