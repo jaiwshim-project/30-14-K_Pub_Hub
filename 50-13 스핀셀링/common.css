@@ -141,7 +141,7 @@ body::before {
 /* Navigation */
 .nav {
   display: flex;
-  background: #f8f9fb;
+  background: #e0f2fe;
   border-bottom: 1px solid var(--border);
   overflow-x: auto;
   scrollbar-width: none;
