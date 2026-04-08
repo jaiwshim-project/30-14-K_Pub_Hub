@@ -120,6 +120,23 @@ function getMemberCode(memberId) {
   return String(code).padStart(4, '0');
 }
 
+// ========== ROLE MANAGEMENT ==========
+function getSavedRole() {
+  return localStorage.getItem('spin_role') || null; // 'trainer' or 'trainee'
+}
+
+function saveRole(role) {
+  localStorage.setItem('spin_role', role);
+}
+
+function clearRole() {
+  localStorage.removeItem('spin_role');
+}
+
+function isTrainer() {
+  return getSavedRole() === 'trainer';
+}
+
 // ========== USER IDENTITY ==========
 function getSavedUser() {
   return JSON.parse(localStorage.getItem('spin_current_user') || 'null');
@@ -184,104 +201,57 @@ function getSessionBarHTML() {
 function switchSession() {
   clearSessionId();
   clearUser();
+  clearRole();
   location.href = 'index.html';
 }
 
 // ========== USER IDENTITY BAR ==========
 function getUserBarHTML() {
-  return `
+  const role = getSavedRole();
+  const user = getSavedUser();
+
+  if (role === 'trainer') {
+    return `
+<div id="userIdentityBar" style="display:none; background:linear-gradient(135deg, #1a1a2e, #16213e); border-bottom:1px solid rgba(255,255,255,0.1); padding:8px 24px;">
+  <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span style="background:var(--gold); color:#1a1a2e; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px;">TRAINER</span>
+      <span style="color:rgba(255,255,255,0.7); font-size:13px; font-weight:600;">강사 모드 — 모든 기능 접근 가능</span>
+    </div>
+    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.5); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">역할 변경</button>
+  </div>
+</div>`;
+  }
+
+  if (user) {
+    return `
 <div id="userIdentityBar" style="display:none; background:var(--card); border-bottom:1px solid var(--border); padding:10px 24px;">
-  <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-    <div id="codeInputArea" style="display:flex; align-items:center; gap:10px;">
-      <span style="font-size:13px; font-weight:600; color:var(--text-tertiary);">접속 코드:</span>
-      <input id="accessCodeInput" type="text" inputmode="numeric" maxlength="4" placeholder="4자리 코드"
-        style="width:100px; padding:8px 14px; border:2px solid var(--border); border-radius:10px; font-family:inherit; font-size:16px; font-weight:700; text-align:center; letter-spacing:4px; color:var(--text); background:var(--bg); transition:border-color 0.2s;"
-        onkeyup="if(this.value.length===4) verifyAccessCode()"
-        onfocus="this.select()">
-      <button onclick="verifyAccessCode()" style="padding:8px 16px; background:var(--accent); color:white; border:none; border-radius:8px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;">확인</button>
-      <span id="codeError" style="display:none; font-size:12px; color:var(--accent); font-weight:600;"></span>
-    </div>
-    <div id="userConfirmed" style="display:none; font-size:13px; font-weight:700; color:var(--accent); align-items:center; gap:6px;">
-      <span id="userConfirmedText"></span>
-      <button onclick="changeUser()" style="background:none; border:1px solid var(--border); border-radius:6px; padding:3px 10px; font-size:11px; cursor:pointer; color:var(--text-muted); font-family:inherit;">변경</button>
-    </div>
+  <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:12px;">
+    <span style="font-size:13px; font-weight:700; color:var(--accent); display:flex; align-items:center; gap:6px;">
+      <span>팀 ${user.team_id} | ${user.name}</span>
+    </span>
+    <button onclick="changeUser()" style="background:none; border:1px solid var(--border); border-radius:6px; padding:3px 10px; font-size:11px; cursor:pointer; color:var(--text-muted); font-family:inherit;">변경</button>
+  </div>
+</div>`;
+  }
+
+  // 미로그인 상태: 홈으로 이동 유도
+  return `
+<div id="userIdentityBar" style="display:none; background:rgba(192,57,43,0.04); border-bottom:1px solid var(--border); padding:10px 24px;">
+  <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:12px;">
+    <span style="font-size:13px; color:var(--accent); font-weight:600;">본인 확인이 필요합니다</span>
+    <a href="index.html" style="padding:6px 16px; background:var(--accent); color:white; border:none; border-radius:8px; font-family:inherit; font-size:12px; font-weight:700; text-decoration:none;">홈에서 로그인</a>
   </div>
 </div>`;
 }
 
 let allMembersCache = null;
 
-async function verifyAccessCode() {
-  const input = document.getElementById('accessCodeInput');
-  const errorEl = document.getElementById('codeError');
-  const code = input.value.trim();
-
-  if (code.length !== 4) {
-    errorEl.textContent = '4자리를 입력하세요';
-    errorEl.style.display = 'inline';
-    return;
-  }
-
-  if (!allMembersCache) {
-    allMembersCache = await fetchAllMembers();
-  }
-
-  const member = allMembersCache.find(m => getMemberCode(m.id) === code);
-
-  if (!member) {
-    errorEl.textContent = '잘못된 코드입니다';
-    errorEl.style.display = 'inline';
-    input.style.borderColor = 'var(--accent)';
-    input.select();
-    return;
-  }
-
-  if (!member.name) {
-    errorEl.textContent = '미등록 팀원입니다';
-    errorEl.style.display = 'inline';
-    return;
-  }
-
-  errorEl.style.display = 'none';
-  input.style.borderColor = 'var(--green)';
-
-  const user = {
-    id: member.id,
-    team_id: member.team_id,
-    name: member.name,
-    slot: member.slot
-  };
-
-  saveUser(user);
-  showConfirmedUser(user);
-  updateHeaderUser(user);
-}
-
-function showConfirmedUser(user) {
-  const codeArea = document.getElementById('codeInputArea');
-  const confirmed = document.getElementById('userConfirmed');
-
-  if (codeArea) codeArea.style.display = 'none';
-  if (confirmed) {
-    confirmed.style.display = 'flex';
-    document.getElementById('userConfirmedText').textContent = `팀 ${user.team_id} | ${user.name}`;
-  }
-}
-
 function changeUser() {
   clearUser();
+  clearRole();
   allMembersCache = null;
-  const codeArea = document.getElementById('codeInputArea');
-  const confirmed = document.getElementById('userConfirmed');
-  const input = document.getElementById('accessCodeInput');
-  const errorEl = document.getElementById('codeError');
-
-  if (codeArea) codeArea.style.display = 'flex';
-  if (confirmed) confirmed.style.display = 'none';
-  if (input) { input.value = ''; input.style.borderColor = 'var(--border)'; }
-  if (errorEl) errorEl.style.display = 'none';
-
-  updateHeaderUser(null);
+  location.href = 'index.html';
 }
 
 function updateHeaderUser(user) {
@@ -298,14 +268,12 @@ function updateHeaderUser(user) {
 
 function restoreUser() {
   const user = getSavedUser();
+  const role = getSavedRole();
   if (user) {
     state.user = user;
-    const teamSelect = document.getElementById('userTeamSelect');
-    const nameSelect = document.getElementById('userNameSelect');
-    if (teamSelect && nameSelect) {
-      showConfirmedUser(user);
-    }
     updateHeaderUser(user);
+  } else if (role === 'trainer') {
+    updateHeaderUser({ team_id: '', name: '강사' });
   }
 }
 
@@ -399,6 +367,9 @@ function checkAutoLogin() {}
 
 // ========== COMMON HTML GENERATORS ==========
 function getNavHTML(activePage) {
+  const role = getSavedRole();
+  const trainerOnly = ['team-setup', 'scoreboard', 'coaching'];
+
   const items = [
     { page: 'index.html', section: 'home', icon: '🏠', label: '홈' },
     { page: 'team-setup.html', section: 'team-setup', icon: '👥', label: '팀 편성' },
@@ -412,8 +383,10 @@ function getNavHTML(activePage) {
     { page: 'coaching.html', section: 'coaching', icon: '📊', label: '코칭 리포트' }
   ];
 
+  const filtered = role === 'trainer' ? items : items.filter(i => !trainerOnly.includes(i.section));
+
   return '<div class="nav" id="mainNav">' +
-    items.map(item =>
+    filtered.map(item =>
       `<a href="${item.page}" class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label}</a>`
     ).join('') +
     '</div>';
@@ -478,8 +451,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const isScoreboard = window.location.pathname.includes('scoreboard');
   const session = getSavedSession();
 
-  // 세션이 없고 홈이 아니면 → 홈으로 리다이렉트
-  if (!session && !isHome) {
+  const role = getSavedRole();
+
+  // 세션 또는 역할이 없고 홈이 아니면 → 홈으로 리다이렉트
+  if ((!session || !role) && !isHome) {
+    location.href = 'index.html';
+    return;
+  }
+
+  // 교육생인데 유저 미선택이고 홈이 아니면 → 홈으로
+  if (role === 'trainee' && !getSavedUser() && !isHome) {
     location.href = 'index.html';
     return;
   }
