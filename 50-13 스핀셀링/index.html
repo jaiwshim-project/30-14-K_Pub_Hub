@@ -186,14 +186,18 @@
 /* Session info strip */
 .session-strip {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 14px;
-  padding: 16px 24px;
-  margin-bottom: 24px;
+  border-radius: 0 0 14px 14px;
+  padding: 14px 24px;
+  margin: 0 -24px 24px -24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
+  position: sticky;
+  top: 74px;
+  z-index: 98;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
 
 .session-strip-info {

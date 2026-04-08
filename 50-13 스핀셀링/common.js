@@ -190,7 +190,7 @@ function getSessionBarHTML() {
   const session = getSavedSession();
   if (!session) return '';
   return `
-<div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); padding:8px 24px; text-align:center;">
+<div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); padding:8px 24px; text-align:center; position:sticky; top:74px; z-index:98; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
   <span style="color:rgba(255,255,255,0.6); font-size:12px; font-weight:500;">현재 교육</span>
   <span style="color:var(--gold-light); font-size:18px; font-weight:800; margin-left:8px;">${session.company_name}</span>
   ${session.training_date ? `<span style="color:rgba(255,255,255,0.4); font-size:11px; margin-left:8px;">${session.training_date}</span>` : ''}
