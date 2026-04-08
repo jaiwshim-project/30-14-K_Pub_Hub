@@ -515,18 +515,19 @@ function getFooterHTML() {
 document.addEventListener('DOMContentLoaded', function() {
   const isHome = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
   const isScoreboard = window.location.pathname.includes('scoreboard');
+  const isPrereading = window.location.pathname.includes('prereading');
   const session = getSavedSession();
 
   const role = getSavedRole();
 
-  // 세션 또는 역할이 없고 홈이 아니면 → 홈으로 리다이렉트
-  if ((!session || !role) && !isHome) {
+  // 세션 또는 역할이 없고 홈/프리리딩이 아니면 → 홈으로 리다이렉트
+  if ((!session || !role) && !isHome && !isPrereading) {
     location.href = 'index.html';
     return;
   }
 
-  // 교육생인데 유저 미선택이고 홈이 아니면 → 홈으로
-  if (role === 'trainee' && !getSavedUser() && !isHome) {
+  // 교육생인데 유저 미선택이고 홈/프리리딩이 아니면 → 홈으로
+  if (role === 'trainee' && !getSavedUser() && !isHome && !isPrereading) {
     location.href = 'index.html';
     return;
   }
