@@ -577,10 +577,31 @@ async function loadAdminSessionList() {
           <span style="font-weight:700; font-size:13px;">${s.company_name}</span>
           <span style="color:var(--text-muted); font-size:11px; margin-left:8px;">${s.training_date || ''}</span>
         </div>
-        <button onclick="adminEnterSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}', '${(s.training_date||'').replace(/'/g,"\\'")}')"
-          class="btn btn-secondary" style="font-size:11px; padding:4px 12px;">팀 편성</button>
+        <div style="display:flex; gap:6px;">
+          <button onclick="adminEnterSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}', '${(s.training_date||'').replace(/'/g,"\\'")}')"
+            class="btn btn-secondary" style="font-size:11px; padding:4px 12px;">팀 편성</button>
+          <button onclick="adminDeleteSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}')"
+            style="font-size:11px; padding:4px 12px; background:rgba(192,57,43,0.08); color:var(--accent); border:1px solid rgba(192,57,43,0.2); border-radius:6px; cursor:pointer; font-family:inherit; font-weight:600; transition:all 0.2s;"
+            onmouseover="this.style.background='var(--accent)';this.style.color='white'" onmouseout="this.style.background='rgba(192,57,43,0.08)';this.style.color='var(--accent)'">삭제</button>
+        </div>
       </div>
     `).join('');
+}
+
+async function adminDeleteSession(id, name) {
+  if (!confirm(`"${name}" 교육을 삭제하시겠습니까?\n팀원 데이터도 모두 삭제됩니다.`)) return;
+
+  // 멤버 삭제
+  await fetch(`${SUPABASE_URL}/rest/v1/spin_members?session_id=eq.${id}`, {
+    method: 'DELETE', headers: SB_HEADERS
+  });
+  // 세션 삭제
+  await fetch(`${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${id}`, {
+    method: 'DELETE', headers: SB_HEADERS
+  });
+
+  loadAdminSessionList();
+  loadSessionList();
 }
 
 function adminEnterSession(id, name, date) {
