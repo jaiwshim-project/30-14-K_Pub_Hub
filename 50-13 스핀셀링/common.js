@@ -464,7 +464,7 @@ function getFooterHTML() {
     <div class="footer-top">
       <div class="footer-brand">
         <div class="footer-logo">
-          <img src="logo-kornferry.svg" alt="Korn Ferry" class="footer-logo-img">
+          <img src="logo-kornferry.png" alt="Korn Ferry" class="footer-logo-img">
         </div>
         <p class="footer-desc">Korn Ferry(Huthwaite) 35,000건 영업 연구 기반<br>세계 최고의 B2B 영업 방법론을 AI와 함께 체화하는 실전형 훈련 플랫폼</p>
       </div>
