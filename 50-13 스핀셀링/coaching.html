@@ -80,6 +80,15 @@
 </div>
 
 <script src="common.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const role = getSavedRole();
+  if (role === 'trainee') {
+    alert('코칭 리포트는 강사 또는 관리자만 볼 수 있습니다.');
+    location.href = 'index.html';
+  }
+});
+</script>
 <script src="coaching.js"></script>
 </body>
 </html>
