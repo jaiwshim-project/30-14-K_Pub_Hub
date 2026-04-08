@@ -81,10 +81,10 @@ async function createSession(companyName, trainingDate, password) {
   return session;
 }
 
-// Fetch all sessions
+// Fetch all sessions (삭제된 세션 제외)
 async function fetchSessions() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/spin_sessions?select=*&order=created_at.desc`,
+    `${SUPABASE_URL}/rest/v1/spin_sessions?company_name=neq.&select=*&order=created_at.desc`,
     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
   );
   return await res.json();

@@ -591,15 +591,21 @@ async function loadAdminSessionList() {
 async function adminDeleteSession(id, name) {
   if (!confirm(`"${name}" 교육을 삭제하시겠습니까?\n팀원 데이터도 모두 삭제됩니다.`)) return;
 
-  // 멤버 삭제
-  await fetch(`${SUPABASE_URL}/rest/v1/spin_members?session_id=eq.${id}`, {
-    method: 'DELETE', headers: SB_HEADERS
-  });
-  // 세션 삭제
+  // 세션을 삭제 표시 (company_name을 빈 문자열로)
   await fetch(`${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${id}`, {
-    method: 'DELETE', headers: SB_HEADERS
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({ company_name: '', memo: '[deleted]' })
   });
 
+  // 멤버 이름 초기화
+  await fetch(`${SUPABASE_URL}/rest/v1/spin_members?session_id=eq.${id}`, {
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({ name: '', score_quiz: 0, score_needs: 0, score_scenario: 0, score_practice: 0, score_roleplay: 0, score_fab: 0 })
+  });
+
+  alert(`"${name}" 교육이 삭제되었습니다.`);
   loadAdminSessionList();
   loadSessionList();
 }
