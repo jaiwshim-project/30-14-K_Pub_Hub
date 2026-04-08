@@ -114,6 +114,24 @@ async function updateTeamName(teamKey, newName) {
   );
 }
 
+// Save trainer name to Supabase session
+async function saveTrainerName(name) {
+  const session = getSavedSession();
+  if (!session) return;
+  const data = await fetchTeamNames();
+  data.trainer_name = name;
+  await fetch(
+    `${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${session.id}`,
+    { method: 'PATCH', headers: SB_HEADERS, body: JSON.stringify({ team_names: data }) }
+  );
+}
+
+// Fetch trainer name from Supabase session
+async function fetchTrainerName() {
+  const data = await fetchTeamNames();
+  return data.trainer_name || '';
+}
+
 // ========== ACCESS CODE ==========
 function getMemberCode(memberId) {
   const code = ((memberId * 7919 + 104729) % 10000);

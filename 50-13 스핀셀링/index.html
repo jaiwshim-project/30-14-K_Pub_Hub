@@ -540,6 +540,11 @@ async function goToIdentityStep() {
   document.getElementById('idSessionDate').textContent = session.training_date || '';
   showStep('stepIdentity');
 
+  // Supabase에서 강사 이름 복원
+  const trainerName = await fetchTrainerName();
+  const trainerInput = document.getElementById('trainerNameInput');
+  if (trainerInput && trainerName) trainerInput.value = trainerName;
+
   // 이름 그리드 로드
   const members = await fetchAllMembers();
   const teamNames = await fetchTeamNames();
@@ -565,7 +570,7 @@ async function goToIdentityStep() {
   }).join('');
 }
 
-function loginAsTrainer() {
+async function loginAsTrainer() {
   const nameInput = document.getElementById('trainerNameInput');
   const name = nameInput.value.trim();
   if (!name) { nameInput.focus(); nameInput.style.borderColor = '#e74c3c'; return; }
@@ -573,6 +578,10 @@ function loginAsTrainer() {
   saveRole('trainer');
   saveUser({ id: null, team_id: null, name: name, slot: null });
   updateHeaderUser({ name });
+
+  // Supabase에 강사 이름 저장
+  await saveTrainerName(name);
+
   goToDashboard();
 }
 
