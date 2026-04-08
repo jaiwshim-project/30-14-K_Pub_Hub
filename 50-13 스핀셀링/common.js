@@ -500,6 +500,7 @@ function getFooterHTML() {
       <div class="footer-badges">
         <span class="footer-badge">Huthwaite Certified</span>
         <span class="footer-badge accent">AI-Enhanced</span>
+        <a href="index.html#admin" onclick="localStorage.setItem('spin_open_admin','1')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.4); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">🔧 관리자</a>
       </div>
     </div>
   </div>

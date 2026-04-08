@@ -678,6 +678,12 @@ document.addEventListener('DOMContentLoaded', function() {
   updateHeaderUser(null);
   showStep('stepSession');
   loadSessionList();
+
+  // 푸터 관리자 버튼에서 온 경우 자동으로 관리자 패널 열기
+  if (localStorage.getItem('spin_open_admin') === '1') {
+    localStorage.removeItem('spin_open_admin');
+    setTimeout(() => showAdminPanel(), 300);
+  }
 });
 </script>
 </body>
