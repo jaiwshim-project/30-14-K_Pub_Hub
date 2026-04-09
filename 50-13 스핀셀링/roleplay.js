@@ -421,13 +421,13 @@ function requestAIEvaluation() {
   evalResults[diff] = { score, grade, html: evalHTML };
   saveEvalResults();
 
-  // 하단 평가 결과 카드 표시 + 해당 탭 활성화
-  document.getElementById('evalResultCard').style.display = 'block';
+  // 해당 난이도 탭 활성화 + 결과 표시
   updateEvalTabs();
   switchEvalTab(diff);
 
   // 스크롤
-  document.getElementById('evalResultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const evalContent = document.getElementById('evalContent' + diff.charAt(0).toUpperCase() + diff.slice(1));
+  if (evalContent) evalContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function buildEvalHTML(d) {
@@ -523,7 +523,6 @@ function loadEvalResults() {
     if (data[d]) evalResults[d] = data[d];
   });
   if (data.easy || data.medium || data.hard) {
-    document.getElementById('evalResultCard').style.display = 'block';
     updateEvalTabs();
     const first = data.easy ? 'easy' : data.medium ? 'medium' : 'hard';
     switchEvalTab(first);

@@ -171,7 +171,6 @@
     <div class="chat-input-area" style="margin-left:38px;">
       <input type="text" class="chat-input" id="chatInput" placeholder="질문을 입력하세요..." onkeypress="if(event.key==='Enter')sendChat()">
       <button class="btn btn-primary" onclick="sendChat()">전송</button>
-      <button class="btn btn-gold" onclick="requestAIEvaluation()">AI평가받기</button>
     </div>
 
     <div id="roleplayAnalysis" style="margin-top:16px; margin-left:38px; display:none;">
@@ -180,30 +179,39 @@
         <div id="roleplayAnalysisContent"></div>
       </div>
     </div>
-  </div>
 
-  <!-- 평가 결과 섹션 -->
-  <div class="card" id="evalResultCard" style="display:none;">
-    <div class="card-title"><span class="icon">📊</span> AI 평가 결과</div>
+    <hr class="step-divider">
 
-    <div class="eval-tab-bar">
-      <button class="eval-tab easy" onclick="switchEvalTab('easy')">
-        난이도(하)
-        <span class="eval-score" id="evalScoreEasy">미완료</span>
-      </button>
-      <button class="eval-tab medium" onclick="switchEvalTab('medium')">
-        난이도(중)
-        <span class="eval-score" id="evalScoreMedium">미완료</span>
-      </button>
-      <button class="eval-tab hard" onclick="switchEvalTab('hard')">
-        난이도(상)
-        <span class="eval-score" id="evalScoreHard">미완료</span>
-      </button>
+    <!-- 4단계: AI평가받기 -->
+    <div class="step-label">
+      <span class="step-num" style="background:var(--purple);">4</span>
+      <span class="step-text">AI평가받기</span>
     </div>
 
-    <div class="eval-content" id="evalContentEasy"></div>
-    <div class="eval-content" id="evalContentMedium"></div>
-    <div class="eval-content" id="evalContentHard"></div>
+    <div style="margin-left:38px;">
+      <div class="eval-tab-bar" style="margin-bottom:12px;">
+        <button class="eval-tab easy" onclick="switchEvalTab('easy')">
+          난이도(하)
+          <span class="eval-score" id="evalScoreEasy">미완료</span>
+        </button>
+        <button class="eval-tab medium" onclick="switchEvalTab('medium')">
+          난이도(중)
+          <span class="eval-score" id="evalScoreMedium">미완료</span>
+        </button>
+        <button class="eval-tab hard" onclick="switchEvalTab('hard')">
+          난이도(상)
+          <span class="eval-score" id="evalScoreHard">미완료</span>
+        </button>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <button class="btn btn-gold" onclick="requestAIEvaluation()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">🤖 현재 상담 AI평가받기</button>
+      </div>
+
+      <div class="eval-content" id="evalContentEasy"></div>
+      <div class="eval-content" id="evalContentMedium"></div>
+      <div class="eval-content" id="evalContentHard"></div>
+    </div>
   </div>
 </div>
 </div>
