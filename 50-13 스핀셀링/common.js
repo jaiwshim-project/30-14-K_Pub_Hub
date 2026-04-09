@@ -388,6 +388,7 @@ const FLOW_ORDER = [
   { page: 'spin-needs.html', label: 'SPIN질문&니즈 구분', icon: '🔎' },
   { page: 'fab.html', label: 'FAB/BAF', icon: '🧩' },
   { page: 'roleplay.html', label: 'AI 롤플레이', icon: '🎭' },
+  { page: 'callplan.html', label: '콜플랜 작성', icon: '📋' },
   { page: 'spin-tools.html', label: '스핀도구들', icon: '🛠' },
   { page: 'scoreboard.html', label: '최종 결과', icon: '🏆' }
 ];
@@ -448,7 +449,8 @@ function getNavHTML(activePage) {
     { page: 'spin-needs.html', section: 'spin-needs', icon: '🔎', label: '6.SPIN질문&니즈 구분' },
     { page: 'fab.html', section: 'fab', icon: '🧩', label: '7.FAB/BAF' },
     { page: 'roleplay.html', section: 'roleplay', icon: '🎭', label: '8.롤플레이' },
-    { page: 'spin-tools.html', section: 'spin-tools', icon: '🛠', label: '9.스핀도구들' },
+    { page: 'callplan.html', section: 'callplan', icon: '📋', label: '9.콜플랜 작성' },
+    { page: 'spin-tools.html', section: 'spin-tools', icon: '🛠', label: '10.스핀도구들' },
     { page: 'scoreboard.html', section: 'scoreboard', icon: '🏆', label: '스코어보드' },
     { page: 'coaching.html', section: 'coaching', icon: '📊', label: '코칭 리포트' }
   ];

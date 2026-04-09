@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling 2.0 & 3.0 - 콜플랜 작성</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.cp-section {
+  background: linear-gradient(135deg, #ffffff, var(--pastel-blue));
+  border: 1.5px solid rgba(36,113,163,0.12);
+  border-left: 4px solid var(--blue);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.cp-section h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cp-section h3 .num {
+  background: var(--blue);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  flex: none;
+}
+
+.cp-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+  margin-top: 10px;
+}
+
+.cp-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1.5px solid rgba(36,113,163,0.15);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+  resize: vertical;
+}
+
+.cp-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(36,113,163,0.08);
+  background: #fff;
+}
+
+textarea.cp-input { min-height: 70px; }
+
+.cp-spin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cp-spin-box {
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.cp-spin-box.s { background: rgba(36,113,163,0.05); border: 1.5px solid rgba(36,113,163,0.15); }
+.cp-spin-box.p { background: rgba(192,57,43,0.04); border: 1.5px solid rgba(192,57,43,0.15); }
+.cp-spin-box.i { background: rgba(125,60,152,0.04); border: 1.5px solid rgba(125,60,152,0.15); }
+.cp-spin-box.n { background: rgba(30,132,73,0.04); border: 1.5px solid rgba(30,132,73,0.15); }
+
+.cp-spin-box label {
+  font-size: 13px;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.cp-spin-box.s label { color: var(--blue); }
+.cp-spin-box.p label { color: var(--accent); }
+.cp-spin-box.i label { color: var(--purple); }
+.cp-spin-box.n label { color: var(--green); }
+
+@media (max-width: 768px) {
+  .cp-spin-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling 2.0 & 3.0</div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="callplan"></div>
+
+<div class="main">
+<div class="section">
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> 9. 콜플랜 작성</div>
+    <p style="color: var(--text-tertiary); margin-bottom: 20px; font-size: 13px; line-height: 1.6;">
+      영업 상담 전에 콜플랜을 작성하여 체계적으로 준비하세요.<br>
+      각 항목을 작성한 후 <strong>저장</strong> 버튼을 클릭하면 로컬에 저장됩니다.
+    </p>
+
+    <!-- 1. 고객 정보 -->
+    <div class="cp-section">
+      <h3><span class="num">1</span> 고객 정보</h3>
+      <div class="cp-label">고객사명</div>
+      <input type="text" class="cp-input" id="cpCompany" placeholder="예: ABC제조">
+      <div class="cp-label">담당자 / 직위</div>
+      <input type="text" class="cp-input" id="cpContact" placeholder="예: 김영수 이사">
+      <div class="cp-label">산업 분야</div>
+      <input type="text" class="cp-input" id="cpIndustry" placeholder="예: 자동차 부품 제조">
+      <div class="cp-label">회사 규모 (직원 수, 매출 등)</div>
+      <input type="text" class="cp-input" id="cpSize" placeholder="예: 직원 350명, 연매출 800억">
+    </div>
+
+    <!-- 2. 상담 목표 -->
+    <div class="cp-section">
+      <h3><span class="num" style="background:var(--accent);">2</span> 상담 목표 (Advance)</h3>
+      <div class="cp-label">이번 상담의 진전(Advance) 목표</div>
+      <textarea class="cp-input" id="cpAdvance" placeholder="예: 2주 내 IT팀장과 시스템 데모 일정을 확정한다 (SMART 기준)"></textarea>
+      <div class="cp-label">대안 진전(Alternative Advance)</div>
+      <textarea class="cp-input" id="cpAltAdvance" placeholder="예: 다음 주까지 니즈 분석 보고서를 이메일로 전달하고 피드백 미팅을 잡는다"></textarea>
+    </div>
+
+    <!-- 3. 고객 이슈 & 가설 -->
+    <div class="cp-section">
+      <h3><span class="num" style="background:var(--gold);">3</span> 고객 이슈 & 가설</h3>
+      <div class="cp-label">예상되는 고객의 핵심 이슈/문제</div>
+      <textarea class="cp-input" id="cpIssues" placeholder="예: 납기 지연 반복, 수작업 생산 스케줄링의 한계, 품질 추적 불가"></textarea>
+      <div class="cp-label">가치 가설 (Value Hypothesis)</div>
+      <textarea class="cp-input" id="cpValueHypo" placeholder="예: 우리 MES 솔루션으로 납기 준수율 95%→99% 달성 가능, 품질 추적 자동화로 불량률 50% 감소"></textarea>
+    </div>
+
+    <!-- 4. SPIN 질문 계획 -->
+    <div class="cp-section">
+      <h3><span class="num" style="background:var(--purple);">4</span> SPIN 질문 계획</h3>
+      <div class="cp-spin-grid">
+        <div class="cp-spin-box s">
+          <label>S 상황질문 (2~3개)</label>
+          <textarea class="cp-input" id="cpSpinS" placeholder="현재 어떤 시스템으로...&#10;직원 수는...&#10;연간 생산량은..." style="min-height:80px;"></textarea>
+        </div>
+        <div class="cp-spin-box p">
+          <label>P 문제질문 (2~3개)</label>
+          <textarea class="cp-input" id="cpSpinP" placeholder="그 부분에서 어려움은...&#10;가장 불편한 점은...&#10;오류 발생 빈도는..." style="min-height:80px;"></textarea>
+        </div>
+        <div class="cp-spin-box i">
+          <label>I 시사질문 (2~3개)</label>
+          <textarea class="cp-input" id="cpSpinI" placeholder="그 문제로 다른 부서에도...&#10;연간으로 환산하면 비용이...&#10;고객 이탈로 이어지지..." style="min-height:80px;"></textarea>
+        </div>
+        <div class="cp-spin-box n">
+          <label>N 해결질문 (2~3개)</label>
+          <textarea class="cp-input" id="cpSpinN" placeholder="만약 이 문제가 해결되면...&#10;처리 시간이 50% 단축되면...&#10;실시간 데이터를 볼 수 있다면..." style="min-height:80px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 역량 증명 준비 -->
+    <div class="cp-section">
+      <h3><span class="num" style="background:var(--green);">5</span> 역량 증명 (FAB) 준비</h3>
+      <div class="cp-label">Feature (특징) — 제품/서비스의 사실적 설명</div>
+      <textarea class="cp-input" id="cpFeature" placeholder="예: 실시간 생산 모니터링 대시보드, 자동 품질 추적 시스템"></textarea>
+      <div class="cp-label">Advantage (장점) — 특징이 어떻게 활용되는지</div>
+      <textarea class="cp-input" id="cpAdvantage" placeholder="예: 모든 생산라인 현황을 한 화면에서 확인, 불량 발생 즉시 알림"></textarea>
+      <div class="cp-label">Benefit (이익) — 고객의 현재니즈를 충족하는 방법</div>
+      <textarea class="cp-input" id="cpBenefit" placeholder="예: 말씀하신 납기 지연 문제를 근본적으로 해결할 수 있습니다"></textarea>
+    </div>
+
+    <!-- 6. 상담 시작 문구 -->
+    <div class="cp-section">
+      <h3><span class="num" style="background:#ca6f1e;">6</span> 상담 시작 (Opening)</h3>
+      <div class="cp-label">고객 중심 목적 문구</div>
+      <textarea class="cp-input" id="cpOpening" placeholder="예: 오늘 미팅에서는 귀사의 생산 관리 현황을 파악하고, 납기 개선에 도움이 될 방안을 함께 논의하고자 합니다."></textarea>
+    </div>
+
+    <!-- 버튼 -->
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button class="btn btn-primary" onclick="saveCallPlan()">저장</button>
+      <button class="btn btn-secondary" onclick="clearCallPlan()">초기화</button>
+      <button class="btn btn-gold" onclick="exportCallPlan()">텍스트 복사</button>
+    </div>
+
+    <div id="cpSaveMsg" style="display:none; margin-top:12px; padding:10px 16px; background:var(--pastel-green); border:1px solid rgba(30,132,73,0.15); border-radius:8px; font-size:13px; color:var(--green); font-weight:600;"></div>
+  </div>
+</div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+const cpFields = ['cpCompany','cpContact','cpIndustry','cpSize','cpAdvance','cpAltAdvance','cpIssues','cpValueHypo','cpSpinS','cpSpinP','cpSpinI','cpSpinN','cpFeature','cpAdvantage','cpBenefit','cpOpening'];
+
+function saveCallPlan() {
+  const data = {};
+  cpFields.forEach(id => { data[id] = document.getElementById(id).value; });
+  localStorage.setItem('spin_callplan', JSON.stringify(data));
+  const msg = document.getElementById('cpSaveMsg');
+  msg.textContent = '콜플랜이 저장되었습니다.';
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 3000);
+}
+
+function loadCallPlan() {
+  const data = JSON.parse(localStorage.getItem('spin_callplan') || '{}');
+  cpFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && data[id]) el.value = data[id];
+  });
+}
+
+function clearCallPlan() {
+  if (!confirm('콜플랜을 초기화하시겠습니까?')) return;
+  cpFields.forEach(id => { document.getElementById(id).value = ''; });
+  localStorage.removeItem('spin_callplan');
+  const msg = document.getElementById('cpSaveMsg');
+  msg.textContent = '콜플랜이 초기화되었습니다.';
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 3000);
+}
+
+function exportCallPlan() {
+  let text = '[ SPIN 콜플랜 ]\n\n';
+  text += '1. 고객 정보\n';
+  text += '  고객사: ' + document.getElementById('cpCompany').value + '\n';
+  text += '  담당자: ' + document.getElementById('cpContact').value + '\n';
+  text += '  산업분야: ' + document.getElementById('cpIndustry').value + '\n';
+  text += '  규모: ' + document.getElementById('cpSize').value + '\n\n';
+  text += '2. 상담 목표\n';
+  text += '  진전(Advance): ' + document.getElementById('cpAdvance').value + '\n';
+  text += '  대안 진전: ' + document.getElementById('cpAltAdvance').value + '\n\n';
+  text += '3. 고객 이슈 & 가설\n';
+  text += '  핵심 이슈: ' + document.getElementById('cpIssues').value + '\n';
+  text += '  가치 가설: ' + document.getElementById('cpValueHypo').value + '\n\n';
+  text += '4. SPIN 질문 계획\n';
+  text += '  [S] ' + document.getElementById('cpSpinS').value.replace(/\n/g, '\n      ') + '\n';
+  text += '  [P] ' + document.getElementById('cpSpinP').value.replace(/\n/g, '\n      ') + '\n';
+  text += '  [I] ' + document.getElementById('cpSpinI').value.replace(/\n/g, '\n      ') + '\n';
+  text += '  [N] ' + document.getElementById('cpSpinN').value.replace(/\n/g, '\n      ') + '\n\n';
+  text += '5. FAB 준비\n';
+  text += '  Feature: ' + document.getElementById('cpFeature').value + '\n';
+  text += '  Advantage: ' + document.getElementById('cpAdvantage').value + '\n';
+  text += '  Benefit: ' + document.getElementById('cpBenefit').value + '\n\n';
+  text += '6. 상담 시작\n';
+  text += '  ' + document.getElementById('cpOpening').value + '\n';
+
+  navigator.clipboard.writeText(text).then(() => {
+    const msg = document.getElementById('cpSaveMsg');
+    msg.textContent = '콜플랜이 클립보드에 복사되었습니다.';
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => loadCallPlan(), 200);
+});
+</script>
+</body>
+</html>
