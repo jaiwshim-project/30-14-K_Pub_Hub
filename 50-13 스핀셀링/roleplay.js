@@ -505,7 +505,7 @@ function updateEvalTabs() {
   ['easy', 'medium', 'hard'].forEach(diff => {
     const scoreEl = document.getElementById('evalScore' + diff.charAt(0).toUpperCase() + diff.slice(1));
     if (scoreEl) {
-      scoreEl.textContent = evalResults[diff] ? `${evalResults[diff].grade} (${evalResults[diff].score}점)` : '미완료';
+      scoreEl.textContent = evalResults[diff] ? `${evalResults[diff].grade} (${evalResults[diff].score}/100점)` : '미완료';
     }
   });
 }

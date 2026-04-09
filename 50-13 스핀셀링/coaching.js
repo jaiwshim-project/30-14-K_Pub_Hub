@@ -235,7 +235,7 @@ function renderTeamBarChart(registered) {
         <div class="team-bar-label">${getTeamDisplayName(t)}</div>
         <div class="team-bar-track">
           <div class="team-bar-fill" style="width:${Math.max(pct, 3)}%; background:${TEAM_COLORS[i]};">
-            <span class="team-bar-value">${score}점</span>
+            <span class="team-bar-value">${score}/600점</span>
           </div>
         </div>
       </div>`;
@@ -302,7 +302,7 @@ function renderMemberSelect() {
     html += `<optgroup label="${getTeamDisplayName(t)}">`;
     teamMembers.forEach(m => {
       const total = getMemberTotalScore(m);
-      html += `<option value="${m.id}">${m.name} (${total}점)</option>`;
+      html += `<option value="${m.id}">${m.name} (${total}/600점)</option>`;
     });
     html += '</optgroup>';
   });
@@ -443,7 +443,7 @@ function renderMemberSpinAnalysis(memberLogs) {
 }
 
 function renderMemberDiagnosis(member, memberLogs) {
-  const scores = SCORE_CATEGORIES.map(c => ({ label: c.label, score: member[c.key] || 0 }));
+  const scores = SCORE_CATEGORIES.map(c => ({ label: c.label, score: member[c.key] || 0, max: c.max || 100 }));
   const sortedScores = [...scores].sort((a, b) => b.score - a.score);
 
   const strengths = sortedScores.filter(s => s.score > 0).slice(0, 2);
@@ -473,7 +473,7 @@ function renderMemberDiagnosis(member, memberLogs) {
     html += `<div class="diagnosis-box">
       <div class="diagnosis-title" style="color:var(--green);">💪 강점</div>`;
     strengths.forEach(s => {
-      if (s.score > 0) html += `<div class="diagnosis-item">- ${s.label}: ${s.score}점으로 우수한 성과</div>`;
+      if (s.score > 0) html += `<div class="diagnosis-item">- ${s.label}: ${s.score}/${s.max || 100}점으로 우수한 성과</div>`;
     });
     html += '</div>';
   }
@@ -488,7 +488,7 @@ function renderMemberDiagnosis(member, memberLogs) {
       <div class="diagnosis-title" style="color:var(--accent);">📌 개선 필요</div>`;
     weaknesses.forEach(w => {
       if (sortedScores[0].score > 0 && w.score < sortedScores[0].score * 0.5) {
-        html += `<div class="diagnosis-item">- ${w.label}: 추가 학습이 필요합니다 (${w.score}점)</div>`;
+        html += `<div class="diagnosis-item">- ${w.label}: 추가 학습이 필요합니다 (${w.score}/${w.max || 100}점)</div>`;
       }
     });
     html += '</div>';

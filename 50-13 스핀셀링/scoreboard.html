@@ -465,7 +465,7 @@ async function showMemberActivity(memberId, memberName, teamId) {
       detail = `정답 <strong style="color:var(--green);">${data.correct}</strong> / ${data.total}문제 (${pct}%)`;
     }
     if (data.grade) {
-      detail = `등급 <strong style="color:${cfg.color};">${data.grade}</strong> (${data.score || log.score}점)`;
+      detail = `등급 <strong style="color:${cfg.color};">${data.grade}</strong> (${data.score || log.score}/100점)`;
     }
     if (data.question) {
       detail = `[${data.type}] "${data.question.substring(0, 50)}${data.question.length > 50 ? '...' : ''}"`;

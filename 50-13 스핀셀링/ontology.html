@@ -456,8 +456,9 @@ function generateOntology(member, logs) {
   const weaknesses = sorted.slice(-2).reverse();
 
   // category-level strengths/weaknesses
+  const catMaxMap = { quiz: 80, needs: 80, scenario: 100, practice: 120, roleplay: 100, fab: 90 };
   const catScores = scoreCategories.map(c => ({
-    key: c.key, label: c.label, score: member[`score_${c.key}`] || 0
+    key: c.key, label: c.label, score: member[`score_${c.key}`] || 0, max: catMaxMap[c.key] || 100
   }));
   catScores.sort((a, b) => b.score - a.score);
   const catStrengths = catScores.filter(c => c.score > 0).slice(0, 2);
@@ -468,14 +469,14 @@ function generateOntology(member, logs) {
   strengths.forEach(s => {
     allStrengths.push({
       label: spinLabels[s.type].name,
-      detail: `점수 ${s.score}점`,
+      detail: `점수 ${s.score}/100점`,
       type: 'spin'
     });
   });
   if (catStrengths.length > 0 && catStrengths[0].score > 50) {
     allStrengths.push({
       label: catStrengths[0].label + ' 우수',
-      detail: `${catStrengths[0].score}점`,
+      detail: `${catStrengths[0].score}/${catStrengths[0].max}점`,
       type: 'category'
     });
   }
@@ -484,14 +485,14 @@ function generateOntology(member, logs) {
   weaknesses.forEach(w => {
     allWeaknesses.push({
       label: spinLabels[w.type].name,
-      detail: `점수 ${w.score}점`,
+      detail: `점수 ${w.score}/100점`,
       type: 'spin'
     });
   });
   if (catWeaknesses.length > 0 && catWeaknesses[0].score < 60) {
     allWeaknesses.push({
       label: catWeaknesses[0].label + ' 보완 필요',
-      detail: `${catWeaknesses[0].score}점`,
+      detail: `${catWeaknesses[0].score}/${catWeaknesses[0].max}점`,
       type: 'category'
     });
   }
@@ -552,7 +553,7 @@ function renderGraph(ontology) {
 
   // 1. 교육생 (중앙)
   html += '<div style="text-align:center; margin-bottom:8px;">';
-  html += node('member', '교육생', ontology.member.name || '(이름 없음)', `팀 ${ontology.member.team_id} | 종합 ${ontology.overall}점`);
+  html += node('member', '교육생', ontology.member.name || '(이름 없음)', `팀 ${ontology.member.team_id} | 종합 ${ontology.overall}/600점`);
   html += '</div>';
   html += downArrow;
 
@@ -564,7 +565,7 @@ function renderGraph(ontology) {
     html += `<div class="onto-node type-spin" style="display:block; margin:0;">
       <span class="node-label">SPIN 역량</span>
       <span class="node-title">${spinLabels[t].short} ${spinLabels[t].name.split('(')[0].trim()}</span>
-      <span class="node-sub">${score}점</span>
+      <span class="node-sub">${score}/100점</span>
       <div style="height:6px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:6px; overflow:hidden;">
         <div style="height:100%; width:${score}%; background:${colors[t]}; border-radius:3px;"></div>
       </div>
@@ -620,7 +621,7 @@ function renderPanel(ontology) {
   const panelBody = document.getElementById('panelBody');
 
   panelName.textContent = ontology.member.name || '(이름 없음)';
-  panelTeam.textContent = `팀 ${ontology.member.team_id} | 종합 점수: ${ontology.overall}점`;
+  panelTeam.textContent = `팀 ${ontology.member.team_id} | 종합 점수: ${ontology.overall}/600점`;
 
   let html = '';
 

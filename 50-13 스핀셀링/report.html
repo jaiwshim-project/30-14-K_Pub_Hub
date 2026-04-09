@@ -510,7 +510,7 @@ function generateCoachingFeedback(member, spinCounts) {
 
   // Strength
   if (analysis.strengths.length > 0) {
-    strengthText = analysis.strengths.map(s => `${s.name} (${s.score}점)`).join(', ') + ' 영역에서 우수한 성과를 보였습니다.';
+    strengthText = analysis.strengths.map(s => `${s.name} (${s.score}/${s.max}점)`).join(', ') + ' 영역에서 우수한 성과를 보였습니다.';
   } else {
     strengthText = '아직 활동 참여가 부족합니다. 적극적인 참여가 필요합니다.';
   }
@@ -521,7 +521,7 @@ function generateCoachingFeedback(member, spinCounts) {
     if (weakItems.length > 0) {
       weaknessText = weakItems.map(w => w.name).join(', ') + ' 영역은 아직 미참여 상태입니다.';
     } else {
-      weaknessText = analysis.weaknesses.map(w => `${w.name} (${w.score}점)`).join(', ') + ' 영역의 추가 학습을 권장합니다.';
+      weaknessText = analysis.weaknesses.map(w => `${w.name} (${w.score}/${w.max}점)`).join(', ') + ' 영역의 추가 학습을 권장합니다.';
     }
   }
 
@@ -679,7 +679,7 @@ async function showMemberReport(memberId) {
         <div class="rpt-eval-card">
           <div class="eval-label">난이도: ${ev.difficulty}</div>
           <div class="eval-grade" style="color:${getGradeColor(ev.grade)}">${ev.grade}</div>
-          <div class="eval-score">${ev.score}점</div>
+          <div class="eval-score">${ev.score}/100점</div>
         </div>`).join('')}
       </div>` : '<div style="padding:16px; background:var(--bg); border-radius:10px; color:var(--text-muted); font-size:13px;">롤플레이 평가 데이터가 없습니다.</div>'}
     </div>
@@ -693,7 +693,7 @@ async function showMemberReport(memberId) {
         <div class="rpt-eval-card">
           <div class="eval-label">콜플랜</div>
           <div class="eval-grade" style="color:${getGradeColor(ev.grade)}">${ev.grade}</div>
-          <div class="eval-score">${ev.score}점</div>
+          <div class="eval-score">${ev.score}/100점</div>
         </div>`).join('')}
       </div>` : '<div style="padding:16px; background:var(--bg); border-radius:10px; color:var(--text-muted); font-size:13px;">콜플랜 평가 데이터가 없습니다.</div>'}
     </div>
