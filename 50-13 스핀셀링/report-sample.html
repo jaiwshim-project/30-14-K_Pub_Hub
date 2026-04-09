@@ -453,39 +453,128 @@
     <!-- 8. 온톨로지 역량 진단 -->
     <div class="report-section">
       <div class="report-section-title">
-        <span class="report-section-num">8</span> 온톨로지 역량 진단 (이슈→원인→개선→실행)
+        <span class="report-section-num">8</span> SPIN 역량 온톨로지 그래프
       </div>
       <p style="font-size:13px; color:var(--text-tertiary); margin-bottom:16px; line-height:1.6;">
-        AI가 교육 활동 데이터를 온톨로지 구조로 분석하여, 약점의 근본 원인과 개선 전략, 실행 과제를 자동 연결합니다.
+        AI가 교육 활동 데이터를 온톨로지 구조로 분석하여, 역량 수준과 약점의 근본 원인, 개선 전략, 실행 과제를 자동 연결합니다.
       </p>
 
+      <!-- 온톨로지 그래프: 교육생 -->
+      <div style="text-align:center; margin-bottom:8px;">
+        <div style="display:inline-block; background:linear-gradient(135deg, #0a2240, #0d3161); color:white; border:2px solid #1a4a7a; border-radius:12px; padding:12px 24px; font-weight:800; font-size:14px;">
+          <span style="font-size:11px; opacity:0.75; display:block;">교육생</span>
+          김영수
+          <span style="font-size:11px; opacity:0.85; display:block; margin-top:4px;">팀 A | 종합 468/600점</span>
+        </div>
+      </div>
+      <div style="text-align:center; font-size:20px; color:var(--text-disabled); margin:6px 0;">↓</div>
+
+      <!-- SPIN 4역량 -->
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:8px;">
+        <div style="background:linear-gradient(135deg, #1a3a6b, #2471a3); color:white; border:2px solid #2980b9; border-radius:12px; padding:12px; text-align:center;">
+          <div style="font-size:11px; opacity:0.75;">SPIN 역량</div>
+          <div style="font-size:14px; font-weight:800;">S 상황질문</div>
+          <div style="font-size:12px; margin-top:4px;">18/100점</div>
+          <div style="height:6px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:6px;"><div style="height:100%; width:18%; background:#5dade2; border-radius:3px;"></div></div>
+        </div>
+        <div style="background:linear-gradient(135deg, #1a3a6b, #2471a3); color:white; border:2px solid #2980b9; border-radius:12px; padding:12px; text-align:center;">
+          <div style="font-size:11px; opacity:0.75;">SPIN 역량</div>
+          <div style="font-size:14px; font-weight:800;">P 문제질문</div>
+          <div style="font-size:12px; margin-top:4px;">25/100점</div>
+          <div style="height:6px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:6px;"><div style="height:100%; width:25%; background:#f39c12; border-radius:3px;"></div></div>
+        </div>
+        <div style="background:linear-gradient(135deg, #1a3a6b, #2471a3); color:white; border:2px solid #2980b9; border-radius:12px; padding:12px; text-align:center;">
+          <div style="font-size:11px; opacity:0.75;">SPIN 역량</div>
+          <div style="font-size:14px; font-weight:800;">I 시사질문</div>
+          <div style="font-size:12px; margin-top:4px;">32/100점</div>
+          <div style="height:6px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:6px;"><div style="height:100%; width:32%; background:#e74c3c; border-radius:3px;"></div></div>
+        </div>
+        <div style="background:linear-gradient(135deg, #1a3a6b, #2471a3); color:white; border:2px solid #2980b9; border-radius:12px; padding:12px; text-align:center;">
+          <div style="font-size:11px; opacity:0.75;">SPIN 역량</div>
+          <div style="font-size:14px; font-weight:800;">N 해결질문</div>
+          <div style="font-size:12px; margin-top:4px;">25/100점</div>
+          <div style="height:6px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:6px;"><div style="height:100%; width:25%; background:#2ecc71; border-radius:3px;"></div></div>
+        </div>
+      </div>
+      <div style="text-align:center; font-size:20px; color:var(--text-disabled); margin:6px 0;">↓</div>
+
+      <!-- 강점 + 약점 -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:8px;">
+        <div>
+          <div style="font-size:12px; font-weight:700; color:var(--green); margin-bottom:6px; text-align:center;">💪 강점</div>
+          <div style="background:linear-gradient(135deg, #1e8449, #27ae60); color:white; border:2px solid #2ecc71; border-radius:12px; padding:10px 14px; margin-bottom:6px; text-align:center;">
+            <div style="font-size:11px; opacity:0.75;">강점</div>
+            <div style="font-size:13px; font-weight:800;">시사질문(I) 활용 우수</div>
+            <div style="font-size:11px; opacity:0.85; margin-top:2px;">I비율 32%로 이상적</div>
+          </div>
+          <div style="background:linear-gradient(135deg, #1e8449, #27ae60); color:white; border:2px solid #2ecc71; border-radius:12px; padding:10px 14px; text-align:center;">
+            <div style="font-size:11px; opacity:0.75;">강점</div>
+            <div style="font-size:13px; font-weight:800;">FAB/BAF 구분 탁월</div>
+            <div style="font-size:11px; opacity:0.85; margin-top:2px;">83/90점 (92%)</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:6px; text-align:center;">⚠️ 약점</div>
+          <div style="background:linear-gradient(135deg, #c0392b, #e74c3c); color:white; border:2px solid #f1948a; border-radius:12px; padding:10px 14px; margin-bottom:6px; text-align:center;">
+            <div style="font-size:11px; opacity:0.75;">약점</div>
+            <div style="font-size:13px; font-weight:800;">질문 작성 연습 부족</div>
+            <div style="font-size:11px; opacity:0.85; margin-top:2px;">80/120점 (67%)</div>
+          </div>
+          <div style="background:linear-gradient(135deg, #c0392b, #e74c3c); color:white; border:2px solid #f1948a; border-radius:12px; padding:10px 14px; text-align:center;">
+            <div style="font-size:11px; opacity:0.75;">약점</div>
+            <div style="font-size:13px; font-weight:800;">니즈 구분 능력</div>
+            <div style="font-size:11px; opacity:0.85; margin-top:2px;">60/80점 (75%)</div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center; font-size:20px; color:var(--text-disabled); margin:6px 0;">↓</div>
+
+      <!-- 이슈 → 원인 → 전략 → 실행 체인 -->
+      <div style="font-size:13px; font-weight:800; color:var(--text); margin-bottom:10px; text-align:center;">이슈 → 원인 → 개선전략 → 실행과제</div>
+
       <!-- 이슈 체인 1 -->
-      <div style="margin-bottom:20px;">
-        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px;">
-          <span style="background:#c0392b; color:white; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">약점: 질문 작성력 부족 (67%)</span>
-          <span style="font-size:16px; color:var(--text-disabled);">→</span>
-          <span style="background:#d4880f; color:white; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">이슈: Problem 질문 발굴력 약함</span>
-          <span style="font-size:16px; color:var(--text-disabled);">→</span>
-          <span style="background:#7d3c98; color:white; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">원인: 고객 문제 탐색 역량 부족</span>
-          <span style="font-size:16px; color:var(--text-disabled);">→</span>
-          <span style="background:#2471a3; color:white; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">전략: P질문 집중 훈련</span>
-          <span style="font-size:16px; color:var(--text-disabled);">→</span>
-          <span style="background:#f5a623; color:#1a1a2e; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">실행: 매일 5개 P질문 작성</span>
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px; margin-bottom:10px; padding:10px; background:var(--bg); border:1px solid var(--border-light); border-radius:10px;">
+        <div style="background:linear-gradient(135deg, #b7700a, #d4880f); color:white; border:2px solid #f0b429; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+          <span style="font-size:10px; opacity:0.75; display:block;">이슈</span>
+          <span style="font-weight:800;">P질문 발굴력 약함</span>
+        </div>
+        <span style="font-size:16px; color:var(--text-disabled);">→</span>
+        <div style="background:linear-gradient(135deg, #6c3483, #7d3c98); color:white; border:2px solid #a569bd; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+          <span style="font-size:10px; opacity:0.75; display:block;">근본 원인</span>
+          <span style="font-weight:800;">고객 문제 탐색 역량 부족</span>
+        </div>
+        <span style="font-size:16px; color:var(--text-disabled);">→</span>
+        <div style="background:linear-gradient(135deg, #1a6fa0, #2471a3); color:white; border:2px solid #5dade2; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+          <span style="font-size:10px; opacity:0.75; display:block;">개선 전략</span>
+          <span style="font-weight:800;">P질문 집중 훈련</span>
+        </div>
+        <span style="font-size:16px; color:var(--text-disabled);">→</span>
+        <div style="background:linear-gradient(135deg, #c07d0e, #f5a623); color:#1a1a2e; border:2px solid #f9c74f; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+          <span style="font-size:10px; opacity:0.75; display:block;">실행 과제</span>
+          <span style="font-weight:800;">매일 5개 P질문 작성</span>
         </div>
       </div>
 
       <!-- 이슈 체인 2 -->
-      <div style="margin-bottom:20px;">
-        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px;">
-          <span style="background:#c0392b; color:white; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">약점: 니즈 구분 (75%)</span>
-          <span style="font-size:16px; color:var(--text-disabled);">→</span>
-          <span style="background:#d4880f; color:white; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">이슈: IN/EN 구분 혼동</span>
-          <span style="font-size:16px; color:var(--text-disabled);">→</span>
-          <span style="background:#7d3c98; color:white; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">원인: 잠재니즈/현재니즈 개념 불명확</span>
-          <span style="font-size:16px; color:var(--text-disabled);">→</span>
-          <span style="background:#2471a3; color:white; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">전략: IN/EN 사례 반복 학습</span>
-          <span style="font-size:16px; color:var(--text-disabled);">→</span>
-          <span style="background:#f5a623; color:#1a1a2e; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:700;">실행: 주 3회 니즈 구분 연습</span>
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px; margin-bottom:10px; padding:10px; background:var(--bg); border:1px solid var(--border-light); border-radius:10px;">
+        <div style="background:linear-gradient(135deg, #b7700a, #d4880f); color:white; border:2px solid #f0b429; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+          <span style="font-size:10px; opacity:0.75; display:block;">이슈</span>
+          <span style="font-weight:800;">IN/EN 구분 혼동</span>
+        </div>
+        <span style="font-size:16px; color:var(--text-disabled);">→</span>
+        <div style="background:linear-gradient(135deg, #6c3483, #7d3c98); color:white; border:2px solid #a569bd; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+          <span style="font-size:10px; opacity:0.75; display:block;">근본 원인</span>
+          <span style="font-weight:800;">잠재니즈/현재니즈 개념 불명확</span>
+        </div>
+        <span style="font-size:16px; color:var(--text-disabled);">→</span>
+        <div style="background:linear-gradient(135deg, #1a6fa0, #2471a3); color:white; border:2px solid #5dade2; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+          <span style="font-size:10px; opacity:0.75; display:block;">개선 전략</span>
+          <span style="font-weight:800;">IN/EN 사례 반복 학습</span>
+        </div>
+        <span style="font-size:16px; color:var(--text-disabled);">→</span>
+        <div style="background:linear-gradient(135deg, #c07d0e, #f5a623); color:#1a1a2e; border:2px solid #f9c74f; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+          <span style="font-size:10px; opacity:0.75; display:block;">실행 과제</span>
+          <span style="font-weight:800;">주 3회 니즈 구분 연습</span>
         </div>
       </div>
 
