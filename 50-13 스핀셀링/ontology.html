@@ -535,206 +535,82 @@ function generateOntology(member, logs) {
 // ========== RENDER GRAPH ==========
 function renderGraph(ontology) {
   const container = document.getElementById('ontoNodes');
-  const svg = document.getElementById('ontoSvg');
   container.innerHTML = '';
-  svg.innerHTML = '';
+  const svg = document.getElementById('ontoSvg');
+  if (svg) svg.style.display = 'none';
 
-  const wrap = document.getElementById('ontoGraph');
-  const W = wrap.offsetWidth - 64; // padding
-  const H = Math.max(700, 120 + ontology.issues.length * 100);
-  wrap.style.minHeight = H + 'px';
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.style.width = W + 'px';
-  svg.style.height = H + 'px';
+  const arrow = '<span style="font-size:18px; color:var(--text-disabled); margin:0 4px;">→</span>';
+  const downArrow = '<div style="text-align:center; font-size:20px; color:var(--text-disabled); margin:6px 0;">↓</div>';
 
-  const nodes = [];
-  const edges = [];
-
-  // Helper: create node element
-  function addNode(id, type, label, title, sub, x, y, w) {
-    const el = document.createElement('div');
-    el.className = `onto-node type-${type}`;
-    el.style.left = x + 'px';
-    el.style.top = y + 'px';
-    if (w) el.style.width = w + 'px';
-    el.innerHTML = `<span class="node-label">${label}</span><span class="node-title">${title}</span>${sub ? `<span class="node-sub">${sub}</span>` : ''}`;
-    container.appendChild(el);
-    const rect = { x, y, w: el.offsetWidth || (w || 150), h: el.offsetHeight || 60 };
-    nodes.push({ id, el, rect });
-    return rect;
+  function node(type, label, title, sub) {
+    return `<div class="onto-node type-${type}" style="display:inline-block; margin:4px;">
+      <span class="node-label">${label}</span><span class="node-title">${title}</span>${sub ? `<span class="node-sub">${sub}</span>` : ''}
+    </div>`;
   }
 
-  // Helper: create SPIN node with bar
-  function addSpinNode(id, type, spinType, score, x, y) {
-    const el = document.createElement('div');
-    el.className = `onto-node type-${type}`;
-    el.style.left = x + 'px';
-    el.style.top = y + 'px';
-    el.style.width = '150px';
-    const fillClass = spinType.toLowerCase() + '-fill';
-    el.innerHTML = `
+  let html = '';
+
+  // 1. 교육생 (중앙)
+  html += '<div style="text-align:center; margin-bottom:8px;">';
+  html += node('member', '교육생', ontology.member.name || '(이름 없음)', `팀 ${ontology.member.team_id} | 종합 ${ontology.overall}점`);
+  html += '</div>';
+  html += downArrow;
+
+  // 2. SPIN 4역량 (가로 4열)
+  html += '<div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:8px;">';
+  ['S','P','I','N'].forEach(t => {
+    const score = ontology.scores[t];
+    const colors = { S:'#2471a3', P:'#c0392b', I:'#7d3c98', N:'#1e8449' };
+    html += `<div class="onto-node type-spin" style="display:block; margin:0;">
       <span class="node-label">SPIN 역량</span>
-      <span class="node-title">${spinLabels[spinType].short} - ${spinLabels[spinType].name.split('(')[0].trim()}</span>
+      <span class="node-title">${spinLabels[t].short} ${spinLabels[t].name.split('(')[0].trim()}</span>
       <span class="node-sub">${score}점</span>
-      <div class="spin-score-bar"><div class="fill ${fillClass}" style="width:${score}%"></div></div>
-    `;
-    container.appendChild(el);
-    const rect = { x, y, w: 150, h: el.offsetHeight || 80 };
-    nodes.push({ id, el, rect });
-    return rect;
+      <div style="height:6px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:6px; overflow:hidden;">
+        <div style="height:100%; width:${score}%; background:${colors[t]}; border-radius:3px;"></div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  html += downArrow;
+
+  // 3. 강점 + 약점 (가로 2분할)
+  html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:8px;">';
+  // 강점
+  html += '<div>';
+  html += '<div style="font-size:12px; font-weight:700; color:var(--green); margin-bottom:6px; text-align:center;">💪 강점</div>';
+  ontology.strengths.forEach(s => {
+    html += node('strength', '강점', s.label, s.detail);
+  });
+  if (ontology.strengths.length === 0) html += '<div style="text-align:center; color:var(--text-disabled); font-size:12px; padding:16px;">강점 데이터 없음</div>';
+  html += '</div>';
+  // 약점
+  html += '<div>';
+  html += '<div style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:6px; text-align:center;">⚠️ 약점</div>';
+  ontology.weaknesses.forEach(w => {
+    html += node('weakness', '약점', w.label, w.detail);
+  });
+  if (ontology.weaknesses.length === 0) html += '<div style="text-align:center; color:var(--text-disabled); font-size:12px; padding:16px;">약점 데이터 없음</div>';
+  html += '</div>';
+  html += '</div>';
+
+  // 4. 이슈 → 원인 → 개선 → 실행 체인 (각 이슈별 가로 흐름)
+  if (ontology.issues.length > 0) {
+    html += downArrow;
+    html += '<div style="font-size:13px; font-weight:800; color:var(--text); margin-bottom:10px; text-align:center;">이슈 → 원인 → 개선전략 → 실행과제</div>';
+    ontology.issues.forEach((iss, i) => {
+      html += `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px; margin-bottom:10px; padding:10px; background:var(--bg); border:1px solid var(--border-light); border-radius:10px;">`;
+      html += node('issue', '이슈', iss.issue, '');
+      html += arrow;
+      html += node('cause', '근본 원인', iss.cause, '');
+      html += arrow;
+      html += node('strategy', '개선 전략', iss.strategy, '');
+      html += arrow;
+      html += node('action', '실행 과제', iss.action, '');
+      html += '</div>';
+    });
   }
 
-  // Center member node
-  const cx = Math.round(W * 0.38);
-  const cy = 20;
-  const memberR = addNode('member', 'member', '교육생',
-    `${ontology.member.name || '(이름 없음)'}`,
-    `팀 ${ontology.member.team_id} | 종합 ${ontology.overall}점`,
-    cx - 75, cy, 170);
-
-  // SPIN nodes (around member)
-  const spinPositions = [
-    { type: 'S', x: cx - 230, y: cy + 100 },
-    { type: 'P', x: cx - 50,  y: cy + 100 },
-    { type: 'I', x: cx + 130, y: cy + 100 },
-    { type: 'N', x: cx + 310, y: cy + 100 }
-  ];
-
-  // Clamp positions
-  spinPositions.forEach(sp => {
-    if (sp.x < 10) sp.x = 10;
-    if (sp.x + 150 > W - 10) sp.x = W - 160;
-  });
-
-  const spinRects = {};
-  spinPositions.forEach(sp => {
-    spinRects[sp.type] = addSpinNode('spin_' + sp.type, 'spin', sp.type, ontology.scores[sp.type], sp.x, sp.y);
-    edges.push({ from: 'member', to: 'spin_' + sp.type, label: 'has_competency' });
-  });
-
-  // Strengths (left side)
-  const strY = cy + 240;
-  ontology.strengths.forEach((s, i) => {
-    const nx = 10;
-    const ny = strY + i * 70;
-    addNode('str_' + i, 'strength', '강점', s.label, s.detail, nx, ny, 160);
-    edges.push({ from: 'member', to: 'str_' + i, label: 'exhibits_strength' });
-  });
-
-  // Weaknesses + chain (right side)
-  const chainStartX = Math.min(cx + 60, W * 0.35);
-  const chainY = strY;
-  const chainGapX = Math.max(120, Math.round((W - chainStartX - 20) / 5));
-
-  ontology.weaknesses.forEach((w, i) => {
-    const ny = chainY + i * 70;
-    addNode('weak_' + i, 'weakness', '약점', w.label, w.detail, chainStartX, ny, 140);
-    edges.push({ from: 'member', to: 'weak_' + i, label: 'exhibits_weakness' });
-  });
-
-  // Issues chain
-  const issueY = chainY + ontology.weaknesses.length * 70 + 30;
-  ontology.issues.forEach((iss, i) => {
-    const row = issueY + i * 95;
-    const xIssue = 10;
-    const xCause = xIssue + chainGapX;
-    const xStrategy = xCause + chainGapX;
-    const xAction = xStrategy + chainGapX;
-
-    // Clamp
-    const nodeW = Math.min(140, chainGapX - 10);
-
-    addNode('iss_' + i, 'issue', '이슈', iss.issue, '', xIssue, row, nodeW);
-    addNode('cause_' + i, 'cause', '근본 원인', iss.cause, '', Math.min(xCause, W - nodeW - 10), row, nodeW);
-    addNode('strat_' + i, 'strategy', '개선 전략', iss.strategy, '', Math.min(xStrategy, W - nodeW - 10), row, nodeW);
-    addNode('act_' + i, 'action', '실행 과제', iss.action, '', Math.min(xAction, W - nodeW - 10), row, nodeW);
-
-    // Connect weaknesses to issues
-    if (i < ontology.weaknesses.length) {
-      edges.push({ from: 'weak_' + i, to: 'iss_' + i, label: 'leads_to' });
-    } else if (ontology.weaknesses.length > 0) {
-      edges.push({ from: 'weak_0', to: 'iss_' + i, label: 'leads_to' });
-    }
-
-    edges.push({ from: 'iss_' + i, to: 'cause_' + i, label: 'caused_by' });
-    edges.push({ from: 'cause_' + i, to: 'strat_' + i, label: 'improved_by' });
-    edges.push({ from: 'strat_' + i, to: 'act_' + i, label: 'executed_as' });
-  });
-
-  // Update container height
-  const maxY = Math.max(...nodes.map(n => n.rect.y + (n.el.offsetHeight || 60))) + 40;
-  wrap.style.minHeight = Math.max(700, maxY) + 'px';
-  svg.setAttribute('viewBox', `0 0 ${W} ${Math.max(700, maxY)}`);
-  svg.style.height = Math.max(700, maxY) + 'px';
-
-  // Draw SVG edges
-  requestAnimationFrame(() => drawEdges(nodes, edges, svg, W, Math.max(700, maxY)));
-}
-
-function drawEdges(nodes, edges, svg, W, H) {
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  const nodeMap = {};
-  nodes.forEach(n => {
-    const el = n.el;
-    nodeMap[n.id] = {
-      cx: n.rect.x + (el.offsetWidth || n.rect.w) / 2,
-      cy: n.rect.y + (el.offsetHeight || n.rect.h) / 2,
-      w: el.offsetWidth || n.rect.w,
-      h: el.offsetHeight || n.rect.h,
-      x: n.rect.x,
-      y: n.rect.y
-    };
-  });
-
-  // Arrow marker
-  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-  defs.innerHTML = `
-    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="rgba(0,0,0,0.25)" />
-    </marker>
-  `;
-  svg.appendChild(defs);
-
-  edges.forEach(e => {
-    const from = nodeMap[e.from];
-    const to = nodeMap[e.to];
-    if (!from || !to) return;
-
-    // Calculate edge points (from bottom of source to top of target, or side-to-side)
-    let x1, y1, x2, y2;
-    const dy = to.cy - from.cy;
-    const dx = to.cx - from.cx;
-
-    if (Math.abs(dy) > Math.abs(dx) * 0.3) {
-      // Vertical-ish
-      x1 = from.cx;
-      y1 = dy > 0 ? from.y + from.h : from.y;
-      x2 = to.cx;
-      y2 = dy > 0 ? to.y : to.y + to.h;
-    } else {
-      // Horizontal-ish
-      x1 = dx > 0 ? from.x + from.w : from.x;
-      y1 = from.cy;
-      x2 = dx > 0 ? to.x : to.x + to.w;
-      y2 = to.cy;
-    }
-
-    const midX = (x1 + x2) / 2;
-    const midY = (y1 + y2) / 2;
-
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    // Curve
-    const ctrl1x = x1 + (midX - x1) * 0.5;
-    const ctrl1y = y1;
-    const ctrl2x = x2 - (x2 - midX) * 0.5;
-    const ctrl2y = y2;
-    path.setAttribute('d', `M${x1},${y1} C${ctrl1x},${ctrl1y} ${ctrl2x},${ctrl2y} ${x2},${y2}`);
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'rgba(0,0,0,0.15)');
-    path.setAttribute('stroke-width', '1.5');
-    path.setAttribute('marker-end', 'url(#arrowhead)');
-    svg.appendChild(path);
-  });
+  container.innerHTML = html;
 }
 
 // ========== RENDER PANEL ==========
