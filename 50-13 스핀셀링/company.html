@@ -383,6 +383,22 @@
 </div>
 </div>
 
+<!-- 이메일 입력 모달 -->
+<div class="modal-overlay" id="emailModal">
+  <div class="modal" style="max-width:420px; text-align:center;">
+    <h2 style="font-size:18px; margin-bottom:4px;">이메일 주소 입력</h2>
+    <p style="font-size:13px; color:var(--text-tertiary); margin-bottom:6px;" id="emailModalName"></p>
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">교육 완료 후 AI 분석리포트를 이메일로 받으실 수 있습니다.</p>
+    <input type="email" id="emailModalInput" placeholder="example@company.com"
+      style="width:100%; padding:14px; border:2px solid var(--border); border-radius:12px; font-family:inherit; font-size:15px; text-align:center; color:var(--text); background:var(--bg); transition:border-color 0.2s; margin-bottom:8px;"
+      onkeyup="if(event.key==='Enter') confirmEmailAndLogin()">
+    <div style="display:flex; gap:8px; margin-top:12px;">
+      <button onclick="skipEmailAndLogin()" class="btn btn-secondary" style="flex:1;">건너뛰기</button>
+      <button onclick="confirmEmailAndLogin()" class="btn btn-primary" style="flex:1;">확인</button>
+    </div>
+  </div>
+</div>
+
 <div id="footerPlaceholder"></div>
 
 </div><!-- /mainApp -->
@@ -454,10 +470,55 @@ async function loginAsTrainer() {
   goToDashboard();
 }
 
+// 교육생 이름 클릭 → 이메일 입력 모달 표시
+let pendingTrainee = null;
+
 function loginAsTrainee(id, teamId, name, slot) {
+  pendingTrainee = { id, team_id: teamId, name, slot };
+  document.getElementById('emailModalName').textContent = name + ' (' + teamId + '팀)';
+  document.getElementById('emailModalInput').value = '';
+
+  // 기존에 저장된 이메일이 있으면 복원
+  const members = allMembersCache || [];
+  const member = members.find(m => m.id === id);
+  if (member && member.email) {
+    document.getElementById('emailModalInput').value = member.email;
+  }
+
+  document.getElementById('emailModal').classList.add('active');
+  setTimeout(() => document.getElementById('emailModalInput').focus(), 100);
+}
+
+let allMembersCache = null;
+
+async function confirmEmailAndLogin() {
+  const emailInput = document.getElementById('emailModalInput');
+  const email = emailInput.value.trim();
+
+  // 이메일 Supabase에 저장
+  if (email && pendingTrainee) {
+    await fetch(SUPABASE_URL + '/rest/v1/spin_members?id=eq.' + pendingTrainee.id, {
+      method: 'PATCH',
+      headers: SB_HEADERS,
+      body: JSON.stringify({ email: email, updated_at: new Date().toISOString() })
+    });
+  }
+
+  closeModal('emailModal');
+  completeTraineeLogin();
+}
+
+function skipEmailAndLogin() {
+  closeModal('emailModal');
+  completeTraineeLogin();
+}
+
+function completeTraineeLogin() {
+  if (!pendingTrainee) return;
   saveRole('trainee');
-  saveUser({ id, team_id: teamId, name, slot });
-  updateHeaderUser({ team_id: teamId, name });
+  saveUser(pendingTrainee);
+  updateHeaderUser({ team_id: pendingTrainee.team_id, name: pendingTrainee.name });
+  pendingTrainee = null;
   goToDashboard();
 }
 

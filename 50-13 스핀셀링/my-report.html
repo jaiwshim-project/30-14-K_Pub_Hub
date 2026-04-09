@@ -1012,16 +1012,16 @@ async function loadMemberReport(memberId) {
         <span class="report-section-num">9</span> 강사 종합 코멘트
       </div>
       <div style="padding:20px; background:linear-gradient(135deg, var(--pastel-blue), var(--pastel-green)); border-radius:12px; font-size:14px; color:var(--text-secondary); line-height:1.8;">
-        ${member.name}님은 SPIN Selling AI 교육에서 <strong>종합 ${totalGrade.grade}등급(${totalScore}/${TOTAL_MAX}점)</strong>의 성과를 달성하셨습니다.
-        ${topPct <= 30 ? '전체 교육생 중 상위 ' + topPct + '%에 해당하는 우수한 성적입니다.' : ''}
+        ${member.name}님은 2일간의 SPIN Selling AI 교육에서 <strong>종합 ${totalGrade.grade}등급(${totalScore}/${TOTAL_MAX}점)</strong>의 성과를 달성하셨습니다.
+        ${topPct <= 30 ? '전체 교육생 중 상위 ' + topPct + '%에 해당하는 성적으로, SPIN 방법론에 대한 깊은 이해와 실전 적용 역량을 갖추고 있습니다.' : topPct <= 60 ? '평균 수준의 성과를 보여주셨으며, 아래 피드백을 참고하시면 빠르게 성장하실 수 있습니다.' : '기본적인 이해도를 바탕으로 향후 집중 훈련을 통해 큰 성장이 기대됩니다.'}
         <br><br>
-        ${strengths.length > 0 ? '<strong>강점 영역</strong>으로는 ' + strengthNames + '이(가) 돋보입니다. 이러한 역량을 실제 영업 상담에서 적극 활용하시기 바랍니다.' : ''}
-        ${strengths.length > 0 && weaknesses.length > 0 ? '<br><br>' : ''}
-        ${weaknesses.length > 0 ? '향후 실전 영업에서는 <strong>' + weaknessNames + '</strong> 영역의 보완이 필요합니다. ' : ''}
-        ${triggered.length > 0 ? '온톨로지 분석에서 도출된 ' + triggered.length + '개 이슈에 대한 실행 과제를 꾸준히 수행하면 빠른 성장이 가능합니다.' : ''}
+        ${strengths.length > 0 ? '<strong>강점 영역</strong>으로는 ' + strengthNames + '이(가) 돋보입니다. Huthwaite의 35,000건 영업 연구에 따르면, 이러한 역량은 대규모 B2B 영업에서 성공적인 상담과 직접적으로 연관됩니다. 특히 시사질문(I)과 해결질문(N) 활용 능력은 잠재니즈를 현재니즈로 전환하는 핵심 스킬이므로, 이 강점을 실전 영업에서 적극 발휘하시기 바랍니다.' : '아직 뚜렷한 강점 영역이 형성되지 않았습니다. 기본 개념 복습과 반복 연습을 통해 SPIN 각 영역의 역량을 고르게 발전시키시기 바랍니다.'}
         <br><br>
-        콜플랜 도구를 활용하여 상담 전 SPIN 질문을 미리 계획하는 습관을 기르시고,
-        30일 실행계획을 꾸준히 수행하시면 실전 영업 역량이 크게 향상될 것입니다.
+        ${weaknesses.length > 0 ? '향후 실전 영업에서는 <strong>' + weaknessNames + '</strong> 영역의 집중적인 보완이 필요합니다. ' : ''}
+        ${triggered.length > 0 ? '온톨로지 분석 결과, ' + triggered.length + '개의 핵심 이슈가 도출되었으며 각 이슈의 근본 원인과 맞춤 개선 전략이 위의 8번 섹션에 제시되어 있습니다. 이 실행 과제들을 일상 업무에 접목하여 꾸준히 수행하면 4주 이내에 유의미한 역량 향상을 체험하실 수 있습니다.' : ''}
+        <br><br>
+        콜플랜 도구를 활용하여 매 상담 전에 SPIN 질문을 미리 계획하는 습관을 기르시고, 30일 맞춤 실행계획을 꾸준히 수행하시기 바랍니다.
+        ${member.name}님의 강점을 살리면서 약점을 체계적으로 보완한다면, 3개월 이내에 팀 내 최고 수준의 SPIN 영업 역량을 갖출 수 있을 것으로 기대합니다.
         어려움이 있으시면 언제든 코칭 세션을 요청해 주세요.
         <br><br>
         <div style="text-align:right; margin-top:12px; font-weight:700; color:var(--kf-navy);">
