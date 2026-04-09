@@ -572,19 +572,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const role = getSavedRole();
 
-  // 미로그인 상태 → 항상 랜딩 페이지(index.html)로
+  // 세션 없음 → 랜딩 페이지로
   if (!session && !isHome && !isPrereading && !isAdmin) {
     location.href = 'index.html';
     return;
   }
 
+  // 세션 있지만 역할 없음 → company.html로 (역할 선택)
   if (session && !role && !isHome && !isCompany && !isPrereading && !isAdmin) {
-    location.href = 'index.html';
+    location.href = 'company.html';
     return;
   }
 
+  // 교육생인데 유저 미선택 → company.html로
   if (role === 'trainee' && !getSavedUser() && !isHome && !isCompany && !isPrereading && !isAdmin) {
-    location.href = 'index.html';
+    location.href = 'company.html';
     return;
   }
 

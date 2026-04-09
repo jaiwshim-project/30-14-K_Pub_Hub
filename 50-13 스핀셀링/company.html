@@ -420,19 +420,27 @@ function goBackToLanding() {
 
 // ========== STEP 1: IDENTITY (강사/교육생) ==========
 async function goToIdentityStep() {
-  const session = getSavedSession();
-  document.getElementById('sessionName').textContent = session.company_name;
-  document.getElementById('sessionDate').textContent = session.training_date || '';
+  // 먼저 화면 표시
   showStep('stepIdentity');
 
-  // Supabase에서 강사 이름 복원
-  const trainerName = await fetchTrainerName();
-  const trainerInput = document.getElementById('trainerNameInput');
-  if (trainerInput && trainerName) trainerInput.value = trainerName;
+  const session = getSavedSession();
+  if (!session) { location.href = 'index.html'; return; }
 
-  // 이름 그리드 로드
-  const members = await fetchAllMembers();
-  const teamNames = await fetchTeamNames();
+  const nameEl = document.getElementById('sessionName');
+  const dateEl = document.getElementById('sessionDate');
+  if (nameEl) nameEl.textContent = session.company_name;
+  if (dateEl) dateEl.textContent = session.training_date || '';
+
+  try {
+    // Supabase에서 강사 이름 복원
+    const trainerName = await fetchTrainerName();
+    const trainerInput = document.getElementById('trainerNameInput');
+    if (trainerInput && trainerName) trainerInput.value = trainerName;
+
+    // 이름 그리드 로드
+    const members = await fetchAllMembers();
+    allMembersCache = members;
+    const teamNames = await fetchTeamNames();
   const grid = document.getElementById('nameGrid');
 
   const grouped = {};
@@ -453,6 +461,11 @@ async function goToIdentityStep() {
       </div>
     `;
   }).join('');
+  } catch (e) {
+    console.log('goToIdentityStep error:', e);
+    const grid = document.getElementById('nameGrid');
+    if (grid) grid.innerHTML = '<div style="text-align:center; color:var(--accent); padding:20px;">데이터 로드 중 오류가 발생했습니다. 새로고침해주세요.</div>';
+  }
 }
 
 async function loginAsTrainer() {
