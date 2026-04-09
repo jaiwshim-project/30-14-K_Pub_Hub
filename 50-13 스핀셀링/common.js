@@ -314,7 +314,7 @@ function updateHeaderUser(user) {
   } else if (role === 'trainer' && user) {
     headerTeam.innerHTML = `<span>강사 | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
   } else if (role === 'trainee' && user) {
-    headerTeam.innerHTML = `<span>팀 ${user.team_id} | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
+    headerTeam.innerHTML = `<span>팀 ${user.team_id} | ${user.name}</span><a href="company.html" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit; text-decoration:none; margin-left:4px;">내 대시보드</a><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
   } else {
     headerTeam.style.display = 'none';
   }
