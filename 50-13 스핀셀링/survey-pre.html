@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling AI - 사전 & 사후 설문조사</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.survey-tab-bar {
+  display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 12px;
+  border: 2px solid var(--border); margin-bottom: 24px;
+}
+.survey-tab {
+  flex: 1; padding: 12px; text-align: center; border-radius: 8px; font-size: 14px;
+  font-weight: 700; cursor: pointer; color: var(--text-tertiary); transition: all 0.2s;
+  border: none; background: transparent; font-family: inherit;
+}
+.survey-tab:hover { color: var(--text); }
+.survey-tab.active.pre { background: var(--green); color: white; }
+.survey-tab.active.post { background: var(--blue); color: white; }
+
+.survey-content { display: none; }
+.survey-content.active { display: block; }
+
+.survey-q {
+  padding: 16px 20px; background: linear-gradient(135deg, #ffffff, var(--pastel-blue));
+  border: 1.5px solid rgba(10,34,64,0.1); border-radius: 12px; margin-bottom: 12px;
+}
+.survey-q-num {
+  font-size: 11px; font-weight: 800; color: var(--kf-navy); margin-bottom: 4px;
+}
+.survey-q-text {
+  font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; line-height: 1.6;
+}
+.survey-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.survey-opt {
+  padding: 8px 16px; border: 2px solid var(--border); border-radius: 8px; background: white;
+  font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+  cursor: pointer; transition: all 0.2s;
+}
+.survey-opt:hover { border-color: var(--blue); color: var(--text); }
+.survey-opt.selected { background: var(--kf-navy); color: white; border-color: var(--kf-navy); }
+
+.survey-textarea {
+  width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px;
+  font-family: inherit; font-size: 14px; color: var(--text); background: var(--bg);
+  resize: vertical; min-height: 60px;
+}
+.survey-textarea:focus { outline: none; border-color: var(--blue); }
+
+.survey-submit-msg {
+  display: none; padding: 16px; background: var(--pastel-green); border: 1.5px solid rgba(30,132,73,0.15);
+  border-radius: 12px; text-align: center; font-size: 14px; font-weight: 700; color: var(--green);
+  margin-top: 16px;
+}
+</style>
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" onclick="clearSessionId();clearUser();clearRole();" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="main">
+<div class="section">
+  <div class="card">
+    <div class="card-title"><span class="icon">📝</span> 12. 사전 & 사후 설문조사</div>
+    <p style="color:var(--text-tertiary); margin-bottom:20px; font-size:13px; line-height:1.6;">
+      교육 전후의 SPIN Selling 역량 자기 평가와 교육 만족도를 조사합니다.
+    </p>
+
+    <!-- 탭 -->
+    <div class="survey-tab-bar">
+      <button class="survey-tab pre active" onclick="switchSurveyTab('pre')">사전 설문 (교육 전)</button>
+      <button class="survey-tab post" onclick="switchSurveyTab('post')">사후 설문 (교육 후)</button>
+    </div>
+
+    <!-- 사전 설문 -->
+    <div class="survey-content active" id="surveyPre">
+      <div id="preQuestions"></div>
+      <div style="margin-top:16px; display:flex; gap:10px;">
+        <button class="btn btn-primary" onclick="submitSurvey('pre')">사전 설문 제출</button>
+      </div>
+      <div class="survey-submit-msg" id="preSubmitMsg">사전 설문이 제출되었습니다. 감사합니다!</div>
+    </div>
+
+    <!-- 사후 설문 -->
+    <div class="survey-content" id="surveyPost">
+      <div id="postQuestions"></div>
+      <div style="margin-top:16px; display:flex; gap:10px;">
+        <button class="btn btn-blue" onclick="submitSurvey('post')">사후 설문 제출</button>
+      </div>
+      <div class="survey-submit-msg" id="postSubmitMsg">사후 설문이 제출되었습니다. 감사합니다!</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+// 설문 문항
+const preQuestions = [
+  { id: 'pre_1', type: 'scale', text: 'SPIN Selling 방법론에 대해 얼마나 알고 계십니까?' },
+  { id: 'pre_2', type: 'scale', text: '현재 영업 상담에서 질문 기법을 얼마나 활용하고 계십니까?' },
+  { id: 'pre_3', type: 'scale', text: '고객의 잠재니즈와 현재니즈를 구분할 수 있습니까?' },
+  { id: 'pre_4', type: 'scale', text: '영업 상담 전 체계적인 콜플랜을 작성하고 계십니까?' },
+  { id: 'pre_5', type: 'scale', text: '고객의 문제를 심화시키는 질문(시사질문)을 활용하고 계십니까?' },
+  { id: 'pre_6', type: 'scale', text: '이번 교육에서 가장 기대하는 것은 무엇입니까?' },
+  { id: 'pre_7', type: 'text', text: '현재 영업 활동에서 가장 어려운 점은 무엇입니까?' },
+  { id: 'pre_8', type: 'text', text: '이번 교육을 통해 얻고 싶은 구체적인 역량은 무엇입니까?' }
+];
+
+const postQuestions = [
+  { id: 'post_1', type: 'scale', text: '교육 후 SPIN Selling 방법론에 대한 이해도가 향상되었습니까?' },
+  { id: 'post_2', type: 'scale', text: '교육에서 배운 질문 기법을 실전에서 활용할 수 있다고 생각합니까?' },
+  { id: 'post_3', type: 'scale', text: '잠재니즈와 현재니즈를 구분하는 능력이 향상되었습니까?' },
+  { id: 'post_4', type: 'scale', text: '시사질문(I)과 해결질문(N) 활용에 자신감이 생겼습니까?' },
+  { id: 'post_5', type: 'scale', text: '콜플랜 작성의 중요성을 이해하고 활용할 수 있습니까?' },
+  { id: 'post_6', type: 'scale', text: '교육 내용의 실무 적용 가능성은 어떻습니까?' },
+  { id: 'post_7', type: 'scale', text: '강사의 교육 진행에 대한 전반적인 만족도는?' },
+  { id: 'post_8', type: 'scale', text: 'AI 실습 플랫폼 활용에 대한 만족도는?' },
+  { id: 'post_9', type: 'text', text: '교육에서 가장 유익했던 내용은 무엇입니까?' },
+  { id: 'post_10', type: 'text', text: '교육 개선을 위한 제안 사항이 있으시면 적어주세요.' }
+];
+
+const scaleLabels = ['전혀 아니다', '아니다', '보통이다', '그렇다', '매우 그렇다'];
+
+function renderQuestions(questions, containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = questions.map((q, i) => {
+    if (q.type === 'scale') {
+      return `
+      <div class="survey-q">
+        <div class="survey-q-num">Q${i + 1}</div>
+        <div class="survey-q-text">${q.text}</div>
+        <div class="survey-options">
+          ${scaleLabels.map((label, j) => `
+            <button class="survey-opt" data-qid="${q.id}" data-val="${j + 1}" onclick="selectOpt(this)">${j + 1}. ${label}</button>
+          `).join('')}
+        </div>
+      </div>`;
+    } else {
+      return `
+      <div class="survey-q">
+        <div class="survey-q-num">Q${i + 1}</div>
+        <div class="survey-q-text">${q.text}</div>
+        <textarea class="survey-textarea" id="${q.id}" placeholder="자유롭게 작성해주세요..."></textarea>
+      </div>`;
+    }
+  }).join('');
+
+  // 저장된 답변 복원
+  const saved = JSON.parse(localStorage.getItem('spin_survey_' + containerId.replace('Questions', '')) || '{}');
+  Object.entries(saved).forEach(([qid, val]) => {
+    if (typeof val === 'number') {
+      const btn = container.querySelector(`[data-qid="${qid}"][data-val="${val}"]`);
+      if (btn) btn.classList.add('selected');
+    } else {
+      const ta = document.getElementById(qid);
+      if (ta) ta.value = val;
+    }
+  });
+}
+
+function selectOpt(btn) {
+  const qid = btn.dataset.qid;
+  btn.parentElement.querySelectorAll('.survey-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function switchSurveyTab(tab) {
+  document.querySelectorAll('.survey-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.survey-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('.survey-tab.' + tab).classList.add('active');
+  document.getElementById('survey' + (tab === 'pre' ? 'Pre' : 'Post')).classList.add('active');
+}
+
+async function submitSurvey(type) {
+  const questions = type === 'pre' ? preQuestions : postQuestions;
+  const containerId = type === 'pre' ? 'preQuestions' : 'postQuestions';
+  const container = document.getElementById(containerId);
+  const answers = {};
+
+  questions.forEach(q => {
+    if (q.type === 'scale') {
+      const selected = container.querySelector(`[data-qid="${q.id}"].selected`);
+      answers[q.id] = selected ? parseInt(selected.dataset.val) : null;
+    } else {
+      const ta = document.getElementById(q.id);
+      answers[q.id] = ta ? ta.value.trim() : '';
+    }
+  });
+
+  // localStorage에 저장
+  localStorage.setItem('spin_survey_' + type, JSON.stringify(answers));
+
+  // Supabase에 저장
+  const session = getSavedSession();
+  const user = getSavedUser();
+  if (session && user && user.id) {
+    saveActivityLog('survey_' + type, answers, 0);
+  }
+
+  // 제출 메시지
+  const msg = document.getElementById(type + 'SubmitMsg');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 5000);
+}
+
+// 초기화
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => {
+    renderQuestions(preQuestions, 'preQuestions');
+    renderQuestions(postQuestions, 'postQuestions');
+  }, 200);
+});
+</script>
+</body>
+</html>
