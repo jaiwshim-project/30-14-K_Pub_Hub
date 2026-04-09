@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling - SPIN 역량 온톨로지</title>
+<link rel="stylesheet" href="common.css">
+<style>
+/* ===== Member Selector ===== */
+.onto-selector {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 28px; flex-wrap: wrap;
+}
+.onto-selector label {
+  font-size: 14px; font-weight: 700; color: var(--text);
+}
+.onto-selector select {
+  padding: 10px 16px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 14px; font-family: inherit; background: var(--card);
+  color: var(--text); min-width: 260px; cursor: pointer;
+}
+.onto-selector select:focus {
+  outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+}
+
+/* ===== Layout ===== */
+.onto-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+  align-items: start;
+}
+
+/* ===== Graph Container ===== */
+.onto-graph-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  position: relative;
+  min-height: 700px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.onto-graph-wrap svg.onto-lines {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 1;
+}
+
+/* ===== Nodes ===== */
+.onto-node {
+  position: absolute;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 2;
+  cursor: pointer;
+  transition: transform 0.25s, box-shadow 0.25s;
+  max-width: 180px;
+  text-align: center;
+  line-height: 1.4;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.onto-node:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.onto-node .node-label { display: block; font-size: 11px; opacity: 0.75; margin-bottom: 2px; }
+.onto-node .node-title { display: block; font-size: 13px; font-weight: 800; }
+.onto-node .node-sub { display: block; font-size: 11px; margin-top: 4px; opacity: 0.85; }
+
+/* Node type colors */
+.onto-node.type-member {
+  background: linear-gradient(135deg, #0a2240, #0d3161);
+  color: #fff; border: 2px solid #1a4a7a;
+}
+.onto-node.type-spin {
+  background: linear-gradient(135deg, #1a3a6b, #2471a3);
+  color: #fff; border: 2px solid #2980b9;
+}
+.onto-node.type-strength {
+  background: linear-gradient(135deg, #1e8449, #27ae60);
+  color: #fff; border: 2px solid #2ecc71;
+}
+.onto-node.type-weakness {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  color: #fff; border: 2px solid #f1948a;
+}
+.onto-node.type-issue {
+  background: linear-gradient(135deg, #b7700a, #d4880f);
+  color: #fff; border: 2px solid #f0b429;
+}
+.onto-node.type-cause {
+  background: linear-gradient(135deg, #6c3483, #7d3c98);
+  color: #fff; border: 2px solid #a569bd;
+}
+.onto-node.type-strategy {
+  background: linear-gradient(135deg, #1a6fa0, #2471a3);
+  color: #fff; border: 2px solid #5dade2;
+}
+.onto-node.type-action {
+  background: linear-gradient(135deg, #c07d0e, #f5a623);
+  color: #1a1a2e; border: 2px solid #f9c74f;
+}
+
+/* ===== Score Bar inside SPIN node ===== */
+.spin-score-bar {
+  width: 100%; height: 6px; background: rgba(255,255,255,0.2);
+  border-radius: 3px; margin-top: 6px; overflow: hidden;
+}
+.spin-score-bar .fill {
+  height: 100%; border-radius: 3px; transition: width 0.6s ease;
+}
+.spin-score-bar .fill.s-fill { background: #5dade2; }
+.spin-score-bar .fill.p-fill { background: #f39c12; }
+.spin-score-bar .fill.i-fill { background: #e74c3c; }
+.spin-score-bar .fill.n-fill { background: #2ecc71; }
+
+/* ===== Right Panel ===== */
+.onto-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.onto-panel-header {
+  padding: 18px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+}
+.onto-panel-header h3 {
+  font-size: 16px; font-weight: 800; margin-bottom: 2px;
+}
+.onto-panel-header p {
+  font-size: 12px; opacity: 0.8;
+}
+.onto-panel-body {
+  padding: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* Panel sections */
+.panel-section {
+  margin-bottom: 20px;
+}
+.panel-section:last-child { margin-bottom: 0; }
+.panel-section-title {
+  font-size: 13px; font-weight: 800; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.panel-section-title .dot {
+  width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+}
+.panel-item {
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.panel-item strong {
+  display: block; font-size: 13px; font-weight: 700; color: var(--text);
+  margin-bottom: 2px;
+}
+.panel-item .tag {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  font-size: 10px; font-weight: 700; margin-right: 4px;
+}
+
+/* ===== 30-day Plan ===== */
+.plan-week {
+  margin-bottom: 16px;
+}
+.plan-week-title {
+  font-size: 13px; font-weight: 800; color: var(--text);
+  margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+}
+.plan-week-title .week-badge {
+  background: var(--accent); color: #fff;
+  padding: 2px 10px; border-radius: 6px; font-size: 11px;
+}
+.plan-task {
+  padding: 8px 12px;
+  background: var(--bg);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ===== Empty / Loading ===== */
+.onto-empty {
+  text-align: center; padding: 80px 40px; color: var(--text-muted);
+}
+.onto-empty .icon { font-size: 48px; margin-bottom: 16px; }
+.onto-empty h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--text-tertiary); }
+.onto-empty p { font-size: 14px; }
+
+.onto-loading {
+  text-align: center; padding: 60px; color: var(--text-muted); font-size: 14px;
+}
+
+/* ===== Legend ===== */
+.onto-legend {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 20px;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; color: var(--text-muted);
+}
+.legend-dot {
+  width: 12px; height: 12px; border-radius: 4px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .onto-layout { grid-template-columns: 1fr; }
+  .onto-graph-wrap { min-height: 600px; }
+}
+@media (max-width: 768px) {
+  .onto-graph-wrap { padding: 20px; min-height: 500px; }
+  .onto-node { max-width: 140px; padding: 8px 10px; }
+  .onto-node .node-title { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" onclick="clearSessionId();clearUser();clearRole();" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="spin-tools"></div>
+
+<div class="main">
+<div class="section">
+
+  <h2 style="font-size:22px; font-weight:900; margin-bottom:6px;">SPIN 역량 온톨로지 그래프</h2>
+  <p style="font-size:14px; color:var(--text-tertiary); margin-bottom:24px;">교육생의 사고/질문/대화/실행 패턴을 온톨로지로 구조화하여 시각화합니다.</p>
+
+  <!-- Member Selector -->
+  <div class="onto-selector">
+    <label for="memberSelect">교육생 선택</label>
+    <select id="memberSelect" onchange="onMemberSelect()">
+      <option value="">-- 교육생을 선택하세요 --</option>
+    </select>
+  </div>
+
+  <!-- Legend -->
+  <div class="onto-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#0a2240;"></div>교육생</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2471a3;"></div>SPIN 역량</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1e8449;"></div>강점</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c0392b;"></div>약점</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d4880f;"></div>이슈</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7d3c98;"></div>근본 원인</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2471a3;"></div>개선 전략</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f5a623;"></div>실행 과제</div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="ontoEmpty" class="onto-empty">
+    <div class="icon">🧠</div>
+    <h3>교육생을 선택하세요</h3>
+    <p>드롭다운에서 교육생을 선택하면 개인별 SPIN 역량 온톨로지 그래프가 생성됩니다.</p>
+  </div>
+
+  <!-- Main Layout -->
+  <div id="ontoMain" class="onto-layout" style="display:none;">
+    <!-- Graph -->
+    <div class="onto-graph-wrap" id="ontoGraph">
+      <svg class="onto-lines" id="ontoSvg"></svg>
+      <div id="ontoNodes"></div>
+    </div>
+    <!-- Detail Panel -->
+    <div class="onto-panel">
+      <div class="onto-panel-header">
+        <h3 id="panelName">교육생 이름</h3>
+        <p id="panelTeam">팀 정보</p>
+      </div>
+      <div class="onto-panel-body" id="panelBody">
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+// ========== ACCESS CHECK ==========
+(function() {
+  const role = getSavedRole();
+  if (role === 'trainee') {
+    alert('강사/관리자만 접근할 수 있습니다.');
+    location.href = 'index.html';
+    return;
+  }
+})();
+
+// ========== ISSUE RULES ==========
+const issueRules = [
+  {
+    id: 'quiz_low',
+    condition: (m) => (m.score_quiz || 0) < 50,
+    issue: '개념 이해 부족',
+    cause: 'SPIN 이론 학습 미흡',
+    strategy: '프리리딩 재학습 + 퀴즈 재도전',
+    action: '교육 후 1주 내 퀴즈 100% 달성'
+  },
+  {
+    id: 'p_low',
+    condition: (m, r) => (r.P || 0) < 15,
+    issue: 'Problem 질문 부족',
+    cause: '고객 문제 탐색 역량 약함',
+    strategy: 'Problem 질문 집중 훈련',
+    action: '매일 5개 Problem 질문 작성 연습'
+  },
+  {
+    id: 'i_low',
+    condition: (m, r) => (r.I || 0) < 20,
+    issue: '시사질문 확장 미흡',
+    cause: '문제 영향/파급효과 인식 부족',
+    strategy: 'Implication 질문 확장 템플릿 활용',
+    action: '"그 문제가 ~에 미치는 영향은?" 패턴 10회 연습'
+  },
+  {
+    id: 'n_low',
+    condition: (m, r) => (r.N || 0) < 15,
+    issue: 'Need-payoff 전환 부족',
+    cause: '해결 가치를 고객이 말하게 하는 기술 부족',
+    strategy: '"만약 ~한다면" 형태 질문 집중 훈련',
+    action: '매 상담 시 N 질문 2개 이상 계획'
+  },
+  {
+    id: 'fab_low',
+    condition: (m) => (m.score_fab || 0) < 50,
+    issue: 'FAB 구분 능력 약함',
+    cause: 'Feature/Advantage/Benefit 개념 혼동',
+    strategy: 'FAB 재학습 + BAF 전환 연습',
+    action: '자사 제품 FAB 3세트 작성'
+  },
+  {
+    id: 'roleplay_low',
+    condition: (m) => (m.score_roleplay || 0) < 60,
+    issue: '실전 적용력 부족',
+    cause: '이론-실전 연결 미흡',
+    strategy: '롤플레이 반복 연습',
+    action: '주 2회 동료와 SPIN 롤플레이 실시'
+  },
+  {
+    id: 'scenario_low',
+    condition: (m) => (m.score_scenario || 0) < 50,
+    issue: 'SPIN 질문 구분력 부족',
+    cause: '질문 유형 판별 기준 모호',
+    strategy: 'SPIN 질문 구분 집중 훈련',
+    action: '하루 20개 질문 분류 연습'
+  },
+  {
+    id: 'needs_low',
+    condition: (m) => (m.score_needs || 0) < 50,
+    issue: '니즈 구분력 약함',
+    cause: 'Implied/Explicit 니즈 구분 기준 부족',
+    strategy: '니즈 구분 사례 학습',
+    action: '상담 녹음 분석 시 니즈 유형 표시 연습'
+  },
+  {
+    id: 'practice_low',
+    condition: (m) => (m.score_practice || 0) < 50,
+    issue: 'SPIN 질문 작성 미숙',
+    cause: '질문 구성 경험 부족',
+    strategy: 'SPIN 질문 작성 반복 훈련',
+    action: '산업별 SPIN 질문 세트 3개 작성'
+  },
+  {
+    id: 's_over',
+    condition: (m, r) => (r.S || 0) > 50,
+    issue: '상황질문 과다 의존',
+    cause: '정보 수집 편중, 심층 탐색 부족',
+    strategy: 'S질문 줄이고 P/I 질문 전환 훈련',
+    action: '상담 시 S질문 3개 이내로 제한하고 P 질문 연결'
+  }
+];
+
+// ========== SPIN SCORE LABELS ==========
+const spinLabels = {
+  S: { name: '상황질문 (Situation)', short: 'S' },
+  P: { name: '문제질문 (Problem)', short: 'P' },
+  I: { name: '시사질문 (Implication)', short: 'I' },
+  N: { name: '해결질문 (Need-Payoff)', short: 'N' }
+};
+
+const scoreCategories = [
+  { key: 'quiz', label: '개념 퀴즈', weight: { S: 0.3, P: 0.2, I: 0.2, N: 0.3 } },
+  { key: 'scenario', label: 'SPIN 질문구분', weight: { S: 0.25, P: 0.25, I: 0.25, N: 0.25 } },
+  { key: 'needs', label: '니즈 구분', weight: { S: 0.1, P: 0.3, I: 0.3, N: 0.3 } },
+  { key: 'practice', label: '질문 연습', weight: { S: 0.2, P: 0.3, I: 0.3, N: 0.2 } },
+  { key: 'roleplay', label: 'AI 롤플레이', weight: { S: 0.15, P: 0.25, I: 0.3, N: 0.3 } },
+  { key: 'fab', label: 'FAB/BAF', weight: { S: 0.1, P: 0.2, I: 0.3, N: 0.4 } }
+];
+
+// ========== GENERATE ONTOLOGY ==========
+function generateOntology(member, logs) {
+  // 1. SPIN 역량 점수 산출
+  const scores = { S: 0, P: 0, I: 0, N: 0 };
+  let totalWeight = { S: 0, P: 0, I: 0, N: 0 };
+
+  scoreCategories.forEach(cat => {
+    const val = member[`score_${cat.key}`] || 0;
+    ['S','P','I','N'].forEach(t => {
+      scores[t] += val * cat.weight[t];
+      totalWeight[t] += 100 * cat.weight[t];
+    });
+  });
+
+  // Normalize to 0-100
+  ['S','P','I','N'].forEach(t => {
+    scores[t] = totalWeight[t] > 0 ? Math.round((scores[t] / totalWeight[t]) * 100) : 0;
+  });
+
+  const overall = Math.round((scores.S + scores.P + scores.I + scores.N) / 4);
+
+  // 2. SPIN ratio from logs (for P/I/N ratio checks)
+  const spinCounts = { S: 0, P: 0, I: 0, N: 0 };
+  if (logs && logs.length > 0) {
+    logs.forEach(log => {
+      if (log.activity_data && log.activity_data.spin_type) {
+        const t = log.activity_data.spin_type;
+        if (spinCounts[t] !== undefined) spinCounts[t]++;
+      }
+    });
+  }
+  const totalSpin = spinCounts.S + spinCounts.P + spinCounts.I + spinCounts.N;
+  const ratios = {
+    S: totalSpin > 0 ? Math.round((spinCounts.S / totalSpin) * 100) : 25,
+    P: totalSpin > 0 ? Math.round((spinCounts.P / totalSpin) * 100) : 25,
+    I: totalSpin > 0 ? Math.round((spinCounts.I / totalSpin) * 100) : 25,
+    N: totalSpin > 0 ? Math.round((spinCounts.N / totalSpin) * 100) : 25
+  };
+
+  // 3. Strengths / Weaknesses
+  const sorted = ['S','P','I','N'].map(t => ({ type: t, score: scores[t] }));
+  sorted.sort((a, b) => b.score - a.score);
+  const strengths = sorted.slice(0, 2);
+  const weaknesses = sorted.slice(-2).reverse();
+
+  // category-level strengths/weaknesses
+  const catScores = scoreCategories.map(c => ({
+    key: c.key, label: c.label, score: member[`score_${c.key}`] || 0
+  }));
+  catScores.sort((a, b) => b.score - a.score);
+  const catStrengths = catScores.filter(c => c.score > 0).slice(0, 2);
+  const catWeaknesses = catScores.slice(-2).reverse();
+
+  // Combine strengths
+  const allStrengths = [];
+  strengths.forEach(s => {
+    allStrengths.push({
+      label: spinLabels[s.type].name,
+      detail: `점수 ${s.score}점`,
+      type: 'spin'
+    });
+  });
+  if (catStrengths.length > 0 && catStrengths[0].score > 50) {
+    allStrengths.push({
+      label: catStrengths[0].label + ' 우수',
+      detail: `${catStrengths[0].score}점`,
+      type: 'category'
+    });
+  }
+
+  const allWeaknesses = [];
+  weaknesses.forEach(w => {
+    allWeaknesses.push({
+      label: spinLabels[w.type].name,
+      detail: `점수 ${w.score}점`,
+      type: 'spin'
+    });
+  });
+  if (catWeaknesses.length > 0 && catWeaknesses[0].score < 60) {
+    allWeaknesses.push({
+      label: catWeaknesses[0].label + ' 보완 필요',
+      detail: `${catWeaknesses[0].score}점`,
+      type: 'category'
+    });
+  }
+
+  // 4. Issues from rules
+  const memberWithRatios = {
+    ...member,
+    S_ratio: ratios.S, P_ratio: ratios.P, I_ratio: ratios.I, N_ratio: ratios.N
+  };
+  const triggered = issueRules.filter(r => r.condition(memberWithRatios, ratios));
+
+  // 5. Build chain: issues -> causes -> strategies -> actions
+  const issues = triggered.map(r => ({
+    issue: r.issue,
+    cause: r.cause,
+    strategy: r.strategy,
+    action: r.action
+  }));
+
+  // If no issues triggered, add a positive note
+  if (issues.length === 0) {
+    issues.push({
+      issue: '특별한 이슈 없음',
+      cause: '전반적으로 양호한 역량 수준',
+      strategy: '고급 SPIN 기법 학습으로 심화',
+      action: '복합 시나리오 롤플레이 도전'
+    });
+  }
+
+  return {
+    member,
+    scores,
+    overall,
+    ratios,
+    strengths: allStrengths.slice(0, 3),
+    weaknesses: allWeaknesses.slice(0, 3),
+    issues
+  };
+}
+
+// ========== RENDER GRAPH ==========
+function renderGraph(ontology) {
+  const container = document.getElementById('ontoNodes');
+  const svg = document.getElementById('ontoSvg');
+  container.innerHTML = '';
+  svg.innerHTML = '';
+
+  const wrap = document.getElementById('ontoGraph');
+  const W = wrap.offsetWidth - 64; // padding
+  const H = Math.max(700, 120 + ontology.issues.length * 100);
+  wrap.style.minHeight = H + 'px';
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.style.width = W + 'px';
+  svg.style.height = H + 'px';
+
+  const nodes = [];
+  const edges = [];
+
+  // Helper: create node element
+  function addNode(id, type, label, title, sub, x, y, w) {
+    const el = document.createElement('div');
+    el.className = `onto-node type-${type}`;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    if (w) el.style.width = w + 'px';
+    el.innerHTML = `<span class="node-label">${label}</span><span class="node-title">${title}</span>${sub ? `<span class="node-sub">${sub}</span>` : ''}`;
+    container.appendChild(el);
+    const rect = { x, y, w: el.offsetWidth || (w || 150), h: el.offsetHeight || 60 };
+    nodes.push({ id, el, rect });
+    return rect;
+  }
+
+  // Helper: create SPIN node with bar
+  function addSpinNode(id, type, spinType, score, x, y) {
+    const el = document.createElement('div');
+    el.className = `onto-node type-${type}`;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.width = '150px';
+    const fillClass = spinType.toLowerCase() + '-fill';
+    el.innerHTML = `
+      <span class="node-label">SPIN 역량</span>
+      <span class="node-title">${spinLabels[spinType].short} - ${spinLabels[spinType].name.split('(')[0].trim()}</span>
+      <span class="node-sub">${score}점</span>
+      <div class="spin-score-bar"><div class="fill ${fillClass}" style="width:${score}%"></div></div>
+    `;
+    container.appendChild(el);
+    const rect = { x, y, w: 150, h: el.offsetHeight || 80 };
+    nodes.push({ id, el, rect });
+    return rect;
+  }
+
+  // Center member node
+  const cx = Math.round(W * 0.38);
+  const cy = 20;
+  const memberR = addNode('member', 'member', '교육생',
+    `${ontology.member.name || '(이름 없음)'}`,
+    `팀 ${ontology.member.team_id} | 종합 ${ontology.overall}점`,
+    cx - 75, cy, 170);
+
+  // SPIN nodes (around member)
+  const spinPositions = [
+    { type: 'S', x: cx - 230, y: cy + 100 },
+    { type: 'P', x: cx - 50,  y: cy + 100 },
+    { type: 'I', x: cx + 130, y: cy + 100 },
+    { type: 'N', x: cx + 310, y: cy + 100 }
+  ];
+
+  // Clamp positions
+  spinPositions.forEach(sp => {
+    if (sp.x < 10) sp.x = 10;
+    if (sp.x + 150 > W - 10) sp.x = W - 160;
+  });
+
+  const spinRects = {};
+  spinPositions.forEach(sp => {
+    spinRects[sp.type] = addSpinNode('spin_' + sp.type, 'spin', sp.type, ontology.scores[sp.type], sp.x, sp.y);
+    edges.push({ from: 'member', to: 'spin_' + sp.type, label: 'has_competency' });
+  });
+
+  // Strengths (left side)
+  const strY = cy + 240;
+  ontology.strengths.forEach((s, i) => {
+    const nx = 10;
+    const ny = strY + i * 70;
+    addNode('str_' + i, 'strength', '강점', s.label, s.detail, nx, ny, 160);
+    edges.push({ from: 'member', to: 'str_' + i, label: 'exhibits_strength' });
+  });
+
+  // Weaknesses + chain (right side)
+  const chainStartX = Math.min(cx + 60, W * 0.35);
+  const chainY = strY;
+  const chainGapX = Math.max(120, Math.round((W - chainStartX - 20) / 5));
+
+  ontology.weaknesses.forEach((w, i) => {
+    const ny = chainY + i * 70;
+    addNode('weak_' + i, 'weakness', '약점', w.label, w.detail, chainStartX, ny, 140);
+    edges.push({ from: 'member', to: 'weak_' + i, label: 'exhibits_weakness' });
+  });
+
+  // Issues chain
+  const issueY = chainY + ontology.weaknesses.length * 70 + 30;
+  ontology.issues.forEach((iss, i) => {
+    const row = issueY + i * 95;
+    const xIssue = 10;
+    const xCause = xIssue + chainGapX;
+    const xStrategy = xCause + chainGapX;
+    const xAction = xStrategy + chainGapX;
+
+    // Clamp
+    const nodeW = Math.min(140, chainGapX - 10);
+
+    addNode('iss_' + i, 'issue', '이슈', iss.issue, '', xIssue, row, nodeW);
+    addNode('cause_' + i, 'cause', '근본 원인', iss.cause, '', Math.min(xCause, W - nodeW - 10), row, nodeW);
+    addNode('strat_' + i, 'strategy', '개선 전략', iss.strategy, '', Math.min(xStrategy, W - nodeW - 10), row, nodeW);
+    addNode('act_' + i, 'action', '실행 과제', iss.action, '', Math.min(xAction, W - nodeW - 10), row, nodeW);
+
+    // Connect weaknesses to issues
+    if (i < ontology.weaknesses.length) {
+      edges.push({ from: 'weak_' + i, to: 'iss_' + i, label: 'leads_to' });
+    } else if (ontology.weaknesses.length > 0) {
+      edges.push({ from: 'weak_0', to: 'iss_' + i, label: 'leads_to' });
+    }
+
+    edges.push({ from: 'iss_' + i, to: 'cause_' + i, label: 'caused_by' });
+    edges.push({ from: 'cause_' + i, to: 'strat_' + i, label: 'improved_by' });
+    edges.push({ from: 'strat_' + i, to: 'act_' + i, label: 'executed_as' });
+  });
+
+  // Update container height
+  const maxY = Math.max(...nodes.map(n => n.rect.y + (n.el.offsetHeight || 60))) + 40;
+  wrap.style.minHeight = Math.max(700, maxY) + 'px';
+  svg.setAttribute('viewBox', `0 0 ${W} ${Math.max(700, maxY)}`);
+  svg.style.height = Math.max(700, maxY) + 'px';
+
+  // Draw SVG edges
+  requestAnimationFrame(() => drawEdges(nodes, edges, svg, W, Math.max(700, maxY)));
+}
+
+function drawEdges(nodes, edges, svg, W, H) {
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const nodeMap = {};
+  nodes.forEach(n => {
+    const el = n.el;
+    nodeMap[n.id] = {
+      cx: n.rect.x + (el.offsetWidth || n.rect.w) / 2,
+      cy: n.rect.y + (el.offsetHeight || n.rect.h) / 2,
+      w: el.offsetWidth || n.rect.w,
+      h: el.offsetHeight || n.rect.h,
+      x: n.rect.x,
+      y: n.rect.y
+    };
+  });
+
+  // Arrow marker
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  defs.innerHTML = `
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="rgba(0,0,0,0.25)" />
+    </marker>
+  `;
+  svg.appendChild(defs);
+
+  edges.forEach(e => {
+    const from = nodeMap[e.from];
+    const to = nodeMap[e.to];
+    if (!from || !to) return;
+
+    // Calculate edge points (from bottom of source to top of target, or side-to-side)
+    let x1, y1, x2, y2;
+    const dy = to.cy - from.cy;
+    const dx = to.cx - from.cx;
+
+    if (Math.abs(dy) > Math.abs(dx) * 0.3) {
+      // Vertical-ish
+      x1 = from.cx;
+      y1 = dy > 0 ? from.y + from.h : from.y;
+      x2 = to.cx;
+      y2 = dy > 0 ? to.y : to.y + to.h;
+    } else {
+      // Horizontal-ish
+      x1 = dx > 0 ? from.x + from.w : from.x;
+      y1 = from.cy;
+      x2 = dx > 0 ? to.x : to.x + to.w;
+      y2 = to.cy;
+    }
+
+    const midX = (x1 + x2) / 2;
+    const midY = (y1 + y2) / 2;
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    // Curve
+    const ctrl1x = x1 + (midX - x1) * 0.5;
+    const ctrl1y = y1;
+    const ctrl2x = x2 - (x2 - midX) * 0.5;
+    const ctrl2y = y2;
+    path.setAttribute('d', `M${x1},${y1} C${ctrl1x},${ctrl1y} ${ctrl2x},${ctrl2y} ${x2},${y2}`);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'rgba(0,0,0,0.15)');
+    path.setAttribute('stroke-width', '1.5');
+    path.setAttribute('marker-end', 'url(#arrowhead)');
+    svg.appendChild(path);
+  });
+}
+
+// ========== RENDER PANEL ==========
+function renderPanel(ontology) {
+  const panelName = document.getElementById('panelName');
+  const panelTeam = document.getElementById('panelTeam');
+  const panelBody = document.getElementById('panelBody');
+
+  panelName.textContent = ontology.member.name || '(이름 없음)';
+  panelTeam.textContent = `팀 ${ontology.member.team_id} | 종합 점수: ${ontology.overall}점`;
+
+  let html = '';
+
+  // SPIN Scores
+  html += `<div class="panel-section">
+    <div class="panel-section-title"><span class="dot" style="background:#2471a3;"></span> SPIN 역량 점수</div>`;
+  ['S','P','I','N'].forEach(t => {
+    const score = ontology.scores[t];
+    const colors = { S: '#5dade2', P: '#f39c12', I: '#e74c3c', N: '#2ecc71' };
+    html += `<div class="panel-item" style="display:flex; align-items:center; gap:12px;">
+      <span style="font-weight:800; width:24px; color:${colors[t]};">${t}</span>
+      <div style="flex:1;">
+        <div style="font-size:12px; font-weight:600; margin-bottom:3px;">${spinLabels[t].name}</div>
+        <div style="background:var(--border); border-radius:3px; height:8px; overflow:hidden;">
+          <div style="width:${score}%; height:100%; background:${colors[t]}; border-radius:3px; transition:width 0.6s;"></div>
+        </div>
+      </div>
+      <span style="font-weight:800; font-size:14px; min-width:36px; text-align:right;">${score}</span>
+    </div>`;
+  });
+  html += '</div>';
+
+  // Strengths
+  html += `<div class="panel-section">
+    <div class="panel-section-title"><span class="dot" style="background:#1e8449;"></span> 강점</div>`;
+  ontology.strengths.forEach(s => {
+    html += `<div class="panel-item"><strong>${s.label}</strong>${s.detail}</div>`;
+  });
+  html += '</div>';
+
+  // Weaknesses
+  html += `<div class="panel-section">
+    <div class="panel-section-title"><span class="dot" style="background:#c0392b;"></span> 약점</div>`;
+  ontology.weaknesses.forEach(w => {
+    html += `<div class="panel-item"><strong>${w.label}</strong>${w.detail}</div>`;
+  });
+  html += '</div>';
+
+  // Issues -> Cause -> Strategy -> Action
+  html += `<div class="panel-section">
+    <div class="panel-section-title"><span class="dot" style="background:#d4880f;"></span> 이슈 / 원인 / 개선 / 실행</div>`;
+  ontology.issues.forEach((iss, i) => {
+    html += `<div class="panel-item">
+      <strong><span class="tag" style="background:rgba(212,136,15,0.15); color:#b7700a;">이슈</span> ${iss.issue}</strong>
+      <div style="margin-top:6px;">
+        <span class="tag" style="background:rgba(125,60,152,0.12); color:#6c3483;">원인</span> ${iss.cause}
+      </div>
+      <div style="margin-top:4px;">
+        <span class="tag" style="background:rgba(36,113,163,0.12); color:#1a6fa0;">전략</span> ${iss.strategy}
+      </div>
+      <div style="margin-top:4px;">
+        <span class="tag" style="background:rgba(245,166,35,0.15); color:#c07d0e;">실행</span> ${iss.action}
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // 30-day Plan
+  html += render30DayPlan(ontology);
+
+  panelBody.innerHTML = html;
+}
+
+// ========== 30-DAY PLAN ==========
+function render30DayPlan(ontology) {
+  const actions = ontology.issues.map(i => i.action);
+  const strategies = ontology.issues.map(i => i.strategy);
+
+  let html = `<div class="panel-section" style="margin-top:8px;">
+    <div class="panel-section-title"><span class="dot" style="background:var(--gold);"></span> 30일 실행계획</div>`;
+
+  // Week 1
+  html += `<div class="plan-week">
+    <div class="plan-week-title"><span class="week-badge">1주차</span> 기본 개념 복습 + 약점 인식</div>
+    <div class="plan-task">SPIN 이론 프리리딩 자료 재학습</div>
+    <div class="plan-task">개인 SPIN 역량 진단 결과 분석 및 약점 목록 작성</div>`;
+  ontology.weaknesses.forEach(w => {
+    html += `<div class="plan-task">${w.label} 관련 기본 개념 재정리</div>`;
+  });
+  html += '</div>';
+
+  // Week 2
+  html += `<div class="plan-week">
+    <div class="plan-week-title"><span class="week-badge">2주차</span> 집중 훈련 (질문 작성 + 롤플레이)</div>`;
+  strategies.slice(0, 3).forEach(s => {
+    html += `<div class="plan-task">${s}</div>`;
+  });
+  html += `<div class="plan-task">동료와 SPIN 질문 연습 롤플레이 2회 실시</div>`;
+  html += '</div>';
+
+  // Week 3
+  html += `<div class="plan-week">
+    <div class="plan-week-title"><span class="week-badge">3주차</span> 실전 적용 (실제 상담 활용)</div>`;
+  actions.slice(0, 3).forEach(a => {
+    html += `<div class="plan-task">${a}</div>`;
+  });
+  html += `<div class="plan-task">실제 고객 상담에서 SPIN 질문 최소 4개 이상 활용</div>`;
+  html += '</div>';
+
+  // Week 4
+  html += `<div class="plan-week">
+    <div class="plan-week-title"><span class="week-badge">4주차</span> 자기 점검 + 성장 확인</div>
+    <div class="plan-task">1~3주차 실행 결과 자기 점검표 작성</div>
+    <div class="plan-task">SPIN 플랫폼 퀴즈/시나리오/롤플레이 재도전으로 성장 확인</div>
+    <div class="plan-task">향후 3개월 심화 학습 계획 수립</div>`;
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
+// ========== MEMBER SELECT ==========
+let allMembers = [];
+let teamNames = {};
+
+async function loadMembers() {
+  const session = getSavedSession();
+  if (!session) return;
+
+  try {
+    const [members, tNames] = await Promise.all([
+      fetchAllMembers(),
+      fetchTeamNames()
+    ]);
+    allMembers = members.filter(m => m.name && m.name.trim() !== '');
+    teamNames = tNames;
+
+    const select = document.getElementById('memberSelect');
+    select.innerHTML = '<option value="">-- 교육생을 선택하세요 --</option>';
+
+    // Group by team
+    const teams = {};
+    allMembers.forEach(m => {
+      if (!teams[m.team_id]) teams[m.team_id] = [];
+      teams[m.team_id].push(m);
+    });
+
+    Object.keys(teams).sort().forEach(teamId => {
+      const group = document.createElement('optgroup');
+      group.label = teamNames[teamId] || `팀 ${teamId}`;
+      teams[teamId].forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = `${m.name} (슬롯 ${m.slot + 1})`;
+        group.appendChild(opt);
+      });
+      select.appendChild(group);
+    });
+  } catch (e) {
+    console.error('Failed to load members:', e);
+  }
+}
+
+async function onMemberSelect() {
+  const select = document.getElementById('memberSelect');
+  const memberId = parseInt(select.value);
+  if (!memberId) {
+    document.getElementById('ontoEmpty').style.display = 'block';
+    document.getElementById('ontoMain').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('ontoEmpty').style.display = 'none';
+  document.getElementById('ontoMain').style.display = 'grid';
+
+  const member = allMembers.find(m => m.id === memberId);
+  if (!member) return;
+
+  // Show loading
+  document.getElementById('ontoNodes').innerHTML = '<div class="onto-loading">온톨로지 생성 중...</div>';
+  document.getElementById('panelBody').innerHTML = '<div class="onto-loading">분석 중...</div>';
+
+  try {
+    const logs = await fetchMemberLogs(memberId);
+    const ontology = generateOntology(member, logs);
+    renderGraph(ontology);
+    renderPanel(ontology);
+  } catch (e) {
+    console.error('Ontology generation failed:', e);
+    document.getElementById('ontoNodes').innerHTML = '<div class="onto-empty"><div class="icon">⚠️</div><h3>데이터 로드 실패</h3><p>잠시 후 다시 시도해주세요.</p></div>';
+  }
+}
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded', function() {
+  loadMembers();
+});
+</script>
+</body>
+</html>
