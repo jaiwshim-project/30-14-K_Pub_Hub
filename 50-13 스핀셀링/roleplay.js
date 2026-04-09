@@ -124,34 +124,95 @@ function renderRoleplayButtons() {
   ).join('');
 }
 
+// 난이도 설정
+const difficultyConfig = {
+  easy: {
+    label: '난이도(하)',
+    desc: '고객이 협조적입니다. 질문에 상세하게 답변하며, 문제와 니즈를 비교적 쉽게 표현합니다. SPIN 질문의 기본 흐름을 연습하기 좋습니다.',
+    responseStyle: 'cooperative'
+  },
+  medium: {
+    label: '난이도(중)',
+    desc: '고객이 중립적입니다. 질문에 간략하게 답하며, 시사질문(I)과 해결질문(N)을 통해 니즈를 심화시켜야 합니다. 문제를 인정하지만 행동 의도는 쉽게 표현하지 않습니다.',
+    responseStyle: 'neutral'
+  },
+  hard: {
+    label: '난이도(상)',
+    desc: '고객이 방어적입니다. 문제를 축소하거나 현 상태에 만족한다고 말합니다. 강력한 시사질문(I)으로 문제의 심각성을 인식시키고, 해결질문(N)으로 전환해야 합니다.',
+    responseStyle: 'defensive'
+  }
+};
+
+// 난이도별 평가 결과 저장
+const evalResults = { easy: null, medium: null, hard: null };
+
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(() => renderRoleplayButtons(), 150);
+  setTimeout(() => {
+    renderRoleplayButtons();
+    loadEvalResults();
+  }, 150);
 });
 
-// ========== ROLEPLAY FUNCTIONS ==========
-function startRoleplay(type) {
+// ========== 1단계: 산업분야 선택 ==========
+state.selectedScenarioType = null;
+state.selectedDifficulty = null;
+
+function selectScenario(type) {
+  state.selectedScenarioType = type;
   const scenario = roleplayScenarios[type];
-  state.roleplayScenario = scenario;
-  state.roleplayMessages = [];
-  state.roleplayTurnCount = 0;
-  state.spinCounts = { S: 0, P: 0, I: 0, N: 0 };
 
-  // 버튼 활성 상태 표시
+  // 버튼 활성
   document.querySelectorAll('.roleplay-btn').forEach(b => b.classList.remove('active'));
-  const activeBtn = document.querySelector(`.roleplay-btn[data-type="${type}"]`);
-  if (activeBtn) activeBtn.classList.add('active');
+  document.querySelector(`.roleplay-btn[data-type="${type}"]`)?.classList.add('active');
 
-  // 설명문 표시
+  // 설명문
   const descEl = document.getElementById('scenarioDesc');
   descEl.style.display = 'block';
   descEl.innerHTML = `<div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:8px;">${scenario.name} — 사례 설명</div>
     <div style="font-size:13px; color:var(--text-secondary); line-height:1.8;">${scenario.description}</div>`;
 
-  // 채팅 초기화
+  // 난이도가 이미 선택되어 있으면 채팅 시작
+  if (state.selectedDifficulty) beginChat();
+}
+
+// ========== 2단계: 난이도 선택 ==========
+function selectDifficulty(diff) {
+  state.selectedDifficulty = diff;
+
+  // 버튼 활성
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.diff-btn.${diff}`)?.classList.add('active');
+
+  // 설명 표시
+  const desc = document.getElementById('diffDesc');
+  desc.style.display = 'block';
+  desc.textContent = difficultyConfig[diff].desc;
+
+  // 산업분야가 이미 선택되어 있으면 채팅 시작
+  if (state.selectedScenarioType) beginChat();
+}
+
+// ========== 3단계: 상담 시작 ==========
+function beginChat() {
+  if (!state.selectedScenarioType || !state.selectedDifficulty) return;
+
+  const scenario = roleplayScenarios[state.selectedScenarioType];
+  state.roleplayScenario = scenario;
+  state.roleplayMessages = [];
+  state.roleplayTurnCount = 0;
+  state.spinCounts = { S: 0, P: 0, I: 0, N: 0 };
+
   const container = document.getElementById('chatContainer');
   container.innerHTML = '';
-  addChatMessage('ai', `안녕하세요, ${scenario.name}입니다. 무엇을 도와드릴까요?`);
+
+  const diffLabel = difficultyConfig[state.selectedDifficulty].label;
+  addChatMessage('ai', `안녕하세요, ${scenario.name}입니다. [${diffLabel}] 무엇을 도와드릴까요?`);
   document.getElementById('roleplayAnalysis').style.display = 'none';
+}
+
+// 기존 startRoleplay를 selectScenario로 대체
+function startRoleplay(type) {
+  selectScenario(type);
 }
 
 function sendChat() {
@@ -353,76 +414,118 @@ function requestAIEvaluation() {
     addActivity(`AI 롤플레이 평가: ${grade} (${score}/100점)`);
   }
 
-  // 렌더링
-  const evalEl = document.getElementById('aiEvaluation');
-  evalEl.style.display = 'block';
-  evalEl.innerHTML = `
-    <div style="background:linear-gradient(135deg, #ffffff, var(--pastel-blue)); border:2px solid rgba(36,113,163,0.15); border-top:4px solid var(--blue); border-radius:14px; padding:24px;">
-      <div style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
-        <span>🤖</span> SPIN 상담 종합 평가
-      </div>
+  // 난이도별 결과 저장
+  const diff = state.selectedDifficulty || 'easy';
+  const evalHTML = buildEvalHTML({ grade, gradeColor, gradeMsg, score, totalTurns, S, P, I, N, sRatio, pRatio, iRatio, nRatio, totalQ, feedback, questions });
 
-      <!-- 점수 & 등급 -->
-      <div style="display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap;">
-        <div style="text-align:center; padding:16px 24px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:120px;">
-          <div style="font-size:36px; font-weight:900; color:${gradeColor};">${grade}</div>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">등급</div>
-        </div>
-        <div style="text-align:center; padding:16px 24px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:120px;">
-          <div style="font-size:36px; font-weight:900; color:${gradeColor};">${score}</div>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">/ 100점</div>
-        </div>
-        <div style="text-align:center; padding:16px 24px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:120px;">
-          <div style="font-size:36px; font-weight:900; color:var(--text);">${totalTurns}</div>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">대화 턴</div>
-        </div>
-      </div>
+  evalResults[diff] = { score, grade, html: evalHTML };
+  saveEvalResults();
 
-      <div style="padding:12px 16px; background:rgba(36,113,163,0.04); border-radius:10px; margin-bottom:20px; font-size:14px; color:var(--text-secondary); line-height:1.6;">
-        ${gradeMsg}
-      </div>
+  // 하단 평가 결과 카드 표시 + 해당 탭 활성화
+  document.getElementById('evalResultCard').style.display = 'block';
+  updateEvalTabs();
+  switchEvalTab(diff);
 
-      <!-- SPIN 비율 바 -->
-      <div style="margin-bottom:20px;">
-        <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px;">SPIN 질문 비율</div>
-        <div style="display:flex; height:24px; border-radius:8px; overflow:hidden; border:1px solid var(--border);">
-          ${S > 0 ? `<div style="width:${sRatio}%; background:var(--blue); display:flex; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:700;">S ${sRatio}%</div>` : ''}
-          ${P > 0 ? `<div style="width:${pRatio}%; background:var(--accent); display:flex; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:700;">P ${pRatio}%</div>` : ''}
-          ${I > 0 ? `<div style="width:${iRatio}%; background:var(--purple); display:flex; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:700;">I ${iRatio}%</div>` : ''}
-          ${N > 0 ? `<div style="width:${nRatio}%; background:var(--green); display:flex; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:700;">N ${nRatio}%</div>` : ''}
+  // 스크롤
+  document.getElementById('evalResultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildEvalHTML(d) {
+  return `
+    <div style="background:linear-gradient(135deg, #ffffff, var(--pastel-blue)); border:1.5px solid rgba(36,113,163,0.12); border-radius:12px; padding:20px;">
+      <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+        <div style="text-align:center; padding:14px 20px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:100px;">
+          <div style="font-size:32px; font-weight:900; color:${d.gradeColor};">${d.grade}</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">등급</div>
         </div>
-        <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:10px; color:var(--text-muted);">
-          <span>S:${S} P:${P} I:${I} N:${N} (총 ${totalQ}개)</span>
-          <span>이상적 비율: S≤20% P≈25% I≈35% N≈20%</span>
+        <div style="text-align:center; padding:14px 20px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:100px;">
+          <div style="font-size:32px; font-weight:900; color:${d.gradeColor};">${d.score}</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">/ 100점</div>
+        </div>
+        <div style="text-align:center; padding:14px 20px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:100px;">
+          <div style="font-size:32px; font-weight:900; color:var(--text);">${d.totalTurns}</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">대화 턴</div>
         </div>
       </div>
-
-      <!-- 세부 피드백 -->
-      <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:10px;">세부 피드백</div>
-      ${feedback.map(f => `
-        <div style="padding:10px 14px; background:var(--card); border:1px solid var(--border-light); border-radius:10px; margin-bottom:8px; display:flex; gap:10px; align-items:flex-start;">
-          <span style="font-size:16px; flex:none;">${f.icon}</span>
+      <div style="padding:10px 14px; background:rgba(36,113,163,0.04); border-radius:10px; margin-bottom:16px; font-size:13px; color:var(--text-secondary); line-height:1.6;">${d.gradeMsg}</div>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:6px;">SPIN 질문 비율</div>
+        <div style="display:flex; height:22px; border-radius:8px; overflow:hidden; border:1px solid var(--border);">
+          ${d.S > 0 ? `<div style="width:${d.sRatio}%; background:var(--blue); display:flex; align-items:center; justify-content:center; color:white; font-size:9px; font-weight:700;">S ${d.sRatio}%</div>` : ''}
+          ${d.P > 0 ? `<div style="width:${d.pRatio}%; background:var(--accent); display:flex; align-items:center; justify-content:center; color:white; font-size:9px; font-weight:700;">P ${d.pRatio}%</div>` : ''}
+          ${d.I > 0 ? `<div style="width:${d.iRatio}%; background:var(--purple); display:flex; align-items:center; justify-content:center; color:white; font-size:9px; font-weight:700;">I ${d.iRatio}%</div>` : ''}
+          ${d.N > 0 ? `<div style="width:${d.nRatio}%; background:var(--green); display:flex; align-items:center; justify-content:center; color:white; font-size:9px; font-weight:700;">N ${d.nRatio}%</div>` : ''}
+        </div>
+        <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">S:${d.S} P:${d.P} I:${d.I} N:${d.N} (총 ${d.totalQ}개)</div>
+      </div>
+      <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:8px;">세부 피드백</div>
+      ${d.feedback.map(f => `
+        <div style="padding:8px 12px; background:var(--card); border:1px solid var(--border-light); border-radius:8px; margin-bottom:6px; display:flex; gap:8px; align-items:flex-start;">
+          <span style="font-size:14px; flex:none;">${f.icon}</span>
           <div>
-            <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:2px;">${f.category}</div>
-            <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">${f.text}</div>
+            <div style="font-size:10px; font-weight:700; color:var(--text-muted);">${f.category}</div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5;">${f.text}</div>
           </div>
         </div>
       `).join('')}
-
-      <!-- 질문 목록 -->
-      <div style="margin-top:16px;">
-        <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px;">내가 한 질문 (${questions.length}개)</div>
-        ${questions.map((q, i) => {
+      <div style="margin-top:12px;">
+        <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:6px;">내가 한 질문 (${d.questions.length}개)</div>
+        ${d.questions.map(q => {
           const qType = classifyQuestion(q);
-          return `<div style="padding:6px 12px; background:var(--bg); border-radius:8px; margin-bottom:4px; font-size:12px; display:flex; align-items:center; gap:8px;">
-            <span class="spin-tag ${qType || ''}" style="padding:2px 8px; font-size:10px;">${qType || '?'}</span>
+          return `<div style="padding:4px 10px; background:var(--bg); border-radius:6px; margin-bottom:3px; font-size:11px; display:flex; align-items:center; gap:6px;">
+            <span class="spin-tag ${qType || ''}" style="padding:2px 6px; font-size:9px;">${qType || '?'}</span>
             <span style="color:var(--text-tertiary);">${q}</span>
           </div>`;
         }).join('')}
       </div>
-    </div>
-  `;
+    </div>`;
+}
 
-  // 스크롤
-  evalEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// ========== 평가 탭 시스템 ==========
+function switchEvalTab(diff) {
+  // 탭 활성화
+  document.querySelectorAll('.eval-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.eval-tab.${diff}`)?.classList.add('active');
+
+  // 콘텐츠 표시
+  document.querySelectorAll('.eval-content').forEach(c => c.classList.remove('active'));
+  const content = document.getElementById('evalContent' + diff.charAt(0).toUpperCase() + diff.slice(1));
+  if (content) {
+    content.classList.add('active');
+    if (evalResults[diff]) {
+      content.innerHTML = evalResults[diff].html;
+    } else {
+      content.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-disabled); font-size:14px;">이 난이도에서 아직 평가를 받지 않았습니다.<br>산업분야 → 난이도 선택 → 상담 → AI평가받기를 진행하세요.</div>';
+    }
+  }
+}
+
+function updateEvalTabs() {
+  ['easy', 'medium', 'hard'].forEach(diff => {
+    const scoreEl = document.getElementById('evalScore' + diff.charAt(0).toUpperCase() + diff.slice(1));
+    if (scoreEl) {
+      scoreEl.textContent = evalResults[diff] ? `${evalResults[diff].grade} (${evalResults[diff].score}점)` : '미완료';
+    }
+  });
+}
+
+function saveEvalResults() {
+  const data = {};
+  ['easy', 'medium', 'hard'].forEach(d => {
+    if (evalResults[d]) data[d] = { score: evalResults[d].score, grade: evalResults[d].grade, html: evalResults[d].html };
+  });
+  localStorage.setItem('spin_roleplay_evals', JSON.stringify(data));
+}
+
+function loadEvalResults() {
+  const data = JSON.parse(localStorage.getItem('spin_roleplay_evals') || '{}');
+  ['easy', 'medium', 'hard'].forEach(d => {
+    if (data[d]) evalResults[d] = data[d];
+  });
+  if (data.easy || data.medium || data.hard) {
+    document.getElementById('evalResultCard').style.display = 'block';
+    updateEvalTabs();
+    const first = data.easy ? 'easy' : data.medium ? 'medium' : 'hard';
+    switchEvalTab(first);
+  }
 }

@@ -5,6 +5,102 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPIN Selling 2.0 & 3.0 - AI 롤플레이</title>
 <link rel="stylesheet" href="common.css">
+<style>
+.step-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.step-num {
+  background: var(--blue);
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  flex: none;
+}
+
+.step-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.diff-btn {
+  padding: 10px 20px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.diff-btn:hover { transform: translateY(-2px); }
+.diff-btn.easy { border-color: var(--green); color: var(--green); }
+.diff-btn.easy.active, .diff-btn.easy:hover { background: var(--green); color: white; }
+.diff-btn.medium { border-color: var(--gold); color: var(--gold); }
+.diff-btn.medium.active, .diff-btn.medium:hover { background: var(--gold); color: white; }
+.diff-btn.hard { border-color: var(--accent); color: var(--accent); }
+.diff-btn.hard.active, .diff-btn.hard:hover { background: var(--accent); color: white; }
+
+.step-divider {
+  border: none;
+  border-top: 1px dashed var(--border);
+  margin: 20px 0;
+}
+
+/* 평가 결과 탭 */
+.eval-tab-bar {
+  display: flex;
+  gap: 4px;
+  background: var(--bg);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.eval-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+}
+
+.eval-tab:hover { color: var(--text-secondary); }
+.eval-tab.active.easy { background: var(--green); color: white; }
+.eval-tab.active.medium { background: var(--gold); color: white; }
+.eval-tab.active.hard { background: var(--accent); color: white; }
+
+.eval-tab .eval-score {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+.eval-content { display: none; }
+.eval-content.active { display: block; }
+</style>
 </head>
 <body>
 
@@ -36,34 +132,82 @@
   <div class="card">
     <div class="card-title"><span class="icon">🎭</span> AI 고객 롤플레이</div>
     <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 13px;">
-      AI가 고객 역할을 합니다. SPIN 질문을 활용하여 고객의 니즈를 파악하세요.
+      AI가 고객 역할을 합니다. 산업분야와 난이도를 선택한 후 SPIN 질문으로 상담하세요.
     </p>
 
-    <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap:wrap;" id="roleplayBtns"></div>
+    <!-- 1단계: 산업분야 선택 -->
+    <div class="step-label">
+      <span class="step-num">1</span>
+      <span class="step-text">산업분야 선택</span>
+    </div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; margin-left:38px;" id="roleplayBtns"></div>
 
-    <div id="scenarioDesc" style="display:none; padding:16px 20px; background:linear-gradient(135deg, var(--pastel-blue), var(--pastel-green)); border:1.5px solid rgba(36,113,163,0.12); border-radius:12px; margin-bottom:16px;"></div>
+    <div id="scenarioDesc" style="display:none; padding:14px 18px; background:linear-gradient(135deg, var(--pastel-blue), var(--pastel-green)); border:1.5px solid rgba(36,113,163,0.12); border-radius:12px; margin-bottom:8px; margin-left:38px;"></div>
 
-    <div class="chat-container" id="chatContainer"></div>
+    <hr class="step-divider">
 
-    <div class="chat-input-area">
+    <!-- 2단계: 난이도 선택 -->
+    <div class="step-label">
+      <span class="step-num" style="background:var(--gold);">2</span>
+      <span class="step-text">난이도 선택</span>
+    </div>
+    <div style="display:flex; gap:10px; margin-left:38px; margin-bottom:8px;">
+      <button class="diff-btn easy" onclick="selectDifficulty('easy')">난이도(하)</button>
+      <button class="diff-btn medium" onclick="selectDifficulty('medium')">난이도(중)</button>
+      <button class="diff-btn hard" onclick="selectDifficulty('hard')">난이도(상)</button>
+    </div>
+    <div id="diffDesc" style="display:none; margin-left:38px; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:8px; font-size:12px; color:var(--text-tertiary); line-height:1.6; margin-bottom:8px;"></div>
+
+    <hr class="step-divider">
+
+    <!-- 3단계: 상담하기 -->
+    <div class="step-label">
+      <span class="step-num" style="background:var(--accent);">3</span>
+      <span class="step-text">상담하기</span>
+    </div>
+
+    <div class="chat-container" id="chatContainer" style="margin-left:38px;"></div>
+
+    <div class="chat-input-area" style="margin-left:38px;">
       <input type="text" class="chat-input" id="chatInput" placeholder="질문을 입력하세요..." onkeypress="if(event.key==='Enter')sendChat()">
       <button class="btn btn-primary" onclick="sendChat()">전송</button>
       <button class="btn btn-gold" onclick="requestAIEvaluation()">AI평가받기</button>
     </div>
 
-    <div id="roleplayAnalysis" style="margin-top: 16px; display:none;">
+    <div id="roleplayAnalysis" style="margin-top:16px; margin-left:38px; display:none;">
       <div class="ai-feedback">
-        <div class="ai-label">🤖 AI 상담 분석</div>
+        <div class="ai-label">🤖 AI 실시간 분석</div>
         <div id="roleplayAnalysisContent"></div>
       </div>
     </div>
+  </div>
 
-    <div id="aiEvaluation" style="margin-top: 16px; display:none;"></div>
+  <!-- 평가 결과 섹션 -->
+  <div class="card" id="evalResultCard" style="display:none;">
+    <div class="card-title"><span class="icon">📊</span> AI 평가 결과</div>
+
+    <div class="eval-tab-bar">
+      <button class="eval-tab easy" onclick="switchEvalTab('easy')">
+        난이도(하)
+        <span class="eval-score" id="evalScoreEasy">미완료</span>
+      </button>
+      <button class="eval-tab medium" onclick="switchEvalTab('medium')">
+        난이도(중)
+        <span class="eval-score" id="evalScoreMedium">미완료</span>
+      </button>
+      <button class="eval-tab hard" onclick="switchEvalTab('hard')">
+        난이도(상)
+        <span class="eval-score" id="evalScoreHard">미완료</span>
+      </button>
+    </div>
+
+    <div class="eval-content" id="evalContentEasy"></div>
+    <div class="eval-content" id="evalContentMedium"></div>
+    <div class="eval-content" id="evalContentHard"></div>
   </div>
 </div>
 </div>
 
-<div id="flowNavPlaceholder"></div>
 <div id="footerPlaceholder"></div>
 </div>
 
