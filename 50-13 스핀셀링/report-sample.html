@@ -806,7 +806,9 @@ async function sendEmailSimulation() {
   btn.disabled = true;
 
   try {
-    const reportHtml = document.getElementById('reportPage').querySelector('.report-body').innerHTML;
+    // 전체 리포트 페이지를 WYSIWYG 방식으로 이메일 전송
+    const reportPage = document.getElementById('reportPage');
+    const fullHtml = buildEmailHtml(reportPage.innerHTML);
 
     const res = await fetch(`${SUPABASE_URL}/functions/v1/dynamic-function`, {
       method: 'POST',
@@ -817,18 +819,14 @@ async function sendEmailSimulation() {
       body: JSON.stringify({
         to: email,
         name: name,
-        team: '팀 A (Alpha)',
-        company: '존슨콘트롤즈',
-        date: '2026. 04. 14~15',
-        trainer: '심재우 대표',
-        reportHtml: reportHtml
+        reportHtml: fullHtml
       })
     });
 
     const data = await res.json();
 
     if (data.id) {
-      alert(`✅ 이메일 발송 완료!\n\n수신: ${email}\n제목: [SPIN Selling AI] ${name}님 교육 참가 결과 AI 분석리포트\n\nResend ID: ${data.id}`);
+      alert(`✅ 이메일 발송 완료!\n\n수신: ${email}\n제목: [SPIN Selling AI] ${name}님 교육 참가 결과 AI 분석리포트\n\n리포트 전체가 이메일로 전송되었습니다.`);
     } else if (data.success) {
       alert(`✅ 이메일 발송 완료!\n\n수신: ${email}`);
     } else {
@@ -840,6 +838,47 @@ async function sendEmailSimulation() {
 
   btn.textContent = '📧 이메일 발송';
   btn.disabled = false;
+}
+
+// 이메일용 WYSIWYG HTML 생성 (인라인 CSS 포함)
+function buildEmailHtml(reportInnerHtml) {
+  return `
+<div style="max-width:700px; margin:0 auto; font-family:'Noto Sans KR','Helvetica Neue',Arial,sans-serif; color:#000; background:#fff;">
+
+  <!-- 리포트 헤더 -->
+  <div style="background:linear-gradient(135deg, #0a2240, #0d3161); padding:32px 40px; color:white;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
+      <div>
+        <div style="font-size:18px; font-weight:800;">SPIN Selling AI</div>
+        <div style="font-size:10px; letter-spacing:2px; opacity:0.7;">AI-POWERED TRAINING</div>
+      </div>
+      <div style="font-size:12px; opacity:0.6;">발행일: 2026년 4월 16일</div>
+    </div>
+    <div style="font-size:28px; font-weight:900; margin-bottom:8px;">교육 참가 결과 AI 분석리포트</div>
+    <div style="font-size:14px; opacity:0.8;">AI가 분석한 개인별 SPIN 역량 진단 및 맞춤 코칭</div>
+  </div>
+
+  <!-- 참가자 정보 -->
+  <div style="display:flex; gap:24px; padding:16px 40px; background:#f0f3f8; border-bottom:1px solid #e2e8f0; flex-wrap:wrap; font-size:13px;">
+    <span><span style="color:#666; font-size:11px;">교육생</span> <b>김영수</b></span>
+    <span><span style="color:#666; font-size:11px;">소속</span> <b>존슨콘트롤즈</b></span>
+    <span><span style="color:#666; font-size:11px;">팀</span> <b>팀 A (Alpha)</b></span>
+    <span><span style="color:#666; font-size:11px;">교육일</span> <b>2026. 04. 14~15</b></span>
+    <span><span style="color:#666; font-size:11px;">강사</span> <b>심재우 대표</b></span>
+    <span><span style="color:#666; font-size:11px;">이메일</span> <b>jaiwshim@gmail.com</b></span>
+  </div>
+
+  <!-- 리포트 본문 (페이지와 동일) -->
+  <div style="padding:32px 40px;">
+    ${reportInnerHtml}
+  </div>
+
+  <!-- 이메일 푸터 -->
+  <div style="text-align:center; padding:20px 40px; border-top:1px solid #e2e8f0; font-size:11px; color:#999;">
+    본 리포트는 SPIN Selling AI 플랫폼에서 자동 생성되었습니다.<br>
+    &copy; 2026 Korn Ferry SPIN Selling Official Program | 심재우 대표 | SB Consulting
+  </div>
+</div>`;
 }
 </script>
 </body>
