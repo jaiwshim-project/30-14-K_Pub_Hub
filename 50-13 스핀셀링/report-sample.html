@@ -798,9 +798,46 @@
 
 <script src="common.js"></script>
 <script>
-function sendEmailSimulation() {
+async function sendEmailSimulation() {
   const email = 'kimys@johnson.com';
-  alert(`📧 이메일 발송 시뮬레이션\n\n수신: ${email}\n제목: [SPIN Selling AI] 김영수님 교육 참가 결과 AI 분석리포트\n\n실제 발송은 n8n 워크플로우 또는 Supabase Edge Function과 연동하면 가능합니다.\n\n현재는 인쇄(Ctrl+P)로 PDF 저장 후 수동 발송하세요.`);
+  const name = '김영수';
+  const btn = event.target;
+  btn.textContent = '📧 발송 중...';
+  btn.disabled = true;
+
+  try {
+    const reportHtml = document.getElementById('reportPage').querySelector('.report-body').innerHTML;
+
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-report`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify({
+        to: email,
+        name: name,
+        team: '팀 A (Alpha)',
+        company: '존슨콘트롤즈',
+        date: '2026. 04. 14~15',
+        trainer: '심재우 대표',
+        reportHtml: reportHtml
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert(`✅ 이메일 발송 완료!\n\n수신: ${email}\n제목: [SPIN Selling AI] ${name}님 교육 참가 결과 AI 분석리포트`);
+    } else {
+      alert(`⚠️ 발송 실패: ${JSON.stringify(data.error)}\n\nResend API 키가 설정되지 않았을 수 있습니다.\nSupabase Dashboard → Edge Functions → send-report → Secrets에서 RESEND_API_KEY를 설정하세요.`);
+    }
+  } catch (e) {
+    alert(`⚠️ 발송 오류: ${e.message}\n\nEdge Function이 배포되지 않았을 수 있습니다.`);
+  }
+
+  btn.textContent = '📧 이메일 발송';
+  btn.disabled = false;
 }
 </script>
 </body>
