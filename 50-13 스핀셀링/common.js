@@ -558,6 +558,7 @@ function getFooterHTML() {
       <div class="footer-badges">
         <span class="footer-badge">Korn Ferry Certified</span>
         <span class="footer-badge accent">AI-Enhanced</span>
+        <a href="report-sample.html" style="background:rgba(245,166,35,0.15); border:1px solid rgba(245,166,35,0.3); color:var(--gold-light); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--gold-light)'">📋 AI리포트 샘플</a>
         <a href="admin.html" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.8); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🔧 관리자</a>
       </div>
     </div>

@@ -29,13 +29,14 @@ const ACTIVITY_COLORS = {
 };
 
 const SCORE_CATEGORIES = [
-  { key: 'score_quiz', label: '퀴즈', color: 'var(--blue)' },
-  { key: 'score_needs', label: '니즈 구분', color: 'var(--green)' },
-  { key: 'score_scenario', label: 'SPIN 질문구분', color: 'var(--purple)' },
-  { key: 'score_practice', label: '질문 연습', color: 'var(--accent)' },
-  { key: 'score_roleplay', label: '롤플레이', color: 'var(--accent-light)' },
-  { key: 'score_fab', label: 'FAB/BAF', color: 'var(--gold)' }
+  { key: 'score_quiz', label: '퀴즈', color: 'var(--blue)', max: 80 },
+  { key: 'score_needs', label: '니즈 구분', color: 'var(--green)', max: 80 },
+  { key: 'score_scenario', label: 'SPIN 질문구분', color: 'var(--purple)', max: 100 },
+  { key: 'score_practice', label: '질문 연습', color: 'var(--accent)', max: 120 },
+  { key: 'score_roleplay', label: '롤플레이', color: 'var(--accent-light)', max: 100 },
+  { key: 'score_fab', label: 'FAB/BAF', color: 'var(--gold)', max: 90 }
 ];
+const COACHING_TOTAL_MAX = 600;
 
 const TEAM_COLORS = ['var(--blue)', 'var(--accent)', 'var(--green)', 'var(--purple)', 'var(--gold)'];
 
@@ -341,24 +342,30 @@ function selectMemberForAnalysis(memberId) {
 }
 
 function renderMemberScoreBars(member) {
-  const maxPossible = Math.max(
-    ...SCORE_CATEGORIES.map(c => member[c.key] || 0),
-    100
-  );
-
   let html = '';
   SCORE_CATEGORIES.forEach(cat => {
     const score = member[cat.key] || 0;
-    const pct = Math.round((score / maxPossible) * 100);
+    const max = cat.max;
+    const pct = Math.round((score / max) * 100);
     html += `
       <div class="score-bar-row">
         <div class="score-bar-label">${cat.label}</div>
         <div class="score-bar-track">
           <div class="score-bar-fill" style="width:${Math.max(pct, 2)}%; background:${cat.color};"></div>
         </div>
-        <div class="score-bar-value">${score}</div>
+        <div class="score-bar-value">${score} <span style="color:var(--text-disabled,#aaa); font-size:11px;">/ ${max}</span></div>
       </div>`;
   });
+
+  const totalScore = getMemberTotalScore(member);
+  html += `
+    <div class="score-bar-row" style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border,#e0e0e0);">
+      <div class="score-bar-label" style="font-weight:800;">합계</div>
+      <div class="score-bar-track">
+        <div class="score-bar-fill" style="width:${Math.max(Math.round((totalScore / COACHING_TOTAL_MAX) * 100), 2)}%; background:var(--accent);"></div>
+      </div>
+      <div class="score-bar-value" style="font-weight:800;">${totalScore} <span style="color:var(--text-disabled,#aaa); font-size:11px;">/ ${COACHING_TOTAL_MAX}</span></div>
+    </div>`;
 
   document.getElementById('memberScoreBars').innerHTML = html;
 }

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling AI - 교육 결과 리포트 (샘플)</title>
+<link rel="stylesheet" href="common.css">
+<style>
+@media print {
+  .header, .nav, .footer, .no-print, #footerPlaceholder { display: none !important; }
+  .report-page { box-shadow: none !important; border: none !important; margin: 0 !important; }
+  body { background: white !important; }
+}
+
+.report-page {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.report-header {
+  background: linear-gradient(135deg, #0a2240, #0d3161);
+  padding: 32px 40px;
+  color: white;
+}
+
+.report-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.report-logo { display: flex; align-items: center; gap: 12px; }
+.report-logo img { height: 32px; }
+.report-logo-text { font-size: 18px; font-weight: 800; }
+.report-logo-sub { font-size: 10px; letter-spacing: 2px; opacity: 0.7; }
+.report-date { font-size: 12px; opacity: 0.6; }
+
+.report-title {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.report-subtitle { font-size: 14px; opacity: 0.8; }
+
+.report-info-bar {
+  display: flex;
+  gap: 24px;
+  padding: 16px 40px;
+  background: #f0f3f8;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.report-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.report-info-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.report-info-value { font-size: 14px; color: var(--text); font-weight: 700; }
+
+.report-body { padding: 32px 40px; }
+
+.report-section {
+  margin-bottom: 28px;
+}
+
+.report-section-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--kf-navy);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.report-section-num {
+  background: var(--kf-navy);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* Score table */
+.score-tbl { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+.score-tbl th { background: #f0f3f8; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+.score-tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border-light); font-size: 14px; color: var(--text); }
+.score-tbl .highlight { font-weight: 800; color: var(--kf-navy); }
+.score-tbl .total-row td { background: #f0f3f8; font-weight: 800; border-top: 2px solid var(--kf-navy); }
+
+/* SPIN chart */
+.spin-bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.spin-bar-row { display: flex; align-items: center; gap: 10px; }
+.spin-bar-label { width: 80px; font-size: 13px; font-weight: 700; }
+.spin-bar-track { flex: 1; height: 20px; background: var(--border-light); border-radius: 10px; overflow: hidden; }
+.spin-bar-fill { height: 100%; border-radius: 10px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 10px; color: white; font-weight: 700; transition: width 0.5s; }
+.spin-bar-value { width: 50px; text-align: right; font-size: 13px; font-weight: 700; }
+
+/* Grade badge */
+.grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.grade-a { background: linear-gradient(135deg, #1e8449, #27ae60); color: white; }
+.grade-b { background: linear-gradient(135deg, #2471a3, #3498db); color: white; }
+.grade-c { background: linear-gradient(135deg, #d4880f, #f5a623); color: white; }
+.grade-d { background: linear-gradient(135deg, #c0392b, #e74c3c); color: white; }
+
+/* Coaching card */
+.coaching-card {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.coaching-card.strength { background: rgba(30,132,73,0.06); border-left: 4px solid var(--green); }
+.coaching-card.weakness { background: rgba(192,57,43,0.06); border-left: 4px solid var(--accent); }
+.coaching-card.tip { background: rgba(36,113,163,0.06); border-left: 4px solid var(--blue); }
+
+/* Email button */
+.email-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: white;
+  border: 2px solid #b8760c;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.email-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(212,136,15,0.3); }
+
+@media (max-width: 768px) {
+  .report-header { padding: 24px 20px; }
+  .report-body { padding: 20px; }
+  .report-info-bar { padding: 12px 20px; }
+  .report-title { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" onclick="clearSessionId();clearUser();clearRole();" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="main">
+<div class="section">
+
+<!-- 컨트롤 바 -->
+<div class="no-print" style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
+  <button class="email-btn" onclick="sendEmailSimulation()">📧 이메일 발송 시뮬레이션</button>
+  <button class="btn btn-primary" onclick="window.print()">🖨 인쇄 / PDF</button>
+  <button class="btn btn-secondary" onclick="location.href='index.html'">홈으로</button>
+</div>
+
+<!-- ========== 리포트 시작 ========== -->
+<div class="report-page" id="reportPage">
+
+  <!-- 리포트 헤더 -->
+  <div class="report-header">
+    <div class="report-header-top">
+      <div class="report-logo">
+        <img src="logo-kornferry.png" alt="Korn Ferry">
+        <div>
+          <div class="report-logo-text">SPIN Selling AI</div>
+          <div class="report-logo-sub">AI-POWERED TRAINING</div>
+        </div>
+      </div>
+      <div class="report-date">발행일: 2026년 4월 16일</div>
+    </div>
+    <div class="report-title">교육 참가 결과 리포트</div>
+    <div class="report-subtitle">AI가 분석한 개인별 SPIN 역량 진단 및 맞춤 코칭</div>
+  </div>
+
+  <!-- 참가자 정보 -->
+  <div class="report-info-bar">
+    <div class="report-info-item">
+      <span class="report-info-label">교육생</span>
+      <span class="report-info-value">김영수</span>
+    </div>
+    <div class="report-info-item">
+      <span class="report-info-label">소속</span>
+      <span class="report-info-value">존슨콘트롤즈</span>
+    </div>
+    <div class="report-info-item">
+      <span class="report-info-label">팀</span>
+      <span class="report-info-value">팀 A (Alpha)</span>
+    </div>
+    <div class="report-info-item">
+      <span class="report-info-label">교육일</span>
+      <span class="report-info-value">2026. 04. 14~15</span>
+    </div>
+    <div class="report-info-item">
+      <span class="report-info-label">강사</span>
+      <span class="report-info-value">심재우 대표</span>
+    </div>
+    <div class="report-info-item">
+      <span class="report-info-label">이메일</span>
+      <span class="report-info-value">kimys@johnson.com</span>
+    </div>
+  </div>
+
+  <!-- 리포트 본문 -->
+  <div class="report-body">
+
+    <!-- 1. 종합 평가 -->
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">1</span> 종합 평가
+      </div>
+      <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+        <div style="text-align:center;">
+          <div class="grade-badge grade-a" style="width:72px; height:72px; font-size:28px;">A</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">종합 등급</div>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <div style="font-size:32px; font-weight:900; color:var(--kf-navy);">468 <span style="font-size:16px; color:var(--text-disabled);">/ 600점</span></div>
+          <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">상위 15% | 참여 활동 8/10개 완료</div>
+          <div style="margin-top:8px; height:12px; background:var(--border-light); border-radius:6px; overflow:hidden;">
+            <div style="width:78%; height:100%; background:linear-gradient(90deg, var(--kf-navy), var(--blue)); border-radius:6px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 활동별 성과 -->
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">2</span> 활동별 성과
+      </div>
+      <table class="score-tbl">
+        <thead>
+          <tr>
+            <th>활동</th>
+            <th>획득 점수</th>
+            <th>만점</th>
+            <th>달성률</th>
+            <th>등급</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>📝 SPIN 개념 퀴즈</td><td class="highlight">70</td><td>80</td><td>88%</td><td><span style="color:var(--green); font-weight:700;">A</span></td></tr>
+          <tr><td>🎯 니즈 구분 (IN/EN)</td><td class="highlight">60</td><td>80</td><td>75%</td><td><span style="color:var(--blue); font-weight:700;">B+</span></td></tr>
+          <tr><td>🔍 SPIN 질문구분</td><td class="highlight">90</td><td>100</td><td>90%</td><td><span style="color:var(--green); font-weight:700;">A+</span></td></tr>
+          <tr><td>💬 질문 작성 연습</td><td class="highlight">80</td><td>120</td><td>67%</td><td><span style="color:var(--blue); font-weight:700;">B</span></td></tr>
+          <tr><td>🎭 AI 롤플레이</td><td class="highlight">85</td><td>100</td><td>85%</td><td><span style="color:var(--green); font-weight:700;">A</span></td></tr>
+          <tr><td>🧩 FAB/BAF 연습</td><td class="highlight">83</td><td>90</td><td>92%</td><td><span style="color:var(--green); font-weight:700;">A+</span></td></tr>
+          <tr class="total-row"><td>합계</td><td class="highlight">468</td><td>600</td><td>78%</td><td><span style="color:var(--kf-navy); font-weight:800;">A</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 3. SPIN 질문 역량 분석 -->
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">3</span> SPIN 질문 역량 분석
+      </div>
+      <p style="font-size:13px; color:var(--text-tertiary); margin-bottom:16px;">
+        AI 롤플레이와 질문 연습에서 사용한 SPIN 질문 유형 분포입니다.
+      </p>
+      <div class="spin-bar-chart">
+        <div class="spin-bar-row">
+          <span class="spin-bar-label" style="color:var(--blue);">S 상황</span>
+          <div class="spin-bar-track"><div class="spin-bar-fill" style="width:18%; background:var(--blue);">18%</div></div>
+          <span class="spin-bar-value" style="color:var(--blue);">5회</span>
+        </div>
+        <div class="spin-bar-row">
+          <span class="spin-bar-label" style="color:var(--accent);">P 문제</span>
+          <div class="spin-bar-track"><div class="spin-bar-fill" style="width:25%; background:var(--accent);">25%</div></div>
+          <span class="spin-bar-value" style="color:var(--accent);">7회</span>
+        </div>
+        <div class="spin-bar-row">
+          <span class="spin-bar-label" style="color:var(--purple);">I 시사</span>
+          <div class="spin-bar-track"><div class="spin-bar-fill" style="width:32%; background:var(--purple);">32%</div></div>
+          <span class="spin-bar-value" style="color:var(--purple);">9회</span>
+        </div>
+        <div class="spin-bar-row">
+          <span class="spin-bar-label" style="color:var(--green);">N 해결</span>
+          <div class="spin-bar-track"><div class="spin-bar-fill" style="width:25%; background:var(--green);">25%</div></div>
+          <span class="spin-bar-value" style="color:var(--green);">7회</span>
+        </div>
+      </div>
+      <div style="margin-top:12px; padding:12px 16px; background:rgba(36,113,163,0.04); border-radius:10px; font-size:13px; color:var(--text-secondary); line-height:1.6;">
+        <strong>분석:</strong> S(18%) → P(25%) → I(32%) → N(25%)의 이상적인 SPIN 비율을 보여주고 있습니다.
+        시사질문(I)을 가장 많이 활용하여 잠재니즈를 현재니즈로 전환하는 핵심 스킬이 우수합니다.
+      </div>
+    </div>
+
+    <!-- 4. AI 맞춤 코칭 -->
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">4</span> AI 맞춤 코칭
+      </div>
+
+      <div class="coaching-card strength">
+        <span style="font-size:20px;">💪</span>
+        <div>
+          <div style="font-weight:700; color:var(--green); margin-bottom:4px;">강점: 시사질문(I) 활용 우수</div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            시사질문 비율이 32%로 이상적인 수준입니다. 문제의 영향과 파급효과를 탐색하여
+            고객이 문제의 심각성을 인식하게 만드는 능력이 뛰어납니다.
+            이 역량을 실제 영업 상담에서도 적극 활용하세요.
+          </div>
+        </div>
+      </div>
+
+      <div class="coaching-card strength">
+        <span style="font-size:20px;">💪</span>
+        <div>
+          <div style="font-weight:700; color:var(--green); margin-bottom:4px;">강점: FAB/BAF 구분 능력 탁월</div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            FAB 연습에서 92% 달성률로 A+ 등급을 받았습니다.
+            Feature/Advantage/Benefit을 정확히 구분하고, 고객의 현재니즈에 연결하여 제시하는 역량이 우수합니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="coaching-card weakness">
+        <span style="font-size:20px;">⚠️</span>
+        <div>
+          <div style="font-weight:700; color:var(--accent); margin-bottom:4px;">개선 필요: 질문 작성 연습 (67%)</div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            질문 연습에서 달성률이 67%로 다른 활동 대비 낮습니다.
+            특히 해결질문(N) 작성 시 "만약 ~한다면" 형태를 더 연습하세요.
+            고객이 스스로 솔루션의 가치를 말하게 하는 질문이 핵심입니다.
+          </div>
+        </div>
+      </div>
+
+      <div class="coaching-card tip">
+        <span style="font-size:20px;">💡</span>
+        <div>
+          <div style="font-weight:700; color:var(--blue); margin-bottom:4px;">실전 적용 팁</div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            다음 영업 상담에서 SPIN 순서(S→P→I→N)를 의식적으로 따라가 보세요.
+            특히 시사질문(I) 2~3개 후에 해결질문(N)을 배치하면 고객의 구매 의지를 효과적으로 높일 수 있습니다.
+            콜플랜 작성 도구를 활용하여 미리 질문을 계획하고 상담에 임하세요.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 롤플레이 평가 -->
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">5</span> AI 롤플레이 평가
+      </div>
+      <div style="display:flex; gap:16px; flex-wrap:wrap;">
+        <div style="flex:1; min-width:150px; padding:16px; background:rgba(30,132,73,0.05); border:1.5px solid rgba(30,132,73,0.15); border-radius:12px; text-align:center;">
+          <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">난이도(하)</div>
+          <div class="grade-badge grade-a" style="margin:0 auto;">A+</div>
+          <div style="font-size:14px; font-weight:800; color:var(--green); margin-top:6px;">95 / 100</div>
+        </div>
+        <div style="flex:1; min-width:150px; padding:16px; background:rgba(36,113,163,0.05); border:1.5px solid rgba(36,113,163,0.15); border-radius:12px; text-align:center;">
+          <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">난이도(중)</div>
+          <div class="grade-badge grade-a" style="margin:0 auto;">A</div>
+          <div style="font-size:14px; font-weight:800; color:var(--blue); margin-top:6px;">82 / 100</div>
+        </div>
+        <div style="flex:1; min-width:150px; padding:16px; background:rgba(212,136,15,0.05); border:1.5px solid rgba(212,136,15,0.15); border-radius:12px; text-align:center;">
+          <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">난이도(상)</div>
+          <div class="grade-badge grade-b" style="margin:0 auto;">B+</div>
+          <div style="font-size:14px; font-weight:800; color:var(--gold); margin-top:6px;">72 / 100</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. 콜플랜 평가 -->
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">6</span> 콜플랜 평가
+      </div>
+      <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div class="grade-badge grade-a">A</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">등급</div>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <div style="font-size:24px; font-weight:900; color:var(--kf-navy);">85 <span style="font-size:14px; color:var(--text-disabled);">/ 100점</span></div>
+          <div style="font-size:13px; color:var(--text-tertiary); margin-top:4px;">
+            고객 정보 15/15 | 상담 목표 18/20 | 이슈&가설 13/15 | SPIN 질문 24/30 | FAB 8/10 | Opening 7/10
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. 퀴즈 문제풀이 결과 -->
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">7</span> 퀴즈 문제풀이 결과
+      </div>
+      <table class="score-tbl">
+        <thead>
+          <tr><th>카테고리</th><th>정답</th><th>총문제</th><th>정답률</th><th>획득점수</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>핵심 개념</td><td>7</td><td>8</td><td>88%</td><td>70 / 80</td></tr>
+          <tr><td>구매사이클</td><td>4</td><td>5</td><td>80%</td><td>40 / 50</td></tr>
+          <tr><td>SPIN 질문 유형</td><td>7</td><td>8</td><td>88%</td><td>70 / 80</td></tr>
+          <tr><td>고급 문제</td><td>5</td><td>6</td><td>83%</td><td>50 / 60</td></tr>
+          <tr class="total-row"><td>합계</td><td>23</td><td>27</td><td>85%</td><td>230 / 270</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:13px; color:var(--text-tertiary); line-height:1.6;">
+        <strong>오답 분석:</strong> "잠재니즈를 현재니즈로 전환하는 이유"와 "시사질문의 역할" 관련 문제에서 오답이 발생했습니다.
+        Huthwaite 연구에서 시사질문(I)이 잠재니즈→현재니즈 전환의 핵심이라는 원리를 복습하시기 바랍니다.
+      </div>
+    </div>
+
+    <!-- 8. 종합 코멘트 -->
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">8</span> 강사 종합 코멘트
+      </div>
+      <div style="padding:20px; background:linear-gradient(135deg, var(--pastel-blue), var(--pastel-green)); border-radius:12px; font-size:14px; color:var(--text-secondary); line-height:1.8;">
+        김영수님은 2일간의 SPIN Selling AI 교육에서 <strong>종합 A등급(468/600점)</strong>이라는 우수한 성과를 달성하셨습니다.
+        특히 시사질문(I) 활용과 FAB 구분 능력에서 뛰어난 역량을 보여주셨습니다.
+        <br><br>
+        향후 실전 영업에서는 <strong>질문 작성 연습</strong>에서 나타난 약점을 보완하시면 더욱 효과적인 영업 상담이 가능할 것입니다.
+        콜플랜 도구를 활용하여 상담 전 SPIN 질문을 미리 계획하는 습관을 기르시기 바랍니다.
+        <br><br>
+        <div style="text-align:right; margin-top:12px; font-weight:700; color:var(--kf-navy);">
+          — 심재우 대표 | SB Consulting | Korn Ferry Certified SPIN Master Trainer
+        </div>
+      </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div style="text-align:center; padding-top:20px; border-top:1px solid var(--border); font-size:11px; color:var(--text-disabled);">
+      본 리포트는 SPIN Selling AI 플랫폼에서 자동 생성되었습니다.<br>
+      &copy; 2026 Korn Ferry SPIN Selling Official Program | 심재우 대표 | SB Consulting
+    </div>
+
+  </div><!-- /report-body -->
+</div><!-- /report-page -->
+
+</div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+function sendEmailSimulation() {
+  const email = 'kimys@johnson.com';
+  alert(`📧 이메일 발송 시뮬레이션\n\n수신: ${email}\n제목: [SPIN Selling AI] 김영수님 교육 참가 결과 리포트\n\n실제 발송은 n8n 워크플로우 또는 Supabase Edge Function과 연동하면 가능합니다.\n\n현재는 인쇄(Ctrl+P)로 PDF 저장 후 수동 발송하세요.`);
+}
+</script>
+</body>
+</html>

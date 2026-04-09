@@ -4,6 +4,9 @@ const TEAMS = ['A', 'B', 'C', 'D', 'E'];
 const TEAM_COLORS = { A: 'var(--accent)', B: 'var(--blue)', C: 'var(--green)', D: 'var(--gold)', E: 'var(--purple)' };
 const CATEGORIES = ['quiz', 'needs', 'scenario', 'practice', 'roleplay', 'fab'];
 const CAT_LABELS = { quiz: '퀴즈', needs: '니즈구분', scenario: '시나리오', practice: '질문연습', roleplay: '롤플레이', fab: 'FAB' };
+const CAT_MAX = { quiz: 80, needs: 80, scenario: 100, practice: 120, roleplay: 100, fab: 90 };
+const TOTAL_MAX = 600;
+const MAX_SUFFIX = '<span style="color:var(--text-disabled,#aaa); font-size:11px;">';
 
 // ========== SUPABASE API (scoreboard) ==========
 async function fetchMembers() {
@@ -112,13 +115,13 @@ function renderTeamScoreTable(grouped) {
       <tr>
         <td><span class="rank-badge ${rankClass}">${i + 1}</span></td>
         <td style="font-weight:600;"><span class="team-label-cell ${team.key}">팀 ${team.key}</span></td>
-        <td>${team.quiz}</td>
-        <td>${team.needs}</td>
-        <td>${team.scenario}</td>
-        <td>${team.practice}</td>
-        <td>${team.roleplay}</td>
-        <td>${team.fab}</td>
-        <td class="score-total">${team.total}</td>
+        <td>${team.quiz}${MAX_SUFFIX}/${CAT_MAX.quiz * memberCount}</span></td>
+        <td>${team.needs}${MAX_SUFFIX}/${CAT_MAX.needs * memberCount}</span></td>
+        <td>${team.scenario}${MAX_SUFFIX}/${CAT_MAX.scenario * memberCount}</span></td>
+        <td>${team.practice}${MAX_SUFFIX}/${CAT_MAX.practice * memberCount}</span></td>
+        <td>${team.roleplay}${MAX_SUFFIX}/${CAT_MAX.roleplay * memberCount}</span></td>
+        <td>${team.fab}${MAX_SUFFIX}/${CAT_MAX.fab * memberCount}</span></td>
+        <td class="score-total">${team.total}${MAX_SUFFIX}/${TOTAL_MAX * memberCount}</span></td>
         <td style="min-width:80px; font-weight:700; color:var(--blue);">${team.total} / ${teamMax}</td>
       </tr>
     `;
@@ -141,9 +144,9 @@ function renderIndividualScores(grouped) {
         <td><span class="team-label-cell ${t}">팀 ${t}</span></td>
         ${CATEGORIES.map(c => `
           <td><input class="score-cell-input" type="number" min="0" value="${m['score_' + c] || 0}"
-            onchange="handleScoreChange(${m.id}, '${c}', this.value, this)"></td>
+            onchange="handleScoreChange(${m.id}, '${c}', this.value, this)">${MAX_SUFFIX}/${CAT_MAX[c]}</span></td>
         `).join('')}
-        <td class="score-total" id="total-${m.id}">${total}</td>
+        <td class="score-total" id="total-${m.id}">${total}${MAX_SUFFIX}/${TOTAL_MAX}</span></td>
       </tr>`;
     });
 
@@ -154,11 +157,12 @@ function renderIndividualScores(grouped) {
     });
     const grandTotal = CATEGORIES.reduce((sum, c) => sum + teamTotals[c], 0);
 
+    const memberCount = members.filter(m => m.name).length || members.length;
     html += `<tr class="sb-summary-row">
       <td style="text-align:left; padding-left:16px;">팀 ${t} 소계</td>
       <td></td>
-      ${CATEGORIES.map(c => `<td>${teamTotals[c]}</td>`).join('')}
-      <td class="score-total">${grandTotal}</td>
+      ${CATEGORIES.map(c => `<td>${teamTotals[c]}${MAX_SUFFIX}/${CAT_MAX[c] * memberCount}</span></td>`).join('')}
+      <td class="score-total">${grandTotal}${MAX_SUFFIX}/${TOTAL_MAX * memberCount}</span></td>
     </tr>`;
   });
 
@@ -183,13 +187,13 @@ function renderIndividualScores(grouped) {
         <td><span class="rank-badge ${rankClass}">${i + 1}</span></td>
         <td class="member-name-cell">${name}</td>
         <td><span class="team-label-cell ${p.team}">팀 ${p.team}</span></td>
-        <td>${p.score_quiz || 0}</td>
-        <td>${p.score_needs || 0}</td>
-        <td>${p.score_scenario || 0}</td>
-        <td>${p.score_practice || 0}</td>
-        <td>${p.score_roleplay || 0}</td>
-        <td>${p.score_fab || 0}</td>
-        <td class="score-total">${p.total}</td>
+        <td>${p.score_quiz || 0}${MAX_SUFFIX}/${CAT_MAX.quiz}</span></td>
+        <td>${p.score_needs || 0}${MAX_SUFFIX}/${CAT_MAX.needs}</span></td>
+        <td>${p.score_scenario || 0}${MAX_SUFFIX}/${CAT_MAX.scenario}</span></td>
+        <td>${p.score_practice || 0}${MAX_SUFFIX}/${CAT_MAX.practice}</span></td>
+        <td>${p.score_roleplay || 0}${MAX_SUFFIX}/${CAT_MAX.roleplay}</span></td>
+        <td>${p.score_fab || 0}${MAX_SUFFIX}/${CAT_MAX.fab}</span></td>
+        <td class="score-total">${p.total}${MAX_SUFFIX}/${TOTAL_MAX}</span></td>
       </tr>`;
     }).join('');
   }
@@ -208,7 +212,7 @@ async function handleScoreChange(id, category, value, inputEl) {
     if (member) {
       const total = CATEGORIES.reduce((sum, c) => sum + (member['score_' + c] || 0), 0);
       const totalEl = document.getElementById(`total-${id}`);
-      if (totalEl) totalEl.textContent = total;
+      if (totalEl) totalEl.innerHTML = `${total}${MAX_SUFFIX}/${TOTAL_MAX}</span>`;
     }
   }, 300);
 }
@@ -243,13 +247,13 @@ function renderRanking(grouped, members) {
           <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
             ${team.memberNames.length > 0 ? team.memberNames.join(', ') : '(팀원 미등록)'}
           </div>
-          <div style="display:flex; gap:12px; font-size:11px; color:var(--text-tertiary); margin-bottom:8px;">
-            <span>퀴즈 ${team.quiz}</span>
-            <span>니즈 ${team.needs}</span>
-            <span>시나리오 ${team.scenario}</span>
-            <span>질문 ${team.practice}</span>
-            <span>롤플레이 ${team.roleplay}</span>
-            <span>FAB ${team.fab}</span>
+          <div style="display:flex; gap:12px; font-size:11px; color:var(--text-tertiary); margin-bottom:8px; flex-wrap:wrap;">
+            <span>퀴즈 ${team.quiz}<span style="opacity:0.5">/${CAT_MAX.quiz * (team.memberNames.length || 1)}</span></span>
+            <span>니즈 ${team.needs}<span style="opacity:0.5">/${CAT_MAX.needs * (team.memberNames.length || 1)}</span></span>
+            <span>시나리오 ${team.scenario}<span style="opacity:0.5">/${CAT_MAX.scenario * (team.memberNames.length || 1)}</span></span>
+            <span>질문 ${team.practice}<span style="opacity:0.5">/${CAT_MAX.practice * (team.memberNames.length || 1)}</span></span>
+            <span>롤플레이 ${team.roleplay}<span style="opacity:0.5">/${CAT_MAX.roleplay * (team.memberNames.length || 1)}</span></span>
+            <span>FAB ${team.fab}<span style="opacity:0.5">/${CAT_MAX.fab * (team.memberNames.length || 1)}</span></span>
           </div>
           <div class="team-score-bar">
             <div class="team-score-fill" style="width:${barPct}%; background:${TEAM_COLORS[team.key]};"></div>
@@ -275,13 +279,13 @@ function renderRanking(grouped, members) {
         <td><span class="rank-badge ${rankClass}">${i + 1}</span></td>
         <td class="member-name-cell">${p.name}</td>
         <td><span class="team-label-cell ${p.team_id}">팀 ${p.team_id}</span></td>
-        <td>${p.score_quiz || 0}</td>
-        <td>${p.score_needs || 0}</td>
-        <td>${p.score_scenario || 0}</td>
-        <td>${p.score_practice || 0}</td>
-        <td>${p.score_roleplay || 0}</td>
-        <td>${p.score_fab || 0}</td>
-        <td class="score-total">${p.total}</td>
+        <td>${p.score_quiz || 0}${MAX_SUFFIX}/${CAT_MAX.quiz}</span></td>
+        <td>${p.score_needs || 0}${MAX_SUFFIX}/${CAT_MAX.needs}</span></td>
+        <td>${p.score_scenario || 0}${MAX_SUFFIX}/${CAT_MAX.scenario}</span></td>
+        <td>${p.score_practice || 0}${MAX_SUFFIX}/${CAT_MAX.practice}</span></td>
+        <td>${p.score_roleplay || 0}${MAX_SUFFIX}/${CAT_MAX.roleplay}</span></td>
+        <td>${p.score_fab || 0}${MAX_SUFFIX}/${CAT_MAX.fab}</span></td>
+        <td class="score-total">${p.total}${MAX_SUFFIX}/${TOTAL_MAX}</span></td>
       </tr>
     `;
   }).join('') || '<tr><td colspan="10" style="text-align:center; color:var(--text-muted); padding:24px;">팀원 이름을 먼저 등록하세요</td></tr>';

@@ -266,6 +266,7 @@
 
     <div class="rpt-controls">
       <button class="btn-primary" onclick="generateAllReports()">전체 리포트 생성</button>
+      <button class="btn-gold" onclick="sendAllReportsEmail()" style="padding:10px 20px; background:linear-gradient(135deg, var(--gold), var(--gold-light)); color:white; border:2px solid #b8760c; border-radius:10px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;">📧 전체 개인별 리포트 이메일 발송</button>
       <button class="btn-secondary" onclick="loadReportData()">새로고침</button>
     </div>
 
@@ -389,7 +390,7 @@ function renderMemberList() {
       html += `<div class="rpt-member-row">
         <span class="rpt-member-name">${m.name}</span>
         <span class="rpt-member-email">${m.email || '-'}</span>
-        <span class="rpt-member-score">${totalScore}점</span>
+        <span class="rpt-member-score">${totalScore}<span style="color:#999; font-size:11px;"> / 600</span>점</span>
         <button class="rpt-member-btn" onclick="showMemberReport(${m.id})">리포트 보기</button>
       </div>`;
     });
@@ -484,12 +485,12 @@ function getCallplanEvals(memberId) {
 // ========== STRENGTH / WEAKNESS ANALYSIS ==========
 function analyzeStrengthWeakness(member) {
   const activities = [
-    { name: '퀴즈', score: member.score_quiz || 0, max: 20 },
-    { name: '니즈 구분', score: member.score_needs || 0, max: 20 },
-    { name: 'SPIN 질문구분', score: member.score_scenario || 0, max: 20 },
-    { name: '질문 연습', score: member.score_practice || 0, max: 20 },
-    { name: '롤플레이', score: member.score_roleplay || 0, max: 30 },
-    { name: 'FAB/BAF', score: member.score_fab || 0, max: 20 }
+    { name: '퀴즈', score: member.score_quiz || 0, max: 80 },
+    { name: '니즈 구분', score: member.score_needs || 0, max: 80 },
+    { name: 'SPIN 질문구분', score: member.score_scenario || 0, max: 100 },
+    { name: '질문 연습', score: member.score_practice || 0, max: 120 },
+    { name: '롤플레이', score: member.score_roleplay || 0, max: 100 },
+    { name: 'FAB/BAF', score: member.score_fab || 0, max: 90 }
   ];
 
   const sorted = [...activities].sort((a, b) => (b.score / b.max) - (a.score / a.max));
@@ -601,7 +602,7 @@ async function showMemberReport(memberId) {
         </div>
         <div>
           <div style="font-size:13px; color:var(--text-muted);">총 획득 점수</div>
-          <div style="font-size:20px; font-weight:900; color:var(--accent);">${totalScore}점</div>
+          <div style="font-size:20px; font-weight:900; color:var(--accent);">${totalScore}<span style="color:#999; font-size:13px; font-weight:500;"> / 600점</span></div>
         </div>
       </div>
     </div>
@@ -614,13 +615,13 @@ async function showMemberReport(memberId) {
           <tr><th>활동</th><th style="text-align:center;">점수</th></tr>
         </thead>
         <tbody>
-          <tr><td>퀴즈</td><td class="score-cell">${member.score_quiz || 0}</td></tr>
-          <tr><td>니즈 구분</td><td class="score-cell">${member.score_needs || 0}</td></tr>
-          <tr><td>SPIN 질문구분</td><td class="score-cell">${member.score_scenario || 0}</td></tr>
-          <tr><td>질문 연습</td><td class="score-cell">${member.score_practice || 0}</td></tr>
-          <tr><td>롤플레이</td><td class="score-cell">${member.score_roleplay || 0}</td></tr>
-          <tr><td>FAB/BAF</td><td class="score-cell">${member.score_fab || 0}</td></tr>
-          <tr class="total-row"><td>합계</td><td class="score-cell">${totalScore}</td></tr>
+          <tr><td>퀴즈</td><td class="score-cell">${member.score_quiz || 0} <span style="color:#999; font-size:11px;">/ 80</span></td></tr>
+          <tr><td>니즈 구분</td><td class="score-cell">${member.score_needs || 0} <span style="color:#999; font-size:11px;">/ 80</span></td></tr>
+          <tr><td>SPIN 질문구분</td><td class="score-cell">${member.score_scenario || 0} <span style="color:#999; font-size:11px;">/ 100</span></td></tr>
+          <tr><td>질문 연습</td><td class="score-cell">${member.score_practice || 0} <span style="color:#999; font-size:11px;">/ 120</span></td></tr>
+          <tr><td>롤플레이</td><td class="score-cell">${member.score_roleplay || 0} <span style="color:#999; font-size:11px;">/ 100</span></td></tr>
+          <tr><td>FAB/BAF</td><td class="score-cell">${member.score_fab || 0} <span style="color:#999; font-size:11px;">/ 90</span></td></tr>
+          <tr class="total-row"><td>합계</td><td class="score-cell">${totalScore} <span style="color:#999; font-size:12px;">/ 600</span></td></tr>
         </tbody>
       </table>
     </div>

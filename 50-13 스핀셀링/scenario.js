@@ -102,7 +102,7 @@ function checkScenarioAnswers() {
   if (correct > 0) addScore(correct * 10, 'scenario');
   addActivity(`시나리오 분석: ${correct}/${total}`);
   saveActivityLog('scenario', { correct: correct, total: total }, correct * 10);
-  alert(`${total}문제 중 ${correct}문제 정답! (+${correct * 10}점)`);
+  alert(`${total}문제 중 ${correct}문제 정답! (+${correct * 10} / ${total * 10}점)`);
 }
 
 function resetScenario() {
