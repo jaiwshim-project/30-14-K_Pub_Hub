@@ -172,26 +172,36 @@ const quizData = {
   ]
 };
 
-// ========== QUIZ COMPLETION TRACKING ==========
-function markQuizComplete(category) {
-  const completed = JSON.parse(localStorage.getItem('spin_quiz_completed') || '{}');
-  completed[category] = true;
-  localStorage.setItem('spin_quiz_completed', JSON.stringify(completed));
-  updateQuizButtons();
+// ========== QUIZ SCORE TRACKING ==========
+const quizMaxScores = { concept: 80, buyingCycle: 50, spinType: 80, advanced: 60, all: 150 };
+
+function saveQuizScore(category, correct, total) {
+  const scores = JSON.parse(localStorage.getItem('spin_quiz_scores') || '{}');
+  const earned = correct * 10;
+  // 최고 점수 유지
+  if (!scores[category] || earned > scores[category].earned) {
+    scores[category] = { earned, max: total * 10, correct, total };
+  }
+  localStorage.setItem('spin_quiz_scores', JSON.stringify(scores));
+  updateScoreDisplay();
 }
 
-function updateQuizButtons() {
-  const completed = JSON.parse(localStorage.getItem('spin_quiz_completed') || '{}');
-  const btnMap = { concept: 0, buyingCycle: 1, spinType: 2, advanced: 3, all: 4 };
-  const btns = document.querySelectorAll('.quiz-category-btn');
-  btns.forEach((btn, i) => {
-    const cat = Object.keys(btnMap).find(k => btnMap[k] === i);
-    if (cat && completed[cat]) {
-      if (!btn.querySelector('.quiz-done')) {
-        btn.insertAdjacentHTML('beforeend', '<span class="quiz-done" style="margin-left:6px; color:var(--green); font-weight:800;">&#10003;</span>');
-        btn.style.borderColor = 'var(--green)';
-        btn.style.background = 'rgba(30,132,73,0.06)';
-      }
+function updateScoreDisplay() {
+  const scores = JSON.parse(localStorage.getItem('spin_quiz_scores') || '{}');
+  const cats = ['concept', 'buyingCycle', 'spinType', 'advanced', 'all'];
+
+  cats.forEach(cat => {
+    const scoreEl = document.getElementById('score-' + cat);
+    const cardEl = document.querySelector(`.quiz-cat-card[data-cat="${cat}"]`);
+    if (!scoreEl || !cardEl) return;
+
+    const max = quizMaxScores[cat];
+    if (scores[cat]) {
+      scoreEl.textContent = `${scores[cat].earned} / ${max}`;
+      cardEl.classList.add('completed');
+    } else {
+      scoreEl.textContent = `0 / ${max}`;
+      cardEl.classList.remove('completed');
     }
   });
 }
@@ -276,14 +286,14 @@ function nextQuiz() {
       '핵심 개념을 다시 한번 복습해보세요.';
     document.getElementById('quizResultModal').classList.add('active');
     document.getElementById('quizArea').style.display = 'none';
-    markQuizComplete(state.currentQuizCategory);
+    saveQuizScore(state.currentQuizCategory, score, total);
     addActivity(`퀴즈 완료: ${score}/${total} (${Math.round(score/total*100)}%)`);
     return;
   }
   showQuizQuestion();
 }
 
-// 페이지 로드 시 완료 상태 복원
+// 페이지 로드 시 점수 복원
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(() => updateQuizButtons(), 200);
+  setTimeout(() => updateScoreDisplay(), 200);
 });

@@ -5,6 +5,76 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPIN Selling 2.0 & 3.0 - 개념 퀴즈</title>
 <link rel="stylesheet" href="common.css">
+<style>
+.quiz-cat-card {
+  background: linear-gradient(135deg, #ffffff, var(--pastel-blue));
+  border: 1.5px solid rgba(36,113,163,0.12);
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quiz-cat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(36,113,163,0.12);
+  border-color: var(--blue);
+}
+
+.quiz-cat-card.gold {
+  background: linear-gradient(135deg, #ffffff, var(--pastel-gold));
+  border-color: rgba(212,136,15,0.15);
+}
+
+.quiz-cat-card.gold:hover {
+  border-color: var(--gold);
+  box-shadow: 0 6px 20px rgba(212,136,15,0.12);
+}
+
+.quiz-cat-card.completed {
+  border-color: var(--green);
+  background: linear-gradient(135deg, #ffffff, var(--pastel-green));
+}
+
+.quiz-cat-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.quiz-cat-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.quiz-cat-score {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--text-disabled);
+  padding: 6px 0;
+  border-top: 1px solid var(--border-light);
+}
+
+.quiz-cat-card.completed .quiz-cat-score {
+  color: var(--green);
+}
+
+.quiz-cat-card.completed .quiz-cat-name::after {
+  content: ' \2713';
+  color: var(--green);
+  font-weight: 900;
+}
+
+@media (max-width: 768px) {
+  #quizCategoryGrid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+  #quizCategoryGrid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
 </head>
 <body>
 
@@ -39,12 +109,32 @@
     <div class="card-title"><span class="icon">📝</span> SPIN 개념 퀴즈</div>
     <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 13px;">각 문제를 읽고 정답을 선택하세요. 정답 시 팀 점수에 반영됩니다.</p>
 
-    <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-      <button class="btn btn-sm btn-secondary quiz-category-btn" onclick="startQuiz('concept')">핵심 개념 (8)</button>
-      <button class="btn btn-sm btn-secondary quiz-category-btn" onclick="startQuiz('buyingCycle')">구매사이클 (5)</button>
-      <button class="btn btn-sm btn-secondary quiz-category-btn" onclick="startQuiz('spinType')">SPIN 질문 유형 (8)</button>
-      <button class="btn btn-sm btn-secondary quiz-category-btn" onclick="startQuiz('advanced')">고급 문제 (6)</button>
-      <button class="btn btn-sm btn-gold quiz-category-btn" onclick="startQuiz('all')">전체 랜덤 (15)</button>
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;" id="quizCategoryGrid">
+      <div class="quiz-cat-card" data-cat="concept" onclick="startQuiz('concept')">
+        <div class="quiz-cat-name">핵심 개념</div>
+        <div class="quiz-cat-count">8문제</div>
+        <div class="quiz-cat-score" id="score-concept">0 / 80</div>
+      </div>
+      <div class="quiz-cat-card" data-cat="buyingCycle" onclick="startQuiz('buyingCycle')">
+        <div class="quiz-cat-name">구매사이클</div>
+        <div class="quiz-cat-count">5문제</div>
+        <div class="quiz-cat-score" id="score-buyingCycle">0 / 50</div>
+      </div>
+      <div class="quiz-cat-card" data-cat="spinType" onclick="startQuiz('spinType')">
+        <div class="quiz-cat-name">SPIN 질문 유형</div>
+        <div class="quiz-cat-count">8문제</div>
+        <div class="quiz-cat-score" id="score-spinType">0 / 80</div>
+      </div>
+      <div class="quiz-cat-card" data-cat="advanced" onclick="startQuiz('advanced')">
+        <div class="quiz-cat-name">고급 문제</div>
+        <div class="quiz-cat-count">6문제</div>
+        <div class="quiz-cat-score" id="score-advanced">0 / 60</div>
+      </div>
+      <div class="quiz-cat-card gold" data-cat="all" onclick="startQuiz('all')">
+        <div class="quiz-cat-name">전체 랜덤</div>
+        <div class="quiz-cat-count">15문제</div>
+        <div class="quiz-cat-score" id="score-all">0 / 150</div>
+      </div>
     </div>
 
     <div id="quizArea" style="display:none;">
