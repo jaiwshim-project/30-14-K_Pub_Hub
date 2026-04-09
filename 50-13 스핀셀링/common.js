@@ -476,8 +476,8 @@ function checkAutoLogin() {}
 // ========== COMMON HTML GENERATORS ==========
 function getNavHTML(activePage) {
   const role = getSavedRole();
-  const adminOnly = ['team-setup'];
-  const adminTrainer = ['scoreboard', 'coaching'];
+  const adminOnly = [];
+  const adminTrainer = ['team-setup', 'scoreboard', 'coaching'];
 
   const items = [
     { page: 'index.html', section: 'home', icon: '🏠', label: '홈' },

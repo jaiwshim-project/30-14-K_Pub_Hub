@@ -212,11 +212,15 @@ async function renderTeamSetup() {
 
     const inputs = teamMembers.map((m, i) => {
       const code = getMemberCode(m.id);
+      const otherTeams = TEAMS.filter(ot => ot !== t);
       return `
-      <div>
+      <div style="margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border-light);">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div class="ts-member-label">팀원 ${i + 1}</div>
-          <div style="font-size:11px; font-weight:700; font-family:monospace; color:${m.name ? 'var(--accent)' : 'var(--text-disabled)'}; letter-spacing:2px;" title="접속 코드">${m.name ? code : '----'}</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div style="font-size:11px; font-weight:700; font-family:monospace; color:${m.name ? 'var(--accent)' : 'var(--text-disabled)'}; letter-spacing:2px;" title="접속 코드">${m.name ? code : '----'}</div>
+            ${m.name ? `<button onclick="removeMember(${m.id}, '${m.name.replace(/'/g,"\\'")}')" style="background:none; border:1px solid rgba(192,57,43,0.2); color:var(--accent); width:20px; height:20px; border-radius:4px; font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center;" title="교육생 삭제">✕</button>` : ''}
+          </div>
         </div>
         <input class="ts-member-input ${m.name ? 'filled' : ''}" type="text"
           value="${m.name || ''}"
@@ -224,6 +228,10 @@ async function renderTeamSetup() {
           data-id="${m.id}"
           onchange="handleTsName(${m.id}, this.value, this)"
           onfocus="this.select()">
+        ${m.name ? `<select onchange="moveMember(${m.id}, this.value)" style="width:100%; padding:4px 8px; font-size:11px; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--text-muted); font-family:inherit; cursor:pointer; margin-top:4px;">
+          <option value="">팀 이동...</option>
+          ${otherTeams.map(ot => `<option value="${ot}">→ 팀 ${ot}로 이동</option>`).join('')}
+        </select>` : ''}
       </div>
     `;}).join('');
 
@@ -272,6 +280,59 @@ async function handleTsName(id, name, inputEl) {
 
 async function handleTeamName(teamKey, newName) {
   await updateTeamName(teamKey, newName.trim());
+}
+
+async function removeMember(id, name) {
+  if (!confirm(`"${name}"을(를) 명단에서 삭제하시겠습니까?`)) return;
+  await fetch(`${SUPABASE_URL}/rest/v1/spin_members?id=eq.${id}`, {
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({ name: '', score_quiz: 0, score_needs: 0, score_scenario: 0, score_practice: 0, score_roleplay: 0, score_fab: 0, updated_at: new Date().toISOString() })
+  });
+  renderTeamSetup();
+}
+
+async function moveMember(id, newTeam) {
+  if (!newTeam) return;
+  // 대상 팀에 빈 슬롯 찾기
+  const members = await fetchAllMembers();
+  const sourceMember = members.find(m => m.id === id);
+  if (!sourceMember) return;
+
+  const targetSlots = members.filter(m => m.team_id === newTeam);
+  const emptySlot = targetSlots.find(m => !m.name);
+
+  if (!emptySlot) {
+    alert(`팀 ${newTeam}에 빈 자리가 없습니다.`);
+    renderTeamSetup();
+    return;
+  }
+
+  // 대상 슬롯에 이름/점수 복사
+  await fetch(`${SUPABASE_URL}/rest/v1/spin_members?id=eq.${emptySlot.id}`, {
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({
+      name: sourceMember.name,
+      score_quiz: sourceMember.score_quiz,
+      score_needs: sourceMember.score_needs,
+      score_scenario: sourceMember.score_scenario,
+      score_practice: sourceMember.score_practice,
+      score_roleplay: sourceMember.score_roleplay,
+      score_fab: sourceMember.score_fab,
+      updated_at: new Date().toISOString()
+    })
+  });
+
+  // 원래 슬롯 비우기
+  await fetch(`${SUPABASE_URL}/rest/v1/spin_members?id=eq.${id}`, {
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({ name: '', score_quiz: 0, score_needs: 0, score_scenario: 0, score_practice: 0, score_roleplay: 0, score_fab: 0, updated_at: new Date().toISOString() })
+  });
+
+  alert(`${sourceMember.name}을(를) 팀 ${newTeam}로 이동했습니다.`);
+  renderTeamSetup();
 }
 
 async function copyAllCodes() {
