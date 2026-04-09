@@ -54,50 +54,71 @@
       </div>
     </div>
 
-    <div style="margin-bottom: 16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-      <span style="background:var(--blue); color:white; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none;">1</span>
-      <div id="practiceContextBtns" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+    <!-- 단계 1: 산업분야 선택 -->
+    <div style="padding:16px 0; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span style="background:var(--blue); color:white; width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none;">1</span>
+        <span style="font-size:13px; font-weight:700; color:var(--text-secondary);">산업분야 선택</span>
+      </div>
+      <div id="practiceContextBtns" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; margin-left:36px;"></div>
     </div>
 
-    <div class="practice-context" id="practiceContext">
+    <div class="practice-context" id="practiceContext" style="margin-left:36px;">
       <strong>상황:</strong> 당신은 기업용 솔루션 영업사원입니다.
       고객사(중견 제조업체)의 생산관리 담당 이사를 만났습니다.
       고객은 현재 수작업으로 생산 스케줄을 관리하고 있으며,
       최근 납기 지연 문제가 발생하고 있다고 합니다.
     </div>
 
-    <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-      <span style="background:var(--accent); color:white; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none;">2</span>
-      <p style="font-size: 13px; color: var(--text-muted); margin:0;">질문 유형을 선택한 후, 해당 유형의 질문을 작성하세요:</p>
+    <hr style="border:none; border-top:1px dashed var(--border); margin:20px 0;">
+
+    <!-- 단계 2: 질문유형 선택 -->
+    <div style="padding:16px 0; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <span style="background:var(--accent); color:white; width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none;">2</span>
+        <span style="font-size:13px; font-weight:700; color:var(--text-secondary);">질문 유형을 선택하세요</span>
+      </div>
+
+      <div class="spin-type-selector" style="margin-left:36px;">
+        <button class="spin-type-btn S active" onclick="selectSpinType('S')">
+          <span class="type-name">S</span>
+          <span class="type-desc">상황질문</span>
+        </button>
+        <button class="spin-type-btn P" onclick="selectSpinType('P')">
+          <span class="type-name">P</span>
+          <span class="type-desc">문제질문</span>
+        </button>
+        <button class="spin-type-btn I" onclick="selectSpinType('I')">
+          <span class="type-name">I</span>
+          <span class="type-desc">시사질문</span>
+        </button>
+        <button class="spin-type-btn N" onclick="selectSpinType('N')">
+          <span class="type-name">N</span>
+          <span class="type-desc">해결질문</span>
+        </button>
+      </div>
     </div>
 
-    <div class="spin-type-selector">
-      <button class="spin-type-btn S active" onclick="selectSpinType('S')">
-        <span class="type-name">S</span>
-        <span class="type-desc">상황질문</span>
-      </button>
-      <button class="spin-type-btn P" onclick="selectSpinType('P')">
-        <span class="type-name">P</span>
-        <span class="type-desc">문제질문</span>
-      </button>
-      <button class="spin-type-btn I" onclick="selectSpinType('I')">
-        <span class="type-name">I</span>
-        <span class="type-desc">시사질문</span>
-      </button>
-      <button class="spin-type-btn N" onclick="selectSpinType('N')">
-        <span class="type-name">N</span>
-        <span class="type-desc">해결질문</span>
-      </button>
+    <hr style="border:none; border-top:1px dashed var(--border); margin:20px 0;">
+
+    <!-- 단계 3: 질문 작성 -->
+    <div style="padding:16px 0; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <span style="background:var(--purple); color:white; width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none;">3</span>
+        <span style="font-size:13px; font-weight:700; color:var(--text-secondary);">질문을 작성하세요</span>
+      </div>
+      <div style="margin-left:36px;">
+        <textarea class="practice-input" id="practiceInput" placeholder="질문을 작성하세요..."></textarea>
+      </div>
     </div>
 
-    <div style="display:flex; gap:10px; align-items:flex-start;">
-      <span style="background:var(--purple); color:white; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none; margin-top:10px;">3</span>
-      <textarea class="practice-input" id="practiceInput" placeholder="질문을 작성하세요..." style="flex:1;"></textarea>
-    </div>
+    <hr style="border:none; border-top:1px dashed var(--border); margin:20px 0;">
 
-    <div style="margin-top: 12px; display: flex; gap: 8px; align-items:center;">
-      <span style="background:var(--green); color:white; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none;">4</span>
-      <button class="btn btn-primary" onclick="submitPracticeQuestion()">제출 & AI 평가</button>
+    <!-- 단계 4: 제출 -->
+    <div style="padding:16px 0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="background:var(--green); color:white; width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none;">4</span>
+        <button class="btn btn-primary" onclick="submitPracticeQuestion()">제출 & AI 평가</button>
       <button class="btn btn-secondary" onclick="showExampleQuestions()">예시 질문 보기</button>
     </div>
 
