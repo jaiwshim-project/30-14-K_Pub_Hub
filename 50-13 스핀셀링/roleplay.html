@@ -39,11 +39,9 @@
       AI가 고객 역할을 합니다. SPIN 질문을 활용하여 고객의 니즈를 파악하세요.
     </p>
 
-    <div style="display: flex; gap: 8px; margin-bottom: 20px;">
-      <button class="btn btn-sm btn-secondary" onclick="startRoleplay('riprock')">Riprock Rooftops</button>
-      <button class="btn btn-sm btn-secondary" onclick="startRoleplay('manufacturing')">제조업 고객</button>
-      <button class="btn btn-sm btn-secondary" onclick="startRoleplay('shopnsave')">Shop N Save</button>
-    </div>
+    <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap:wrap;" id="roleplayBtns"></div>
+
+    <div id="scenarioDesc" style="display:none; padding:16px 20px; background:linear-gradient(135deg, var(--pastel-blue), var(--pastel-green)); border:1.5px solid rgba(36,113,163,0.12); border-radius:12px; margin-bottom:16px;"></div>
 
     <div class="chat-container" id="chatContainer"></div>
 
