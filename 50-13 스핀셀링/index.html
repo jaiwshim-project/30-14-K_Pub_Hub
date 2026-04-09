@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const user = getSavedUser();
 
   // 이미 로그인 상태면 company.html로
-  if (session && (role === 'trainer' || role === 'trainee') && user) {
+  if (session && (role === 'trainer' || role === 'trainee' || role === 'manager') && user) {
     location.href = 'company.html';
     return;
   }

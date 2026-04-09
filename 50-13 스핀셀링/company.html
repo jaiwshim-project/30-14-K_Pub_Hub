@@ -265,6 +265,17 @@
     </div>
   </div>
 
+  <!-- 교육 매니저 선택 -->
+  <div class="id-section">
+    <div class="id-section-title">📋 교육 매니저로 접속</div>
+    <div class="trainer-card" style="background:linear-gradient(135deg, #0d3161, #1a5276);">
+      <span style="color:var(--blue-light); font-size:14px; font-weight:700; white-space:nowrap;">매니저 이름</span>
+      <input type="text" id="managerNameInput" placeholder="매니저명을 입력하세요" onfocus="this.select()">
+      <input type="email" id="managerEmailInput" placeholder="이메일 주소" onfocus="this.select()" style="min-width:200px;">
+      <button onclick="loginAsManager()" style="padding:12px 28px; background:var(--blue); color:white; border:none; border-radius:10px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; white-space:nowrap; transition:all 0.2s;">매니저 접속</button>
+    </div>
+  </div>
+
   <!-- 교육생 선택 -->
   <div class="id-section">
     <div class="id-section-title">🙋 교육생 — 본인 이름을 클릭하세요</div>
@@ -468,6 +479,32 @@ async function goToIdentityStep() {
   }
 }
 
+async function loginAsManager() {
+  const nameInput = document.getElementById('managerNameInput');
+  const emailInput = document.getElementById('managerEmailInput');
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  if (!name) { nameInput.focus(); nameInput.style.borderColor = '#e74c3c'; return; }
+
+  saveRole('manager');
+  saveUser({ id: null, team_id: null, name: name, slot: null, email: email });
+  updateHeaderUser({ name });
+
+  // Supabase에 매니저 정보 저장 (세션의 team_names JSON에)
+  const session = getSavedSession();
+  if (session) {
+    const data = await fetchTeamNames();
+    data.manager_name = name;
+    data.manager_email = email;
+    await fetch(SUPABASE_URL + '/rest/v1/spin_sessions?id=eq.' + session.id, {
+      method: 'PATCH', headers: SB_HEADERS,
+      body: JSON.stringify({ team_names: data })
+    });
+  }
+
+  goToDashboard();
+}
+
 async function loginAsTrainer() {
   const nameInput = document.getElementById('trainerNameInput');
   const name = nameInput.value.trim();
@@ -548,6 +585,9 @@ function goToDashboard() {
   if (role === 'trainer') {
     badge.innerHTML = `<span style="background:var(--gold); color:#1a1a2e; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800;">TRAINER</span> <span style="margin-left:4px;">${user ? user.name : ''}</span>`;
     document.getElementById('dashTrainerSection').style.display = 'block';
+  } else if (role === 'manager') {
+    badge.innerHTML = `<span style="background:var(--blue); color:white; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800;">MANAGER</span> <span style="margin-left:4px;">${user ? user.name : ''}</span>`;
+    document.getElementById('dashTrainerSection').style.display = 'block';
   } else {
     badge.innerHTML = `<span style="background:rgba(255,255,255,0.15); padding:3px 10px; border-radius:6px; font-size:11px;">팀 ${user.team_id}</span> <span style="margin-left:4px;">${user.name}</span>`;
     document.getElementById('dashTrainerSection').style.display = 'none';
@@ -569,7 +609,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // 세션+역할+유저가 있으면 대시보드로 바로 이동
-  if (session && (role === 'trainer' || role === 'trainee') && user) {
+  if (session && (role === 'trainer' || role === 'trainee' || role === 'manager') && user) {
     updateHeaderUser(user);
     goToDashboard();
   } else {

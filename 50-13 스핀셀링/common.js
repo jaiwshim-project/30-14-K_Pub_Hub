@@ -256,7 +256,7 @@ function getUserBarHTML() {
 </div>`;
   }
 
-  if (role === 'trainer' && user) {
+  if ((role === 'trainer' || role === 'manager') && user) {
     return `
 <div id="userIdentityBar" style="display:none; background:linear-gradient(135deg, #1a1a2e, #16213e); border-bottom:1px solid rgba(255,255,255,0.1); padding:8px 24px;">
   <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
@@ -309,6 +309,8 @@ function updateHeaderUser(user) {
 
   if (role === 'admin') {
     headerTeam.innerHTML = '<span>관리자</span>';
+  } else if (role === 'manager' && user) {
+    headerTeam.innerHTML = `<span>매니저 | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
   } else if (role === 'trainer' && user) {
     headerTeam.innerHTML = `<span>강사 | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
   } else if (role === 'trainee' && user) {
@@ -490,7 +492,7 @@ function getNavHTML(activePage) {
   let filtered;
   if (role === 'admin') {
     filtered = items;
-  } else if (role === 'trainer') {
+  } else if (role === 'trainer' || role === 'manager') {
     filtered = items.filter(i => !adminOnly.includes(i.section));
   } else {
     filtered = items.filter(i => !adminOnly.includes(i.section) && !adminTrainer.includes(i.section));
