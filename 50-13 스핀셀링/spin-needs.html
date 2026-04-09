@@ -323,7 +323,7 @@ function checkAnswers() {
 
   const totalCorrect = spinCorrect + needsCorrect;
   const totalAll = spinTotal + needsTotal;
-  const points = totalCorrect * 5;
+  const points = totalCorrect * 10;
 
   if (totalCorrect > 0) addScore(points, 'scenario');
   addActivity(`SPIN질문&니즈 구분: ${totalCorrect}/${totalAll}`);

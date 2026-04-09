@@ -76,12 +76,12 @@ function checkFab() {
     }
   });
 
-  if (correct > 0) addScore(correct * 5, 'fab');
+  if (correct > 0) addScore(correct * 10, 'fab');
 
   const result = document.getElementById('fabResult');
   result.style.display = 'block';
   result.innerHTML = `<div class="ai-feedback"><div class="ai-label">🤖 결과</div>
-    <p>${total}문제 중 <strong style="color:var(--gold);">${correct}문제</strong> 정답! (+${correct * 5}점)</p></div>`;
+    <p>${total}문제 중 <strong style="color:var(--gold);">${correct}문제</strong> 정답! (+${correct * 10}점)</p></div>`;
 
   addActivity(`FAB 구분: ${correct}/${total}`);
 }

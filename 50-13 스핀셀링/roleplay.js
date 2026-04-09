@@ -88,7 +88,7 @@ function sendChat() {
     }
   }, 800);
 
-  addScore(5, 'roleplay');
+  addScore(10, 'roleplay');
 }
 
 function addChatMessage(role, text) {

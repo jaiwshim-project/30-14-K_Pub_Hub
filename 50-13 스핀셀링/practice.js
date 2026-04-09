@@ -49,7 +49,7 @@ function submitPracticeQuestion() {
   state.practiceHistory.push({ question, type, timestamp: new Date() });
   updatePracticeHistory();
 
-  addScore(8, 'practice');
+  addScore(10, 'practice');
   addActivity(`질문 연습(${type}): "${question.substring(0, 30)}..."`);
 
   input.value = '';
