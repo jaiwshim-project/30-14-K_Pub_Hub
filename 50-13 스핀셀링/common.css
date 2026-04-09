@@ -31,8 +31,8 @@
   /* 어두운 배경(헤더/히어로/푸터) 위 텍스트 위계 */
   --text-on-dark: #ffffff;            /* 제목 — 100% */
   --text-on-dark-secondary: #ffffff;                /* 본문 — 100% */
-  --text-on-dark-tertiary: rgba(255,255,255,0.9);   /* 보조 — 90% */
-  --text-on-dark-muted: rgba(255,255,255,0.75);     /* 메타 — 75% */
+  --text-on-dark-tertiary: #ffffff;                 /* 보조 — 100% */
+  --text-on-dark-muted: rgba(255,255,255,0.9);      /* 메타 — 90% */
   /* 파스텔톤 배경 */
   --pastel-blue: #e8eef6;
   --pastel-green: #eefbf4;
@@ -165,7 +165,7 @@ body::before {
   padding: 10px 12px;
   font-size: 12px;
   font-weight: 500;
-  color: rgba(255,255,255,0.85);
+  color: #ffffff;
   cursor: pointer;
   border-bottom: 2.5px solid transparent;
   transition: all 0.25s;
@@ -1387,7 +1387,7 @@ body::before {
 .footer-desc {
   font-size: 13px;
   line-height: 1.7;
-  color: var(--text-on-dark-muted);
+  color: rgba(255,255,255,0.9);
 }
 
 .footer-links {
