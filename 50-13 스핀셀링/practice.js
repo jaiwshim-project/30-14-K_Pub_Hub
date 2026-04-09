@@ -1,27 +1,73 @@
 // ========== PRACTICE CONTEXTS ==========
 const practiceContexts = [
   {
-    title: "제조업 시나리오",
+    title: "제조업",
     text: "<strong>상황:</strong> 당신은 기업용 솔루션 영업사원입니다. 고객사(중견 제조업체)의 생산관리 담당 이사를 만났습니다. 고객은 현재 수작업으로 생산 스케줄을 관리하고 있으며, 최근 납기 지연 문제가 발생하고 있다고 합니다."
   },
   {
-    title: "IT 서비스 시나리오",
+    title: "IT 서비스",
     text: "<strong>상황:</strong> 당신은 클라우드 서비스 영업사원입니다. 고객사(200명 규모 IT기업)의 CTO를 만났습니다. 고객은 자체 서버를 운영 중이며, 최근 서버 다운타임이 증가하여 서비스 안정성에 불안을 느끼고 있습니다."
   },
   {
-    title: "금융 시나리오",
+    title: "금융",
     text: "<strong>상황:</strong> 당신은 리스크 관리 솔루션 영업사원입니다. 고객사(중견 증권사)의 리스크 관리팀장을 만났습니다. 최근 규제 강화로 인해 리포팅 업무가 급증했고, 수작업 리포팅에 따른 오류 위험을 걱정하고 있습니다."
   },
   {
-    title: "병원 시나리오",
+    title: "병원",
     text: "<strong>상황:</strong> 당신은 의료 정보 시스템 영업사원입니다. 고객사(300병상 규모 종합병원)의 행정부원장을 만났습니다. 현재 진료 예약 시스템이 노후화되어 환자 대기 시간이 길고, 의료진 스케줄 관리에 어려움을 겪고 있습니다."
+  },
+  {
+    title: "물류/유통",
+    text: "<strong>상황:</strong> 당신은 물류 자동화 솔루션 영업사원입니다. 고객사(대형 유통업체)의 물류센터장을 만났습니다. 현재 재고 관리를 엑셀로 하고 있으며, 성수기 때마다 재고 오차로 인한 품절과 과잉 재고가 반복되고 있습니다."
+  },
+  {
+    title: "건설/부동산",
+    text: "<strong>상황:</strong> 당신은 프로젝트 관리 솔루션 영업사원입니다. 고객사(중견 건설사)의 프로젝트 관리 본부장을 만났습니다. 현재 10개 이상 동시 진행 현장의 공정 관리를 각 현장 소장이 개별적으로 하고 있어 본사 차원의 진척 파악이 어렵습니다."
+  },
+  {
+    title: "교육/에듀테크",
+    text: "<strong>상황:</strong> 당신은 학습관리시스템(LMS) 영업사원입니다. 고객사(500명 규모 기업)의 인재개발팀장을 만났습니다. 현재 교육 이수율 관리가 수작업이며, 직원별 역량 갭 분석이 안 되어 체계적인 교육 계획 수립이 어렵다고 합니다."
+  },
+  {
+    title: "자동차/모빌리티",
+    text: "<strong>상황:</strong> 당신은 차량 관제 솔루션 영업사원입니다. 고객사(택배/배송 업체)의 운영이사를 만났습니다. 300대의 배송 차량 운행 현황을 실시간으로 파악하지 못해 배차 비효율과 고객 불만이 증가하고 있습니다."
+  },
+  {
+    title: "에너지/환경",
+    text: "<strong>상황:</strong> 당신은 에너지 관리 솔루션 영업사원입니다. 고객사(대형 제조 공장)의 시설관리 부장을 만났습니다. 전기료가 매년 15%씩 상승하고 있고, 탄소배출 규제 대응을 위해 에너지 사용 현황 파악이 시급하다고 합니다."
+  },
+  {
+    title: "호텔/숙박",
+    text: "<strong>상황:</strong> 당신은 호텔 관리 시스템 영업사원입니다. 고객사(150실 규모 비즈니스 호텔)의 총지배인을 만났습니다. 객실 예약을 여러 OTA 채널에서 받고 있는데 오버부킹이 잦고, 체크인 절차가 느려 투숙객 불만이 발생하고 있습니다."
+  },
+  {
+    title: "식품/외식",
+    text: "<strong>상황:</strong> 당신은 식자재 관리 솔루션 영업사원입니다. 고객사(프랜차이즈 50개 매장)의 운영본부장을 만났습니다. 각 매장별 식자재 발주가 통일되지 않아 원가율 편차가 크고, 유통기한 관리 실수로 폐기량이 증가하고 있습니다."
   }
 ];
 
 // ========== PRACTICE FUNCTIONS ==========
+function renderContextButtons() {
+  const container = document.getElementById('practiceContextBtns');
+  if (!container) return;
+  container.innerHTML = practiceContexts.map((ctx, i) =>
+    `<button class="btn btn-sm btn-secondary" onclick="changePracticeContext(${i})" style="font-size:11px; padding:5px 10px;">${ctx.title}</button>`
+  ).join('');
+}
+
 function changePracticeContext(idx) {
   document.getElementById('practiceContext').innerHTML = practiceContexts[idx].text;
+  // 선택된 버튼 강조
+  const btns = document.querySelectorAll('#practiceContextBtns .btn');
+  btns.forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
 }
+
+// 페이지 로드 시 버튼 생성
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => renderContextButtons(), 150);
+});
 
 function selectSpinType(type) {
   state.selectedSpinType = type;

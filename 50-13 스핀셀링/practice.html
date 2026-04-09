@@ -54,12 +54,9 @@
       </div>
     </div>
 
-    <div style="margin-bottom: 16px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <div style="margin-bottom: 16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
       <span style="background:var(--blue); color:white; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none;">1</span>
-      <button class="btn btn-sm btn-secondary" onclick="changePracticeContext(0)">제조업 시나리오</button>
-      <button class="btn btn-sm btn-secondary" onclick="changePracticeContext(1)">IT 서비스 시나리오</button>
-      <button class="btn btn-sm btn-secondary" onclick="changePracticeContext(2)">금융 시나리오</button>
-      <button class="btn btn-sm btn-secondary" onclick="changePracticeContext(3)">병원 시나리오</button>
+      <div id="practiceContextBtns" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
     </div>
 
     <div class="practice-context" id="practiceContext">
