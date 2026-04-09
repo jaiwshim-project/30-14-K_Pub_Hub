@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling - 교육 참가 리포트</title>
+<link rel="stylesheet" href="common.css">
+<style>
+/* ========== REPORT PAGE ========== */
+.rpt-controls {
+  display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center;
+}
+.rpt-controls .btn-primary {
+  background: var(--accent); color: white; border: none; padding: 10px 24px;
+  border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
+  transition: all 0.2s;
+}
+.rpt-controls .btn-primary:hover { background: var(--accent-light); }
+.rpt-controls .btn-secondary {
+  background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 10px 20px;
+  border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+  transition: all 0.2s;
+}
+.rpt-controls .btn-secondary:hover { background: var(--bg); }
+
+/* Team section */
+.rpt-team-section {
+  margin-bottom: 28px;
+}
+.rpt-team-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  padding: 10px 16px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+}
+.rpt-team-header h3 { font-size: 15px; font-weight: 800; }
+.rpt-team-header .team-count { font-size: 12px; opacity: 0.7; margin-left: auto; }
+
+.rpt-member-row {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  margin-bottom: 6px; transition: all 0.2s;
+}
+.rpt-member-row:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.rpt-member-name { font-weight: 700; font-size: 14px; min-width: 80px; }
+.rpt-member-email { font-size: 12px; color: var(--text-muted); flex: 1; }
+.rpt-member-score {
+  font-weight: 800; font-size: 15px; color: var(--accent);
+  min-width: 60px; text-align: right;
+}
+.rpt-member-btn {
+  background: var(--accent2); color: white; border: none; padding: 6px 16px;
+  border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: all 0.2s; white-space: nowrap;
+}
+.rpt-member-btn:hover { background: var(--blue); }
+
+/* Modal */
+.rpt-modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); z-index: 9999; overflow-y: auto;
+  justify-content: center; padding: 20px;
+}
+.rpt-modal-overlay.active { display: flex; }
+.rpt-modal {
+  background: white; border-radius: 16px; max-width: 800px; width: 100%;
+  margin: auto; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  position: relative; max-height: 90vh; overflow-y: auto;
+}
+.rpt-modal-close {
+  position: sticky; top: 0; right: 0; z-index: 10;
+  display: flex; justify-content: flex-end; padding: 12px 16px;
+  background: white; border-bottom: 1px solid var(--border);
+}
+.rpt-modal-close button {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: inherit;
+}
+.rpt-modal-actions {
+  display: flex; gap: 8px; padding: 16px 32px; background: var(--bg);
+  border-top: 1px solid var(--border); position: sticky; bottom: 0;
+}
+.rpt-modal-actions button {
+  padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit; border: none; transition: all 0.2s;
+}
+.rpt-modal-actions .btn-print { background: var(--accent2); color: white; }
+.rpt-modal-actions .btn-print:hover { background: var(--blue); }
+.rpt-modal-actions .btn-copy { background: var(--green); color: white; }
+.rpt-modal-actions .btn-copy:hover { background: var(--green-light); }
+.rpt-modal-actions .btn-close { background: var(--bg-warm); color: var(--text); border: 1px solid var(--border); }
+
+/* Report card (inside modal) */
+.rpt-card {
+  padding: 32px;
+}
+.rpt-card-header {
+  text-align: center; padding-bottom: 24px; border-bottom: 2px solid var(--primary);
+  margin-bottom: 24px;
+}
+.rpt-card-header img { height: 32px; margin-bottom: 8px; }
+.rpt-card-header h1 { font-size: 20px; font-weight: 900; color: var(--primary); margin-bottom: 4px; }
+.rpt-card-header .subtitle { font-size: 13px; color: var(--text-muted); }
+
+.rpt-info-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px;
+  padding: 16px 20px; background: var(--pastel-blue); border-radius: 12px;
+  margin-bottom: 24px; font-size: 13px;
+}
+.rpt-info-grid .label { color: var(--text-muted); font-weight: 600; }
+.rpt-info-grid .value { color: var(--text); font-weight: 700; }
+
+.rpt-section { margin-bottom: 24px; }
+.rpt-section h2 {
+  font-size: 15px; font-weight: 800; color: var(--primary);
+  padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.rpt-section h2 .num {
+  background: var(--primary); color: white; width: 22px; height: 22px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800;
+}
+
+/* Score table */
+.rpt-score-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.rpt-score-table th {
+  background: var(--primary); color: white; padding: 8px 12px;
+  text-align: left; font-weight: 700; font-size: 12px;
+}
+.rpt-score-table td {
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+}
+.rpt-score-table tr:nth-child(even) td { background: var(--bg); }
+.rpt-score-table .score-cell {
+  font-weight: 800; text-align: center; color: var(--accent);
+}
+.rpt-score-table .total-row td {
+  background: var(--pastel-gold); font-weight: 800; border-top: 2px solid var(--gold);
+}
+
+/* SPIN bar chart */
+.spin-bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.spin-bar-row { display: flex; align-items: center; gap: 10px; }
+.spin-bar-label { width: 80px; font-size: 13px; font-weight: 700; color: var(--text); }
+.spin-bar-track {
+  flex: 1; height: 28px; background: var(--bg); border-radius: 8px;
+  overflow: hidden; position: relative;
+}
+.spin-bar-fill {
+  height: 100%; border-radius: 8px; display: flex; align-items: center;
+  padding-left: 10px; font-size: 11px; font-weight: 700; color: white;
+  transition: width 0.6s ease; min-width: 0;
+}
+.spin-bar-fill.s-bar { background: linear-gradient(135deg, #3498db, #2471a3); }
+.spin-bar-fill.p-bar { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.spin-bar-fill.i-bar { background: linear-gradient(135deg, #f5a623, #d4880f); }
+.spin-bar-fill.n-bar { background: linear-gradient(135deg, #27ae60, #1e8449); }
+.spin-bar-value { width: 50px; text-align: right; font-size: 13px; font-weight: 800; color: var(--text); }
+
+/* Coaching box */
+.rpt-coaching {
+  background: linear-gradient(135deg, var(--pastel-blue), var(--pastel-green));
+  border: 1px solid rgba(36,113,163,0.15); border-radius: 12px; padding: 20px;
+}
+.rpt-coaching h4 { font-size: 14px; font-weight: 800; margin-bottom: 8px; color: var(--primary); }
+.rpt-coaching .strength { color: var(--green); font-weight: 700; margin-bottom: 4px; }
+.rpt-coaching .weakness { color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+.rpt-coaching .suggestion { color: var(--text-tertiary); font-size: 13px; line-height: 1.6; margin-top: 8px; }
+
+/* Roleplay / Callplan eval */
+.rpt-eval-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px; margin-bottom: 8px;
+}
+.rpt-eval-card .eval-label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+.rpt-eval-card .eval-grade {
+  font-size: 20px; font-weight: 900; margin: 4px 0;
+}
+.rpt-eval-card .eval-score { font-size: 13px; color: var(--text-tertiary); }
+
+.rpt-eval-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;
+}
+
+/* Participation badge */
+.participation-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 10px; font-size: 14px; font-weight: 700;
+}
+.participation-badge.high { background: var(--pastel-green); color: var(--green); }
+.participation-badge.mid { background: var(--pastel-gold); color: var(--orange); }
+.participation-badge.low { background: var(--pastel-red); color: var(--accent); }
+
+/* Loading spinner */
+.rpt-loading {
+  text-align: center; padding: 60px 20px; color: var(--text-muted);
+}
+.rpt-loading .spinner {
+  width: 40px; height: 40px; border: 3px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Toast */
+.rpt-toast {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+  background: var(--primary); color: white; padding: 12px 28px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; z-index: 99999; opacity: 0;
+  transition: opacity 0.3s; pointer-events: none;
+}
+.rpt-toast.show { opacity: 1; }
+
+/* Print styles */
+@media print {
+  body { background: white !important; }
+  body::before { display: none !important; }
+  .header, #mainNav, #userIdentityBar, .rpt-controls,
+  .rpt-modal-close, .rpt-modal-actions, .footer,
+  .rpt-modal-overlay { display: none !important; }
+  .rpt-card { padding: 20px !important; }
+  .rpt-modal { max-height: none !important; overflow: visible !important; box-shadow: none !important; }
+  #reportPrintArea { display: block !important; }
+  .no-print { display: none !important; }
+}
+
+/* Print area (hidden by default, shown only during print) */
+#reportPrintArea {
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" onclick="clearSessionId();clearUser();clearRole();" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+  <div class="header-right">
+    <div class="team-badge" id="headerTeam"></div>
+    <div class="score-display" id="headerScore">0 점</div>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active="spin-tools"></div>
+
+<div class="main">
+<div class="section">
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> 교육 참가 리포트</div>
+    <p style="color: var(--text-tertiary); margin-bottom: 20px; font-size: 14px; line-height: 1.6;">
+      교육생 개인별 참가 리포트를 생성합니다. 각 교육생의 활동 성과, SPIN 역량 분석, AI 코칭 피드백을 확인할 수 있습니다.
+    </p>
+
+    <div class="rpt-controls">
+      <button class="btn-primary" onclick="generateAllReports()">전체 리포트 생성</button>
+      <button class="btn-secondary" onclick="loadReportData()">새로고침</button>
+    </div>
+
+    <div id="memberListArea">
+      <div class="rpt-loading">
+        <div class="spinner"></div>
+        <div>교육생 데이터를 불러오는 중...</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<!-- Report Modal -->
+<div class="rpt-modal-overlay" id="reportModal">
+  <div class="rpt-modal">
+    <div class="rpt-modal-close no-print">
+      <button onclick="closeReportModal()">닫기</button>
+    </div>
+    <div class="rpt-card" id="reportContent">
+      <!-- Report content injected here -->
+    </div>
+    <div class="rpt-modal-actions no-print">
+      <button class="btn-print" onclick="printReport()">인쇄</button>
+      <button class="btn-copy" onclick="copyReportToClipboard()">이메일용 복사</button>
+      <button class="btn-close" onclick="closeReportModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden print area -->
+<div id="reportPrintArea"></div>
+
+<!-- Toast -->
+<div class="rpt-toast" id="rptToast"></div>
+
+<script src="common.js"></script>
+<script>
+// ========== STATE ==========
+let reportMembers = [];
+let reportLogs = [];
+let reportTeamNames = {};
+let reportSession = null;
+let reportTrainerName = '';
+
+// ========== ACCESS CONTROL ==========
+(function checkAccess() {
+  const role = getSavedRole();
+  if (role === 'trainee') {
+    alert('강사 또는 관리자만 접근할 수 있습니다.');
+    location.href = 'index.html';
+    return;
+  }
+})();
+
+// ========== LOAD DATA ==========
+async function loadReportData() {
+  const session = getSavedSession();
+  if (!session) {
+    document.getElementById('memberListArea').innerHTML =
+      '<div style="text-align:center; padding:40px; color:var(--text-muted);">세션이 선택되지 않았습니다.</div>';
+    return;
+  }
+
+  reportSession = session;
+  try {
+    const [members, logs, teamNames, trainerName] = await Promise.all([
+      fetchAllMembers(),
+      fetchActivityLogs(session.id),
+      fetchTeamNames(),
+      fetchTrainerName()
+    ]);
+    reportMembers = members;
+    reportLogs = Array.isArray(logs) ? logs : [];
+    reportTeamNames = teamNames;
+    reportTrainerName = trainerName;
+    renderMemberList();
+  } catch (e) {
+    console.error('Report data load error:', e);
+    document.getElementById('memberListArea').innerHTML =
+      '<div style="text-align:center; padding:40px; color:var(--accent);">데이터 로드 중 오류가 발생했습니다.</div>';
+  }
+}
+
+// ========== RENDER MEMBER LIST ==========
+function renderMemberList() {
+  const area = document.getElementById('memberListArea');
+  const activeMembers = reportMembers.filter(m => m.name && m.name.trim());
+
+  if (activeMembers.length === 0) {
+    area.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted);">등록된 교육생이 없습니다.</div>';
+    return;
+  }
+
+  // Group by team
+  const teams = {};
+  activeMembers.forEach(m => {
+    if (!teams[m.team_id]) teams[m.team_id] = [];
+    teams[m.team_id].push(m);
+  });
+
+  let html = '';
+  const teamOrder = ['A', 'B', 'C', 'D', 'E'];
+
+  teamOrder.forEach(teamId => {
+    const members = teams[teamId];
+    if (!members || members.length === 0) return;
+
+    const teamName = reportTeamNames[teamId] || `팀 ${teamId}`;
+    html += `<div class="rpt-team-section">`;
+    html += `<div class="rpt-team-header">
+      <h3>${teamName}</h3>
+      <span class="team-count">${members.length}명</span>
+    </div>`;
+
+    members.forEach(m => {
+      const totalScore = getTotalScore(m);
+      html += `<div class="rpt-member-row">
+        <span class="rpt-member-name">${m.name}</span>
+        <span class="rpt-member-email">${m.email || '-'}</span>
+        <span class="rpt-member-score">${totalScore}점</span>
+        <button class="rpt-member-btn" onclick="showMemberReport(${m.id})">리포트 보기</button>
+      </div>`;
+    });
+
+    html += '</div>';
+  });
+
+  area.innerHTML = html;
+}
+
+// ========== CALCULATE SCORES ==========
+function getTotalScore(member) {
+  return (member.score_quiz || 0) + (member.score_needs || 0) +
+         (member.score_scenario || 0) + (member.score_practice || 0) +
+         (member.score_roleplay || 0) + (member.score_fab || 0);
+}
+
+function getActivityCount(member) {
+  const scores = [
+    member.score_quiz, member.score_needs, member.score_scenario,
+    member.score_practice, member.score_roleplay, member.score_fab
+  ];
+  return scores.filter(s => s > 0).length;
+}
+
+// ========== SPIN ANALYSIS ==========
+function getSpinCounts(memberId) {
+  const counts = { S: 0, P: 0, I: 0, N: 0 };
+  const memberLogs = reportLogs.filter(l => l.member_id === memberId && l.activity_type === 'roleplay');
+
+  memberLogs.forEach(log => {
+    let data = log.activity_data;
+    if (typeof data === 'string') {
+      try { data = JSON.parse(data); } catch(e) { return; }
+    }
+    if (data && data.spinCounts) {
+      counts.S += data.spinCounts.S || 0;
+      counts.P += data.spinCounts.P || 0;
+      counts.I += data.spinCounts.I || 0;
+      counts.N += data.spinCounts.N || 0;
+    }
+  });
+
+  return counts;
+}
+
+// ========== ROLEPLAY EVALUATION ==========
+function getRoleplayEvals(memberId) {
+  const evals = [];
+  const memberLogs = reportLogs.filter(l => l.member_id === memberId && l.activity_type === 'roleplay');
+
+  memberLogs.forEach(log => {
+    let data = log.activity_data;
+    if (typeof data === 'string') {
+      try { data = JSON.parse(data); } catch(e) { return; }
+    }
+    if (data) {
+      evals.push({
+        difficulty: data.difficulty || '보통',
+        grade: data.grade || '-',
+        score: log.score || 0,
+        date: log.created_at
+      });
+    }
+  });
+
+  return evals;
+}
+
+// ========== CALLPLAN EVALUATION ==========
+function getCallplanEvals(memberId) {
+  const evals = [];
+  const memberLogs = reportLogs.filter(l => l.member_id === memberId && l.activity_type === 'callplan');
+
+  memberLogs.forEach(log => {
+    let data = log.activity_data;
+    if (typeof data === 'string') {
+      try { data = JSON.parse(data); } catch(e) { return; }
+    }
+    if (data) {
+      evals.push({
+        grade: data.grade || '-',
+        score: log.score || 0,
+        date: log.created_at
+      });
+    }
+  });
+
+  return evals;
+}
+
+// ========== STRENGTH / WEAKNESS ANALYSIS ==========
+function analyzeStrengthWeakness(member) {
+  const activities = [
+    { name: '퀴즈', score: member.score_quiz || 0, max: 20 },
+    { name: '니즈 구분', score: member.score_needs || 0, max: 20 },
+    { name: 'SPIN 질문구분', score: member.score_scenario || 0, max: 20 },
+    { name: '질문 연습', score: member.score_practice || 0, max: 20 },
+    { name: '롤플레이', score: member.score_roleplay || 0, max: 30 },
+    { name: 'FAB/BAF', score: member.score_fab || 0, max: 20 }
+  ];
+
+  const sorted = [...activities].sort((a, b) => (b.score / b.max) - (a.score / a.max));
+  const strengths = sorted.filter(a => a.score > 0).slice(0, 2);
+  const weaknesses = sorted.filter(a => a.score >= 0).reverse().slice(0, 2);
+
+  return { strengths, weaknesses, activities };
+}
+
+function generateCoachingFeedback(member, spinCounts) {
+  const analysis = analyzeStrengthWeakness(member);
+  const total = spinCounts.S + spinCounts.P + spinCounts.I + spinCounts.N;
+
+  let strengthText = '';
+  let weaknessText = '';
+  let suggestion = '';
+
+  // Strength
+  if (analysis.strengths.length > 0) {
+    strengthText = analysis.strengths.map(s => `${s.name} (${s.score}점)`).join(', ') + ' 영역에서 우수한 성과를 보였습니다.';
+  } else {
+    strengthText = '아직 활동 참여가 부족합니다. 적극적인 참여가 필요합니다.';
+  }
+
+  // Weakness
+  if (analysis.weaknesses.length > 0) {
+    const weakItems = analysis.weaknesses.filter(w => w.score === 0);
+    if (weakItems.length > 0) {
+      weaknessText = weakItems.map(w => w.name).join(', ') + ' 영역은 아직 미참여 상태입니다.';
+    } else {
+      weaknessText = analysis.weaknesses.map(w => `${w.name} (${w.score}점)`).join(', ') + ' 영역의 추가 학습을 권장합니다.';
+    }
+  }
+
+  // SPIN suggestion
+  if (total > 0) {
+    const ratios = {
+      S: spinCounts.S / total,
+      P: spinCounts.P / total,
+      I: spinCounts.I / total,
+      N: spinCounts.N / total
+    };
+    if (ratios.I < 0.15) {
+      suggestion += '시사질문(Implication)의 비율이 낮습니다. 고객의 문제가 미치는 영향과 파급효과를 탐색하는 질문을 더 활용해 보세요. ';
+    }
+    if (ratios.N < 0.15) {
+      suggestion += '해결질문(Need-Payoff)의 비율이 낮습니다. 솔루션의 가치를 고객 스스로 인식하게 하는 질문을 연습해 보세요. ';
+    }
+    if (ratios.S > 0.5) {
+      suggestion += '상황질문(Situation) 비율이 높습니다. 상황질문은 최소화하고 문제/시사/해결 질문으로 전환하세요. ';
+    }
+  }
+
+  if (!suggestion) {
+    suggestion = 'SPIN 질문을 균형 있게 사용하고 있습니다. 실전에서 시사질문과 해결질문의 비중을 더 높이면 상담 효과가 극대화됩니다.';
+  }
+
+  return { strengthText, weaknessText, suggestion };
+}
+
+// ========== SHOW MEMBER REPORT ==========
+async function showMemberReport(memberId) {
+  const member = reportMembers.find(m => m.id === memberId);
+  if (!member) return;
+
+  const teamName = reportTeamNames[member.team_id] || `팀 ${member.team_id}`;
+  const totalScore = getTotalScore(member);
+  const activityCount = getActivityCount(member);
+  const spinCounts = getSpinCounts(memberId);
+  const spinTotal = spinCounts.S + spinCounts.P + spinCounts.I + spinCounts.N;
+  const roleplayEvals = getRoleplayEvals(memberId);
+  const callplanEvals = getCallplanEvals(memberId);
+  const coaching = generateCoachingFeedback(member, spinCounts);
+
+  // Participation level
+  let partClass = 'low', partLabel = '낮음';
+  if (activityCount >= 5) { partClass = 'high'; partLabel = '우수'; }
+  else if (activityCount >= 3) { partClass = 'mid'; partLabel = '보통'; }
+
+  const spinPcts = spinTotal > 0 ? {
+    S: Math.round(spinCounts.S / spinTotal * 100),
+    P: Math.round(spinCounts.P / spinTotal * 100),
+    I: Math.round(spinCounts.I / spinTotal * 100),
+    N: Math.round(spinCounts.N / spinTotal * 100)
+  } : { S: 0, P: 0, I: 0, N: 0 };
+
+  let html = `
+    <div class="rpt-card-header">
+      <img src="logo-kornferry.png" alt="Korn Ferry">
+      <h1>SPIN Selling AI 교육 참가 리포트</h1>
+      <div class="subtitle">Personal Training Report</div>
+    </div>
+
+    <div class="rpt-info-grid">
+      <span class="label">교육생</span><span class="value">${member.name} (${teamName})</span>
+      <span class="label">이메일</span><span class="value">${member.email || '-'}</span>
+      <span class="label">교육</span><span class="value">${reportSession.company_name} ${reportSession.training_date || ''}</span>
+      <span class="label">강사</span><span class="value">${reportTrainerName || '-'}</span>
+    </div>
+
+    <!-- 1. 교육 참여도 -->
+    <div class="rpt-section">
+      <h2><span class="num">1</span> 교육 참여도</h2>
+      <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+        <div class="participation-badge ${partClass}">${partLabel}</div>
+        <div>
+          <div style="font-size:13px; color:var(--text-muted);">참여 활동</div>
+          <div style="font-size:20px; font-weight:900; color:var(--text);">${activityCount} <span style="font-size:13px; font-weight:500; color:var(--text-muted);">/ 6개</span></div>
+        </div>
+        <div>
+          <div style="font-size:13px; color:var(--text-muted);">총 획득 점수</div>
+          <div style="font-size:20px; font-weight:900; color:var(--accent);">${totalScore}점</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 활동별 성과 -->
+    <div class="rpt-section">
+      <h2><span class="num">2</span> 활동별 성과</h2>
+      <table class="rpt-score-table">
+        <thead>
+          <tr><th>활동</th><th style="text-align:center;">점수</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>퀴즈</td><td class="score-cell">${member.score_quiz || 0}</td></tr>
+          <tr><td>니즈 구분</td><td class="score-cell">${member.score_needs || 0}</td></tr>
+          <tr><td>SPIN 질문구분</td><td class="score-cell">${member.score_scenario || 0}</td></tr>
+          <tr><td>질문 연습</td><td class="score-cell">${member.score_practice || 0}</td></tr>
+          <tr><td>롤플레이</td><td class="score-cell">${member.score_roleplay || 0}</td></tr>
+          <tr><td>FAB/BAF</td><td class="score-cell">${member.score_fab || 0}</td></tr>
+          <tr class="total-row"><td>합계</td><td class="score-cell">${totalScore}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 3. SPIN 역량 분석 -->
+    <div class="rpt-section">
+      <h2><span class="num">3</span> SPIN 역량 분석</h2>
+      ${spinTotal > 0 ? `
+      <div class="spin-bar-chart">
+        <div class="spin-bar-row">
+          <span class="spin-bar-label">S 상황질문</span>
+          <div class="spin-bar-track"><div class="spin-bar-fill s-bar" style="width:${spinPcts.S}%">${spinPcts.S > 10 ? spinPcts.S + '%' : ''}</div></div>
+          <span class="spin-bar-value">${spinCounts.S}회 (${spinPcts.S}%)</span>
+        </div>
+        <div class="spin-bar-row">
+          <span class="spin-bar-label">P 문제질문</span>
+          <div class="spin-bar-track"><div class="spin-bar-fill p-bar" style="width:${spinPcts.P}%">${spinPcts.P > 10 ? spinPcts.P + '%' : ''}</div></div>
+          <span class="spin-bar-value">${spinCounts.P}회 (${spinPcts.P}%)</span>
+        </div>
+        <div class="spin-bar-row">
+          <span class="spin-bar-label">I 시사질문</span>
+          <div class="spin-bar-track"><div class="spin-bar-fill i-bar" style="width:${spinPcts.I}%">${spinPcts.I > 10 ? spinPcts.I + '%' : ''}</div></div>
+          <span class="spin-bar-value">${spinCounts.I}회 (${spinPcts.I}%)</span>
+        </div>
+        <div class="spin-bar-row">
+          <span class="spin-bar-label">N 해결질문</span>
+          <div class="spin-bar-track"><div class="spin-bar-fill n-bar" style="width:${spinPcts.N}%">${spinPcts.N > 10 ? spinPcts.N + '%' : ''}</div></div>
+          <span class="spin-bar-value">${spinCounts.N}회 (${spinPcts.N}%)</span>
+        </div>
+      </div>
+      <div style="margin-top:8px; font-size:12px; color:var(--text-muted);">총 SPIN 질문 수: ${spinTotal}회</div>
+      ` : '<div style="padding:16px; background:var(--bg); border-radius:10px; color:var(--text-muted); font-size:13px;">롤플레이 활동 데이터가 없습니다.</div>'}
+    </div>
+
+    <!-- 4. AI 맞춤 코칭 -->
+    <div class="rpt-section">
+      <h2><span class="num">4</span> AI 맞춤 코칭 피드백</h2>
+      <div class="rpt-coaching">
+        <h4>강점</h4>
+        <div class="strength">${coaching.strengthText}</div>
+        <h4 style="margin-top:12px;">개선 영역</h4>
+        <div class="weakness">${coaching.weaknessText}</div>
+        <div class="suggestion" style="margin-top:12px;">
+          <strong>코칭 제안:</strong> ${coaching.suggestion}
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 롤플레이 평가 -->
+    <div class="rpt-section">
+      <h2><span class="num">5</span> 롤플레이 평가</h2>
+      ${roleplayEvals.length > 0 ? `
+      <div class="rpt-eval-grid">
+        ${roleplayEvals.map((ev, i) => `
+        <div class="rpt-eval-card">
+          <div class="eval-label">난이도: ${ev.difficulty}</div>
+          <div class="eval-grade" style="color:${getGradeColor(ev.grade)}">${ev.grade}</div>
+          <div class="eval-score">${ev.score}점</div>
+        </div>`).join('')}
+      </div>` : '<div style="padding:16px; background:var(--bg); border-radius:10px; color:var(--text-muted); font-size:13px;">롤플레이 평가 데이터가 없습니다.</div>'}
+    </div>
+
+    <!-- 6. 콜플랜 평가 -->
+    <div class="rpt-section">
+      <h2><span class="num">6</span> 콜플랜 평가</h2>
+      ${callplanEvals.length > 0 ? `
+      <div class="rpt-eval-grid">
+        ${callplanEvals.map((ev, i) => `
+        <div class="rpt-eval-card">
+          <div class="eval-label">콜플랜</div>
+          <div class="eval-grade" style="color:${getGradeColor(ev.grade)}">${ev.grade}</div>
+          <div class="eval-score">${ev.score}점</div>
+        </div>`).join('')}
+      </div>` : '<div style="padding:16px; background:var(--bg); border-radius:10px; color:var(--text-muted); font-size:13px;">콜플랜 평가 데이터가 없습니다.</div>'}
+    </div>
+  `;
+
+  document.getElementById('reportContent').innerHTML = html;
+  document.getElementById('reportModal').classList.add('active');
+
+  // Store for print/copy
+  document.getElementById('reportPrintArea').innerHTML = html;
+}
+
+function getGradeColor(grade) {
+  if (!grade) return 'var(--text-muted)';
+  const g = grade.toUpperCase();
+  if (g.startsWith('A') || g === 'S') return 'var(--green)';
+  if (g.startsWith('B')) return 'var(--blue)';
+  if (g.startsWith('C')) return 'var(--gold)';
+  if (g.startsWith('D')) return 'var(--orange)';
+  return 'var(--accent)';
+}
+
+// ========== GENERATE ALL REPORTS ==========
+async function generateAllReports() {
+  const activeMembers = reportMembers.filter(m => m.name && m.name.trim());
+  if (activeMembers.length === 0) {
+    showToast('리포트를 생성할 교육생이 없습니다.');
+    return;
+  }
+
+  // Show first member's report
+  await showMemberReport(activeMembers[0].id);
+  showToast(`${activeMembers.length}명의 교육생 리포트가 준비되었습니다. 각 교육생의 "리포트 보기" 버튼을 클릭하세요.`);
+}
+
+// ========== MODAL ==========
+function closeReportModal() {
+  document.getElementById('reportModal').classList.remove('active');
+}
+
+// Close on overlay click
+document.getElementById('reportModal').addEventListener('click', function(e) {
+  if (e.target === this) closeReportModal();
+});
+
+// ========== PRINT ==========
+function printReport() {
+  window.print();
+}
+
+// ========== COPY TO CLIPBOARD ==========
+async function copyReportToClipboard() {
+  const content = document.getElementById('reportContent');
+  if (!content) return;
+
+  try {
+    // Get text version for email
+    const textContent = generateTextReport(content);
+    await navigator.clipboard.writeText(textContent);
+    showToast('리포트가 클립보드에 복사되었습니다. 이메일에 붙여넣기 하세요.');
+  } catch (e) {
+    // Fallback
+    const textarea = document.createElement('textarea');
+    textarea.value = generateTextReport(content);
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast('리포트가 클립보드에 복사되었습니다.');
+  }
+}
+
+function generateTextReport(contentEl) {
+  // Extract text content in a structured format
+  const clone = contentEl.cloneNode(true);
+  // Clean up for text
+  let text = clone.innerText || clone.textContent;
+  // Clean up excessive whitespace
+  text = text.replace(/\n{3,}/g, '\n\n').trim();
+  return text;
+}
+
+// ========== TOAST ==========
+function showToast(msg) {
+  const toast = document.getElementById('rptToast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded', function() {
+  const role = getSavedRole();
+  if (role === 'trainee') return; // Already redirected
+
+  loadReportData();
+});
+</script>
+</body>
+</html>

@@ -228,6 +228,12 @@ async function renderTeamSetup() {
           data-id="${m.id}"
           onchange="handleTsName(${m.id}, this.value, this)"
           onfocus="this.select()">
+        ${m.name ? `<input class="ts-member-input ${m.email ? 'filled' : ''}" type="email"
+          value="${m.email || ''}"
+          placeholder="이메일 입력"
+          style="font-size:12px; padding:6px 10px;"
+          data-id="${m.id}"
+          onchange="handleTsEmail(${m.id}, this.value, this)">` : ''}
         ${m.name ? `<select onchange="moveMember(${m.id}, this.value)" style="width:100%; padding:4px 8px; font-size:11px; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--text-muted); font-family:inherit; cursor:pointer; margin-top:4px;">
           <option value="">팀 이동...</option>
           ${otherTeams.map(ot => `<option value="${ot}">→ 팀 ${ot}로 이동</option>`).join('')}
@@ -278,6 +284,16 @@ async function handleTsName(id, name, inputEl) {
   card.querySelector('.ts-team-count').textContent = `${filledCount}/7명 등록`;
 }
 
+async function handleTsEmail(id, email, inputEl) {
+  const trimmed = email.trim();
+  await fetch(SUPABASE_URL + '/rest/v1/spin_members?id=eq.' + id, {
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({ email: trimmed, updated_at: new Date().toISOString() })
+  });
+  inputEl.classList.toggle('filled', !!trimmed);
+}
+
 async function handleTeamName(teamKey, newName) {
   await updateTeamName(teamKey, newName.trim());
 }
@@ -287,7 +303,7 @@ async function removeMember(id, name) {
   await fetch(`${SUPABASE_URL}/rest/v1/spin_members?id=eq.${id}`, {
     method: 'PATCH',
     headers: SB_HEADERS,
-    body: JSON.stringify({ name: '', score_quiz: 0, score_needs: 0, score_scenario: 0, score_practice: 0, score_roleplay: 0, score_fab: 0, updated_at: new Date().toISOString() })
+    body: JSON.stringify({ name: '', email: '', score_quiz: 0, score_needs: 0, score_scenario: 0, score_practice: 0, score_roleplay: 0, score_fab: 0, updated_at: new Date().toISOString() })
   });
   renderTeamSetup();
 }
@@ -320,6 +336,7 @@ async function moveMember(id, newTeam) {
       score_practice: sourceMember.score_practice,
       score_roleplay: sourceMember.score_roleplay,
       score_fab: sourceMember.score_fab,
+      email: sourceMember.email || '',
       updated_at: new Date().toISOString()
     })
   });
@@ -328,7 +345,7 @@ async function moveMember(id, newTeam) {
   await fetch(`${SUPABASE_URL}/rest/v1/spin_members?id=eq.${id}`, {
     method: 'PATCH',
     headers: SB_HEADERS,
-    body: JSON.stringify({ name: '', score_quiz: 0, score_needs: 0, score_scenario: 0, score_practice: 0, score_roleplay: 0, score_fab: 0, updated_at: new Date().toISOString() })
+    body: JSON.stringify({ name: '', email: '', score_quiz: 0, score_needs: 0, score_scenario: 0, score_practice: 0, score_roleplay: 0, score_fab: 0, updated_at: new Date().toISOString() })
   });
 
   alert(`${sourceMember.name}을(를) 팀 ${newTeam}로 이동했습니다.`);
