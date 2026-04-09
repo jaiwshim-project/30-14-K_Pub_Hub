@@ -18,21 +18,27 @@
   --bg: #f5f6fa;
   --bg-warm: #fefefe;
   --card: #ffffff;
-  /* text-clean: 5단계 텍스트 위계 (cool 팔레트, WCAG AA+ 보정) */
-  --text: #0f172a;              /* L1: 제목, 헤더 — 15.2:1 AAA */
-  --text-secondary: #1e293b;    /* L2: 본문, 라벨 — 12.7:1 AAA */
-  --text-tertiary: #475569;     /* L3: 보조 설명 — 6.5:1 AA */
-  --text-muted: #566479;        /* L4: 힌트, 메타 — 4.8:1 AA (보정됨) */
-  --text-disabled: #94a3b8;     /* L5: 비활성 — 2.6:1 (큰 텍스트용) */
+  /* text-clean: 글자 투명도 최대 (모든 텍스트 진하게, WCAG AAA 목표) */
+  --text: #000000;              /* L1: 제목, 헤더 — 21:1 AAA */
+  --text-secondary: #0f172a;    /* L2: 본문, 라벨 — 15.2:1 AAA */
+  --text-tertiary: #334155;     /* L3: 보조 설명 — 8.5:1 AAA */
+  --text-muted: #475569;        /* L4: 힌트, 메타 — 6.5:1 AA */
+  --text-disabled: #64748b;     /* L5: 비활성 — 4.6:1 AA */
   --text-inverse: #ffffff;      /* 어두운 배경 위 텍스트 */
   --text-success: #15803d;      /* 성공 — 5.8:1 AA */
   --text-error: #b91c1c;        /* 에러 — 6.3:1 AA */
   --text-warning: #a16207;      /* 경고 — 4.7:1 AA */
   /* 어두운 배경(헤더/히어로/푸터) 위 텍스트 위계 */
   --text-on-dark: #ffffff;            /* 제목 — 100% */
-  --text-on-dark-secondary: rgba(255,255,255,0.75); /* 본문 — 75% */
-  --text-on-dark-tertiary: rgba(255,255,255,0.5);   /* 보조 — 50% */
-  --text-on-dark-muted: rgba(255,255,255,0.35);     /* 메타 — 35% */
+  --text-on-dark-secondary: rgba(255,255,255,0.9);  /* 본문 — 90% */
+  --text-on-dark-tertiary: rgba(255,255,255,0.7);   /* 보조 — 70% */
+  --text-on-dark-muted: rgba(255,255,255,0.5);      /* 메타 — 50% */
+  /* 파스텔톤 배경 */
+  --pastel-blue: #eef4ff;
+  --pastel-green: #eefbf4;
+  --pastel-gold: #fef9ee;
+  --pastel-red: #fef2f0;
+  --pastel-purple: #f5f0ff;
   --border: #e2e8f0;
   --border-light: #f0f3f7;
   --glow: rgba(26,58,107,0.06);
@@ -185,9 +191,9 @@ body::before {
 .section {
   display: block;
   animation: fadeIn 0.4s ease;
-  background: linear-gradient(180deg, rgba(36,113,163,0.02) 0%, transparent 40%);
+  background: linear-gradient(180deg, var(--pastel-blue) 0%, transparent 50%);
   border-radius: 20px;
-  padding: 8px;
+  padding: 12px;
 }
 
 @keyframes fadeIn {
@@ -197,19 +203,21 @@ body::before {
 
 /* Cards */
 .card {
-  background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
-  border: 1px solid rgba(36,113,163,0.12);
+  background: linear-gradient(135deg, #ffffff 0%, var(--pastel-blue) 100%);
+  border: 1.5px solid rgba(36,113,163,0.12);
   border-top: 3px solid var(--blue);
   border-radius: var(--radius);
   padding: 28px 32px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 12px rgba(26,58,107,0.06), 0 0 0 1px rgba(36,113,163,0.04);
-  transition: all 0.25s;
+  box-shadow: 0 2px 12px rgba(26,58,107,0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover {
-  box-shadow: 0 4px 20px rgba(26,58,107,0.1), 0 0 0 1px rgba(36,113,163,0.08);
-  border-color: rgba(36,113,163,0.2);
+  box-shadow: 0 8px 28px rgba(26,58,107,0.12);
+  border-color: rgba(36,113,163,0.25);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ffffff 0%, #e8efff 100%);
 }
 
 .card-title {
@@ -340,22 +348,23 @@ body::before {
 }
 
 .feature-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
-  border: 1px solid rgba(36,113,163,0.1);
-  border-left: 3px solid var(--blue);
+  background: linear-gradient(135deg, #ffffff 0%, var(--pastel-green) 100%);
+  border: 1.5px solid rgba(30,132,73,0.1);
+  border-left: 3px solid var(--green);
   border-radius: 14px;
   padding: 24px;
   cursor: pointer;
-  transition: all 0.25s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
   text-decoration: none;
   color: inherit;
   display: block;
 }
 .feature-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(26,58,107,0.12);
-  border-color: rgba(36,113,163,0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(30,132,73,0.12);
+  border-color: rgba(30,132,73,0.25);
+  background: linear-gradient(135deg, #ffffff 0%, #dbf5e6 100%);
 }
 
 .feature-icon { font-size: 28px; margin-bottom: 12px; }
@@ -447,11 +456,11 @@ body::before {
 
 .quiz-option {
   padding: 14px 20px;
-  background: linear-gradient(135deg, #ffffff, #fafbff);
+  background: linear-gradient(135deg, #ffffff, var(--pastel-blue));
   border: 1.5px solid rgba(36,113,163,0.1);
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-secondary);
@@ -459,11 +468,11 @@ body::before {
 }
 
 .quiz-option:hover {
-  background: #fff;
+  background: linear-gradient(135deg, #ffffff, var(--pastel-red));
   border-color: var(--accent);
   color: var(--text);
-  box-shadow: 0 2px 8px rgba(192,57,43,0.08);
-  transform: translateX(3px);
+  box-shadow: 0 4px 14px rgba(192,57,43,0.1);
+  transform: translateX(4px);
 }
 
 .quiz-option.correct {
@@ -502,8 +511,8 @@ body::before {
 
 /* ========== SCENARIO ========== */
 .scenario-dialogue {
-  background: linear-gradient(180deg, #fafcff 0%, #f5f6fa 100%);
-  border: 1.5px solid rgba(36,113,163,0.1);
+  background: linear-gradient(180deg, var(--pastel-blue) 0%, var(--pastel-green) 100%);
+  border: 1.5px solid rgba(36,113,163,0.12);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
@@ -675,8 +684,8 @@ body::before {
 
 /* ========== ROLEPLAY ========== */
 .chat-container {
-  background: linear-gradient(180deg, #fafcff 0%, #f5f6fa 100%);
-  border: 1.5px solid rgba(36,113,163,0.1);
+  background: linear-gradient(180deg, var(--pastel-blue) 0%, var(--pastel-purple) 100%);
+  border: 1.5px solid rgba(125,60,152,0.1);
   border-radius: 12px;
   height: 400px;
   overflow-y: auto;
@@ -818,19 +827,21 @@ body::before {
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #ffffff, #f8faff);
-  border: 1px solid rgba(36,113,163,0.1);
+  background: linear-gradient(135deg, #ffffff, var(--pastel-gold));
+  border: 1.5px solid rgba(212,136,15,0.1);
   border-bottom: 3px solid var(--gold);
   border-radius: 12px;
   padding: 20px;
   text-align: center;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 4px rgba(0,0,0,0.03);
 }
 
 .stat-card:hover {
-  box-shadow: 0 4px 16px rgba(212,136,15,0.1);
-  border-color: rgba(212,136,15,0.2);
+  box-shadow: 0 6px 20px rgba(212,136,15,0.12);
+  border-color: rgba(212,136,15,0.25);
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, #ffffff, #fdf0d5);
 }
 
 .stat-value {
@@ -847,17 +858,17 @@ body::before {
 
 /* ========== IN/EN Practice ========== */
 .need-card {
-  background: linear-gradient(135deg, #ffffff 0%, #fafcff 100%);
-  border: 1.5px solid rgba(36,113,163,0.1);
+  background: linear-gradient(135deg, #ffffff 0%, var(--pastel-purple) 100%);
+  border: 1.5px solid rgba(125,60,152,0.1);
   border-radius: 12px;
   padding: 18px 20px;
   margin-bottom: 10px;
   cursor: pointer;
-  transition: all 0.25s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 3px rgba(0,0,0,0.03);
 }
 
-.need-card:hover { border-color: var(--blue); box-shadow: 0 4px 12px rgba(36,113,163,0.08); }
+.need-card:hover { border-color: var(--purple); box-shadow: 0 6px 18px rgba(125,60,152,0.1); transform: translateY(-2px); background: linear-gradient(135deg, #ffffff, #ece3ff); }
 
 .need-btns {
   display: flex;
