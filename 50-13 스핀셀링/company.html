@@ -502,7 +502,7 @@ function loginAsTrainee(id, teamId, name, slot) {
   setTimeout(() => document.getElementById('emailModalInput').focus(), 100);
 }
 
-let allMembersCache = null;
+// allMembersCache는 common.js에서 선언됨
 
 async function confirmEmailAndLogin() {
   const emailInput = document.getElementById('emailModalInput');
