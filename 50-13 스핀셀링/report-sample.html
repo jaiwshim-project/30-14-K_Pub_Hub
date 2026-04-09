@@ -808,7 +808,7 @@ async function sendEmailSimulation() {
   try {
     const reportHtml = document.getElementById('reportPage').querySelector('.report-body').innerHTML;
 
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-report`, {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/dynamic-function`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
