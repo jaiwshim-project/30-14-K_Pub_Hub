@@ -170,18 +170,30 @@ async function loadSessionList() {
     return;
   }
 
-  listEl.innerHTML = sessions.map(s => {
+  // 각 세션별 교육생 수 조회
+  const sessionCards = await Promise.all(sessions.map(async s => {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/spin_members?session_id=eq.${s.id}&name=neq.&select=id`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const members = await res.json();
+    const memberCount = Array.isArray(members) ? members.length : 0;
     const date = s.training_date || '';
     return `
       <div class="session-card" onclick="selectSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}', '${date.replace(/'/g,"\\'")}')">
         <div>
           <div class="session-card-name">${s.company_name}</div>
-          ${date ? `<div class="session-card-date">${date}</div>` : ''}
+          <div style="display:flex; align-items:center; gap:12px; margin-top:4px;">
+            ${date ? `<span class="session-card-date" style="margin:0;">${date}</span>` : ''}
+            <span style="font-size:12px; font-weight:600; color:var(--blue);">교육생 ${memberCount}명</span>
+          </div>
         </div>
         <span class="session-card-arrow">&#8250;</span>
       </div>
     `;
-  }).join('');
+  }));
+
+  listEl.innerHTML = sessionCards.join('');
 }
 
 // 비밀번호 확인 후 입장
