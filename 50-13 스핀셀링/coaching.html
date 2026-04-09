@@ -3,8 +3,381 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPIN Selling - 코칭 리포트</title>
+<title>SPIN Selling - 종합 코칭 리포트</title>
 <link rel="stylesheet" href="common.css">
+<style>
+/* ===== Coaching Tab Bar ===== */
+.coaching-tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--bg);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.coaching-tab {
+  flex: 1;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.coaching-tab:hover { color: var(--text-secondary); background: rgba(255,255,255,0.5); }
+.coaching-tab.active {
+  background: var(--card);
+  color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-weight: 700;
+}
+.coaching-tab .tab-icon { display: block; font-size: 18px; margin-bottom: 4px; }
+
+/* ===== Tab Content ===== */
+.coaching-panel { display: none; animation: fadeIn 0.4s ease; }
+.coaching-panel.active { display: block; }
+
+/* ===== Stat Cards Row ===== */
+.coaching-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.coaching-stat-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 16px;
+  text-align: center;
+  transition: all 0.3s;
+}
+.coaching-stat-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+.coaching-stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.coaching-stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ===== CSS Bar Chart ===== */
+.bar-chart { margin: 16px 0; }
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.bar-label {
+  width: 110px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+}
+.bar-track {
+  flex: 1;
+  height: 24px;
+  background: var(--border-light);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.6s ease;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  min-width: 0;
+}
+.bar-fill-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+}
+.bar-value {
+  width: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* ===== Horizontal bar for teams ===== */
+.team-bar-chart { margin: 16px 0; }
+.team-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.team-bar-label {
+  width: 60px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+}
+.team-bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--border-light);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.team-bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.6s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+.team-bar-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+/* ===== Timeline ===== */
+.timeline { max-height: 500px; overflow-y: auto; }
+.timeline-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+  align-items: flex-start;
+}
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.timeline-content { flex: 1; }
+.timeline-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.timeline-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ===== Member Select ===== */
+.member-select-wrap {
+  margin-bottom: 24px;
+}
+.member-select-wrap select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.member-select-wrap select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ===== Member Score Bars ===== */
+.score-bars { margin: 16px 0; }
+.score-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.score-bar-label {
+  width: 90px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+}
+.score-bar-track {
+  flex: 1;
+  height: 20px;
+  background: var(--border-light);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.6s ease;
+}
+.score-bar-value {
+  width: 40px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* ===== Diagnosis ===== */
+.diagnosis-box {
+  background: var(--pastel-green);
+  border: 1.5px solid rgba(30,132,73,0.15);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 12px 0;
+}
+.diagnosis-box.weak {
+  background: var(--pastel-red);
+  border-color: rgba(192,57,43,0.15);
+}
+.diagnosis-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.diagnosis-item {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 3px 0;
+  line-height: 1.6;
+}
+
+/* ===== AI Insight ===== */
+.ai-insight-card {
+  background: linear-gradient(135deg, var(--pastel-blue), var(--pastel-purple));
+  border: 1.5px solid rgba(125,60,152,0.12);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.ai-insight-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--purple);
+  margin-bottom: 12px;
+}
+.ai-insight-item {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  line-height: 1.7;
+  border-bottom: 1px solid rgba(125,60,152,0.08);
+}
+.ai-insight-item:last-child { border-bottom: none; }
+
+/* ===== SPIN Distribution Chart ===== */
+.spin-dist {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+.spin-dist-item {
+  text-align: center;
+  padding: 16px 8px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+}
+.spin-dist-label {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.spin-dist-value {
+  font-size: 24px;
+  font-weight: 800;
+}
+.spin-dist-pct {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ===== Loading ===== */
+.coaching-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.coaching-loading .spinner {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== Coaching Points ===== */
+.coaching-points {
+  list-style: none;
+  padding: 0;
+}
+.coaching-points li {
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+  line-height: 1.7;
+}
+.coaching-points li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .coaching-stats { grid-template-columns: repeat(2, 1fr); }
+  .spin-dist { grid-template-columns: repeat(2, 1fr); }
+  .coaching-tab { font-size: 12px; padding: 10px 6px; }
+  .bar-label { width: 80px; font-size: 11px; }
+  .team-bar-label { width: 50px; font-size: 12px; }
+}
+@media (max-width: 480px) {
+  .coaching-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .coaching-stat-value { font-size: 22px; }
+  .coaching-tab .tab-icon { font-size: 15px; }
+}
+</style>
 </head>
 <body>
 
@@ -33,46 +406,108 @@
 
 <div class="main">
 <div class="section">
-  <div class="card">
-    <div class="card-title"><span class="icon">📊</span> 개인 코칭 리포트</div>
 
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-value" style="color: var(--blue);" id="statS">0</div>
-        <div class="stat-label">상황질문 (S)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" style="color: var(--accent);" id="statP">0</div>
-        <div class="stat-label">문제질문 (P)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" style="color: var(--purple);" id="statI">0</div>
-        <div class="stat-label">시사질문 (I)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" style="color: var(--gold);" id="statN">0</div>
-        <div class="stat-label">해결질문 (N)</div>
-      </div>
+  <!-- Tab Bar -->
+  <div class="coaching-tab-bar">
+    <button class="coaching-tab active" onclick="switchCoachingTab('overview')">
+      <span class="tab-icon">📊</span> 전체 현황
+    </button>
+    <button class="coaching-tab" onclick="switchCoachingTab('member')">
+      <span class="tab-icon">👤</span> 교육생별 분석
+    </button>
+    <button class="coaching-tab" onclick="switchCoachingTab('ai')">
+      <span class="tab-icon">🤖</span> AI 코칭
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div id="coachingLoading" class="coaching-loading">
+    <div class="spinner"></div>
+    <div>데이터를 불러오는 중...</div>
+  </div>
+
+  <!-- ===== 탭 1: 전체 현황 ===== -->
+  <div id="panelOverview" class="coaching-panel">
+
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="icon">📈</span> 교육 참여 통계</div>
+      <div class="coaching-stats" id="overviewStats"></div>
     </div>
 
-    <div style="margin-top: 24px;">
-      <div class="card-title"><span class="icon">🎯</span> SPIN 질문 비율</div>
-      <div id="spinBarChart" style="margin-top: 12px;"></div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="icon">🎯</span> 활동별 참여율</div>
+      <div class="bar-chart" id="activityBarChart"></div>
     </div>
 
-    <div style="margin-top: 24px;">
-      <div class="card-title"><span class="icon">💡</span> AI 코칭 조언</div>
-      <div class="ai-feedback" id="coachingAdvice" style="display:block;">
-        <div class="ai-label">🤖 AI 코치</div>
-        <p>아직 활동 데이터가 부족합니다. 퀴즈를 풀고, 질문 연습과 롤플레이를 진행하면 맞춤형 코칭을 받을 수 있습니다.</p>
-      </div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="icon">🏆</span> 팀별 평균 점수 비교</div>
+      <div class="team-bar-chart" id="teamBarChart"></div>
     </div>
 
-    <div style="margin-top: 24px;">
-      <div class="card-title"><span class="icon">📈</span> 활동 이력</div>
-      <div id="activityLog" style="font-size: 13px; color: var(--text-muted);"></div>
+    <div class="card">
+      <div class="card-title"><span class="icon">🕐</span> 최근 활동 타임라인</div>
+      <div class="timeline" id="recentTimeline"></div>
     </div>
   </div>
+
+  <!-- ===== 탭 2: 교육생별 분석 ===== -->
+  <div id="panelMember" class="coaching-panel">
+
+    <div class="member-select-wrap">
+      <select id="memberSelect" onchange="selectMemberForAnalysis(this.value)">
+        <option value="">-- 교육생을 선택하세요 --</option>
+      </select>
+    </div>
+
+    <div id="memberAnalysis" style="display:none;">
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title"><span class="icon">📊</span> <span id="memberNameTitle">교육생</span> 점수 요약</div>
+        <div class="score-bars" id="memberScoreBars"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title"><span class="icon">🔍</span> SPIN 질문 역량 분석</div>
+        <div class="spin-dist" id="memberSpinDist"></div>
+        <div class="bar-chart" id="memberSpinBars" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title"><span class="icon">💡</span> 강점 / 약점 진단</div>
+        <div id="memberDiagnosis"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🕐</span> 활동 이력</div>
+        <div class="timeline" id="memberTimeline"></div>
+      </div>
+    </div>
+
+    <div id="memberEmpty" class="coaching-loading" style="display:none;">
+      <div style="font-size:40px; margin-bottom:12px;">👆</div>
+      <div>위에서 교육생을 선택하면 상세 분석을 확인할 수 있습니다.</div>
+    </div>
+  </div>
+
+  <!-- ===== 탭 3: AI 코칭 ===== -->
+  <div id="panelAi" class="coaching-panel">
+
+    <div class="ai-insight-card">
+      <div class="ai-insight-title">🤖 AI 교육 인사이트</div>
+      <div id="aiInsightList"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="icon">📊</span> 전체 SPIN 비율 분포</div>
+      <div class="spin-dist" id="globalSpinDist"></div>
+      <div class="bar-chart" id="globalSpinBars" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🎯</span> 권장 코칭 포인트</div>
+      <ul class="coaching-points" id="coachingPointsList"></ul>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -86,6 +521,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (role === 'trainee') {
     alert('코칭 리포트는 강사 또는 관리자만 볼 수 있습니다.');
     location.href = 'index.html';
+    return;
   }
 });
 </script>
