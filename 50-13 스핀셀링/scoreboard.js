@@ -97,10 +97,17 @@ function renderTeamScoreTable(grouped) {
     return { key: t, ...totals };
   }).sort((a, b) => b.total - a.total);
 
-  const maxScore = Math.max(...teamStats.map(t => t.total), 1);
+  // 팀별 등록 인원 수로 만점 계산 (인원 x 6카테고리 x 100점)
+  const teamMemberCounts = {};
+  TEAMS.forEach(t => {
+    teamMemberCounts[t] = grouped[t] ? grouped[t].filter(m => m.name).length : 0;
+  });
 
   tbody.innerHTML = teamStats.map((team, i) => {
     const rankClass = i < 3 ? `rank-${i + 1}` : '';
+    const memberCount = teamMemberCounts[team.key] || 1;
+    const maxPerPerson = 600; // 6 카테고리 x 100점
+    const teamMax = memberCount * maxPerPerson;
     return `
       <tr>
         <td><span class="rank-badge ${rankClass}">${i + 1}</span></td>
@@ -112,11 +119,7 @@ function renderTeamScoreTable(grouped) {
         <td>${team.roleplay}</td>
         <td>${team.fab}</td>
         <td class="score-total">${team.total}</td>
-        <td style="min-width:100px;">
-          <div class="team-score-bar">
-            <div class="team-score-fill" style="width:${(team.total / maxScore) * 100}%; background:${TEAM_COLORS[team.key]};"></div>
-          </div>
-        </td>
+        <td style="min-width:80px; font-weight:700; color:var(--blue);">${team.total} / ${teamMax}</td>
       </tr>
     `;
   }).join('');
