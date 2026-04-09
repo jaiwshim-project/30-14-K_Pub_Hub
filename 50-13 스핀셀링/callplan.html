@@ -208,13 +208,16 @@ textarea.cp-input { min-height: 70px; }
     </div>
 
     <!-- 버튼 -->
-    <div style="display:flex; gap:10px; margin-top:20px;">
-      <button class="btn btn-primary" onclick="saveCallPlan()">저장</button>
+    <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="submitAndEvaluate()">제출 & AI평가받기</button>
       <button class="btn btn-secondary" onclick="clearCallPlan()">초기화</button>
-      <button class="btn btn-gold" onclick="exportCallPlan()">텍스트 복사</button>
+      <button class="btn btn-secondary" onclick="exportCallPlan()">텍스트 복사</button>
     </div>
 
     <div id="cpSaveMsg" style="display:none; margin-top:12px; padding:10px 16px; background:var(--pastel-green); border:1px solid rgba(30,132,73,0.15); border-radius:8px; font-size:13px; color:var(--green); font-weight:600;"></div>
+
+    <!-- AI 평가 결과 -->
+    <div id="cpEvalResult" style="display:none; margin-top:20px;"></div>
   </div>
 </div>
 </div>
@@ -230,8 +233,203 @@ function saveCallPlan() {
   const data = {};
   cpFields.forEach(id => { data[id] = document.getElementById(id).value; });
   localStorage.setItem('spin_callplan', JSON.stringify(data));
+}
+
+function submitAndEvaluate() {
+  // 저장
+  saveCallPlan();
+
+  // 필수 항목 검증
+  const company = document.getElementById('cpCompany').value.trim();
+  const advance = document.getElementById('cpAdvance').value.trim();
+  const spinS = document.getElementById('cpSpinS').value.trim();
+  const spinP = document.getElementById('cpSpinP').value.trim();
+  const spinI = document.getElementById('cpSpinI').value.trim();
+  const spinN = document.getElementById('cpSpinN').value.trim();
+
+  if (!company) { alert('고객사명을 입력하세요.'); return; }
+  if (!advance) { alert('상담 목표(Advance)를 입력하세요.'); return; }
+
+  // 평가 로직 (100점 만점)
+  let score = 0;
+  let feedback = [];
+
+  // 1. 고객 정보 완성도 (15점)
+  const infoFields = ['cpCompany','cpContact','cpIndustry','cpSize'];
+  const infoFilled = infoFields.filter(id => document.getElementById(id).value.trim()).length;
+  const infoScore = Math.round((infoFilled / 4) * 15);
+  score += infoScore;
+  if (infoFilled === 4) {
+    feedback.push({ icon: '✅', cat: '고객 정보', text: '모든 고객 정보를 작성했습니다. 상담 전 준비가 잘 되어 있습니다.' });
+  } else {
+    const missing = infoFields.filter(id => !document.getElementById(id).value.trim());
+    feedback.push({ icon: '⚠️', cat: '고객 정보', text: `${4 - infoFilled}개 항목이 비어 있습니다. 고객 정보를 더 완성하면 상담 효과가 높아집니다.` });
+  }
+
+  // 2. 상담 목표 SMART (20점)
+  const altAdvance = document.getElementById('cpAltAdvance').value.trim();
+  const advanceWords = advance.split(/\s+/).length;
+  let advScore = 0;
+  if (advance) advScore += 8;
+  if (advanceWords >= 5) advScore += 4; // 구체적
+  if (advance.match(/주|일|월|내|까지|기한/)) advScore += 4; // 시간 기반
+  if (altAdvance) advScore += 4; // 대안 진전
+  score += advScore;
+  if (advScore >= 16) {
+    feedback.push({ icon: '✅', cat: '상담 목표', text: 'SMART 기준에 부합하는 구체적인 진전 목표와 대안 진전을 설정했습니다.' });
+  } else if (advance && !altAdvance) {
+    feedback.push({ icon: '💡', cat: '상담 목표', text: '진전 목표는 좋지만, 대안 진전(Alternative Advance)도 준비하세요. 고객이 예상과 다르게 반응할 때 대비할 수 있습니다.' });
+  } else {
+    feedback.push({ icon: '⚠️', cat: '상담 목표', text: '진전 목표를 SMART 기준(구체적, 측정 가능, 시간 기반)에 맞게 더 구체화하세요.' });
+  }
+
+  // 3. 고객 이슈 & 가치 가설 (15점)
+  const issues = document.getElementById('cpIssues').value.trim();
+  const valueHypo = document.getElementById('cpValueHypo').value.trim();
+  let issueScore = 0;
+  if (issues) issueScore += 8;
+  if (valueHypo) issueScore += 7;
+  score += issueScore;
+  if (issues && valueHypo) {
+    feedback.push({ icon: '✅', cat: '이슈 & 가설', text: '고객 이슈와 가치 가설을 모두 준비했습니다. 고객에게 가치를 명확히 전달할 수 있습니다.' });
+  } else if (issues && !valueHypo) {
+    feedback.push({ icon: '💡', cat: '이슈 & 가설', text: '고객 이슈는 파악했지만, 가치 가설(우리 솔루션으로 어떤 효과를 줄 수 있는지)을 추가하세요.' });
+  } else {
+    feedback.push({ icon: '⚠️', cat: '이슈 & 가설', text: '고객의 핵심 이슈를 미리 파악하고, 솔루션의 가치 가설을 준비하세요.' });
+  }
+
+  // 4. SPIN 질문 계획 (30점)
+  const spinQuestions = { S: spinS, P: spinP, I: spinI, N: spinN };
+  const spinFilled = Object.values(spinQuestions).filter(v => v).length;
+  let spinScore = 0;
+
+  Object.entries(spinQuestions).forEach(([type, text]) => {
+    if (text) {
+      const lines = text.split('\n').filter(l => l.trim()).length;
+      spinScore += Math.min(lines, 3) * 2.5; // 최대 3개씩 = 7.5점 x 4 = 30점
+    }
+  });
+  spinScore = Math.min(Math.round(spinScore), 30);
+  score += spinScore;
+
+  if (spinFilled === 4) {
+    const totalLines = Object.values(spinQuestions).reduce((sum, v) => sum + v.split('\n').filter(l => l.trim()).length, 0);
+    if (totalLines >= 8) {
+      feedback.push({ icon: '✅', cat: 'SPIN 질문', text: `S/P/I/N 4유형 모두 준비했습니다 (총 ${totalLines}개 질문). SPIN 순서에 따라 체계적인 상담이 가능합니다.` });
+    } else {
+      feedback.push({ icon: '💡', cat: 'SPIN 질문', text: `4유형 모두 작성했지만, 질문 수가 ${totalLines}개로 부족합니다. 유형별 2~3개씩 총 8~12개를 권장합니다.` });
+    }
+  } else {
+    const missing = Object.entries(spinQuestions).filter(([k,v]) => !v).map(([k]) => k);
+    feedback.push({ icon: '⚠️', cat: 'SPIN 질문', text: `${missing.join(', ')} 유형의 질문이 비어 있습니다. 특히 I(시사)와 N(해결) 질문을 반드시 준비하세요.` });
+  }
+
+  // 5. FAB 준비 (10점)
+  const feature = document.getElementById('cpFeature').value.trim();
+  const advantage = document.getElementById('cpAdvantage').value.trim();
+  const benefit = document.getElementById('cpBenefit').value.trim();
+  const fabFilled = [feature, advantage, benefit].filter(v => v).length;
+  const fabScore = Math.round((fabFilled / 3) * 10);
+  score += fabScore;
+  if (fabFilled === 3) {
+    feedback.push({ icon: '✅', cat: 'FAB 준비', text: 'Feature-Advantage-Benefit을 모두 준비했습니다. 고객의 현재니즈(EN)에 연결하여 제시하세요.' });
+  } else {
+    feedback.push({ icon: '💡', cat: 'FAB 준비', text: `FAB 중 ${3 - fabFilled}개가 비어 있습니다. 특히 Benefit은 고객의 현재니즈를 충족하는 표현이어야 합니다.` });
+  }
+
+  // 6. 상담 시작 문구 (10점)
+  const opening = document.getElementById('cpOpening').value.trim();
+  let openScore = 0;
+  if (opening) {
+    openScore += 5;
+    if (opening.length >= 30) openScore += 3;
+    if (opening.match(/목적|논의|파악|도움|함께/)) openScore += 2;
+  }
+  score += openScore;
+  if (openScore >= 8) {
+    feedback.push({ icon: '✅', cat: '상담 시작', text: '고객 중심의 Opening 문구가 잘 준비되어 있습니다.' });
+  } else if (opening) {
+    feedback.push({ icon: '💡', cat: '상담 시작', text: '고객 중심 목적(왜 만나는지), 상호 합의 안건, 질문 허락 등을 포함하면 더 효과적입니다.' });
+  } else {
+    feedback.push({ icon: '⚠️', cat: '상담 시작', text: 'Opening 문구를 준비하세요. 첫인상이 상담의 방향을 결정합니다.' });
+  }
+
+  // 등급 산정
+  let grade, gradeColor, gradeMsg;
+  if (score >= 90) { grade = 'A+'; gradeColor = 'var(--green)'; gradeMsg = '탁월한 콜플랜입니다! 실전 상담에서 높은 성과가 기대됩니다.'; }
+  else if (score >= 80) { grade = 'A'; gradeColor = 'var(--green)'; gradeMsg = '매우 우수합니다. 몇 가지만 보완하면 완벽한 준비가 됩니다.'; }
+  else if (score >= 70) { grade = 'B+'; gradeColor = 'var(--blue)'; gradeMsg = '좋은 준비입니다. 아래 피드백을 참고하여 보완하세요.'; }
+  else if (score >= 60) { grade = 'B'; gradeColor = 'var(--blue)'; gradeMsg = '기본 준비는 되었습니다. SPIN 질문과 FAB를 더 강화하세요.'; }
+  else if (score >= 50) { grade = 'C'; gradeColor = 'var(--gold)'; gradeMsg = '빈 항목이 많습니다. 콜플랜을 더 완성해주세요.'; }
+  else { grade = 'D'; gradeColor = 'var(--accent)'; gradeMsg = '콜플랜 작성이 부족합니다. 각 섹션을 채워주세요.'; }
+
+  // Supabase 점수 반영
+  if (score > 0) {
+    addScore(score, 'practice');
+    addActivity(`콜플랜 평가: ${grade} (${score}/100점)`);
+  }
+
+  // 결과 렌더링
+  const resultEl = document.getElementById('cpEvalResult');
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = `
+    <div style="background:linear-gradient(135deg, #ffffff, var(--pastel-blue)); border:2px solid rgba(36,113,163,0.15); border-top:4px solid var(--blue); border-radius:14px; padding:24px;">
+      <div style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <span>🤖</span> 콜플랜 AI 평가 결과
+      </div>
+
+      <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+        <div style="text-align:center; padding:14px 20px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:100px;">
+          <div style="font-size:32px; font-weight:900; color:${gradeColor};">${grade}</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">등급</div>
+        </div>
+        <div style="text-align:center; padding:14px 20px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:100px;">
+          <div style="font-size:32px; font-weight:900; color:${gradeColor};">${score}</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">/ 100점</div>
+        </div>
+      </div>
+
+      <div style="padding:10px 14px; background:rgba(36,113,163,0.04); border-radius:10px; margin-bottom:16px; font-size:13px; color:var(--text-secondary); line-height:1.6;">${gradeMsg}</div>
+
+      <!-- 항목별 점수 바 -->
+      <div style="margin-bottom:16px;">
+        <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:8px;">항목별 점수</div>
+        ${[
+          { label: '고객 정보', pts: infoScore, max: 15, color: 'var(--blue)' },
+          { label: '상담 목표', pts: advScore, max: 20, color: 'var(--accent)' },
+          { label: '이슈 & 가설', pts: issueScore, max: 15, color: 'var(--gold)' },
+          { label: 'SPIN 질문', pts: spinScore, max: 30, color: 'var(--purple)' },
+          { label: 'FAB 준비', pts: fabScore, max: 10, color: 'var(--green)' },
+          { label: '상담 시작', pts: openScore, max: 10, color: 'var(--orange)' }
+        ].map(item => `
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <span style="font-size:11px; color:var(--text-muted); width:70px; text-align:right;">${item.label}</span>
+            <div style="flex:1; height:16px; background:var(--border-light); border-radius:8px; overflow:hidden;">
+              <div style="width:${(item.pts/item.max)*100}%; height:100%; background:${item.color}; border-radius:8px; transition:width 0.5s;"></div>
+            </div>
+            <span style="font-size:11px; font-weight:700; color:var(--text); width:50px;">${item.pts}/${item.max}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- 세부 피드백 -->
+      <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:8px;">세부 피드백</div>
+      ${feedback.map(f => `
+        <div style="padding:8px 12px; background:var(--card); border:1px solid var(--border-light); border-radius:8px; margin-bottom:6px; display:flex; gap:8px; align-items:flex-start;">
+          <span style="font-size:14px; flex:none;">${f.icon}</span>
+          <div>
+            <div style="font-size:10px; font-weight:700; color:var(--text-muted);">${f.cat}</div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5;">${f.text}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
   const msg = document.getElementById('cpSaveMsg');
-  msg.textContent = '콜플랜이 저장되었습니다.';
+  msg.textContent = '콜플랜이 저장되고 AI 평가가 완료되었습니다.';
   msg.style.display = 'block';
   setTimeout(() => msg.style.display = 'none', 3000);
 }
