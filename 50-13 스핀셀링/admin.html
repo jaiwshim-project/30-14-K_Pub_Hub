@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling - 관리자 대시보드</title>
+<link rel="stylesheet" href="common.css">
+<style>
+/* ========== ADMIN DASHBOARD ========== */
+
+/* 다크 헤더 오버라이드 */
+.admin-header {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-header .logo a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.admin-header .logo-img {
+  height: 36px;
+}
+
+.admin-header .logo-text {
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.admin-header .logo-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.admin-badge {
+  background: rgba(234,179,8,0.15);
+  color: #fbbf24;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(234,179,8,0.25);
+  letter-spacing: 0.5px;
+}
+
+/* 통계 카드 */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--accent2);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* 탭 바 */
+.admin-tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--bg);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.admin-tab {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+}
+
+.admin-tab:hover { color: var(--text-secondary); }
+.admin-tab.active {
+  background: var(--card);
+  color: var(--accent);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.admin-tab .tab-count {
+  display: inline-block;
+  background: rgba(192,57,43,0.08);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+}
+
+.admin-tab.active .tab-count {
+  background: var(--accent);
+  color: white;
+}
+
+/* 탭 콘텐츠 */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* 세션 카드 */
+.session-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-session-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-session-card:hover {
+  border-color: var(--accent2);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.session-info {
+  flex: 1;
+}
+
+.session-company {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.session-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.session-meta-item {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.session-meta-item .meta-icon {
+  font-size: 14px;
+}
+
+.session-stats {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.session-stat-pill {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  text-align: center;
+  min-width: 70px;
+}
+
+.session-stat-pill .pill-value {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--accent2);
+  line-height: 1;
+}
+
+.session-stat-pill .pill-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-disabled);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+}
+
+.session-status-badge {
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.badge-completed {
+  background: rgba(30,132,73,0.1);
+  color: var(--green);
+}
+
+.badge-active {
+  background: rgba(36,113,163,0.1);
+  color: var(--blue);
+}
+
+.badge-upcoming {
+  background: rgba(125,60,152,0.1);
+  color: var(--purple);
+}
+
+.session-arrow {
+  font-size: 20px;
+  color: var(--text-disabled);
+  margin-left: 12px;
+  transition: color 0.2s;
+}
+
+.admin-session-card:hover .session-arrow {
+  color: var(--accent);
+}
+
+/* 모달 */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-content {
+  background: var(--card);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 960px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  padding: 32px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+/* 모달 내 섹션 */
+.detail-section {
+  margin-bottom: 28px;
+}
+
+.detail-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detail-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.detail-info-item {
+  background: var(--bg);
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border-light);
+}
+
+.detail-info-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-disabled);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.detail-info-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* 점수 테이블 */
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.score-table th {
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.score-table th:first-child,
+.score-table td:first-child {
+  text-align: left;
+  padding-left: 14px;
+}
+
+.score-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: center;
+}
+
+.score-table tr:hover td {
+  background: var(--bg);
+}
+
+.score-table .total-cell {
+  font-weight: 900;
+  color: var(--gold);
+  font-size: 15px;
+}
+
+.score-table .team-header-row td {
+  background: var(--bg);
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-top: 2px solid var(--border);
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+/* 활동 타임라인 */
+.timeline {
+  position: relative;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+  align-items: flex-start;
+}
+
+.timeline-item:last-child {
+  border-bottom: none;
+}
+
+.timeline-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+}
+
+.timeline-body {
+  flex: 1;
+}
+
+.timeline-body-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.timeline-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.timeline-type {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--pastel-blue);
+  color: var(--blue);
+}
+
+.timeline-score {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.timeline-time {
+  font-size: 11px;
+  color: var(--text-disabled);
+}
+
+.timeline-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* 새로고침 버튼 */
+.refresh-btn {
+  background: var(--accent2);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.refresh-btn:hover {
+  filter: brightness(1.15);
+}
+
+/* 빈 상태 */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-state-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 로딩 */
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .admin-header { padding: 14px 16px; }
+  .stats-row { grid-template-columns: 1fr; }
+  .modal-content { padding: 20px; }
+  .detail-info-grid { grid-template-columns: 1fr; }
+  .session-stats { display: none; }
+  .score-table { font-size: 11px; }
+  .score-table th, .score-table td { padding: 6px 4px; }
+}
+
+@media (max-width: 480px) {
+  .admin-header .logo-text { font-size: 16px; }
+  .admin-badge { font-size: 11px; padding: 4px 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 관리자 헤더 -->
+<div class="admin-header">
+  <div class="logo">
+    <a href="index.html">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling</div>
+        <div class="logo-sub">Admin Dashboard</div>
+      </div>
+    </a>
+  </div>
+  <div class="admin-badge">ADMIN</div>
+</div>
+
+<div id="navPlaceholder" data-active="admin"></div>
+
+<div class="main">
+<div class="section">
+
+  <!-- 통계 요약 -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number" id="statCompleted">0</div>
+      <div class="stat-label">진행완료</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="statActive">0</div>
+      <div class="stat-label">진행중</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="statUpcoming">0</div>
+      <div class="stat-label">진행예정</div>
+    </div>
+  </div>
+
+  <!-- 탭 바 -->
+  <div class="admin-tab-bar">
+    <button class="admin-tab active" data-tab="completed">진행완료 <span class="tab-count" id="countCompleted">0</span></button>
+    <button class="admin-tab" data-tab="active">진행중 <span class="tab-count" id="countActive">0</span></button>
+    <button class="admin-tab" data-tab="upcoming">진행예정 <span class="tab-count" id="countUpcoming">0</span></button>
+  </div>
+
+  <!-- 진행완료 -->
+  <div class="tab-content active" id="tabCompleted">
+    <div class="session-grid" id="gridCompleted"></div>
+  </div>
+
+  <!-- 진행중 -->
+  <div class="tab-content" id="tabActive">
+    <div class="session-grid" id="gridActive"></div>
+  </div>
+
+  <!-- 진행예정 -->
+  <div class="tab-content" id="tabUpcoming">
+    <div class="session-grid" id="gridUpcoming"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- 상세 모달 -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modalBody">
+      <div class="loading-spinner">데이터를 불러오는 중...</div>
+    </div>
+  </div>
+</div>
+
+<script src="common.js"></script>
+<script>
+// ========== 접근 제한 ==========
+(function() {
+  const pw = prompt('관리자 비밀번호를 입력하세요:');
+  if (pw !== '9633') {
+    alert('비밀번호가 올바르지 않습니다.');
+    location.href = 'index.html';
+  }
+})();
+
+// ========== 전역 데이터 ==========
+let allSessions = [];
+let categorized = { completed: [], active: [], upcoming: [] };
+
+// ========== 활동 유형별 아이콘 ==========
+const ACTIVITY_ICONS = {
+  'quiz': '📝',
+  'needs': '🎯',
+  'scenario': '🔍',
+  'practice': '💬',
+  'roleplay': '🎭',
+  'fab': '🧩',
+  'spin-needs': '🔎',
+  'callplan': '📋'
+};
+
+const ACTIVITY_LABELS = {
+  'quiz': '퀴즈',
+  'needs': '니즈분석',
+  'scenario': '시나리오',
+  'practice': '연습',
+  'roleplay': '역할극',
+  'fab': 'FAB',
+  'spin-needs': 'SPIN 니즈',
+  'callplan': '콜플랜'
+};
+
+// ========== 초기화 ==========
+document.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+  setupTabs();
+  await loadAllData();
+}
+
+// ========== 탭 전환 ==========
+function setupTabs() {
+  document.querySelectorAll('.admin-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab' + capitalize(tab.dataset.tab)).classList.add('active');
+    });
+  });
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// ========== 데이터 로드 ==========
+async function loadAllData() {
+  try {
+    allSessions = await fetchSessions();
+
+    // 각 세션에 대해 멤버 + 활동 수를 가져옴
+    const enriched = await Promise.all(allSessions.map(async (session) => {
+      const [members, activities] = await Promise.all([
+        fetchMembersForSession(session.id),
+        fetchActivitiesForSession(session.id)
+      ]);
+      session._members = members;
+      session._activities = activities;
+      session._registeredCount = members.filter(m => m.name && m.name.trim()).length;
+      session._teamNames = session.team_names || {};
+      session._teamKeys = Object.keys(session._teamNames).filter(k => k.length === 1);
+      session._totalScore = members.reduce((sum, m) =>
+        sum + (m.score_quiz || 0) + (m.score_needs || 0) + (m.score_scenario || 0)
+            + (m.score_practice || 0) + (m.score_roleplay || 0) + (m.score_fab || 0), 0);
+      session._avgScore = session._registeredCount > 0
+        ? Math.round(session._totalScore / session._registeredCount) : 0;
+      return session;
+    }));
+
+    // 분류
+    categorized = { completed: [], active: [], upcoming: [] };
+    enriched.forEach(session => {
+      const tn = session._teamNames;
+      const hasEnded = tn && tn.ended === true;
+      const hasScores = session._totalScore > 0;
+
+      if (hasEnded) {
+        categorized.completed.push(session);
+      } else if (hasScores) {
+        categorized.active.push(session);
+      } else {
+        categorized.upcoming.push(session);
+      }
+    });
+
+    updateStats();
+    renderGrid('completed', categorized.completed);
+    renderGrid('active', categorized.active);
+    renderGrid('upcoming', categorized.upcoming);
+
+  } catch (err) {
+    console.error('데이터 로드 오류:', err);
+  }
+}
+
+// ========== 세션별 멤버 조회 ==========
+async function fetchMembersForSession(sessionId) {
+  const res = await fetch(
+    SUPABASE_URL + '/rest/v1/spin_members?session_id=eq.' + sessionId + '&select=*&order=team_id,slot',
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+  );
+  return await res.json();
+}
+
+// ========== 세션별 활동 로그 조회 ==========
+async function fetchActivitiesForSession(sessionId) {
+  const res = await fetch(
+    SUPABASE_URL + '/rest/v1/spin_activities?session_id=eq.' + sessionId + '&select=*&order=created_at.desc',
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+  );
+  return await res.json();
+}
+
+// ========== 통계 업데이트 ==========
+function updateStats() {
+  document.getElementById('statCompleted').textContent = categorized.completed.length;
+  document.getElementById('statActive').textContent = categorized.active.length;
+  document.getElementById('statUpcoming').textContent = categorized.upcoming.length;
+  document.getElementById('countCompleted').textContent = categorized.completed.length;
+  document.getElementById('countActive').textContent = categorized.active.length;
+  document.getElementById('countUpcoming').textContent = categorized.upcoming.length;
+}
+
+// ========== 그리드 렌더링 ==========
+function renderGrid(type, sessions) {
+  const gridId = 'grid' + capitalize(type);
+  const grid = document.getElementById(gridId);
+
+  if (!sessions.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">${type === 'completed' ? '✅' : type === 'active' ? '🔄' : '📅'}</div>
+        <div class="empty-state-text">${type === 'completed' ? '완료된 세션이 없습니다' : type === 'active' ? '진행중인 세션이 없습니다' : '예정된 세션이 없습니다'}</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = sessions.map(session => {
+    const badgeClass = type === 'completed' ? 'badge-completed' : type === 'active' ? 'badge-active' : 'badge-upcoming';
+    const badgeText = type === 'completed' ? '완료' : type === 'active' ? '진행중' : '예정';
+
+    let statsHTML = '';
+    if (type === 'active') {
+      statsHTML = `
+        <div class="session-stat-pill">
+          <div class="pill-value">${session._activities.length}</div>
+          <div class="pill-label">활동</div>
+        </div>
+        <div class="session-stat-pill">
+          <div class="pill-value">${session._avgScore}</div>
+          <div class="pill-label">평균점수</div>
+        </div>`;
+    } else if (type === 'completed') {
+      // 팀별 순위 요약
+      const teamScores = getTeamScores(session);
+      const topTeam = teamScores.length > 0 ? teamScores[0] : null;
+      statsHTML = `
+        <div class="session-stat-pill">
+          <div class="pill-value">${session._totalScore}</div>
+          <div class="pill-label">총점</div>
+        </div>
+        <div class="session-stat-pill">
+          <div class="pill-value">${topTeam ? topTeam.name : '-'}</div>
+          <div class="pill-label">1위</div>
+        </div>`;
+    }
+
+    return `
+      <div class="admin-session-card" onclick="openDetail('${session.id}')">
+        <div class="session-info">
+          <div class="session-company">${escapeHtml(session.company_name || '(이름 없음)')}</div>
+          <div class="session-meta">
+            <span class="session-meta-item"><span class="meta-icon">📅</span> ${session.training_date || '날짜 미정'}</span>
+            <span class="session-meta-item"><span class="meta-icon">👥</span> ${session._registeredCount}명</span>
+            <span class="session-meta-item"><span class="meta-icon">🏷️</span> ${session._teamKeys.length}팀</span>
+            <span class="session-status-badge ${badgeClass}">${badgeText}</span>
+          </div>
+        </div>
+        <div class="session-stats">${statsHTML}</div>
+        <div class="session-arrow">›</div>
+      </div>`;
+  }).join('');
+}
+
+// ========== 팀별 점수 계산 ==========
+function getTeamScores(session) {
+  const teamMap = {};
+  session._members.forEach(m => {
+    if (!teamMap[m.team_id]) {
+      teamMap[m.team_id] = {
+        key: m.team_id,
+        name: (session._teamNames && session._teamNames[m.team_id]) || ('팀 ' + m.team_id),
+        total: 0
+      };
+    }
+    teamMap[m.team_id].total +=
+      (m.score_quiz || 0) + (m.score_needs || 0) + (m.score_scenario || 0)
+      + (m.score_practice || 0) + (m.score_roleplay || 0) + (m.score_fab || 0);
+  });
+  return Object.values(teamMap).sort((a, b) => b.total - a.total);
+}
+
+// ========== 상세 모달 ==========
+function openDetail(sessionId) {
+  const modal = document.getElementById('detailModal');
+  const body = document.getElementById('modalBody');
+  body.innerHTML = '<div class="loading-spinner">데이터를 불러오는 중...</div>';
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  renderDetail(sessionId);
+}
+
+function closeModal() {
+  document.getElementById('detailModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// 모달 바깥 클릭으로 닫기
+document.getElementById('detailModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+async function renderDetail(sessionId) {
+  const session = allSessions.find(s => s.id === sessionId);
+  if (!session) return;
+
+  // 새로고침 시 최신 데이터 가져오기
+  const [members, activities] = await Promise.all([
+    fetchMembersForSession(sessionId),
+    fetchActivitiesForSession(sessionId)
+  ]);
+  session._members = members;
+  session._activities = activities;
+
+  const tn = session._teamNames || {};
+  const teamKeys = Object.keys(tn).filter(k => k.length === 1);
+  const trainerName = tn.trainer_name || '(미지정)';
+  const registeredCount = members.filter(m => m.name && m.name.trim()).length;
+
+  // 상태 판별
+  const hasEnded = tn.ended === true;
+  const totalScore = members.reduce((sum, m) =>
+    sum + (m.score_quiz||0) + (m.score_needs||0) + (m.score_scenario||0)
+        + (m.score_practice||0) + (m.score_roleplay||0) + (m.score_fab||0), 0);
+  const isActive = !hasEnded && totalScore > 0;
+
+  const body = document.getElementById('modalBody');
+  body.innerHTML = `
+    <div class="modal-title">${escapeHtml(session.company_name || '(이름 없음)')}</div>
+    <div class="modal-subtitle">${session.training_date || '날짜 미정'}${isActive ? ' &nbsp;|&nbsp; <button class="refresh-btn" onclick="renderDetail(\'' + sessionId + '\')">🔄 새로고침</button>' : ''}</div>
+
+    <!-- 기본 정보 -->
+    <div class="detail-section">
+      <div class="detail-section-title">교육 기본 정보</div>
+      <div class="detail-info-grid">
+        <div class="detail-info-item">
+          <div class="detail-info-label">회사명</div>
+          <div class="detail-info-value">${escapeHtml(session.company_name || '-')}</div>
+        </div>
+        <div class="detail-info-item">
+          <div class="detail-info-label">교육일</div>
+          <div class="detail-info-value">${session.training_date || '-'}</div>
+        </div>
+        <div class="detail-info-item">
+          <div class="detail-info-label">강사</div>
+          <div class="detail-info-value">${escapeHtml(trainerName)}</div>
+        </div>
+        <div class="detail-info-item">
+          <div class="detail-info-label">등록 인원</div>
+          <div class="detail-info-value">${registeredCount}명</div>
+        </div>
+        <div class="detail-info-item">
+          <div class="detail-info-label">팀 구성</div>
+          <div class="detail-info-value">${teamKeys.map(k => escapeHtml(tn[k] || ('팀 ' + k))).join(', ')}</div>
+        </div>
+        <div class="detail-info-item">
+          <div class="detail-info-label">활동 건수</div>
+          <div class="detail-info-value">${activities.length}건</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 팀별/개인별 점수 -->
+    <div class="detail-section">
+      <div class="detail-section-title">팀별 / 개인별 점수</div>
+      <div style="overflow-x:auto;">
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>퀴즈</th>
+              <th>니즈</th>
+              <th>시나리오</th>
+              <th>연습</th>
+              <th>역할극</th>
+              <th>FAB</th>
+              <th>합계</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${renderScoreRows(session, members, teamKeys, tn)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 활동 로그 -->
+    <div class="detail-section">
+      <div class="detail-section-title">
+        활동 로그 타임라인
+        <span style="font-size:12px;color:var(--text-disabled);font-weight:500;text-transform:none;letter-spacing:0;">
+          총 ${activities.length}건
+        </span>
+      </div>
+      <div class="timeline">
+        ${activities.length === 0
+          ? '<div class="timeline-empty">활동 기록이 없습니다</div>'
+          : activities.slice(0, 100).map(a => renderTimelineItem(a, members)).join('')
+        }
+        ${activities.length > 100 ? '<div class="timeline-empty">... 외 ' + (activities.length - 100) + '건</div>' : ''}
+      </div>
+    </div>
+  `;
+}
+
+// ========== 점수 테이블 행 ==========
+function renderScoreRows(session, members, teamKeys, teamNames) {
+  let html = '';
+  teamKeys.forEach(teamKey => {
+    const teamMembers = members.filter(m => m.team_id === teamKey && m.name && m.name.trim());
+    if (teamMembers.length === 0) return;
+
+    const teamName = teamNames[teamKey] || ('팀 ' + teamKey);
+    let teamTotal = 0;
+    let memberRows = '';
+
+    teamMembers.forEach(m => {
+      const total = (m.score_quiz||0) + (m.score_needs||0) + (m.score_scenario||0)
+                  + (m.score_practice||0) + (m.score_roleplay||0) + (m.score_fab||0);
+      teamTotal += total;
+      memberRows += `
+        <tr>
+          <td style="text-align:left;font-weight:600;color:var(--text-secondary);padding-left:28px;">${escapeHtml(m.name)}</td>
+          <td>${m.score_quiz || 0}</td>
+          <td>${m.score_needs || 0}</td>
+          <td>${m.score_scenario || 0}</td>
+          <td>${m.score_practice || 0}</td>
+          <td>${m.score_roleplay || 0}</td>
+          <td>${m.score_fab || 0}</td>
+          <td class="total-cell">${total}</td>
+        </tr>`;
+    });
+
+    html += `
+      <tr class="team-header-row">
+        <td colspan="7"><span class="team-label-cell ${teamKey}">${escapeHtml(teamName)}</span> (${teamMembers.length}명)</td>
+        <td class="total-cell">${teamTotal}</td>
+      </tr>
+      ${memberRows}`;
+  });
+
+  if (!html) {
+    html = '<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-muted);">등록된 멤버가 없습니다</td></tr>';
+  }
+  return html;
+}
+
+// ========== 타임라인 아이템 ==========
+function renderTimelineItem(activity, members) {
+  const icon = ACTIVITY_ICONS[activity.activity_type] || '📌';
+  const label = ACTIVITY_LABELS[activity.activity_type] || activity.activity_type;
+  const member = members.find(m => m.id === activity.member_id);
+  const memberName = member ? member.name || '(이름없음)' : '알 수 없음';
+  const time = activity.created_at ? formatTime(activity.created_at) : '';
+  const score = activity.score != null ? ('+' + activity.score + '점') : '';
+
+  return `
+    <div class="timeline-item">
+      <div class="timeline-icon">${icon}</div>
+      <div class="timeline-body">
+        <div class="timeline-body-top">
+          <span class="timeline-name">${escapeHtml(memberName)}</span>
+          <span class="timeline-type">${label}</span>
+          ${score ? '<span class="timeline-score">' + score + '</span>' : ''}
+        </div>
+        <div class="timeline-time">${time}</div>
+      </div>
+    </div>`;
+}
+
+// ========== 유틸리티 ==========
+function escapeHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function formatTime(isoStr) {
+  try {
+    const d = new Date(isoStr);
+    const y = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const h = String(d.getHours()).padStart(2, '0');
+    const mi = String(d.getMinutes()).padStart(2, '0');
+    return `${y}-${mo}-${day} ${h}:${mi}`;
+  } catch {
+    return isoStr;
+  }
+}
+</script>
+</body>
+</html>

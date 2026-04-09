@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPIN Selling 2.0 & 3.0 - SPIN질문&니즈 구분</title>
+<title>SPIN Selling - SPIN질문&니즈 구분</title>
 <link rel="stylesheet" href="common.css">
 <style>
 .conv-line {
@@ -148,7 +148,7 @@
     <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
       <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
       <div>
-        <div class="logo-text">SPIN Selling 2.0 & 3.0</div>
+        <div class="logo-text">SPIN Selling</div>
         <div class="logo-sub">AI-Powered Training</div>
       </div>
     </a>
@@ -327,6 +327,7 @@ function checkAnswers() {
 
   if (totalCorrect > 0) addScore(points, 'scenario');
   addActivity(`SPIN질문&니즈 구분: ${totalCorrect}/${totalAll}`);
+  saveActivityLog('spin-needs', { spinCorrect: spinCorrect, spinTotal: spinTotal, needsCorrect: needsCorrect, needsTotal: needsTotal, totalCorrect: totalCorrect, totalAll: totalAll }, points);
 
   document.getElementById('scoreResult').style.display = 'block';
   document.getElementById('scoreResult').innerHTML = `

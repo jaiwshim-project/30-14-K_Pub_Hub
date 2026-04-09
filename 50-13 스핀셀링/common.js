@@ -360,6 +360,47 @@ function addActivity(text) {
   state.activities.push(`[${time}] ${text}`);
 }
 
+// ========== ACTIVITY LOG (Supabase) ==========
+async function saveActivityLog(activityType, activityData, score) {
+  const session = getSavedSession();
+  const user = getSavedUser();
+  if (!session || !user || !user.id) return;
+
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/spin_activities`, {
+      method: 'POST',
+      headers: SB_HEADERS,
+      body: JSON.stringify({
+        session_id: session.id,
+        member_id: user.id,
+        activity_type: activityType,
+        activity_data: activityData,
+        score: score || 0
+      })
+    });
+  } catch (e) {
+    console.log('Activity log save failed:', e);
+  }
+}
+
+// 세션의 모든 활동 로그 조회
+async function fetchActivityLogs(sessionId) {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/spin_activities?session_id=eq.${sessionId}&select=*,spin_members(name,team_id)&order=created_at.desc`,
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+  );
+  return await res.json();
+}
+
+// 특정 멤버의 활동 로그 조회
+async function fetchMemberLogs(memberId) {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/spin_activities?member_id=eq.${memberId}&select=*&order=created_at.desc`,
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+  );
+  return await res.json();
+}
+
 // ========== UTILS ==========
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -509,7 +550,7 @@ function getFooterHTML() {
     <div class="footer-divider"></div>
     <div class="footer-bottom">
       <div class="footer-copy">
-        <span>&copy; 2024 Korn Ferry SPIN 2.0 & 3.0 Official Program</span>
+        <span>&copy; 2024 Korn Ferry SPIN Selling Official Program</span>
         <span class="footer-sep">|</span>
         <span>심재우 대표 &middot; SB Consulting</span>
         <span class="footer-sep">|</span>
@@ -518,7 +559,7 @@ function getFooterHTML() {
       <div class="footer-badges">
         <span class="footer-badge">Korn Ferry Certified</span>
         <span class="footer-badge accent">AI-Enhanced</span>
-        <a href="index.html#admin" onclick="localStorage.setItem('spin_open_admin','1')" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.4); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">🔧 관리자</a>
+        <a href="admin.html" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.4); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">🔧 관리자</a>
       </div>
     </div>
   </div>

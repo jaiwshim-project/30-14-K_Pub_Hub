@@ -288,6 +288,7 @@ function nextQuiz() {
     document.getElementById('quizArea').style.display = 'none';
     saveQuizScore(state.currentQuizCategory, score, total);
     addActivity(`퀴즈 완료: ${score}/${total} (${Math.round(score/total*100)}%)`);
+    saveActivityLog('quiz', { category: state.currentQuizCategory, correct: score, total: total, percent: Math.round(score/total*100) }, score * 10);
     return;
   }
   showQuizQuestion();

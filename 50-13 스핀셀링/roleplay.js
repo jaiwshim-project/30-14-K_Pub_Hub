@@ -412,6 +412,7 @@ function requestAIEvaluation() {
   if (score > 0) {
     addScore(score, 'roleplay');
     addActivity(`AI 롤플레이 평가: ${grade} (${score}/100점)`);
+    saveActivityLog('roleplay', { grade: grade, score: score, turns: totalTurns, difficulty: state.selectedDifficulty, spinCounts: {S,P,I,N}, questions: questions }, score);
   }
 
   // 난이도별 결과 저장

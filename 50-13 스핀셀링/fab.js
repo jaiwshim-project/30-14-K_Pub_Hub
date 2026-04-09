@@ -84,6 +84,7 @@ function checkFab() {
     <p>${total}문제 중 <strong style="color:var(--gold);">${correct}문제</strong> 정답! (+${correct * 10}점)</p></div>`;
 
   addActivity(`FAB 구분: ${correct}/${total}`);
+  saveActivityLog('fab', { correct: correct, total: total }, correct * 10);
 }
 
 // Auto-init

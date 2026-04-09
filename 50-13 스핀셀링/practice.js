@@ -97,6 +97,7 @@ function submitPracticeQuestion() {
 
   addScore(10, 'practice');
   addActivity(`질문 연습(${type}): "${question.substring(0, 30)}..."`);
+  saveActivityLog('practice', { type: type, question: question }, 10);
 
   input.value = '';
 }

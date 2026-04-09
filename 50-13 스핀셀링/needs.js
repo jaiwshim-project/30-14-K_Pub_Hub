@@ -82,6 +82,7 @@ function showNeedsAnswers() {
     <p>${total}문제 중 <strong style="color:var(--gold);">${correct}문제</strong> 정답! (+${correct * 10}점)</p></div>`;
 
   addActivity(`IN/EN 구분: ${correct}/${total}`);
+  saveActivityLog('needs', { correct: correct, total: total }, correct * 10);
 }
 
 // Auto-init

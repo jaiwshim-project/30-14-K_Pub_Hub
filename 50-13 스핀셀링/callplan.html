@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPIN Selling 2.0 & 3.0 - 콜플랜 작성</title>
+<title>SPIN Selling - 콜플랜 작성</title>
 <link rel="stylesheet" href="common.css">
 <style>
 .cp-section {
@@ -113,7 +113,7 @@ textarea.cp-input { min-height: 70px; }
     <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
       <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
       <div>
-        <div class="logo-text">SPIN Selling 2.0 & 3.0</div>
+        <div class="logo-text">SPIN Selling</div>
         <div class="logo-sub">AI-Powered Training</div>
       </div>
     </a>
@@ -367,6 +367,7 @@ function submitAndEvaluate() {
   if (score > 0) {
     addScore(score, 'practice');
     addActivity(`콜플랜 평가: ${grade} (${score}/100점)`);
+    saveActivityLog('callplan', { grade: grade, score: score, company: company, advance: advance, spinFilled: spinFilled }, score);
   }
 
   // 결과 렌더링
