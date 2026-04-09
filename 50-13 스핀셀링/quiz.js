@@ -172,8 +172,33 @@ const quizData = {
   ]
 };
 
+// ========== QUIZ COMPLETION TRACKING ==========
+function markQuizComplete(category) {
+  const completed = JSON.parse(localStorage.getItem('spin_quiz_completed') || '{}');
+  completed[category] = true;
+  localStorage.setItem('spin_quiz_completed', JSON.stringify(completed));
+  updateQuizButtons();
+}
+
+function updateQuizButtons() {
+  const completed = JSON.parse(localStorage.getItem('spin_quiz_completed') || '{}');
+  const btnMap = { concept: 0, buyingCycle: 1, spinType: 2, advanced: 3, all: 4 };
+  const btns = document.querySelectorAll('.quiz-category-btn');
+  btns.forEach((btn, i) => {
+    const cat = Object.keys(btnMap).find(k => btnMap[k] === i);
+    if (cat && completed[cat]) {
+      if (!btn.querySelector('.quiz-done')) {
+        btn.insertAdjacentHTML('beforeend', '<span class="quiz-done" style="margin-left:6px; color:var(--green); font-weight:800;">&#10003;</span>');
+        btn.style.borderColor = 'var(--green)';
+        btn.style.background = 'rgba(30,132,73,0.06)';
+      }
+    }
+  });
+}
+
 // ========== QUIZ FUNCTIONS ==========
 function startQuiz(category) {
+  state.currentQuizCategory = category;
   let questions;
   if (category === 'all') {
     questions = [...quizData.concept, ...quizData.buyingCycle, ...quizData.spinType, ...quizData.advanced];
@@ -251,8 +276,14 @@ function nextQuiz() {
       '핵심 개념을 다시 한번 복습해보세요.';
     document.getElementById('quizResultModal').classList.add('active');
     document.getElementById('quizArea').style.display = 'none';
+    markQuizComplete(state.currentQuizCategory);
     addActivity(`퀴즈 완료: ${score}/${total} (${Math.round(score/total*100)}%)`);
     return;
   }
   showQuizQuestion();
 }
+
+// 페이지 로드 시 완료 상태 복원
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => updateQuizButtons(), 200);
+});
