@@ -309,16 +309,26 @@ function updateHeaderUser(user) {
     return;
   }
 
-  headerTeam.style.display = 'block';
+  headerTeam.style.display = 'flex';
+  headerTeam.style.alignItems = 'center';
+  headerTeam.style.gap = '8px';
+
   if (role === 'admin') {
-    headerTeam.textContent = '관리자';
+    headerTeam.innerHTML = '<span>관리자</span>';
   } else if (role === 'trainer' && user) {
-    headerTeam.textContent = `강사 | ${user.name}`;
+    headerTeam.innerHTML = `<span>강사 | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
   } else if (role === 'trainee' && user) {
-    headerTeam.textContent = `팀 ${user.team_id} | ${user.name}`;
+    headerTeam.innerHTML = `<span>팀 ${user.team_id} | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
   } else {
     headerTeam.style.display = 'none';
   }
+}
+
+function switchIdentity() {
+  // 세션은 유지하고 역할/유저만 초기화 → index.html의 본인 선택 화면으로
+  clearUser();
+  clearRole();
+  location.href = 'index.html';
 }
 
 function restoreUser() {
@@ -376,8 +386,8 @@ const FLOW_ORDER = [
   { page: 'scenario.html', label: 'SPIN 질문구분', icon: '🔍' },
   { page: 'practice.html', label: '질문 연습', icon: '💬' },
   { page: 'spin-needs.html', label: 'SPIN질문&니즈 구분', icon: '🔎' },
-  { page: 'roleplay.html', label: 'AI 롤플레이', icon: '🎭' },
   { page: 'fab.html', label: 'FAB/BAF', icon: '🧩' },
+  { page: 'roleplay.html', label: 'AI 롤플레이', icon: '🎭' },
   { page: 'spin-tools.html', label: '스핀도구들', icon: '🛠' },
   { page: 'scoreboard.html', label: '최종 결과', icon: '🏆' }
 ];
@@ -436,8 +446,8 @@ function getNavHTML(activePage) {
     { page: 'scenario.html', section: 'scenario', icon: '🔍', label: '4.SPIN 질문구분' },
     { page: 'practice.html', section: 'practice', icon: '💬', label: '5.질문 연습' },
     { page: 'spin-needs.html', section: 'spin-needs', icon: '🔎', label: '6.SPIN질문&니즈 구분' },
-    { page: 'roleplay.html', section: 'roleplay', icon: '🎭', label: '7.롤플레이' },
-    { page: 'fab.html', section: 'fab', icon: '🧩', label: '8.FAB/BAF' },
+    { page: 'fab.html', section: 'fab', icon: '🧩', label: '7.FAB/BAF' },
+    { page: 'roleplay.html', section: 'roleplay', icon: '🎭', label: '8.롤플레이' },
     { page: 'spin-tools.html', section: 'spin-tools', icon: '🛠', label: '9.스핀도구들' },
     { page: 'scoreboard.html', section: 'scoreboard', icon: '🏆', label: '스코어보드' },
     { page: 'coaching.html', section: 'coaching', icon: '📊', label: '코칭 리포트' }
