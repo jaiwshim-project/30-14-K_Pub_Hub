@@ -506,9 +506,11 @@ function getNavHTML(activePage) {
   }
 
   return '<div class="nav" id="mainNav">' +
-    filtered.map(item =>
-      `<a href="${item.page}" class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label}</a>`
-    ).join('') +
+    filtered.map(item => {
+      const isHome = item.section === 'home';
+      const onclick = isHome ? ' onclick="clearSessionId();clearUser();clearRole();"' : '';
+      return `<a href="${item.page}"${onclick} class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label}</a>`;
+    }).join('') +
     '</div>';
 }
 
