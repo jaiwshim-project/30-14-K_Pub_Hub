@@ -746,13 +746,22 @@ function goToDashboard() {
 
 // ========== INIT ==========
 document.addEventListener('DOMContentLoaded', function() {
-  // index.html 접속 시 항상 랜딩(세션 선택)부터 시작
-  clearSessionId();
-  clearUser();
-  clearRole();
-  updateHeaderUser(null);
-  showStep('stepSession');
-  loadSessionList();
+  const session = getSavedSession();
+  const role = getSavedRole();
+  const user = getSavedUser();
+
+  // 세션+역할+유저가 있으면 대시보드로 바로 이동
+  if (session && (role === 'trainer' || role === 'trainee') && user) {
+    updateHeaderUser(user);
+    goToDashboard();
+  } else if (session && !role) {
+    // 세션만 있고 역할 미선택 → 본인 선택 화면
+    goToIdentityStep();
+  } else {
+    // 아무것도 없으면 랜딩(세션 선택)
+    showStep('stepSession');
+    loadSessionList();
+  }
 
   // 푸터 관리자 버튼에서 온 경우 비밀번호 확인 후 관리자 패널 열기
   if (localStorage.getItem('spin_open_admin') === '1') {
