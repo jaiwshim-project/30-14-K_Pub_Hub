@@ -280,14 +280,8 @@ function getUserBarHTML() {
 </div>`;
   }
 
-  // 미로그인 상태
-  return `
-<div id="userIdentityBar" style="display:none; background:rgba(192,57,43,0.04); border-bottom:1px solid var(--border); padding:10px 24px;">
-  <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:12px;">
-    <span style="font-size:13px; color:var(--accent); font-weight:600;">본인 확인이 필요합니다</span>
-    <a href="index.html" style="padding:6px 16px; background:var(--accent); color:white; border:none; border-radius:8px; font-family:inherit; font-size:12px; font-weight:700; text-decoration:none;">홈에서 로그인</a>
-  </div>
-</div>`;
+  // 미로그인 상태 — 리다이렉트로 처리되므로 빈 바
+  return '';
 }
 
 let allMembersCache = null;
