@@ -6,10 +6,6 @@
 <title>SPIN Selling - AI 교육 플랫폼</title>
 <link rel="stylesheet" href="common.css">
 <style>
-/* ========== STEP SCREENS ========== */
-.step-screen { display: none; }
-.step-screen.active { display: block; }
-
 /* ========== SESSION CARDS ========== */
 .session-card {
   display: flex;
@@ -48,176 +44,6 @@
   font-weight: 700;
 }
 
-/* ========== IDENTITY SELECTION ========== */
-.id-section {
-  margin-bottom: 32px;
-}
-
-.id-section-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--border);
-}
-
-/* Trainer card */
-.trainer-card {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  border-radius: 14px;
-  padding: 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.trainer-card input {
-  flex: 1;
-  min-width: 200px;
-  padding: 12px 16px;
-  background: rgba(255,255,255,0.08);
-  border: 1.5px solid rgba(255,255,255,0.15);
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  color: white;
-}
-
-.trainer-card input::placeholder { color: rgba(255,255,255,0.35); }
-.trainer-card input:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,0.12); }
-
-/* Name grid */
-.name-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-}
-
-.name-team-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-  position: relative;
-  overflow: hidden;
-}
-
-.name-team-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 4px;
-}
-
-.name-team-card.team-A::before { background: var(--accent); }
-.name-team-card.team-B::before { background: var(--blue); }
-.name-team-card.team-C::before { background: var(--green); }
-.name-team-card.team-D::before { background: var(--gold); }
-.name-team-card.team-E::before { background: var(--purple); }
-
-.name-team-title {
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--text);
-  margin-bottom: 12px;
-}
-
-.name-btn {
-  display: block;
-  width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 6px;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: left;
-}
-
-.name-btn:hover {
-  border-color: var(--accent);
-  background: rgba(192,57,43,0.03);
-  transform: translateX(2px);
-}
-
-.name-btn.empty {
-  color: var(--text-disabled);
-  cursor: default;
-  border-style: dashed;
-}
-
-.name-btn.empty:hover {
-  border-color: var(--border);
-  background: var(--bg);
-  transform: none;
-}
-
-/* ========== DASHBOARD ========== */
-.session-strip {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 0 0 14px 14px;
-  padding: 14px 24px;
-  margin: 0 -24px 24px -24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  position: sticky;
-  top: 74px;
-  z-index: 98;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-}
-
-.dash-activity-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-
-.dash-activity {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px 20px;
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.dash-activity:hover {
-  border-color: #cbd5e0;
-  box-shadow: var(--shadow-hover);
-  transform: translateY(-2px);
-}
-
-.dash-activity-icon { font-size: 28px; }
-.dash-activity-title { font-size: 15px; font-weight: 700; color: var(--text); }
-.dash-activity-desc { font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
-.dash-activity-badge {
-  align-self: flex-start;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 20px;
-}
-
-.dash-activity-badge.day1 { background: rgba(36,113,163,0.08); color: var(--blue); }
-.dash-activity-badge.day2 { background: rgba(192,57,43,0.08); color: var(--accent); }
-
 /* Admin link */
 .admin-link {
   display: inline-flex;
@@ -241,15 +67,6 @@
   color: var(--text);
   background: var(--card);
 }
-
-/* Responsive */
-@media (max-width: 768px) {
-  .name-grid { grid-template-columns: repeat(2, 1fr); }
-  .dash-activity-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 480px) {
-  .name-grid { grid-template-columns: 1fr; }
-}
 </style>
 </head>
 <body>
@@ -262,11 +79,13 @@
 <!-- Header -->
 <div class="header">
   <div class="logo">
-    <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
-    <div>
-      <div class="logo-text">SPIN Selling</div>
-      <div class="logo-sub">AI-Powered Training</div>
-    </div>
+    <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling</div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
   </div>
   <div class="header-right">
     <div class="team-badge" id="headerTeam"></div>
@@ -279,8 +98,7 @@
 <div class="main">
 <div class="section">
 
-<!-- ========== STEP 1: 현재교육 선택 ========== -->
-<div class="step-screen" id="stepSession">
+<!-- ========== 랜딩: 현재교육 선택 ========== -->
 
   <div class="hero" style="padding:0; overflow:hidden; border-radius:var(--radius);">
     <img src="cover-spin.png" alt="SPIN 3.0 Sales Performance" style="width:100%; display:block; border-radius:var(--radius);">
@@ -316,134 +134,6 @@
       <div id="adminSessionList" style="margin-top:16px;"></div>
     </div>
   </div>
-</div>
-
-<!-- ========== STEP 2: 본인 선택 (강사/교육생) ========== -->
-<div class="step-screen" id="stepIdentity">
-
-  <div class="session-strip">
-    <div style="display:flex; align-items:center; gap:12px;">
-      <span style="color:rgba(255,255,255,0.5); font-size:12px;">현재 교육</span>
-      <span style="color:var(--gold-light); font-size:18px; font-weight:800;" id="idSessionName"></span>
-      <span style="color:rgba(255,255,255,0.3); font-size:12px;" id="idSessionDate"></span>
-    </div>
-    <button onclick="goBackToSession()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.6); padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer; font-family:inherit;">세션 변경</button>
-  </div>
-
-  <!-- 강사 선택 -->
-  <div class="id-section">
-    <div class="id-section-title">🎓 강사로 접속</div>
-    <div class="trainer-card">
-      <span style="color:var(--gold-light); font-size:14px; font-weight:700; white-space:nowrap;">강사 이름</span>
-      <input type="text" id="trainerNameInput" placeholder="강사명을 입력하세요" onfocus="this.select()">
-      <button onclick="loginAsTrainer()" style="padding:12px 28px; background:var(--gold); color:#1a1a2e; border:none; border-radius:10px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; white-space:nowrap; transition:all 0.2s;">강사 접속</button>
-    </div>
-  </div>
-
-  <!-- 교육생 선택 -->
-  <div class="id-section">
-    <div class="id-section-title">🙋 교육생 — 본인 이름을 클릭하세요</div>
-    <div class="name-grid" id="nameGrid">
-      <div style="text-align:center; color:var(--text-muted); padding:40px; grid-column:1/-1;">불러오는 중...</div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== STEP 3: 대시보드 ========== -->
-<div class="step-screen" id="stepDashboard">
-
-  <div class="session-strip">
-    <div style="display:flex; align-items:center; gap:12px;">
-      <span style="color:rgba(255,255,255,0.5); font-size:12px;">현재 교육</span>
-      <span style="color:var(--gold-light); font-size:18px; font-weight:800;" id="dashSessionName"></span>
-      <span style="color:rgba(255,255,255,0.3); font-size:12px;" id="dashSessionDate"></span>
-    </div>
-    <div style="display:flex; align-items:center; gap:8px;">
-      <span id="dashUserBadge" style="font-size:13px; font-weight:700; color:white;"></span>
-      <button onclick="changeUser()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.6); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">변경</button>
-    </div>
-  </div>
-
-  <!-- 강사 전용: 관리 영역 -->
-  <div id="dashTrainerSection" style="display:none;">
-    <div class="card" style="border-left:4px solid var(--gold); margin-bottom:16px;">
-      <div class="card-title"><span class="icon">🎓</span> 강사 관리</div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a href="scoreboard.html" class="btn btn-secondary" style="font-size:13px;">🏆 스코어보드</a>
-        <a href="coaching.html" class="btn btn-secondary" style="font-size:13px;">📊 코칭 리포트</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- 교육 활동 목록 -->
-  <div style="margin-bottom:16px;">
-    <h3 style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:4px;">교육 활동</h3>
-    <p style="font-size:13px; color:var(--text-tertiary);">아래 활동을 순서대로 진행하세요. 점수는 자동으로 기록됩니다.</p>
-  </div>
-
-  <div class="dash-activity-grid">
-    <a class="dash-activity" href="prereading.html">
-      <span class="dash-activity-badge day1">사전학습</span>
-      <span class="dash-activity-icon">📖</span>
-      <span class="dash-activity-title">1. 프리리딩</span>
-      <span class="dash-activity-desc">SPIN 2.0 판매의 발전 — 사전 학습 자료 (28P)</span>
-    </a>
-    <a class="dash-activity" href="quiz.html">
-      <span class="dash-activity-badge day1">Day 1</span>
-      <span class="dash-activity-icon">📝</span>
-      <span class="dash-activity-title">2. SPIN 개념 퀴즈</span>
-      <span class="dash-activity-desc">핵심 개념, 구매사이클, 질문 유형을 퀴즈로 테스트</span>
-    </a>
-    <a class="dash-activity" href="needs.html">
-      <span class="dash-activity-badge day1">Day 1</span>
-      <span class="dash-activity-icon">🎯</span>
-      <span class="dash-activity-title">3. 니즈 구분 실습</span>
-      <span class="dash-activity-desc">잠재니즈(IN)와 현재니즈(EN)를 구분하는 카드 실습</span>
-    </a>
-    <a class="dash-activity" href="scenario.html">
-      <span class="dash-activity-badge day1">Day 1</span>
-      <span class="dash-activity-icon">🔍</span>
-      <span class="dash-activity-title">4. SPIN 질문구분</span>
-      <span class="dash-activity-desc">실제 영업 대화에서 S/P/I/N 질문 유형 분류</span>
-    </a>
-    <a class="dash-activity" href="practice.html">
-      <span class="dash-activity-badge day2">Day 2</span>
-      <span class="dash-activity-icon">💬</span>
-      <span class="dash-activity-title">5. 질문 작성 연습</span>
-      <span class="dash-activity-desc">시나리오별 SPIN 질문을 직접 작성하고 AI 평가</span>
-    </a>
-    <a class="dash-activity" href="spin-needs.html">
-      <span class="dash-activity-badge day2">Day 2</span>
-      <span class="dash-activity-icon">🔎</span>
-      <span class="dash-activity-title">6. SPIN질문&니즈 구분</span>
-      <span class="dash-activity-desc">비브라디페랑스 시나리오에서 SPIN 질문 유형과 니즈를 구분</span>
-    </a>
-    <a class="dash-activity" href="fab.html">
-      <span class="dash-activity-badge day2">Day 2</span>
-      <span class="dash-activity-icon">🧩</span>
-      <span class="dash-activity-title">7. FAB/BAF 연습</span>
-      <span class="dash-activity-desc">특징-장점-이익 구분 및 BAF 전환 실습</span>
-    </a>
-    <a class="dash-activity" href="roleplay.html">
-      <span class="dash-activity-badge day2">Day 2</span>
-      <span class="dash-activity-icon">🎭</span>
-      <span class="dash-activity-title">8. AI 롤플레이</span>
-      <span class="dash-activity-desc">AI 고객과 실전 상담 시뮬레이션</span>
-    </a>
-    <a class="dash-activity" href="callplan.html">
-      <span class="dash-activity-badge day2">실전</span>
-      <span class="dash-activity-icon">📋</span>
-      <span class="dash-activity-title">9. 콜플랜 작성</span>
-      <span class="dash-activity-desc">영업 상담 전 체계적 콜플랜 작성</span>
-    </a>
-    <a class="dash-activity" href="spin-tools.html">
-      <span class="dash-activity-badge day2">도구</span>
-      <span class="dash-activity-icon">🛠</span>
-      <span class="dash-activity-title">10. 스핀 도구들</span>
-      <span class="dash-activity-desc">SPIN 사례 분석 도구, 콜 플랜 도구</span>
-    </a>
-  </div>
-</div>
 
 </div>
 </div>
@@ -470,22 +160,7 @@
 
 <script src="common.js"></script>
 <script>
-// ========== NAVIGATION ==========
-function showStep(stepId) {
-  document.querySelectorAll('.step-screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(stepId).classList.add('active');
-}
-
-function goBackToSession() {
-  clearSessionId();
-  clearUser();
-  clearRole();
-  updateHeaderUser(null);
-  showStep('stepSession');
-  loadSessionList();
-}
-
-// ========== STEP 1: SESSION LIST ==========
+// ========== SESSION LIST ==========
 async function loadSessionList() {
   const sessions = await fetchSessions();
   const listEl = document.getElementById('sessionList');
@@ -544,12 +219,12 @@ async function checkPassword() {
     return;
   }
 
-  // 비밀번호 일치 또는 비밀번호 미설정
+  // 비밀번호 일치 또는 비밀번호 미설정 → company.html로 이동
   closeModal('pwModal');
   saveSessionId(pendingSession);
   clearUser();
   clearRole();
-  goToIdentityStep();
+  location.href = 'company.html';
 }
 
 // ========== ADMIN ==========
@@ -670,106 +345,27 @@ function adminEnterSession(id, name, date) {
   location.href = 'team-setup.html';
 }
 
-// ========== STEP 2: IDENTITY (강사/교육생) ==========
-async function goToIdentityStep() {
-  const session = getSavedSession();
-  document.getElementById('idSessionName').textContent = session.company_name;
-  document.getElementById('idSessionDate').textContent = session.training_date || '';
-  showStep('stepIdentity');
-
-  // Supabase에서 강사 이름 복원
-  const trainerName = await fetchTrainerName();
-  const trainerInput = document.getElementById('trainerNameInput');
-  if (trainerInput && trainerName) trainerInput.value = trainerName;
-
-  // 이름 그리드 로드
-  const members = await fetchAllMembers();
-  const teamNames = await fetchTeamNames();
-  const grid = document.getElementById('nameGrid');
-
-  const grouped = {};
-  ['A','B','C','D','E'].forEach(t => { grouped[t] = []; });
-  members.forEach(m => { if (grouped[m.team_id]) grouped[m.team_id].push(m); });
-
-  grid.innerHTML = ['A','B','C','D','E'].map(t => {
-    const tName = teamNames[t] || `팀 ${t}`;
-    const btns = grouped[t].map(m => {
-      if (!m.name) return `<button class="name-btn empty" disabled>미등록</button>`;
-      return `<button class="name-btn" onclick="loginAsTrainee(${m.id}, '${m.team_id}', '${m.name.replace(/'/g,"\\'")}', ${m.slot})">${m.name}</button>`;
-    }).join('');
-
-    return `
-      <div class="name-team-card team-${t}">
-        <div class="name-team-title">${tName}</div>
-        ${btns}
-      </div>
-    `;
-  }).join('');
-}
-
-async function loginAsTrainer() {
-  const nameInput = document.getElementById('trainerNameInput');
-  const name = nameInput.value.trim();
-  if (!name) { nameInput.focus(); nameInput.style.borderColor = '#e74c3c'; return; }
-
-  saveRole('trainer');
-  saveUser({ id: null, team_id: null, name: name, slot: null });
-  updateHeaderUser({ name });
-
-  // Supabase에 강사 이름 저장
-  await saveTrainerName(name);
-
-  goToDashboard();
-}
-
-function loginAsTrainee(id, teamId, name, slot) {
-  saveRole('trainee');
-  saveUser({ id, team_id: teamId, name, slot });
-  updateHeaderUser({ team_id: teamId, name });
-  goToDashboard();
-}
-
-// ========== STEP 3: DASHBOARD ==========
-function goToDashboard() {
-  const session = getSavedSession();
-  const role = getSavedRole();
-  const user = getSavedUser();
-
-  document.getElementById('dashSessionName').textContent = session.company_name;
-  document.getElementById('dashSessionDate').textContent = session.training_date || '';
-
-  const badge = document.getElementById('dashUserBadge');
-  if (role === 'trainer') {
-    badge.innerHTML = `<span style="background:var(--gold); color:#1a1a2e; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800;">TRAINER</span> <span style="margin-left:4px;">${user ? user.name : ''}</span>`;
-    document.getElementById('dashTrainerSection').style.display = 'block';
-  } else {
-    badge.innerHTML = `<span style="background:rgba(255,255,255,0.15); padding:3px 10px; border-radius:6px; font-size:11px;">팀 ${user.team_id}</span> <span style="margin-left:4px;">${user.name}</span>`;
-    document.getElementById('dashTrainerSection').style.display = 'none';
-  }
-
-  showStep('stepDashboard');
-}
-
 // ========== INIT ==========
 document.addEventListener('DOMContentLoaded', function() {
   const session = getSavedSession();
   const role = getSavedRole();
   const user = getSavedUser();
 
-  // 세션+역할+유저가 있으면 대시보드로 바로 이동
+  // 이미 로그인 상태면 company.html로
   if (session && (role === 'trainer' || role === 'trainee') && user) {
-    updateHeaderUser(user);
-    goToDashboard();
-  } else if (session && !role) {
-    // 세션만 있고 역할 미선택 → 본인 선택 화면
-    goToIdentityStep();
-  } else {
-    // 아무것도 없으면 랜딩(세션 선택)
-    showStep('stepSession');
-    loadSessionList();
+    location.href = 'company.html';
+    return;
   }
 
-  // 푸터 관리자 버튼에서 온 경우 비밀번호 확인 후 관리자 패널 열기
+  // 세션만 있으면 company.html로 (역할 선택 화면)
+  if (session && !role) {
+    location.href = 'company.html';
+    return;
+  }
+
+  // 랜딩 표시
+  loadSessionList();
+
   if (localStorage.getItem('spin_open_admin') === '1') {
     localStorage.removeItem('spin_open_admin');
     setTimeout(() => showAdminPanel(), 500);

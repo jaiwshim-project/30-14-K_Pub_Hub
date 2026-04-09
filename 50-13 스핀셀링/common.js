@@ -224,10 +224,10 @@ function getSessionBarHTML() {
   if (!session) return '';
   return `
 <div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); padding:8px 24px; text-align:center; position:sticky; top:74px; z-index:98; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
-  <span style="color:rgba(255,255,255,0.6); font-size:12px; font-weight:500;">현재 교육</span>
+  <span style="color:rgba(255,255,255,0.9); font-size:12px; font-weight:500;">현재 교육</span>
   <span style="color:var(--gold-light); font-size:18px; font-weight:800; margin-left:8px;">${session.company_name}</span>
-  ${session.training_date ? `<span style="color:rgba(255,255,255,0.4); font-size:11px; margin-left:8px;">${session.training_date}</span>` : ''}
-  <button onclick="switchSession()" style="margin-left:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.6); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>
+  ${session.training_date ? `<span style="color:rgba(255,255,255,0.7); font-size:11px; margin-left:8px;">${session.training_date}</span>` : ''}
+  <button onclick="switchSession()" style="margin-left:12px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.9); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>
 </div>`;
 }
 
@@ -251,7 +251,7 @@ function getUserBarHTML() {
       <span style="background:#e74c3c; color:white; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px;">ADMIN</span>
       <span style="color:rgba(255,255,255,0.7); font-size:13px; font-weight:600;">시스템 관리자</span>
     </div>
-    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.5); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">로그아웃</button>
+    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.9); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">로그아웃</button>
   </div>
 </div>`;
   }
@@ -264,7 +264,7 @@ function getUserBarHTML() {
       <span style="background:var(--gold); color:#1a1a2e; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px;">TRAINER</span>
       <span style="color:rgba(255,255,255,0.9); font-size:14px; font-weight:700;">${user.name}</span>
     </div>
-    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.5); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">변경</button>
+    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.9); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">변경</button>
   </div>
 </div>`;
   }
@@ -325,10 +325,10 @@ function updateHeaderUser(user) {
 }
 
 function switchIdentity() {
-  // 세션은 유지하고 역할/유저만 초기화 → index.html의 본인 선택 화면으로
+  // 세션은 유지하고 역할/유저만 초기화 → company.html의 본인 선택 화면으로
   clearUser();
   clearRole();
-  location.href = 'index.html';
+  location.href = 'company.html';
 }
 
 function restoreUser() {
@@ -559,7 +559,7 @@ function getFooterHTML() {
       <div class="footer-badges">
         <span class="footer-badge">Korn Ferry Certified</span>
         <span class="footer-badge accent">AI-Enhanced</span>
-        <a href="admin.html" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.4); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">🔧 관리자</a>
+        <a href="admin.html" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.8); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🔧 관리자</a>
       </div>
     </div>
   </div>
@@ -568,22 +568,31 @@ function getFooterHTML() {
 
 // ========== INIT ==========
 document.addEventListener('DOMContentLoaded', function() {
-  const isHome = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
-  const isScoreboard = window.location.pathname.includes('scoreboard');
-  const isPrereading = window.location.pathname.includes('prereading');
+  const pathname = window.location.pathname;
+  const isHome = pathname.endsWith('index.html') || pathname.endsWith('/');
+  const isCompany = pathname.includes('company');
+  const isScoreboard = pathname.includes('scoreboard');
+  const isPrereading = pathname.includes('prereading');
+  const isAdmin = pathname.includes('admin');
   const session = getSavedSession();
 
   const role = getSavedRole();
 
-  // 세션 또는 역할이 없고 홈/프리리딩이 아니면 → 홈으로 리다이렉트
-  if ((!session || !role) && !isHome && !isPrereading) {
+  // 세션이 없고 특수 페이지가 아니면 → 랜딩으로
+  if (!session && !isHome && !isPrereading && !isAdmin) {
     location.href = 'index.html';
     return;
   }
 
-  // 교육생인데 유저 미선택이고 홈/프리리딩이 아니면 → 홈으로
-  if (role === 'trainee' && !getSavedUser() && !isHome && !isPrereading) {
-    location.href = 'index.html';
+  // 세션은 있지만 역할이 없고 특수 페이지가 아니면 → company.html로
+  if (session && !role && !isHome && !isCompany && !isPrereading && !isAdmin) {
+    location.href = 'company.html';
+    return;
+  }
+
+  // 교육생인데 유저 미선택이고 특수 페이지가 아니면 → company.html로
+  if (role === 'trainee' && !getSavedUser() && !isHome && !isCompany && !isPrereading && !isAdmin) {
+    location.href = 'company.html';
     return;
   }
 
