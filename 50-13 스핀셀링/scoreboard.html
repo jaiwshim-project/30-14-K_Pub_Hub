@@ -264,7 +264,7 @@
   <!-- TAB 1: 팀 편성 -->
   <div id="tabTeam">
     <div class="card">
-      <div class="card-title"><span class="icon">👥</span> 팀 편성 (5팀 x 4명 = 20명)</div>
+      <div class="card-title"><span class="icon">👥</span> 팀 편성 (5팀 x 최대 7명 = 35명)</div>
       <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 13px;">
         각 팀의 팀원 이름을 입력하세요. 입력한 내용은 자동 저장됩니다.
       </p>
@@ -384,6 +384,17 @@
 </div>
 </div>
 
+<!-- 활동 상세 모달 -->
+<div class="modal-overlay" id="activityModal">
+  <div class="modal" style="max-width:700px; max-height:80vh; overflow-y:auto; text-align:left;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="font-size:18px;" id="activityModalTitle">교육생 활동 상세</h2>
+      <button onclick="closeModal('activityModal')" style="background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-muted);">✕</button>
+    </div>
+    <div id="activityModalContent" style="font-size:13px;"></div>
+  </div>
+</div>
+
 <div id="footerPlaceholder"></div>
 </div>
 
@@ -397,6 +408,89 @@ document.addEventListener('DOMContentLoaded', function() {
     location.href = 'index.html';
   }
 });
+
+// 교육생 활동 상세 보기
+async function showMemberActivity(memberId, memberName, teamId) {
+  document.getElementById('activityModalTitle').textContent = `팀 ${teamId} | ${memberName} — 활동 상세`;
+  const content = document.getElementById('activityModalContent');
+  content.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">불러오는 중...</div>';
+  document.getElementById('activityModal').classList.add('active');
+
+  const logs = await fetchMemberLogs(memberId);
+
+  if (!logs || logs.length === 0) {
+    content.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-disabled);">아직 활동 기록이 없습니다.</div>';
+    return;
+  }
+
+  const typeConfig = {
+    quiz: { icon: '📝', label: '퀴즈', color: 'var(--blue)' },
+    needs: { icon: '🎯', label: '니즈 구분', color: 'var(--green)' },
+    scenario: { icon: '🔍', label: 'SPIN 질문구분', color: 'var(--purple)' },
+    practice: { icon: '💬', label: '질문 연습', color: 'var(--gold)' },
+    'spin-needs': { icon: '🔎', label: 'SPIN질문&니즈', color: 'var(--blue)' },
+    fab: { icon: '🧩', label: 'FAB/BAF', color: 'var(--green)' },
+    roleplay: { icon: '🎭', label: 'AI 롤플레이', color: 'var(--accent)' },
+    callplan: { icon: '📋', label: '콜플랜', color: 'var(--purple)' }
+  };
+
+  // 요약
+  const totalScore = logs.reduce((s, l) => s + (l.score || 0), 0);
+  const totalCount = logs.length;
+
+  let html = `
+    <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:100px; text-align:center; padding:12px; background:var(--pastel-blue); border-radius:10px;">
+        <div style="font-size:24px; font-weight:900; color:var(--blue);">${totalCount}</div>
+        <div style="font-size:11px; color:var(--text-muted);">총 활동 횟수</div>
+      </div>
+      <div style="flex:1; min-width:100px; text-align:center; padding:12px; background:var(--pastel-gold); border-radius:10px;">
+        <div style="font-size:24px; font-weight:900; color:var(--gold);">${totalScore}</div>
+        <div style="font-size:11px; color:var(--text-muted);">총 획득 점수</div>
+      </div>
+    </div>
+  `;
+
+  // 활동 로그 목록
+  html += '<div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:8px;">활동 기록</div>';
+
+  logs.forEach(log => {
+    const cfg = typeConfig[log.activity_type] || { icon: '📌', label: log.activity_type, color: 'var(--text-muted)' };
+    const data = log.activity_data || {};
+    const time = new Date(log.created_at).toLocaleString('ko-KR', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+
+    let detail = '';
+    if (data.correct !== undefined && data.total !== undefined) {
+      const pct = Math.round((data.correct / data.total) * 100);
+      detail = `정답 <strong style="color:var(--green);">${data.correct}</strong> / ${data.total}문제 (${pct}%)`;
+    }
+    if (data.grade) {
+      detail = `등급 <strong style="color:${cfg.color};">${data.grade}</strong> (${data.score || log.score}점)`;
+    }
+    if (data.question) {
+      detail = `[${data.type}] "${data.question.substring(0, 50)}${data.question.length > 50 ? '...' : ''}"`;
+    }
+    if (data.spinCorrect !== undefined) {
+      detail = `SPIN ${data.spinCorrect}/${data.spinTotal} + 니즈 ${data.needsCorrect}/${data.needsTotal}`;
+    }
+
+    html += `
+      <div style="display:flex; gap:10px; padding:10px 12px; background:var(--bg); border:1px solid var(--border-light); border-radius:8px; margin-bottom:6px; align-items:center;">
+        <span style="font-size:18px; flex:none;">${cfg.icon}</span>
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:700; color:${cfg.color}; font-size:12px;">${cfg.label}</span>
+            <span style="font-size:10px; color:var(--text-disabled);">${time}</span>
+          </div>
+          <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">${detail}</div>
+        </div>
+        <div style="flex:none; font-weight:800; color:var(--gold); font-size:14px;">+${log.score || 0}</div>
+      </div>
+    `;
+  });
+
+  content.innerHTML = html;
+}
 </script>
 <script src="scoreboard.js"></script>
 </body>

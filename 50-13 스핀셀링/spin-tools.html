@@ -94,10 +94,32 @@
 <div class="main">
 <div class="section">
   <div class="card">
-    <div class="card-title"><span class="icon">🛠</span> 9. 스핀 도구들</div>
+    <div class="card-title"><span class="icon">🛠</span> 10. 스핀 도구들</div>
     <p style="color: var(--text-tertiary); margin-bottom: 24px; font-size: 14px; line-height: 1.6;">
       SPIN Selling 실전에서 활용하는 핵심 도구들입니다. 이미지를 클릭하면 크게 볼 수 있습니다.
     </p>
+
+    <!-- 강사/관리자 전용 도구 -->
+    <div id="trainerTools" style="display:none; margin-bottom:20px;">
+      <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">강사/관리자 도구</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="scoreboard.html" style="flex:1; min-width:200px; padding:20px; background:linear-gradient(135deg, #ffffff, var(--pastel-gold)); border:2px solid rgba(212,136,15,0.15); border-radius:12px; text-decoration:none; display:flex; align-items:center; gap:12px; transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(212,136,15,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <span style="font-size:28px;">🏆</span>
+          <div>
+            <div style="font-size:15px; font-weight:700; color:var(--text);">스코어보드</div>
+            <div style="font-size:12px; color:var(--text-muted);">팀별/개인별 점수 현황 및 순위</div>
+          </div>
+        </a>
+        <a href="coaching.html" style="flex:1; min-width:200px; padding:20px; background:linear-gradient(135deg, #ffffff, var(--pastel-purple)); border:2px solid rgba(125,60,152,0.15); border-radius:12px; text-decoration:none; display:flex; align-items:center; gap:12px; transition:all 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(125,60,152,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <span style="font-size:28px;">📊</span>
+          <div>
+            <div style="font-size:15px; font-weight:700; color:var(--text);">코칭 리포트</div>
+            <div style="font-size:12px; color:var(--text-muted);">SPIN 활용 분석 및 코칭 피드백</div>
+          </div>
+        </a>
+      </div>
+      <hr style="border:none; border-top:1px dashed var(--border); margin:20px 0;">
+    </div>
 
     <div class="tool-card">
       <h3><span style="color:var(--accent);">1</span> SPIN 사례 분석 도구</h3>
@@ -138,6 +160,17 @@ function closeLightbox() {
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeLightbox();
+});
+
+// 강사/관리자일 때 도구 표시
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => {
+    const role = getSavedRole();
+    if (role === 'trainer' || role === 'admin') {
+      const el = document.getElementById('trainerTools');
+      if (el) el.style.display = 'block';
+    }
+  }, 200);
 });
 </script>
 </body>

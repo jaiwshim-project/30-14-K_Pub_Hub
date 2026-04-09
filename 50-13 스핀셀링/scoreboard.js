@@ -134,7 +134,7 @@ function renderIndividualScores(grouped) {
       const total = CATEGORIES.reduce((sum, c) => sum + (m['score_' + c] || 0), 0);
 
       html += `<tr>
-        <td class="member-name-cell" style="text-align:left; padding-left:16px;">${name}</td>
+        <td class="member-name-cell" style="text-align:left; padding-left:16px;"><a href="#" onclick="showMemberActivity(${m.id}, '${name.replace(/'/g,"\\'")}', '${t}'); return false;" style="color:var(--blue); text-decoration:underline; cursor:pointer;">${name}</a></td>
         <td><span class="team-label-cell ${t}">팀 ${t}</span></td>
         ${CATEGORIES.map(c => `
           <td><input class="score-cell-input" type="number" min="0" value="${m['score_' + c] || 0}"

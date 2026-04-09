@@ -57,10 +57,10 @@ async function createSession(companyName, trainingDate, password) {
   const sessions = await res.json();
   const session = sessions[0];
 
-  // 2. Create 20 members (5 teams x 4)
+  // 2. Create 35 members (5 teams x 7)
   const members = [];
   ['A','B','C','D','E'].forEach(team => {
-    for (let slot = 0; slot < 4; slot++) {
+    for (let slot = 0; slot < 7; slot++) {
       members.push({
         team_id: team,
         slot: slot,
@@ -430,8 +430,7 @@ const FLOW_ORDER = [
   { page: 'fab.html', label: 'FAB/BAF', icon: '🧩' },
   { page: 'roleplay.html', label: 'AI 롤플레이', icon: '🎭' },
   { page: 'callplan.html', label: '콜플랜 작성', icon: '📋' },
-  { page: 'spin-tools.html', label: '스핀도구들', icon: '🛠' },
-  { page: 'scoreboard.html', label: '최종 결과', icon: '🏆' }
+  { page: 'spin-tools.html', label: '스핀도구들', icon: '🛠' }
 ];
 
 function getFlowNavHTML(currentPage) {
@@ -477,7 +476,7 @@ function checkAutoLogin() {}
 function getNavHTML(activePage) {
   const role = getSavedRole();
   const adminOnly = [];
-  const adminTrainer = ['team-setup', 'scoreboard', 'coaching'];
+  const adminTrainer = ['team-setup'];
 
   const items = [
     { page: 'index.html', section: 'home', icon: '🏠', label: '홈' },
@@ -491,9 +490,7 @@ function getNavHTML(activePage) {
     { page: 'fab.html', section: 'fab', icon: '🧩', label: '7.FAB/BAF' },
     { page: 'roleplay.html', section: 'roleplay', icon: '🎭', label: '8.롤플레이' },
     { page: 'callplan.html', section: 'callplan', icon: '📋', label: '9.콜플랜 작성' },
-    { page: 'spin-tools.html', section: 'spin-tools', icon: '🛠', label: '10.스핀도구들' },
-    { page: 'scoreboard.html', section: 'scoreboard', icon: '🏆', label: '스코어보드' },
-    { page: 'coaching.html', section: 'coaching', icon: '📊', label: '코칭 리포트' }
+    { page: 'spin-tools.html', section: 'spin-tools', icon: '🛠', label: '10.스핀도구들' }
   ];
 
   let filtered;
@@ -537,8 +534,8 @@ function getFooterHTML() {
           <h4>실전 훈련</h4>
           <a href="roleplay.html">AI 롤플레이</a>
           <a href="fab.html">FAB/BAF 연습</a>
-          <a href="scoreboard.html">스코어보드</a>
-          <a href="coaching.html">코칭 리포트</a>
+          <a href="callplan.html">콜플랜 작성</a>
+          <a href="spin-tools.html">스핀 도구들</a>
         </div>
         <div class="footer-col">
           <h4>SPIN 방법론</h4>

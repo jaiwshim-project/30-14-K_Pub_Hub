@@ -152,7 +152,7 @@
   <div class="card">
     <div class="card-title"><span class="icon">👥</span> 팀 편성 & 이름 등록</div>
     <p style="color: var(--text-tertiary); margin-bottom: 8px; font-size: 14px; line-height: 1.6;">
-      5팀(팀당 4명, 총 20명)으로 구성합니다. 각 팀원의 이름을 입력하세요.<br>
+      5팀(팀당 최대 7명, 총 35명)으로 구성합니다. 각 팀원의 이름을 입력하세요.<br>
       입력하면 자동 저장되며, 모든 활동의 점수가 이 팀원 기준으로 집계됩니다.
     </p>
 
@@ -162,7 +162,7 @@
         <div class="ts-stat-label">등록 완료</div>
       </div>
       <div class="ts-stat">
-        <div class="ts-stat-value" id="tsRemaining" style="color:var(--gold);">20</div>
+        <div class="ts-stat-value" id="tsRemaining" style="color:var(--gold);">35</div>
         <div class="ts-stat-label">미등록</div>
       </div>
       <div class="ts-stat">
@@ -242,7 +242,7 @@ async function renderTeamSetup() {
           placeholder="팀명 입력"
           style="font-size:15px; font-weight:800; border:1px dashed var(--border); text-align:center; margin-bottom:4px;"
           onchange="handleTeamName('${t}', this.value)">
-        <div class="ts-team-count">${filledCount}/4명 등록</div>
+        <div class="ts-team-count">${filledCount}/7명 등록</div>
         ${inputs}
       </div>
     `;
@@ -251,7 +251,7 @@ async function renderTeamSetup() {
   // Update summary
   const registered = members.filter(m => m.name).length;
   document.getElementById('tsRegistered').textContent = registered;
-  document.getElementById('tsRemaining').textContent = 20 - registered;
+  document.getElementById('tsRemaining').textContent = 35 - registered;
 }
 
 async function handleTsName(id, name, inputEl) {
@@ -268,14 +268,14 @@ async function handleTsName(id, name, inputEl) {
   const members = await fetchAllMembers();
   const registered = members.filter(m => m.name).length;
   document.getElementById('tsRegistered').textContent = registered;
-  document.getElementById('tsRemaining').textContent = 20 - registered;
+  document.getElementById('tsRemaining').textContent = 35 - registered;
 
   // Update team count
   const card = inputEl.closest('.ts-team-card');
   const teamKey = card.className.match(/team-([A-E])/)[1];
   const teamMembers = members.filter(m => m.team_id === teamKey);
   const filledCount = teamMembers.filter(m => m.name).length;
-  card.querySelector('.ts-team-count').textContent = `${filledCount}/4명 등록`;
+  card.querySelector('.ts-team-count').textContent = `${filledCount}/7명 등록`;
 }
 
 async function handleTeamName(teamKey, newName) {
