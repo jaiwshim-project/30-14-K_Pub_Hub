@@ -159,8 +159,8 @@ body::before {
 
 .nav-item {
   flex: none;
-  padding: 13px 22px;
-  font-size: 13px;
+  padding: 10px 12px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-tertiary);
   cursor: pointer;
@@ -169,9 +169,11 @@ body::before {
   white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 4px;
   text-decoration: none;
 }
+
+.nav-icon { font-size: 13px; }
 
 .nav-item:hover { color: var(--text-secondary); background: rgba(255,255,255,0.6); }
 .nav-item.active {
@@ -1028,7 +1030,7 @@ body::before {
 .fab-label.a { background: rgba(125,60,152,0.08); color: var(--purple); }
 .fab-label.b { background: rgba(30,132,73,0.08); color: var(--green); }
 
-/* Responsive */
+/* ========== RESPONSIVE: TABLET (768px) ========== */
 @media (max-width: 768px) {
   .header { padding: 12px 16px; }
   .main { padding: 20px 12px; }
@@ -1041,12 +1043,70 @@ body::before {
   .cycle-visual { flex-direction: column; align-items: center; }
   .cycle-stage::after { display: none; }
   .chat-bubble { max-width: 85%; }
+  .card { padding: 20px 16px; }
+  .nav-item { padding: 8px 8px; font-size: 11px; gap: 3px; }
+  .nav-icon { font-size: 12px; }
+  .section { padding: 6px; }
+
+  /* 터치 타겟 최소 44px */
+  .btn { min-height: 44px; padding: 12px 20px; font-size: 14px; }
+  .btn-sm { min-height: 38px; padding: 8px 12px; font-size: 12px; }
 }
 
+/* ========== RESPONSIVE: MOBILE (480px) ========== */
 @media (max-width: 480px) {
+  .header { padding: 10px 12px; }
+  .logo-text { font-size: 14px; }
+  .logo-sub { font-size: 9px; }
+  .logo-img { height: 28px; }
+  .main { padding: 12px 8px; }
+  .section { padding: 4px; border: none; }
+  .card { padding: 16px 12px; margin-bottom: 12px; border-radius: 12px; }
+  .card-title { font-size: 15px; margin-bottom: 12px; padding-bottom: 8px; }
   .feature-grid { grid-template-columns: 1fr; }
-  .nav-item { padding: 12px 14px; font-size: 12px; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero h1 { font-size: 22px; }
+  .hero p { font-size: 13px; }
+
+  /* 네비게이션 극도로 컴팩트 */
+  .nav-item { padding: 8px 6px; font-size: 10px; gap: 2px; }
+  .nav-icon { font-size: 11px; }
+
+  /* 폰트 최소 크기 보정 */
+  .quiz-count { font-size: 12px; }
+  .quiz-question { font-size: 14px; padding: 14px 16px; }
+  .quiz-option { padding: 12px 14px; font-size: 13px; }
+  .quiz-explain { font-size: 12px; padding: 12px 14px; }
+  .practice-context { font-size: 13px; padding: 14px; }
+  .dialogue-line { font-size: 13px; gap: 8px; }
+
+  /* 채팅 */
+  .chat-container { height: 300px; padding: 12px; }
+  .chat-bubble { max-width: 90%; font-size: 13px; padding: 10px 12px; }
+
+  /* 이미지 반응형 */
+  img { max-width: 100%; height: auto; }
+}
+
+/* ========== RESPONSIVE: SMALL MOBILE (360px) ========== */
+@media (max-width: 360px) {
+  .nav-item { padding: 6px 4px; font-size: 9px; }
+  .card { padding: 12px 10px; }
+  .btn { font-size: 13px; padding: 10px 14px; }
+}
+
+/* ========== 터치 UX ========== */
+@media (hover: none) and (pointer: coarse) {
+  button:active, .btn:active, a:active { transform: scale(0.97); }
+  * { -webkit-tap-highlight-color: transparent; }
+}
+
+/* ========== 저전력 모드 대응 ========== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Animations */
@@ -1404,9 +1464,18 @@ body::before {
 }
 
 @media (max-width: 768px) {
-  .footer-top { flex-direction: column; gap: 32px; }
+  .footer-top { flex-direction: column; gap: 24px; }
   .footer-brand { flex: none; }
-  .footer-links { flex-wrap: wrap; gap: 24px; }
-  .footer-col { min-width: 140px; }
-  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .footer-links { flex-wrap: wrap; gap: 20px; }
+  .footer-col { min-width: 120px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .footer-inner { padding: 32px 16px 24px; }
+  .footer-badges { flex-wrap: wrap; }
+}
+
+@media (max-width: 480px) {
+  .footer-links { gap: 16px; }
+  .footer-col { min-width: 100%; }
+  .footer-copy { font-size: 11px; }
+  .footer-desc { font-size: 12px; }
 }
