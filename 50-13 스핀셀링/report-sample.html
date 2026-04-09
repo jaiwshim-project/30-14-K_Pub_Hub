@@ -192,7 +192,7 @@
 
 <!-- 컨트롤 바 -->
 <div class="no-print" style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
-  <button class="email-btn" onclick="sendEmailSimulation()">📧 이메일 발송 시뮬레이션</button>
+  <button class="email-btn" onclick="sendEmailSimulation()">📧 이메일 발송</button>
   <button class="btn btn-primary" onclick="window.print()">🖨 인쇄 / PDF</button>
   <button class="btn btn-secondary" onclick="location.href='index.html'">홈으로</button>
 </div>
@@ -827,13 +827,15 @@ async function sendEmailSimulation() {
 
     const data = await res.json();
 
-    if (data.success) {
-      alert(`✅ 이메일 발송 완료!\n\n수신: ${email}\n제목: [SPIN Selling AI] ${name}님 교육 참가 결과 AI 분석리포트`);
+    if (data.id) {
+      alert(`✅ 이메일 발송 완료!\n\n수신: ${email}\n제목: [SPIN Selling AI] ${name}님 교육 참가 결과 AI 분석리포트\n\nResend ID: ${data.id}`);
+    } else if (data.success) {
+      alert(`✅ 이메일 발송 완료!\n\n수신: ${email}`);
     } else {
-      alert(`⚠️ 발송 실패: ${JSON.stringify(data.error)}\n\nResend API 키가 설정되지 않았을 수 있습니다.\nSupabase Dashboard → Edge Functions → send-report → Secrets에서 RESEND_API_KEY를 설정하세요.`);
+      alert(`⚠️ 발송 실패: ${JSON.stringify(data)}`);
     }
   } catch (e) {
-    alert(`⚠️ 발송 오류: ${e.message}\n\nEdge Function이 배포되지 않았을 수 있습니다.`);
+    alert(`⚠️ 발송 오류: ${e.message}`);
   }
 
   btn.textContent = '📧 이메일 발송';
