@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling AI - 내 AI 분석 리포트</title>
+<link rel="stylesheet" href="common.css">
+<style>
+@media print {
+  .header, .nav, .footer, .no-print, #footerPlaceholder, #userIdentityBar { display: none !important; }
+  .report-page { box-shadow: none !important; border: none !important; margin: 0 !important; }
+  body { background: white !important; }
+}
+
+.report-page {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.report-header {
+  background: linear-gradient(135deg, #0a2240, #0d3161);
+  padding: 32px 40px;
+  color: white;
+}
+
+.report-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.report-logo { display: flex; align-items: center; gap: 12px; }
+.report-logo img { height: 32px; }
+.report-logo-text { font-size: 18px; font-weight: 800; }
+.report-logo-sub { font-size: 10px; letter-spacing: 2px; opacity: 0.7; }
+.report-date { font-size: 12px; opacity: 0.6; }
+
+.report-title {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.report-subtitle { font-size: 14px; opacity: 0.8; }
+
+.report-info-bar {
+  display: flex;
+  gap: 24px;
+  padding: 16px 40px;
+  background: #f0f3f8;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.report-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.report-info-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.report-info-value { font-size: 14px; color: var(--text); font-weight: 700; }
+
+.report-body { padding: 32px 40px; }
+
+.report-section {
+  margin-bottom: 28px;
+}
+
+.report-section-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--kf-navy);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.report-section-num {
+  background: var(--kf-navy);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* Score table */
+.score-tbl { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+.score-tbl th { background: #f0f3f8; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+.score-tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border-light); font-size: 14px; color: var(--text); }
+.score-tbl .highlight { font-weight: 800; color: var(--kf-navy); }
+.score-tbl .total-row td { background: #f0f3f8; font-weight: 800; border-top: 2px solid var(--kf-navy); }
+
+/* SPIN chart */
+.spin-bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.spin-bar-row { display: flex; align-items: center; gap: 10px; }
+.spin-bar-label { width: 80px; font-size: 13px; font-weight: 700; }
+.spin-bar-track { flex: 1; height: 20px; background: var(--border-light); border-radius: 10px; overflow: hidden; }
+.spin-bar-fill { height: 100%; border-radius: 10px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 10px; color: white; font-weight: 700; transition: width 0.5s; }
+.spin-bar-value { width: 50px; text-align: right; font-size: 13px; font-weight: 700; }
+
+/* Grade badge */
+.grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.grade-a { background: linear-gradient(135deg, #1e8449, #27ae60); color: white; }
+.grade-b { background: linear-gradient(135deg, #2471a3, #3498db); color: white; }
+.grade-c { background: linear-gradient(135deg, #d4880f, #f5a623); color: white; }
+.grade-d { background: linear-gradient(135deg, #c0392b, #e74c3c); color: white; }
+
+/* Coaching card */
+.coaching-card {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.coaching-card.strength { background: rgba(30,132,73,0.06); border-left: 4px solid var(--green); }
+.coaching-card.weakness { background: rgba(192,57,43,0.06); border-left: 4px solid var(--accent); }
+.coaching-card.tip { background: rgba(36,113,163,0.06); border-left: 4px solid var(--blue); }
+
+/* Email button */
+.email-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: white;
+  border: 2px solid #b8760c;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.email-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(212,136,15,0.3); }
+
+/* Loading */
+.report-loading {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-muted);
+}
+.report-loading .spinner {
+  width: 48px; height: 48px;
+  border: 4px solid var(--border-light);
+  border-top: 4px solid var(--kf-navy);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Member select */
+#memberSelectWrap {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+#memberSelectWrap select {
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--card);
+  color: var(--text);
+  min-width: 260px;
+  cursor: pointer;
+}
+#memberSelectWrap select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+}
+
+@media (max-width: 768px) {
+  .report-header { padding: 24px 20px; }
+  .report-body { padding: 20px; }
+  .report-info-bar { padding: 12px 20px; }
+  .report-title { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" onclick="clearSessionId();clearUser();clearRole();" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div id="navPlaceholder"></div>
+
+<div class="main">
+<div class="section">
+
+<!-- 컨트롤 바 -->
+<div class="no-print" style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
+  <!-- 강사/관리자만 보이는 교육생 선택 드롭다운 -->
+  <div id="memberSelectWrap">
+    <label style="font-size:13px; font-weight:700; color:var(--text);">교육생:</label>
+    <select id="memberSelect" onchange="loadMemberReport(this.value)">
+      <option value="">교육생 선택...</option>
+    </select>
+  </div>
+
+  <button class="email-btn" onclick="sendReportEmail()">📧 이메일 발송</button>
+  <button class="btn btn-primary" onclick="window.print()">🖨 인쇄 / PDF</button>
+  <button class="btn btn-secondary" onclick="location.href='company.html'">← 대시보드</button>
+</div>
+
+<!-- 리포트 영역 -->
+<div class="report-page" id="reportPage">
+  <div class="report-loading" id="reportLoading">
+    <div class="spinner"></div>
+    <div style="font-size:16px; font-weight:700;">리포트를 불러오는 중...</div>
+    <div style="font-size:13px; margin-top:8px;">교육 활동 데이터를 분석하고 있습니다.</div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+// ========== CONFIG ==========
+const CAT_MAX = { quiz: 80, needs: 80, scenario: 100, practice: 120, roleplay: 100, fab: 90 };
+const TOTAL_MAX = 600;
+const CAT_LABELS = {
+  quiz: { icon: '📝', name: 'SPIN 개념 퀴즈' },
+  needs: { icon: '🎯', name: '니즈 구분 (IN/EN)' },
+  scenario: { icon: '🔍', name: 'SPIN 질문구분' },
+  practice: { icon: '💬', name: '질문 작성 연습' },
+  roleplay: { icon: '🎭', name: 'AI 롤플레이' },
+  fab: { icon: '🧩', name: 'FAB/BAF 연습' }
+};
+const SPIN_COLORS = { S: 'var(--blue)', P: 'var(--accent)', I: 'var(--purple)', N: 'var(--green)' };
+const SPIN_HEX = { S: '#5dade2', P: '#f39c12', I: '#e74c3c', N: '#2ecc71' };
+const SPIN_NAMES = { S: '상황질문 (Situation)', P: '문제질문 (Problem)', I: '시사질문 (Implication)', N: '해결질문 (Need-Payoff)' };
+const SPIN_SHORT = { S: 'S 상황', P: 'P 문제', I: 'I 시사', N: 'N 해결' };
+const SPIN_DESC = {
+  S: '고객의 현재 상태, 배경, 사실 파악',
+  P: '고객의 문제, 어려움, 불만족 탐색',
+  I: '문제의 영향, 결과, 파급효과 탐색',
+  N: '솔루션의 가치와 유용성'
+};
+
+// ========== ISSUE RULES ==========
+const issueRules = [
+  { id: 'quiz_low', condition: (m) => (m.score_quiz || 0) < 50, issue: '개념 이해 부족', cause: 'SPIN 이론 학습 미흡', strategy: '프리리딩 재학습 + 퀴즈 재도전', action: '교육 후 1주 내 퀴즈 100% 달성' },
+  { id: 'p_low', condition: (m, r) => (r.P || 0) < 15, issue: 'Problem 질문 부족', cause: '고객 문제 탐색 역량 약함', strategy: 'Problem 질문 집중 훈련', action: '매일 5개 Problem 질문 작성 연습' },
+  { id: 'i_low', condition: (m, r) => (r.I || 0) < 20, issue: '시사질문 확장 미흡', cause: '문제 영향/파급효과 인식 부족', strategy: 'Implication 질문 확장 템플릿 활용', action: '"그 문제가 ~에 미치는 영향은?" 패턴 10회 연습' },
+  { id: 'n_low', condition: (m, r) => (r.N || 0) < 15, issue: 'Need-payoff 전환 부족', cause: '해결 가치를 고객이 말하게 하는 기술 부족', strategy: '"만약 ~한다면" 형태 질문 집중 훈련', action: '매 상담 시 N 질문 2개 이상 계획' },
+  { id: 'fab_low', condition: (m) => (m.score_fab || 0) < 50, issue: 'FAB 구분 능력 약함', cause: 'Feature/Advantage/Benefit 개념 혼동', strategy: 'FAB 재학습 + BAF 전환 연습', action: '자사 제품 FAB 3세트 작성' },
+  { id: 'roleplay_low', condition: (m) => (m.score_roleplay || 0) < 60, issue: '실전 적용력 부족', cause: '이론-실전 연결 미흡', strategy: '롤플레이 반복 연습', action: '주 2회 동료와 SPIN 롤플레이 실시' },
+  { id: 'scenario_low', condition: (m) => (m.score_scenario || 0) < 50, issue: 'SPIN 질문 구분력 부족', cause: '질문 유형 판별 기준 모호', strategy: 'SPIN 질문 구분 집중 훈련', action: '하루 20개 질문 분류 연습' },
+  { id: 'needs_low', condition: (m) => (m.score_needs || 0) < 50, issue: '니즈 구분력 약함', cause: 'Implied/Explicit 니즈 구분 기준 부족', strategy: '니즈 구분 사례 학습', action: '상담 녹음 분석 시 니즈 유형 표시 연습' },
+  { id: 'practice_low', condition: (m) => (m.score_practice || 0) < 50, issue: 'SPIN 질문 작성 미숙', cause: '질문 구성 경험 부족', strategy: 'SPIN 질문 작성 반복 훈련', action: '산업별 SPIN 질문 세트 3개 작성' },
+  { id: 's_over', condition: (m, r) => (r.S || 0) > 50, issue: '상황질문 과다 의존', cause: '정보 수집 편중, 심층 탐색 부족', strategy: 'S질문 줄이고 P/I 질문 전환 훈련', action: '상담 시 S질문 3개 이내로 제한하고 P 질문 연결' }
+];
+
+// ========== GRADE CALC ==========
+function getGrade(score, max) {
+  const pct = max > 0 ? (score / max) * 100 : 0;
+  if (pct >= 90) return { grade: 'A+', color: 'var(--green)', cls: 'grade-a' };
+  if (pct >= 80) return { grade: 'A', color: 'var(--green)', cls: 'grade-a' };
+  if (pct >= 70) return { grade: 'B+', color: 'var(--blue)', cls: 'grade-b' };
+  if (pct >= 60) return { grade: 'B', color: 'var(--blue)', cls: 'grade-b' };
+  if (pct >= 50) return { grade: 'C', color: 'var(--gold)', cls: 'grade-c' };
+  return { grade: 'D', color: 'var(--accent)', cls: 'grade-d' };
+}
+
+function pct(score, max) {
+  return max > 0 ? Math.round((score / max) * 100) : 0;
+}
+
+// ========== STATE ==========
+let currentMember = null;
+let allMembersData = [];
+let teamNamesData = {};
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded', async function() {
+  const role = getSavedRole();
+  const user = getSavedUser();
+  const session = getSavedSession();
+
+  if (!session) { location.href = 'index.html'; return; }
+
+  // 강사/관리자: 드롭다운 표시 + 교육생 목록 로드
+  if (role === 'trainer' || role === 'admin') {
+    document.getElementById('memberSelectWrap').style.display = 'flex';
+    await loadMemberList();
+  }
+
+  // 교육생: 본인 리포트 자동 로드
+  if (role === 'trainee' && user && user.id) {
+    await loadMemberReport(user.id);
+  }
+});
+
+// ========== MEMBER LIST (강사/관리자용) ==========
+async function loadMemberList() {
+  const members = await fetchAllMembers();
+  teamNamesData = await fetchTeamNames();
+  allMembersData = members;
+
+  const sel = document.getElementById('memberSelect');
+  sel.innerHTML = '<option value="">교육생 선택...</option>';
+
+  // 팀별 그룹핑
+  const teams = {};
+  members.forEach(m => {
+    if (!m.name) return; // 이름 없는 슬롯 스킵
+    if (!teams[m.team_id]) teams[m.team_id] = [];
+    teams[m.team_id].push(m);
+  });
+
+  Object.keys(teams).sort().forEach(teamId => {
+    const teamName = (teamNamesData && teamNamesData[teamId]) || ('팀 ' + teamId);
+    const group = document.createElement('optgroup');
+    group.label = teamName;
+    teams[teamId].forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.name;
+      group.appendChild(opt);
+    });
+    sel.appendChild(group);
+  });
+}
+
+// ========== LOAD MEMBER REPORT ==========
+async function loadMemberReport(memberId) {
+  if (!memberId) {
+    document.getElementById('reportPage').innerHTML = `
+      <div class="report-loading">
+        <div style="font-size:48px; margin-bottom:16px;">📋</div>
+        <div style="font-size:16px; font-weight:700;">교육생을 선택하세요</div>
+        <div style="font-size:13px; margin-top:8px;">위 드롭다운에서 교육생을 선택하면 리포트가 표시됩니다.</div>
+      </div>`;
+    return;
+  }
+
+  // 로딩 표시
+  document.getElementById('reportPage').innerHTML = `
+    <div class="report-loading" id="reportLoading">
+      <div class="spinner"></div>
+      <div style="font-size:16px; font-weight:700;">리포트를 불러오는 중...</div>
+      <div style="font-size:13px; margin-top:8px;">교육 활동 데이터를 분석하고 있습니다.</div>
+    </div>`;
+
+  try {
+    // 1. 멤버 정보 조회
+    const members = allMembersData.length > 0 ? allMembersData : await fetchAllMembers();
+    const member = members.find(m => m.id == memberId);
+    if (!member) {
+      document.getElementById('reportPage').innerHTML = '<div class="report-loading"><div style="font-size:16px; font-weight:700; color:var(--accent);">교육생 정보를 찾을 수 없습니다.</div></div>';
+      return;
+    }
+    currentMember = member;
+
+    // 2. 활동 로그 조회
+    const logs = await fetchMemberLogs(memberId);
+
+    // 3. 세션 & 팀 정보
+    const session = getSavedSession();
+    if (!teamNamesData || !teamNamesData.A) {
+      teamNamesData = await fetchTeamNames();
+    }
+    const teamName = (teamNamesData && teamNamesData[member.team_id]) || ('팀 ' + member.team_id);
+    const trainerName = (teamNamesData && teamNamesData.trainer_name) || '심재우 대표';
+
+    // 4. 점수 계산
+    const scores = {
+      quiz: member.score_quiz || 0,
+      needs: member.score_needs || 0,
+      scenario: member.score_scenario || 0,
+      practice: member.score_practice || 0,
+      roleplay: member.score_roleplay || 0,
+      fab: member.score_fab || 0
+    };
+    const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
+    const totalGrade = getGrade(totalScore, TOTAL_MAX);
+
+    // 5. SPIN 역량 분석 (활동 로그에서 추출)
+    const spinCounts = { S: 0, P: 0, I: 0, N: 0 };
+    logs.forEach(log => {
+      if (log.activity_data && typeof log.activity_data === 'object') {
+        const d = log.activity_data;
+        if (d.spin_type && spinCounts.hasOwnProperty(d.spin_type)) {
+          spinCounts[d.spin_type]++;
+        }
+        if (d.spinCounts) {
+          ['S','P','I','N'].forEach(t => { spinCounts[t] += (d.spinCounts[t] || 0); });
+        }
+        if (d.spin_distribution) {
+          ['S','P','I','N'].forEach(t => { spinCounts[t] += (d.spin_distribution[t] || 0); });
+        }
+      }
+    });
+    const spinTotal = spinCounts.S + spinCounts.P + spinCounts.I + spinCounts.N;
+    const spinRatios = {};
+    ['S','P','I','N'].forEach(t => {
+      spinRatios[t] = spinTotal > 0 ? Math.round((spinCounts[t] / spinTotal) * 100) : 0;
+    });
+
+    // 6. 상위 % 계산
+    const allScores = members.filter(m => m.name).map(m =>
+      (m.score_quiz || 0) + (m.score_needs || 0) + (m.score_scenario || 0) +
+      (m.score_practice || 0) + (m.score_roleplay || 0) + (m.score_fab || 0)
+    ).sort((a, b) => b - a);
+    const rank = allScores.indexOf(totalScore) + 1;
+    const topPct = allScores.length > 0 ? Math.round((rank / allScores.length) * 100) : 0;
+
+    // 7. 강점/약점 도출
+    const catEntries = Object.keys(CAT_MAX).map(cat => ({
+      cat, score: scores[cat], max: CAT_MAX[cat], pctVal: pct(scores[cat], CAT_MAX[cat])
+    }));
+    catEntries.sort((a, b) => b.pctVal - a.pctVal);
+    const strengths = catEntries.filter(e => e.pctVal >= 70).slice(0, 3);
+    const weaknesses = catEntries.filter(e => e.pctVal < 70).slice(-3).reverse();
+
+    // 8. 이슈 추론
+    const memberWithRatios = { ...member };
+    const triggered = issueRules.filter(r => r.condition(memberWithRatios, spinRatios));
+
+    // 9. 롤플레이 상세 (로그에서 난이도별)
+    const roleplayLogs = logs.filter(l => l.activity_type === 'roleplay' && l.activity_data);
+    const roleplayByDiff = { easy: [], medium: [], hard: [] };
+    roleplayLogs.forEach(l => {
+      const d = l.activity_data;
+      const diff = d.difficulty || 'medium';
+      if (roleplayByDiff[diff]) roleplayByDiff[diff].push(l);
+    });
+
+    // 10. 퀴즈 상세 (로그에서)
+    const quizLogs = logs.filter(l => l.activity_type === 'quiz' && l.activity_data);
+    let quizCorrect = 0, quizTotal = 0;
+    const quizCats = {};
+    quizLogs.forEach(l => {
+      const d = l.activity_data;
+      const cat = d.category || d.quiz_category || '일반';
+      if (!quizCats[cat]) quizCats[cat] = { correct: 0, total: 0 };
+      quizCats[cat].total++;
+      quizTotal++;
+      if (d.correct || d.is_correct) {
+        quizCats[cat].correct++;
+        quizCorrect++;
+      }
+    });
+
+    // 11. 콜플랜 (로그에서)
+    const callplanLogs = logs.filter(l => l.activity_type === 'callplan' && l.activity_data);
+    let callplanScore = 0, callplanMax = 100;
+    if (callplanLogs.length > 0) {
+      const last = callplanLogs[0];
+      callplanScore = last.score || (last.activity_data && last.activity_data.score) || 0;
+    }
+
+    // 활동 완료 수
+    const activityTypes = new Set(logs.map(l => l.activity_type));
+    const completedCount = activityTypes.size;
+
+    // 오늘 날짜
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
+
+    // ========== 리포트 HTML 생성 ==========
+    let html = '';
+
+    // --- 리포트 헤더 ---
+    html += `
+    <div class="report-header">
+      <div class="report-header-top">
+        <div class="report-logo">
+          <img src="logo-kornferry.png" alt="Korn Ferry">
+          <div>
+            <div class="report-logo-text">SPIN Selling AI</div>
+            <div class="report-logo-sub">AI-POWERED TRAINING</div>
+          </div>
+        </div>
+        <div class="report-date">발행일: ${dateStr}</div>
+      </div>
+      <div class="report-title">교육 참가 결과 AI 분석리포트</div>
+      <div class="report-subtitle">AI가 분석한 개인별 SPIN 역량 진단 및 맞춤 코칭</div>
+    </div>`;
+
+    // --- 참가자 정보 바 ---
+    html += `
+    <div class="report-info-bar">
+      <div class="report-info-item">
+        <span class="report-info-label">교육생</span>
+        <span class="report-info-value">${member.name}</span>
+      </div>
+      <div class="report-info-item">
+        <span class="report-info-label">소속</span>
+        <span class="report-info-value">${session.company_name}</span>
+      </div>
+      <div class="report-info-item">
+        <span class="report-info-label">팀</span>
+        <span class="report-info-value">${teamName}</span>
+      </div>
+      <div class="report-info-item">
+        <span class="report-info-label">교육일</span>
+        <span class="report-info-value">${session.training_date || '-'}</span>
+      </div>
+      <div class="report-info-item">
+        <span class="report-info-label">강사</span>
+        <span class="report-info-value">${trainerName}</span>
+      </div>
+    </div>`;
+
+    // --- 리포트 본문 ---
+    html += '<div class="report-body">';
+
+    // === 1. 종합 평가 ===
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">1</span> 종합 평가
+      </div>
+      <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+        <div style="text-align:center;">
+          <div class="grade-badge ${totalGrade.cls}" style="width:72px; height:72px; font-size:28px;">${totalGrade.grade}</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">종합 등급</div>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <div style="font-size:32px; font-weight:900; color:var(--kf-navy);">${totalScore} <span style="font-size:16px; color:var(--text-disabled);">/ ${TOTAL_MAX}점</span></div>
+          <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">상위 ${topPct}% | 참여 활동 ${completedCount}개 완료</div>
+          <div style="margin-top:8px; height:12px; background:var(--border-light); border-radius:6px; overflow:hidden;">
+            <div style="width:${pct(totalScore, TOTAL_MAX)}%; height:100%; background:linear-gradient(90deg, var(--kf-navy), var(--blue)); border-radius:6px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+    // === 2. 활동별 성과 ===
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">2</span> 활동별 성과
+      </div>
+      <table class="score-tbl">
+        <thead>
+          <tr><th>활동</th><th>획득 점수</th><th>만점</th><th>달성률</th><th>등급</th></tr>
+        </thead>
+        <tbody>`;
+    Object.keys(CAT_MAX).forEach(cat => {
+      const g = getGrade(scores[cat], CAT_MAX[cat]);
+      html += `<tr>
+        <td>${CAT_LABELS[cat].icon} ${CAT_LABELS[cat].name}</td>
+        <td class="highlight">${scores[cat]}</td>
+        <td>${CAT_MAX[cat]}</td>
+        <td>${pct(scores[cat], CAT_MAX[cat])}%</td>
+        <td><span style="color:${g.color}; font-weight:700;">${g.grade}</span></td>
+      </tr>`;
+    });
+    html += `<tr class="total-row">
+        <td>합계</td>
+        <td class="highlight">${totalScore}</td>
+        <td>${TOTAL_MAX}</td>
+        <td>${pct(totalScore, TOTAL_MAX)}%</td>
+        <td><span style="color:var(--kf-navy); font-weight:800;">${totalGrade.grade}</span></td>
+      </tr>`;
+    html += '</tbody></table></div>';
+
+    // === 3. SPIN 질문 역량 분석 ===
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">3</span> SPIN 질문 역량 분석
+      </div>
+      <p style="font-size:13px; color:var(--text-tertiary); margin-bottom:16px;">
+        AI 롤플레이와 질문 연습에서 사용한 SPIN 질문 유형 분포입니다.
+      </p>
+      <div class="spin-bar-chart">`;
+    ['S','P','I','N'].forEach(t => {
+      const r = spinRatios[t];
+      const w = Math.max(r, 3); // 최소 표시 너비
+      html += `
+        <div class="spin-bar-row">
+          <span class="spin-bar-label" style="color:${SPIN_COLORS[t]};">${SPIN_SHORT[t]}</span>
+          <div class="spin-bar-track"><div class="spin-bar-fill" style="width:${w}%; background:${SPIN_COLORS[t]};">${r}%</div></div>
+          <span class="spin-bar-value" style="color:${SPIN_COLORS[t]};">${spinCounts[t]}회</span>
+        </div>`;
+    });
+    html += '</div>';
+
+    // SPIN 분석 코멘트
+    if (spinTotal > 0) {
+      const dominant = ['S','P','I','N'].reduce((a, b) => spinRatios[a] > spinRatios[b] ? a : b);
+      html += `<div style="margin-top:12px; padding:12px 16px; background:rgba(36,113,163,0.04); border-radius:10px; font-size:13px; color:var(--text-secondary); line-height:1.6;">
+        <strong>분석:</strong> S(${spinRatios.S}%) → P(${spinRatios.P}%) → I(${spinRatios.I}%) → N(${spinRatios.N}%)의 분포를 보여주고 있습니다. `;
+      if (spinRatios.I >= 25) {
+        html += '시사질문(I)을 적극 활용하여 잠재니즈를 현재니즈로 전환하는 핵심 스킬이 우수합니다.';
+      } else if (spinRatios.S >= 40) {
+        html += '상황질문(S) 비율이 높습니다. S질문을 줄이고 P/I 질문으로 전환하는 연습이 필요합니다.';
+      } else {
+        html += `${SPIN_SHORT[dominant]} 유형을 가장 많이 활용하고 있습니다. 이상적인 SPIN 비율(S<20%, P~25%, I>25%, N~20%)을 목표로 연습하세요.`;
+      }
+      html += '</div>';
+    } else {
+      html += '<div style="margin-top:12px; padding:12px 16px; background:rgba(212,136,15,0.06); border-radius:10px; font-size:13px; color:var(--text-secondary);">아직 SPIN 질문 활동 데이터가 없습니다. 질문 연습과 롤플레이를 진행하면 분석이 표시됩니다.</div>';
+    }
+    html += '</div>';
+
+    // === 4. AI 맞춤 코칭 ===
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">4</span> AI 맞춤 코칭
+      </div>`;
+
+    // 강점 카드
+    strengths.forEach(s => {
+      html += `
+      <div class="coaching-card strength">
+        <span style="font-size:20px;">💪</span>
+        <div>
+          <div style="font-weight:700; color:var(--green); margin-bottom:4px;">강점: ${CAT_LABELS[s.cat].name} (${s.pctVal}%)</div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            ${CAT_LABELS[s.cat].name}에서 ${s.score}/${s.max}점(${s.pctVal}%)을 달성하여 ${getGrade(s.score, s.max).grade} 등급을 받았습니다.
+            이 역량을 실제 영업 상담에서도 적극 활용하세요.
+          </div>
+        </div>
+      </div>`;
+    });
+
+    // 약점 카드
+    weaknesses.forEach(w => {
+      html += `
+      <div class="coaching-card weakness">
+        <span style="font-size:20px;">⚠️</span>
+        <div>
+          <div style="font-weight:700; color:var(--accent); margin-bottom:4px;">개선 필요: ${CAT_LABELS[w.cat].name} (${w.pctVal}%)</div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            ${CAT_LABELS[w.cat].name}에서 달성률이 ${w.pctVal}%로 다른 활동 대비 낮습니다.
+            집중적인 반복 훈련으로 이 영역을 보완하면 종합 등급 상승이 가능합니다.
+          </div>
+        </div>
+      </div>`;
+    });
+
+    // 실전 팁
+    html += `
+      <div class="coaching-card tip">
+        <span style="font-size:20px;">💡</span>
+        <div>
+          <div style="font-weight:700; color:var(--blue); margin-bottom:4px;">실전 적용 팁</div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            다음 영업 상담에서 SPIN 순서(S→P→I→N)를 의식적으로 따라가 보세요.
+            특히 시사질문(I) 2~3개 후에 해결질문(N)을 배치하면 고객의 구매 의지를 효과적으로 높일 수 있습니다.
+            콜플랜 작성 도구를 활용하여 미리 질문을 계획하고 상담에 임하세요.
+          </div>
+        </div>
+      </div>`;
+    html += '</div>';
+
+    // === 5. AI 롤플레이 평가 ===
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">5</span> AI 롤플레이 평가
+      </div>`;
+
+    const diffLabels = { easy: '난이도(하)', medium: '난이도(중)', hard: '난이도(상)' };
+    const diffColors = { easy: { bg: 'rgba(30,132,73,0.05)', border: 'rgba(30,132,73,0.15)', text: 'var(--green)' }, medium: { bg: 'rgba(36,113,163,0.05)', border: 'rgba(36,113,163,0.15)', text: 'var(--blue)' }, hard: { bg: 'rgba(212,136,15,0.05)', border: 'rgba(212,136,15,0.15)', text: 'var(--gold)' } };
+
+    if (roleplayLogs.length > 0) {
+      html += '<div style="display:flex; gap:16px; flex-wrap:wrap;">';
+      ['easy','medium','hard'].forEach(diff => {
+        const diffLogs = roleplayByDiff[diff];
+        let bestScore = 0;
+        diffLogs.forEach(l => {
+          const s = l.score || (l.activity_data && l.activity_data.score) || 0;
+          if (s > bestScore) bestScore = s;
+        });
+        const g = getGrade(bestScore, 100);
+        const dc = diffColors[diff];
+        html += `
+        <div style="flex:1; min-width:150px; padding:16px; background:${dc.bg}; border:1.5px solid ${dc.border}; border-radius:12px; text-align:center;">
+          <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">${diffLabels[diff]}</div>
+          <div class="grade-badge ${g.cls}" style="margin:0 auto;">${diffLogs.length > 0 ? g.grade : '-'}</div>
+          <div style="font-size:14px; font-weight:800; color:${dc.text}; margin-top:6px;">${diffLogs.length > 0 ? bestScore + ' / 100' : '미응시'}</div>
+        </div>`;
+      });
+      html += '</div>';
+    } else {
+      // 롤플레이 로그가 없으면 총점 기반 표시
+      const rpG = getGrade(scores.roleplay, CAT_MAX.roleplay);
+      html += `
+      <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div class="grade-badge ${rpG.cls}">${rpG.grade}</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">등급</div>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <div style="font-size:24px; font-weight:900; color:var(--kf-navy);">${scores.roleplay} <span style="font-size:14px; color:var(--text-disabled);">/ ${CAT_MAX.roleplay}점</span></div>
+          <div style="font-size:13px; color:var(--text-tertiary); margin-top:4px;">AI 롤플레이 종합 점수</div>
+        </div>
+      </div>`;
+    }
+    html += '</div>';
+
+    // === 6. 콜플랜 평가 ===
+    const cpScore = callplanLogs.length > 0 ? callplanScore : 0;
+    const cpG = getGrade(cpScore, callplanMax);
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">6</span> 콜플랜 평가
+      </div>
+      <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div class="grade-badge ${cpG.cls}">${callplanLogs.length > 0 ? cpG.grade : '-'}</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">등급</div>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <div style="font-size:24px; font-weight:900; color:var(--kf-navy);">${cpScore} <span style="font-size:14px; color:var(--text-disabled);">/ ${callplanMax}점</span></div>
+          <div style="font-size:13px; color:var(--text-tertiary); margin-top:4px;">${callplanLogs.length > 0 ? '콜플랜 작성 평가 결과' : '아직 콜플랜을 작성하지 않았습니다.'}</div>
+        </div>
+      </div>
+    </div>`;
+
+    // === 7. 퀴즈 문제풀이 결과 ===
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">7</span> 퀴즈 문제풀이 결과
+      </div>`;
+
+    if (quizTotal > 0) {
+      html += `
+      <table class="score-tbl">
+        <thead>
+          <tr><th>카테고리</th><th>정답</th><th>총문제</th><th>정답률</th></tr>
+        </thead>
+        <tbody>`;
+      Object.keys(quizCats).forEach(cat => {
+        const c = quizCats[cat];
+        const qPct = c.total > 0 ? Math.round((c.correct / c.total) * 100) : 0;
+        html += `<tr><td>${cat}</td><td>${c.correct}</td><td>${c.total}</td><td>${qPct}%</td></tr>`;
+      });
+      const totalQPct = quizTotal > 0 ? Math.round((quizCorrect / quizTotal) * 100) : 0;
+      html += `<tr class="total-row"><td>합계</td><td>${quizCorrect}</td><td>${quizTotal}</td><td>${totalQPct}%</td></tr>`;
+      html += '</tbody></table>';
+    } else {
+      html += `<div style="padding:20px; text-align:center; color:var(--text-muted); font-size:14px;">
+        퀴즈 점수: <strong style="color:var(--kf-navy);">${scores.quiz} / ${CAT_MAX.quiz}점</strong> (${pct(scores.quiz, CAT_MAX.quiz)}%)
+        <div style="margin-top:8px; font-size:12px; color:var(--text-tertiary);">상세 문제별 데이터는 활동 로그에서 조회합니다.</div>
+      </div>`;
+    }
+    html += '</div>';
+
+    // === 8. 온톨로지 역량 진단 ===
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">8</span> SPIN 역량 온톨로지 그래프
+      </div>
+      <p style="font-size:13px; color:var(--text-tertiary); margin-bottom:16px; line-height:1.6;">
+        AI가 교육 활동 데이터를 온톨로지 구조로 분석하여, 역량 수준과 약점의 근본 원인, 개선 전략, 실행 과제를 자동 연결합니다.
+      </p>`;
+
+    // 교육생 노드
+    html += `
+      <div style="text-align:center; margin-bottom:8px;">
+        <div style="display:inline-block; background:linear-gradient(135deg, #0a2240, #0d3161); color:white; border:2px solid #1a4a7a; border-radius:12px; padding:12px 24px; font-weight:800; font-size:14px;">
+          <span style="font-size:11px; opacity:0.75; display:block;">교육생</span>
+          ${member.name}
+          <span style="font-size:11px; opacity:0.85; display:block; margin-top:4px;">${teamName} | 종합 ${totalScore}/${TOTAL_MAX}점</span>
+        </div>
+      </div>
+      <div style="text-align:center; font-size:20px; color:var(--text-disabled); margin:6px 0;">↓</div>`;
+
+    // SPIN 4역량 노드
+    html += '<div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:8px;">';
+    ['S','P','I','N'].forEach(t => {
+      const r = spinRatios[t];
+      html += `
+        <div style="background:linear-gradient(135deg, #1a3a6b, #2471a3); color:white; border:2px solid #2980b9; border-radius:12px; padding:12px; text-align:center;">
+          <div style="font-size:11px; opacity:0.75;">SPIN 역량</div>
+          <div style="font-size:14px; font-weight:800;">${SPIN_SHORT[t]}</div>
+          <div style="font-size:12px; margin-top:4px;">${r}%${spinTotal > 0 ? ' (' + spinCounts[t] + '회)' : ''}</div>
+          <div style="height:6px; background:rgba(255,255,255,0.2); border-radius:3px; margin-top:6px;"><div style="height:100%; width:${Math.max(r, 3)}%; background:${SPIN_HEX[t]}; border-radius:3px;"></div></div>
+        </div>`;
+    });
+    html += '</div>';
+    html += '<div style="text-align:center; font-size:20px; color:var(--text-disabled); margin:6px 0;">↓</div>';
+
+    // 강점 + 약점 노드
+    html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:8px;">';
+    // 강점
+    html += '<div>';
+    html += '<div style="font-size:12px; font-weight:700; color:var(--green); margin-bottom:6px; text-align:center;">💪 강점</div>';
+    if (strengths.length > 0) {
+      strengths.forEach(s => {
+        html += `<div style="background:linear-gradient(135deg, #1e8449, #27ae60); color:white; border:2px solid #2ecc71; border-radius:12px; padding:10px 14px; margin-bottom:6px; text-align:center;">
+          <div style="font-size:11px; opacity:0.75;">강점</div>
+          <div style="font-size:13px; font-weight:800;">${CAT_LABELS[s.cat].name}</div>
+          <div style="font-size:11px; opacity:0.85; margin-top:2px;">${s.score}/${s.max}점 (${s.pctVal}%)</div>
+        </div>`;
+      });
+    } else {
+      html += '<div style="background:rgba(30,132,73,0.06); border:1px solid rgba(30,132,73,0.15); border-radius:12px; padding:12px; text-align:center; font-size:13px; color:var(--text-muted);">분석 중</div>';
+    }
+    html += '</div>';
+    // 약점
+    html += '<div>';
+    html += '<div style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:6px; text-align:center;">⚠️ 약점</div>';
+    if (weaknesses.length > 0) {
+      weaknesses.forEach(w => {
+        html += `<div style="background:linear-gradient(135deg, #c0392b, #e74c3c); color:white; border:2px solid #f1948a; border-radius:12px; padding:10px 14px; margin-bottom:6px; text-align:center;">
+          <div style="font-size:11px; opacity:0.75;">약점</div>
+          <div style="font-size:13px; font-weight:800;">${CAT_LABELS[w.cat].name}</div>
+          <div style="font-size:11px; opacity:0.85; margin-top:2px;">${w.score}/${w.max}점 (${w.pctVal}%)</div>
+        </div>`;
+      });
+    } else {
+      html += '<div style="background:rgba(192,57,43,0.06); border:1px solid rgba(192,57,43,0.15); border-radius:12px; padding:12px; text-align:center; font-size:13px; color:var(--text-muted);">약점 없음 — 우수!</div>';
+    }
+    html += '</div></div>';
+
+    // 이슈 체인
+    if (triggered.length > 0) {
+      html += '<div style="text-align:center; font-size:20px; color:var(--text-disabled); margin:6px 0;">↓</div>';
+      html += '<div style="font-size:13px; font-weight:800; color:var(--text); margin-bottom:10px; text-align:center;">이슈 → 원인 → 개선전략 → 실행과제</div>';
+
+      triggered.forEach(iss => {
+        html += `
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px; margin-bottom:10px; padding:10px; background:var(--bg); border:1px solid var(--border-light); border-radius:10px;">
+          <div style="background:linear-gradient(135deg, #b7700a, #d4880f); color:white; border:2px solid #f0b429; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+            <span style="font-size:10px; opacity:0.75; display:block;">이슈</span>
+            <span style="font-weight:800;">${iss.issue}</span>
+          </div>
+          <span style="font-size:16px; color:var(--text-disabled);">→</span>
+          <div style="background:linear-gradient(135deg, #6c3483, #7d3c98); color:white; border:2px solid #a569bd; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+            <span style="font-size:10px; opacity:0.75; display:block;">근본 원인</span>
+            <span style="font-weight:800;">${iss.cause}</span>
+          </div>
+          <span style="font-size:16px; color:var(--text-disabled);">→</span>
+          <div style="background:linear-gradient(135deg, #1a6fa0, #2471a3); color:white; border:2px solid #5dade2; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+            <span style="font-size:10px; opacity:0.75; display:block;">개선 전략</span>
+            <span style="font-weight:800;">${iss.strategy}</span>
+          </div>
+          <span style="font-size:16px; color:var(--text-disabled);">→</span>
+          <div style="background:linear-gradient(135deg, #c07d0e, #f5a623); color:#1a1a2e; border:2px solid #f9c74f; border-radius:12px; padding:8px 12px; text-align:center; font-size:12px;">
+            <span style="font-size:10px; opacity:0.75; display:block;">실행 과제</span>
+            <span style="font-weight:800;">${iss.action}</span>
+          </div>
+        </div>`;
+      });
+
+      // 이슈 상세 카드
+      html += `
+      <div style="margin-top:16px; padding:16px 20px; background:white; border:1.5px solid var(--border); border-radius:12px;">
+        <div style="font-size:14px; font-weight:800; color:#d4880f; margin-bottom:12px;">🔗 이슈 / 원인 / 개선 / 실행 상세</div>`;
+      triggered.forEach(iss => {
+        html += `
+        <div style="padding:14px 16px; background:var(--bg); border:1px solid var(--border); border-radius:10px; margin-bottom:10px; line-height:1.7;">
+          <div style="font-weight:700; color:var(--text); margin-bottom:8px;">
+            <span style="display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:rgba(212,136,15,0.15); color:#b7700a; margin-right:4px;">이슈</span>
+            ${iss.issue}
+          </div>
+          <div style="margin-bottom:4px;">
+            <span style="display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:rgba(125,60,152,0.12); color:#6c3483; margin-right:4px;">원인</span>
+            ${iss.cause}
+          </div>
+          <div style="margin-bottom:4px;">
+            <span style="display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:rgba(36,113,163,0.12); color:#1a6fa0; margin-right:4px;">전략</span>
+            ${iss.strategy}
+          </div>
+          <div>
+            <span style="display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:rgba(245,166,35,0.15); color:#c07d0e; margin-right:4px;">실행</span>
+            ${iss.action}
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    }
+
+    // 30일 실행계획
+    html += `
+      <div style="margin-top:20px; padding:16px 20px; background:var(--pastel-blue); border:1.5px solid rgba(10,34,64,0.1); border-radius:12px;">
+        <div style="font-size:14px; font-weight:800; color:var(--kf-navy); margin-bottom:12px;">📅 30일 맞춤 실행계획</div>
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;">
+          <div style="padding:12px; background:white; border-radius:10px; border-left:3px solid var(--blue);">
+            <div style="font-size:11px; font-weight:700; color:var(--blue); margin-bottom:4px;">1주차</div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5;">SPIN 개념 복습<br>프리리딩 재학습<br>약점 영역 인식</div>
+          </div>
+          <div style="padding:12px; background:white; border-radius:10px; border-left:3px solid var(--accent);">
+            <div style="font-size:11px; font-weight:700; color:var(--accent); margin-bottom:4px;">2주차</div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5;">${weaknesses.length > 0 ? CAT_LABELS[weaknesses[0].cat].name + ' 집중 훈련' : 'SPIN 질문 연습'}<br>동료와 롤플레이<br>질문 템플릿 활용</div>
+          </div>
+          <div style="padding:12px; background:white; border-radius:10px; border-left:3px solid var(--green);">
+            <div style="font-size:11px; font-weight:700; color:var(--green); margin-bottom:4px;">3주차</div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5;">실제 상담에 SPIN 적용<br>콜플랜 작성 후 상담<br>결과 기록</div>
+          </div>
+          <div style="padding:12px; background:white; border-radius:10px; border-left:3px solid var(--gold);">
+            <div style="font-size:11px; font-weight:700; color:var(--gold); margin-bottom:4px;">4주차</div>
+            <div style="font-size:12px; color:var(--text-secondary); line-height:1.5;">자기 점검 체크리스트<br>성장 확인<br>강사 피드백 세션</div>
+          </div>
+        </div>
+      </div>`;
+
+    // SPIN 역량 점수 상세
+    html += `
+      <div style="margin-top:24px; padding:16px 20px; background:white; border:1.5px solid var(--border); border-radius:12px;">
+        <div style="font-size:14px; font-weight:800; color:var(--kf-navy); margin-bottom:14px;">📊 SPIN 역량 점수 상세</div>`;
+    ['S','P','I','N'].forEach(t => {
+      const r = spinRatios[t];
+      html += `
+        <div style="margin-bottom:12px; display:flex; align-items:center; gap:12px;">
+          <span style="font-weight:800; width:24px; color:${SPIN_HEX[t]};">${t}</span>
+          <div style="flex:1;">
+            <div style="font-size:12px; font-weight:600; margin-bottom:3px;">${SPIN_NAMES[t]} — ${SPIN_DESC[t]}</div>
+            <div style="background:var(--border-light); border-radius:4px; height:10px; overflow:hidden;">
+              <div style="width:${Math.max(r, 2)}%; height:100%; background:${SPIN_HEX[t]}; border-radius:4px;"></div>
+            </div>
+          </div>
+          <span style="font-weight:800; font-size:14px; min-width:60px; text-align:right;">${r}%</span>
+        </div>`;
+    });
+    html += '</div>';
+
+    // 강점 상세
+    if (strengths.length > 0) {
+      html += `
+      <div style="margin-top:16px; padding:16px 20px; background:white; border:1.5px solid var(--border); border-radius:12px;">
+        <div style="font-size:14px; font-weight:800; color:#1e8449; margin-bottom:12px;">💪 강점 상세 분석</div>`;
+      strengths.forEach(s => {
+        html += `
+        <div style="padding:12px 16px; background:rgba(30,132,73,0.04); border:1px solid rgba(30,132,73,0.12); border-radius:10px; margin-bottom:8px;">
+          <div style="font-weight:700; color:var(--text); margin-bottom:4px;">${CAT_LABELS[s.cat].name} (${s.score}/${s.max}점, ${s.pctVal}%)</div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            ${CAT_LABELS[s.cat].name}에서 ${s.pctVal}% 달성률로 ${getGrade(s.score, s.max).grade} 등급을 받았습니다.
+            이 영역의 역량이 우수하므로 실전 영업에서 적극 활용하시기 바랍니다.
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    }
+
+    // 약점 상세
+    if (weaknesses.length > 0) {
+      html += `
+      <div style="margin-top:16px; padding:16px 20px; background:white; border:1.5px solid var(--border); border-radius:12px;">
+        <div style="font-size:14px; font-weight:800; color:#c0392b; margin-bottom:12px;">⚠️ 약점 상세 분석</div>`;
+      weaknesses.forEach(w => {
+        html += `
+        <div style="padding:12px 16px; background:rgba(192,57,43,0.04); border:1px solid rgba(192,57,43,0.12); border-radius:10px; margin-bottom:8px;">
+          <div style="font-weight:700; color:var(--text); margin-bottom:4px;">${CAT_LABELS[w.cat].name} (${w.score}/${w.max}점, ${w.pctVal}%)</div>
+          <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">
+            ${CAT_LABELS[w.cat].name}에서 달성률이 ${w.pctVal}%로 보완이 필요합니다.
+            집중적인 반복 훈련과 실전 적용을 통해 이 영역을 강화하면 종합 등급이 크게 상승할 수 있습니다.
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    }
+
+    html += '</div>'; // /report-section 8
+
+    // === 9. 강사 종합 코멘트 ===
+    const strengthNames = strengths.map(s => CAT_LABELS[s.cat].name + '(' + s.pctVal + '%)').join(', ');
+    const weaknessNames = weaknesses.map(w => CAT_LABELS[w.cat].name + '(' + w.pctVal + '%)').join(', ');
+
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">9</span> 강사 종합 코멘트
+      </div>
+      <div style="padding:20px; background:linear-gradient(135deg, var(--pastel-blue), var(--pastel-green)); border-radius:12px; font-size:14px; color:var(--text-secondary); line-height:1.8;">
+        ${member.name}님은 SPIN Selling AI 교육에서 <strong>종합 ${totalGrade.grade}등급(${totalScore}/${TOTAL_MAX}점)</strong>의 성과를 달성하셨습니다.
+        ${topPct <= 30 ? '전체 교육생 중 상위 ' + topPct + '%에 해당하는 우수한 성적입니다.' : ''}
+        <br><br>
+        ${strengths.length > 0 ? '<strong>강점 영역</strong>으로는 ' + strengthNames + '이(가) 돋보입니다. 이러한 역량을 실제 영업 상담에서 적극 활용하시기 바랍니다.' : ''}
+        ${strengths.length > 0 && weaknesses.length > 0 ? '<br><br>' : ''}
+        ${weaknesses.length > 0 ? '향후 실전 영업에서는 <strong>' + weaknessNames + '</strong> 영역의 보완이 필요합니다. ' : ''}
+        ${triggered.length > 0 ? '온톨로지 분석에서 도출된 ' + triggered.length + '개 이슈에 대한 실행 과제를 꾸준히 수행하면 빠른 성장이 가능합니다.' : ''}
+        <br><br>
+        콜플랜 도구를 활용하여 상담 전 SPIN 질문을 미리 계획하는 습관을 기르시고,
+        30일 실행계획을 꾸준히 수행하시면 실전 영업 역량이 크게 향상될 것입니다.
+        어려움이 있으시면 언제든 코칭 세션을 요청해 주세요.
+        <br><br>
+        <div style="text-align:right; margin-top:12px; font-weight:700; color:var(--kf-navy);">
+          — ${trainerName} | SB Consulting | Korn Ferry Certified SPIN Master Trainer
+        </div>
+      </div>
+    </div>`;
+
+    // --- 리포트 푸터 ---
+    html += `
+    <div style="text-align:center; padding-top:20px; border-top:1px solid var(--border); font-size:11px; color:var(--text-disabled);">
+      본 리포트는 SPIN Selling AI 플랫폼에서 자동 생성되었습니다.<br>
+      &copy; 2026 Korn Ferry SPIN Selling Official Program | 심재우 대표 | SB Consulting
+    </div>`;
+
+    html += '</div>'; // /report-body
+
+    // 렌더링
+    document.getElementById('reportPage').innerHTML = html;
+
+  } catch (err) {
+    console.error('Report load error:', err);
+    document.getElementById('reportPage').innerHTML = `
+      <div class="report-loading">
+        <div style="font-size:48px; margin-bottom:16px;">⚠️</div>
+        <div style="font-size:16px; font-weight:700; color:var(--accent);">리포트를 불러오는 중 오류가 발생했습니다.</div>
+        <div style="font-size:13px; margin-top:8px; color:var(--text-muted);">${err.message}</div>
+      </div>`;
+  }
+}
+
+// ========== 이메일 발송 ==========
+async function sendReportEmail() {
+  if (!currentMember) {
+    alert('먼저 교육생을 선택하세요.');
+    return;
+  }
+
+  const btn = event.target;
+  const origText = btn.textContent;
+  btn.textContent = '📧 발송 중...';
+  btn.disabled = true;
+
+  try {
+    const reportPage = document.getElementById('reportPage');
+    const fullHtml = buildEmailHtml(reportPage.innerHTML);
+
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/dynamic-function`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify({
+        to: currentMember.email || '',
+        name: currentMember.name,
+        reportHtml: fullHtml
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.id || data.success) {
+      alert(`이메일 발송 완료!\n\n수신: ${currentMember.email || '(이메일 미등록)'}\n교육생: ${currentMember.name}\n\n리포트 전체가 이메일로 전송되었습니다.`);
+    } else {
+      alert(`발송 실패: ${JSON.stringify(data)}`);
+    }
+  } catch (e) {
+    alert(`발송 오류: ${e.message}`);
+  }
+
+  btn.textContent = origText;
+  btn.disabled = false;
+}
+
+// 이메일용 WYSIWYG HTML 생성
+function buildEmailHtml(reportInnerHtml) {
+  const session = getSavedSession();
+  return `
+<div style="max-width:700px; margin:0 auto; font-family:'Noto Sans KR','Helvetica Neue',Arial,sans-serif; color:#000; background:#fff;">
+  <div style="padding:32px 40px;">
+    ${reportInnerHtml}
+  </div>
+  <div style="text-align:center; padding:20px 40px; border-top:1px solid #e2e8f0; font-size:11px; color:#999;">
+    본 리포트는 SPIN Selling AI 플랫폼에서 자동 생성되었습니다.<br>
+    &copy; 2026 Korn Ferry SPIN Selling Official Program | 심재우 대표 | SB Consulting
+  </div>
+</div>`;
+}
+</script>
+</body>
+</html>
