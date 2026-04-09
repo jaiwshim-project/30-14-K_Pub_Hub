@@ -48,6 +48,7 @@
     <div class="chat-input-area">
       <input type="text" class="chat-input" id="chatInput" placeholder="질문을 입력하세요..." onkeypress="if(event.key==='Enter')sendChat()">
       <button class="btn btn-primary" onclick="sendChat()">전송</button>
+      <button class="btn btn-gold" onclick="requestAIEvaluation()">AI평가받기</button>
     </div>
 
     <div id="roleplayAnalysis" style="margin-top: 16px; display:none;">
@@ -56,6 +57,8 @@
         <div id="roleplayAnalysisContent"></div>
       </div>
     </div>
+
+    <div id="aiEvaluation" style="margin-top: 16px; display:none;"></div>
   </div>
 </div>
 </div>

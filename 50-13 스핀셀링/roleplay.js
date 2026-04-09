@@ -178,7 +178,7 @@ function sendChat() {
     }
   }, 800);
 
-  addScore(10, 'roleplay');
+  // 점수는 AI평가받기에서 일괄 반영
 }
 
 function addChatMessage(role, text) {
@@ -241,4 +241,188 @@ function getCoachingTip() {
   if (N === 0 && total >= 5) return '💡 해결질문(N)을 사용해볼 시점입니다. "만약 ~한다면" 형태의 질문을 시도해보세요.';
   if (I >= 2 && N >= 1) return '✅ 훌륭합니다! SPIN 질문을 균형있게 활용하고 있습니다.';
   return '계속 진행해보세요. 다양한 유형의 질문을 시도해보세요.';
+}
+
+// ========== AI 종합 평가 ==========
+function requestAIEvaluation() {
+  if (!state.roleplayScenario) {
+    alert('먼저 사례를 선택하고 대화를 시작하세요.');
+    return;
+  }
+
+  const userMessages = state.roleplayMessages.filter(m => m.role === 'user');
+  if (userMessages.length < 3) {
+    alert('최소 3개 이상 질문한 후 평가를 받을 수 있습니다.');
+    return;
+  }
+
+  const { S, P, I, N } = state.spinCounts;
+  const totalQ = S + P + I + N;
+  const totalTurns = state.roleplayTurnCount;
+
+  // 질문 목록 추출
+  const questions = userMessages.map(m => m.text);
+
+  // SPIN 비율 분석
+  const sRatio = totalQ > 0 ? Math.round((S / totalQ) * 100) : 0;
+  const pRatio = totalQ > 0 ? Math.round((P / totalQ) * 100) : 0;
+  const iRatio = totalQ > 0 ? Math.round((I / totalQ) * 100) : 0;
+  const nRatio = totalQ > 0 ? Math.round((N / totalQ) * 100) : 0;
+
+  // 점수 계산 (100점 만점)
+  let score = 0;
+  let feedback = [];
+
+  // 1. SPIN 균형 (30점)
+  const hasAllTypes = S > 0 && P > 0 && I > 0 && N > 0;
+  if (hasAllTypes) {
+    score += 30;
+    feedback.push({ icon: '✅', text: 'SPIN 4가지 유형을 모두 활용했습니다.', category: 'SPIN 균형' });
+  } else {
+    const missing = [];
+    if (S === 0) missing.push('상황질문(S)');
+    if (P === 0) missing.push('문제질문(P)');
+    if (I === 0) missing.push('시사질문(I)');
+    if (N === 0) missing.push('해결질문(N)');
+    const partial = (4 - missing.length) / 4 * 30;
+    score += Math.round(partial);
+    feedback.push({ icon: '⚠️', text: `${missing.join(', ')}을 사용하지 않았습니다. SPIN 4가지 유형을 모두 활용하세요.`, category: 'SPIN 균형' });
+  }
+
+  // 2. SPIN 순서 (20점) — S→P→I→N 순서 지향
+  const typeSequence = userMessages.map(m => classifyQuestion(m.text)).filter(Boolean);
+  let orderScore = 0;
+  const idealOrder = { S: 1, P: 2, I: 3, N: 4 };
+  for (let i = 1; i < typeSequence.length; i++) {
+    if (idealOrder[typeSequence[i]] >= idealOrder[typeSequence[i-1]]) orderScore++;
+  }
+  const orderRatio = typeSequence.length > 1 ? orderScore / (typeSequence.length - 1) : 0;
+  const orderPoints = Math.round(orderRatio * 20);
+  score += orderPoints;
+  if (orderRatio >= 0.7) {
+    feedback.push({ icon: '✅', text: 'S→P→I→N 순서를 잘 따르고 있습니다. 자연스러운 대화 흐름입니다.', category: '질문 순서' });
+  } else if (orderRatio >= 0.4) {
+    feedback.push({ icon: '💡', text: 'SPIN 순서(S→P→I→N)를 더 의식적으로 따라보세요. 상황 파악 후 문제를 탐색하고, 시사점을 확대한 뒤 해결 가치를 물어야 합니다.', category: '질문 순서' });
+  } else {
+    feedback.push({ icon: '⚠️', text: '질문 순서가 불규칙합니다. SPIN은 S(상황)→P(문제)→I(시사)→N(해결) 순서로 진행해야 고객의 니즈가 자연스럽게 발전합니다.', category: '질문 순서' });
+  }
+
+  // 3. 상황질문 비율 (15점) — 너무 많으면 감점
+  if (sRatio <= 30) {
+    score += 15;
+    feedback.push({ icon: '✅', text: `상황질문 비율이 ${sRatio}%로 적절합니다. 고객의 시간을 존중하고 있습니다.`, category: '상황질문(S)' });
+  } else if (sRatio <= 50) {
+    score += 8;
+    feedback.push({ icon: '💡', text: `상황질문이 ${sRatio}%입니다. 30% 이하로 줄이세요. 상황질문이 많으면 고객이 심문받는 느낌을 받습니다.`, category: '상황질문(S)' });
+  } else {
+    score += 3;
+    feedback.push({ icon: '⚠️', text: `상황질문이 ${sRatio}%로 과다합니다. Huthwaite 연구에 따르면 성공적인 상담에서 상황질문 비율은 낮습니다. 문제/시사/해결 질문으로 전환하세요.`, category: '상황질문(S)' });
+  }
+
+  // 4. 시사질문 활용 (20점) — 핵심 스킬
+  if (I >= 2) {
+    score += 20;
+    feedback.push({ icon: '✅', text: `시사질문을 ${I}회 사용했습니다. 잠재니즈를 현재니즈로 전환하는 핵심 스킬을 잘 활용하고 있습니다.`, category: '시사질문(I)' });
+  } else if (I === 1) {
+    score += 10;
+    feedback.push({ icon: '💡', text: '시사질문을 1회만 사용했습니다. 문제의 영향, 파급효과, 비용을 탐색하는 시사질문을 더 활용하세요. "그 문제로 인해 ~에도 영향이 있지 않습니까?" 형태가 효과적입니다.', category: '시사질문(I)' });
+  } else {
+    feedback.push({ icon: '⚠️', text: '시사질문(I)을 사용하지 않았습니다. 이것은 SPIN에서 가장 강력한 질문 유형입니다. 발견한 문제의 영향과 결과를 탐색하여 고객이 문제의 심각성을 인식하게 하세요.', category: '시사질문(I)' });
+  }
+
+  // 5. 해결질문 & 마무리 (15점)
+  if (N >= 1) {
+    score += 15;
+    feedback.push({ icon: '✅', text: `해결질문을 ${N}회 사용했습니다. 고객이 솔루션의 가치를 스스로 말하게 하는 좋은 접근입니다.`, category: '해결질문(N)' });
+  } else if (totalTurns >= 5) {
+    feedback.push({ icon: '💡', text: '대화가 충분히 진행되었지만 해결질문(N)을 아직 사용하지 않았습니다. "만약 이 문제가 해결된다면 어떤 도움이 되겠습니까?" 같은 질문으로 고객이 가치를 표현하게 하세요.', category: '해결질문(N)' });
+  }
+
+  // 종합 평가 등급
+  let grade, gradeColor, gradeMsg;
+  if (score >= 90) { grade = 'A+'; gradeColor = 'var(--green)'; gradeMsg = '탁월한 SPIN 상담입니다! 실전에서도 높은 성과를 낼 수 있습니다.'; }
+  else if (score >= 80) { grade = 'A'; gradeColor = 'var(--green)'; gradeMsg = '매우 우수합니다. 몇 가지만 보완하면 완벽한 상담이 됩니다.'; }
+  else if (score >= 70) { grade = 'B+'; gradeColor = 'var(--blue)'; gradeMsg = '좋은 상담입니다. 아래 피드백을 참고하여 더 발전시켜보세요.'; }
+  else if (score >= 60) { grade = 'B'; gradeColor = 'var(--blue)'; gradeMsg = '기본기를 갖추고 있습니다. 시사질문(I)과 해결질문(N) 활용을 강화하세요.'; }
+  else if (score >= 50) { grade = 'C'; gradeColor = 'var(--gold)'; gradeMsg = '개선이 필요합니다. SPIN 순서와 질문 유형 균형에 더 집중하세요.'; }
+  else { grade = 'D'; gradeColor = 'var(--accent)'; gradeMsg = 'SPIN 방법론을 다시 복습하고 재도전해보세요.'; }
+
+  // 점수를 Supabase에 반영 (100점 만점 기준)
+  if (score > 0) {
+    addScore(score, 'roleplay');
+    addActivity(`AI 롤플레이 평가: ${grade} (${score}/100점)`);
+  }
+
+  // 렌더링
+  const evalEl = document.getElementById('aiEvaluation');
+  evalEl.style.display = 'block';
+  evalEl.innerHTML = `
+    <div style="background:linear-gradient(135deg, #ffffff, var(--pastel-blue)); border:2px solid rgba(36,113,163,0.15); border-top:4px solid var(--blue); border-radius:14px; padding:24px;">
+      <div style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <span>🤖</span> SPIN 상담 종합 평가
+      </div>
+
+      <!-- 점수 & 등급 -->
+      <div style="display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap;">
+        <div style="text-align:center; padding:16px 24px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:120px;">
+          <div style="font-size:36px; font-weight:900; color:${gradeColor};">${grade}</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">등급</div>
+        </div>
+        <div style="text-align:center; padding:16px 24px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:120px;">
+          <div style="font-size:36px; font-weight:900; color:${gradeColor};">${score}</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">/ 100점</div>
+        </div>
+        <div style="text-align:center; padding:16px 24px; background:var(--card); border:1.5px solid var(--border); border-radius:12px; flex:1; min-width:120px;">
+          <div style="font-size:36px; font-weight:900; color:var(--text);">${totalTurns}</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">대화 턴</div>
+        </div>
+      </div>
+
+      <div style="padding:12px 16px; background:rgba(36,113,163,0.04); border-radius:10px; margin-bottom:20px; font-size:14px; color:var(--text-secondary); line-height:1.6;">
+        ${gradeMsg}
+      </div>
+
+      <!-- SPIN 비율 바 -->
+      <div style="margin-bottom:20px;">
+        <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px;">SPIN 질문 비율</div>
+        <div style="display:flex; height:24px; border-radius:8px; overflow:hidden; border:1px solid var(--border);">
+          ${S > 0 ? `<div style="width:${sRatio}%; background:var(--blue); display:flex; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:700;">S ${sRatio}%</div>` : ''}
+          ${P > 0 ? `<div style="width:${pRatio}%; background:var(--accent); display:flex; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:700;">P ${pRatio}%</div>` : ''}
+          ${I > 0 ? `<div style="width:${iRatio}%; background:var(--purple); display:flex; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:700;">I ${iRatio}%</div>` : ''}
+          ${N > 0 ? `<div style="width:${nRatio}%; background:var(--green); display:flex; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:700;">N ${nRatio}%</div>` : ''}
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:10px; color:var(--text-muted);">
+          <span>S:${S} P:${P} I:${I} N:${N} (총 ${totalQ}개)</span>
+          <span>이상적 비율: S≤20% P≈25% I≈35% N≈20%</span>
+        </div>
+      </div>
+
+      <!-- 세부 피드백 -->
+      <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:10px;">세부 피드백</div>
+      ${feedback.map(f => `
+        <div style="padding:10px 14px; background:var(--card); border:1px solid var(--border-light); border-radius:10px; margin-bottom:8px; display:flex; gap:10px; align-items:flex-start;">
+          <span style="font-size:16px; flex:none;">${f.icon}</span>
+          <div>
+            <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:2px;">${f.category}</div>
+            <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">${f.text}</div>
+          </div>
+        </div>
+      `).join('')}
+
+      <!-- 질문 목록 -->
+      <div style="margin-top:16px;">
+        <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px;">내가 한 질문 (${questions.length}개)</div>
+        ${questions.map((q, i) => {
+          const qType = classifyQuestion(q);
+          return `<div style="padding:6px 12px; background:var(--bg); border-radius:8px; margin-bottom:4px; font-size:12px; display:flex; align-items:center; gap:8px;">
+            <span class="spin-tag ${qType || ''}" style="padding:2px 8px; font-size:10px;">${qType || '?'}</span>
+            <span style="color:var(--text-tertiary);">${q}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+
+  // 스크롤
+  evalEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
