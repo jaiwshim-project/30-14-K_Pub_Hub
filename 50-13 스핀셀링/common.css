@@ -192,6 +192,7 @@ body::before {
   display: block;
   animation: fadeIn 0.4s ease;
   background: linear-gradient(180deg, var(--pastel-blue) 0%, transparent 50%);
+  border: 1.5px solid rgba(36,113,163,0.1);
   border-radius: 20px;
   padding: 12px;
 }
@@ -204,7 +205,7 @@ body::before {
 /* Cards */
 .card {
   background: linear-gradient(135deg, #ffffff 0%, var(--pastel-blue) 100%);
-  border: 1.5px solid rgba(36,113,163,0.12);
+  border: 2px solid rgba(36,113,163,0.18);
   border-top: 3px solid var(--blue);
   border-radius: var(--radius);
   padding: 28px 32px;
@@ -237,7 +238,7 @@ body::before {
 /* Buttons */
 .btn {
   padding: 11px 26px;
-  border: none;
+  border: 1.5px solid transparent;
   border-radius: 10px;
   font-family: inherit;
   font-size: 13px;
@@ -254,38 +255,38 @@ body::before {
   background: linear-gradient(135deg, var(--accent), var(--accent-light));
   color: white;
   box-shadow: 0 2px 8px rgba(192,57,43,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
-  border: 1px solid rgba(192,57,43,0.3);
+  border: 2px solid #a93226;
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(192,57,43,0.3), inset 0 1px 0 rgba(255,255,255,0.2); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(192,57,43,0.3); border-color: #922b21; }
 
 .btn-secondary {
   background: linear-gradient(135deg, #ffffff, var(--bg));
   color: var(--text-tertiary);
-  border: 1.5px solid var(--border);
+  border: 2px solid var(--blue);
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.btn-secondary:hover { background: linear-gradient(135deg, #ffffff, #edf2f7); color: var(--text-secondary); border-color: var(--blue); box-shadow: 0 2px 8px rgba(36,113,163,0.1); }
-.btn-secondary.active { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; border-color: var(--accent); }
+.btn-secondary:hover { background: linear-gradient(135deg, #ffffff, var(--pastel-blue)); color: var(--text); border-color: #1a5276; box-shadow: 0 4px 12px rgba(36,113,163,0.15); }
+.btn-secondary.active { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; border-color: #a93226; }
 
 .btn-gold {
   background: linear-gradient(135deg, var(--gold), var(--gold-light));
   color: white;
   box-shadow: 0 2px 8px rgba(212,136,15,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
-  border: 1px solid rgba(212,136,15,0.3);
+  border: 2px solid #b8760c;
 }
 
 .btn-blue {
   background: linear-gradient(135deg, var(--blue), var(--blue-light));
   color: white;
   box-shadow: 0 2px 8px rgba(36,113,163,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
-  border: 1px solid rgba(36,113,163,0.3);
+  border: 2px solid #1a5276;
 }
 
 .btn-green {
   background: linear-gradient(135deg, var(--green), var(--green-light));
   color: white;
   box-shadow: 0 2px 8px rgba(30,132,73,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
-  border: 1px solid rgba(30,132,73,0.3);
+  border: 2px solid #186a3b;
 }
 
 .btn-sm { padding: 7px 15px; font-size: 12px; border-radius: 8px; }
@@ -390,7 +391,7 @@ body::before {
   width: 100%;
   padding: 11px 16px;
   background: var(--bg);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--blue);
   border-radius: 10px;
   color: var(--text);
   font-family: inherit;
@@ -612,7 +613,7 @@ body::before {
   width: 100%;
   padding: 14px 16px;
   background: var(--bg);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--purple);
   border-radius: 12px;
   color: var(--text);
   font-family: inherit;
@@ -748,7 +749,7 @@ body::before {
   flex: 1;
   padding: 12px 18px;
   background: var(--bg);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--blue);
   border-radius: 12px;
   color: var(--text);
   font-family: inherit;
