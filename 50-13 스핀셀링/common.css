@@ -1405,7 +1405,7 @@ body::before {
 .footer-col h4 {
   font-size: 12px;
   font-weight: 700;
-  color: var(--text-on-dark-secondary);
+  color: #2ecc71;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 4px;

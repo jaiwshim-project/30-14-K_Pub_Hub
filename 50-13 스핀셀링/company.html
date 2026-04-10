@@ -261,6 +261,7 @@
     <div class="trainer-card">
       <span style="color:var(--gold-light); font-size:14px; font-weight:700; white-space:nowrap;">강사 이름</span>
       <input type="text" id="trainerNameInput" placeholder="강사명을 입력하세요" onfocus="this.select()">
+      <input type="email" id="trainerEmailInput" placeholder="이메일 주소" onfocus="this.select()" style="min-width:200px;">
       <button onclick="loginAsTrainer()" style="padding:12px 28px; background:var(--gold); color:#1a1a2e; border:none; border-radius:10px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; white-space:nowrap; transition:all 0.2s;">강사 접속</button>
     </div>
   </div>
@@ -516,12 +517,24 @@ async function loginAsTrainer() {
   const name = nameInput.value.trim();
   if (!name) { nameInput.focus(); nameInput.style.borderColor = '#e74c3c'; return; }
 
+  const emailInput = document.getElementById('trainerEmailInput');
+  const email = emailInput ? emailInput.value.trim() : '';
+
   saveRole('trainer');
-  saveUser({ id: null, team_id: null, name: name, slot: null });
+  saveUser({ id: null, team_id: null, name: name, slot: null, email: email });
   updateHeaderUser({ name });
 
-  // Supabase에 강사 이름 저장
+  // Supabase에 강사 이름+이메일 저장
   await saveTrainerName(name);
+  const session = getSavedSession();
+  if (session && email) {
+    const data = await fetchTeamNames();
+    data.trainer_email = email;
+    await fetch(SUPABASE_URL + '/rest/v1/spin_sessions?id=eq.' + session.id, {
+      method: 'PATCH', headers: SB_HEADERS,
+      body: JSON.stringify({ team_names: data })
+    });
+  }
 
   goToDashboard();
 }

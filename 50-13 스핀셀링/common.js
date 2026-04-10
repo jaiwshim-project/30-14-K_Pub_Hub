@@ -26,18 +26,53 @@ const state = {
   roleplayTurnCount: 0
 };
 
+// ========== STORAGE HELPER (file:// 호환) ==========
+// file:// 프로토콜에서는 localStorage가 페이지 간 공유 안 됨
+// → window.name을 공유 저장소로 사용 (같은 탭에서 페이지 이동 시 유지)
+const _store = {};
+function _initStore() {
+  try {
+    if (window.name && window.name.startsWith('{')) {
+      Object.assign(_store, JSON.parse(window.name));
+    }
+  } catch(e) {}
+}
+_initStore();
+
+function _getItem(key) {
+  // 1차: localStorage 시도
+  try {
+    const v = localStorage.getItem(key);
+    if (v) return v;
+  } catch(e) {}
+  // 2차: window.name 저장소
+  return _store[key] || null;
+}
+
+function _setItem(key, value) {
+  try { localStorage.setItem(key, value); } catch(e) {}
+  _store[key] = value;
+  try { window.name = JSON.stringify(_store); } catch(e) {}
+}
+
+function _removeItem(key) {
+  try { localStorage.removeItem(key); } catch(e) {}
+  delete _store[key];
+  try { window.name = JSON.stringify(_store); } catch(e) {}
+}
+
 // ========== SESSION MANAGEMENT ==========
 function getSavedSession() {
-  return JSON.parse(localStorage.getItem('spin_session_id') || 'null');
+  return JSON.parse(_getItem('spin_session_id') || 'null');
 }
 
 function saveSessionId(session) {
-  localStorage.setItem('spin_session_id', JSON.stringify(session));
+  _setItem('spin_session_id', JSON.stringify(session));
   state.session = session;
 }
 
 function clearSessionId() {
-  localStorage.removeItem('spin_session_id');
+  _removeItem('spin_session_id');
   state.session = null;
 }
 
