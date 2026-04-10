@@ -247,6 +247,21 @@
   color: var(--purple);
 }
 
+.session-delete-btn {
+  background: rgba(192,57,43,0.08);
+  border: 1px solid rgba(192,57,43,0.2);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.session-delete-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  filter: brightness(1.1);
+}
+
 .session-status-select {
   padding: 4px 8px;
   border: 1.5px solid var(--border);
@@ -911,18 +926,47 @@ function renderGrid(type, sessions) {
             </select>
           </div>
         </div>
-        <div class="session-stats">${statsHTML}</div>
+        <div class="session-stats">
+          ${statsHTML}
+          <button onclick="event.stopPropagation(); deleteSession('${session.id}', '${escapeHtml(session.company_name || '').replace(/'/g,"\\'")}')" class="session-delete-btn" title="교육 삭제">🗑</button>
+        </div>
         <div class="session-arrow">›</div>
       </div>`;
   }).join('');
+}
+
+// ========== 교육 삭제 (2단계 확인) ==========
+async function deleteSession(sessionId, companyName) {
+  if (!confirm(`"${companyName}" 교육을 삭제하시겠습니까?`)) return;
+  if (!confirm(`정말 삭제합니다.\n\n"${companyName}" 교육과 관련된 모든 데이터(팀원, 활동 기록)가 삭제됩니다.\n\n계속하시겠습니까?`)) return;
+
+  // 멤버 초기화 (soft delete)
+  const members = await fetchMembersForSession(sessionId);
+  await Promise.all(members.map(m =>
+    fetch(SUPABASE_URL + '/rest/v1/spin_members?id=eq.' + m.id, {
+      method: 'PATCH',
+      headers: SB_HEADERS,
+      body: JSON.stringify({ name: '', email: '', score_quiz: 0, score_needs: 0, score_scenario: 0, score_practice: 0, score_roleplay: 0, score_fab: 0 })
+    })
+  ));
+
+  // 세션 soft delete
+  await fetch(SUPABASE_URL + '/rest/v1/spin_sessions?id=eq.' + sessionId, {
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({ company_name: '', updated_at: new Date().toISOString() })
+  });
+
+  alert(`"${companyName}" 교육이 삭제되었습니다.`);
+  await loadAllData();
 }
 
 // ========== 날짜 범위 파싱 ==========
 // "2026.04.14~15", "2026.04.14-15", "2026-04-14~2026-04-15", "04.14~15" 등 지원
 function parseDateRange(str) {
   if (!str) return null;
-  // 숫자, 점, 대시, 물결표만 추출
-  const clean = str.replace(/[^0-9.~\-\/]/g, ' ').trim();
+  // 공백 제거 후 숫자, 점, 대시, 물결표만 추출
+  const clean = str.replace(/\s+/g, '').replace(/[^0-9.~\-\/]/g, '');
 
   // 패턴1: "2026.04.14~15" 또는 "2026.04.14-15"
   let m = clean.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})\s*[~\-]\s*(\d{1,2})/);
