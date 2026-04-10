@@ -247,6 +247,21 @@
   color: var(--purple);
 }
 
+.session-status-select {
+  padding: 4px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--bg);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.session-status-select:hover { border-color: var(--accent2); }
+.session-status-select:focus { outline: none; border-color: var(--accent); }
+
 .session-arrow {
   font-size: 20px;
   color: var(--text-disabled);
@@ -724,12 +739,15 @@ async function loadAllData() {
     categorized = { completed: [], active: [], upcoming: [] };
     enriched.forEach(session => {
       const tn = session._teamNames;
+      const status = tn && tn.status;
       const hasEnded = tn && tn.ended === true;
       const hasScores = session._totalScore > 0;
 
-      if (hasEnded) {
+      if (status === 'completed' || hasEnded) {
         categorized.completed.push(session);
-      } else if (hasScores) {
+      } else if (status === 'upcoming') {
+        categorized.upcoming.push(session);
+      } else if (status === 'active' || hasScores) {
         categorized.active.push(session);
       } else {
         categorized.upcoming.push(session);
@@ -826,13 +844,44 @@ function renderGrid(type, sessions) {
             <span class="session-meta-item"><span class="meta-icon">📅</span> ${session.training_date || '날짜 미정'}</span>
             <span class="session-meta-item"><span class="meta-icon">👥</span> ${session._registeredCount}명</span>
             <span class="session-meta-item"><span class="meta-icon">🏷️</span> ${session._teamKeys.length}팀</span>
-            <span class="session-status-badge ${badgeClass}">${badgeText}</span>
+            <select class="session-status-select" onchange="changeSessionStatus('${session.id}', this.value)" onclick="event.stopPropagation();">
+              <option value="upcoming" ${type === 'upcoming' ? 'selected' : ''}>📅 진행예정</option>
+              <option value="active" ${type === 'active' ? 'selected' : ''}>🔄 진행중</option>
+              <option value="completed" ${type === 'completed' ? 'selected' : ''}>✅ 진행완료</option>
+            </select>
           </div>
         </div>
         <div class="session-stats">${statsHTML}</div>
         <div class="session-arrow">›</div>
       </div>`;
   }).join('');
+}
+
+// ========== 세션 상태 변경 ==========
+async function changeSessionStatus(sessionId, newStatus) {
+  const session = allSessions.find(s => s.id == sessionId);
+  if (!session) return;
+
+  const tn = session.team_names || session._teamNames || {};
+
+  if (newStatus === 'completed') {
+    tn.ended = true;
+    tn.status = 'completed';
+  } else if (newStatus === 'active') {
+    delete tn.ended;
+    tn.status = 'active';
+  } else {
+    delete tn.ended;
+    tn.status = 'upcoming';
+  }
+
+  await fetch(SUPABASE_URL + '/rest/v1/spin_sessions?id=eq.' + sessionId, {
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({ team_names: tn, updated_at: new Date().toISOString() })
+  });
+
+  await loadAllData();
 }
 
 // ========== 팀별 점수 계산 ==========
