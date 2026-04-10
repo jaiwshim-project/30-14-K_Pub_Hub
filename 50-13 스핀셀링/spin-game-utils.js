@@ -3,13 +3,10 @@
 
 // 게임 점수 저장
 async function saveGameScore(gameType, gameName, score, detail) {
-  console.log('[saveGameScore] 호출:', gameType, gameName, score);
-  if (typeof getSavedSession !== 'function') { console.warn('[saveGameScore] common.js 미로드'); return; }
+  if (typeof getSavedSession !== 'function') return;
   const session = getSavedSession();
   const user = (typeof getSavedUser === 'function') ? getSavedUser() : null;
-  console.log('[saveGameScore] session:', session, 'user:', user);
-  if (!session) { alert('게임 점수 저장 실패: 세션이 없습니다. 교육에 먼저 입장하세요.'); return; }
-  if (!user || !user.id) { alert('게임 점수 저장 실패: 교육생으로 로그인해야 합니다.\n현재 로그인 정보: ' + JSON.stringify(user)); return; }
+  if (!session || !user || !user.id) return;
 
   try {
     const res = await fetch(SUPABASE_URL + '/rest/v1/spin_activities', {
@@ -30,12 +27,9 @@ async function saveGameScore(gameType, gameName, score, detail) {
       })
     });
     if (!res.ok) {
-      const t = await res.text();
-      console.error('[saveGameScore] INSERT 실패:', res.status, t);
-      alert('게임 점수 저장 실패 (HTTP ' + res.status + ')\n' + t);
+      console.error('saveGameScore INSERT failed:', res.status);
       return;
     }
-    console.log('[saveGameScore] INSERT 성공!');
 
     // 교육생 본인 점수에도 누적
     const r = await fetch(SUPABASE_URL + '/rest/v1/spin_members?id=eq.' + user.id + '&select=score_quiz', {
