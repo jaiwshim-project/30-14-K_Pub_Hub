@@ -542,6 +542,15 @@ function getNavHTML(activePage) {
     '</div>';
 }
 
+function toggleDarkMode() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('spin_theme', next);
+}
+// 페이지 로드 시 테마 복원
+(function(){ const t = localStorage.getItem('spin_theme'); if (t) document.documentElement.setAttribute('data-theme', t); })();
+
 function getFooterHTML() {
   return `
 <footer class="footer">
@@ -593,6 +602,7 @@ function getFooterHTML() {
         <a href="admin.html" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#ffffff'">🔧 관리자</a>
         <a href="manual.html" style="background:rgba(46,204,113,0.15); border:1px solid rgba(46,204,113,0.3); color:#2ecc71; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#2ecc71'">📘 매뉴얼</a>
         <a href="#" onclick="event.preventDefault();if(prompt('비밀번호:')==='9633')window.open('architecture.svg','_blank');else alert('비밀번호가 틀립니다');" style="background:rgba(36,113,163,0.15); border:1px solid rgba(36,113,163,0.3); color:#3498db; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#3498db'">🏗 구조도</a>
+        <button onclick="toggleDarkMode()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit;">🌙 다크모드</button>
       </div>
     </div>
   </div>

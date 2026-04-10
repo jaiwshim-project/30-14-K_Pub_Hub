@@ -68,6 +68,9 @@
   background: var(--card);
 }
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a2240">
+<meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
 
@@ -379,5 +382,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
 </body>
 </html>

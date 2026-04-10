@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPIN Selling - 교육 수료증</title>
+  <link rel="stylesheet" href="common.css">
+  <style>
+    /* 인쇄용 스타일 */
+    @media print {
+      body { margin: 0; }
+      .no-print { display: none !important; }
+      .cert-page { box-shadow: none; border: none; }
+    }
+
+    @page { size: A4 landscape; margin: 0; }
+
+    .cert-container { max-width: 1100px; margin: 32px auto; padding: 0 24px; }
+
+    .cert-controls { display: flex; gap: 12px; margin-bottom: 24px; align-items: center; flex-wrap: wrap; }
+    .cert-controls select, .cert-controls button { padding: 10px 16px; border-radius: 10px; font-family: inherit; font-size: 14px; }
+    .cert-controls select { border: 1.5px solid var(--border); background: var(--bg); color: var(--text); flex: 1; max-width: 300px; }
+
+    .cert-page {
+      width: 297mm; height: 210mm;
+      background: #ffffff;
+      border: 3px solid #f5a623;
+      border-radius: 4px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 60px;
+    }
+
+    /* 장식 보더 */
+    .cert-page::before {
+      content: '';
+      position: absolute;
+      top: 12px; left: 12px; right: 12px; bottom: 12px;
+      border: 2px solid #f5a623;
+      border-radius: 2px;
+      pointer-events: none;
+    }
+
+    .cert-page::after {
+      content: '';
+      position: absolute;
+      top: 16px; left: 16px; right: 16px; bottom: 16px;
+      border: 1px solid rgba(245,166,35,0.3);
+      pointer-events: none;
+    }
+
+    .cert-header { text-align: center; margin-bottom: 20px; }
+    .cert-logo { height: 48px; margin-bottom: 8px; }
+    .cert-org { font-size: 14px; color: #0a2240; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; }
+
+    .cert-title { font-size: 36px; font-weight: 900; color: #0a2240; text-align: center; margin: 16px 0 8px; letter-spacing: 2px; }
+    .cert-subtitle { font-size: 14px; color: #64748b; text-align: center; margin-bottom: 24px; }
+
+    .cert-name { font-size: 32px; font-weight: 800; color: #0a2240; text-align: center; border-bottom: 2px solid #f5a623; padding-bottom: 8px; display: inline-block; margin-bottom: 16px; }
+
+    .cert-body { text-align: center; font-size: 15px; color: #334155; line-height: 1.8; max-width: 600px; margin-bottom: 20px; }
+
+    .cert-details { display: flex; gap: 40px; justify-content: center; margin-bottom: 24px; }
+    .cert-detail { text-align: center; }
+    .cert-detail-label { font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .cert-detail-value { font-size: 16px; font-weight: 700; color: #0a2240; margin-top: 4px; }
+
+    .cert-footer { display: flex; justify-content: space-between; width: 100%; max-width: 500px; margin-top: 16px; }
+    .cert-sign { text-align: center; }
+    .cert-sign-line { width: 160px; border-top: 1px solid #0a2240; margin-bottom: 4px; }
+    .cert-sign-name { font-size: 13px; font-weight: 700; color: #0a2240; }
+    .cert-sign-title { font-size: 11px; color: #64748b; }
+  </style>
+</head>
+<body>
+
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+
+<div id="mainApp" style="display:none;">
+
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="cert-container">
+  <div class="cert-controls no-print">
+    <select id="certMember" onchange="loadCertificate()">
+      <option value="">교육생 선택...</option>
+    </select>
+    <button class="btn btn-primary" onclick="window.print()">🖨 인쇄 / PDF 저장</button>
+    <button class="btn btn-secondary" onclick="history.back()">← 이전</button>
+  </div>
+
+  <div id="certArea" style="display:none;">
+    <div class="cert-page">
+      <div class="cert-header">
+        <img src="logo-kornferry.png" alt="Korn Ferry" class="cert-logo">
+        <div class="cert-org">Korn Ferry · SB Consulting</div>
+      </div>
+
+      <div class="cert-title">교 육 수 료 증</div>
+      <div class="cert-subtitle">Certificate of Completion</div>
+
+      <div class="cert-name" id="certName">홍길동</div>
+
+      <div class="cert-body">
+        위 사람은 Korn Ferry 공인 SPIN Selling AI 교육 프로그램을<br>
+        성실히 이수하였으므로 이 증서를 수여합니다.
+      </div>
+
+      <div class="cert-details">
+        <div class="cert-detail">
+          <div class="cert-detail-label">교육 과정</div>
+          <div class="cert-detail-value">SPIN Selling 3.0</div>
+        </div>
+        <div class="cert-detail">
+          <div class="cert-detail-label">교육 일자</div>
+          <div class="cert-detail-value" id="certDate">2026.04.14~15</div>
+        </div>
+        <div class="cert-detail">
+          <div class="cert-detail-label">교육 회사</div>
+          <div class="cert-detail-value" id="certCompany">존슨콘트롤즈</div>
+        </div>
+        <div class="cert-detail">
+          <div class="cert-detail-label">총점</div>
+          <div class="cert-detail-value" id="certScore">0 / 600</div>
+        </div>
+      </div>
+
+      <div class="cert-footer">
+        <div class="cert-sign">
+          <div class="cert-sign-line"></div>
+          <div class="cert-sign-name">심재우</div>
+          <div class="cert-sign-title">SB Consulting 대표<br>Korn Ferry Certified SPIN Master Trainer</div>
+        </div>
+        <div class="cert-sign">
+          <div class="cert-sign-line"></div>
+          <div class="cert-sign-name" id="certIssueDateText">2026.04.15</div>
+          <div class="cert-sign-title">발급일자</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+async function initCert() {
+  const session = getSavedSession();
+  if (!session) return;
+
+  const members = await fetchAllMembers();
+  const registered = members.filter(m => m.name && m.name.trim());
+  const select = document.getElementById('certMember');
+
+  registered.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = `팀 ${m.team_id} — ${m.name}`;
+    select.appendChild(opt);
+  });
+
+  // 교육생 본인이면 자동 선택
+  const role = getSavedRole();
+  const user = getSavedUser();
+  if (role === 'trainee' && user) {
+    select.value = user.id;
+    loadCertificate();
+  }
+}
+
+async function loadCertificate() {
+  const memberId = document.getElementById('certMember').value;
+  if (!memberId) { document.getElementById('certArea').style.display = 'none'; return; }
+
+  const session = getSavedSession();
+  const members = await fetchAllMembers();
+  const member = members.find(m => m.id == memberId);
+  if (!member) return;
+
+  const total = (member.score_quiz||0) + (member.score_needs||0) + (member.score_scenario||0) + (member.score_practice||0) + (member.score_roleplay||0) + (member.score_fab||0);
+
+  document.getElementById('certName').textContent = member.name;
+  document.getElementById('certCompany').textContent = session.company_name || '';
+  document.getElementById('certDate').textContent = session.training_date || '';
+  document.getElementById('certScore').textContent = total + ' / 600';
+  document.getElementById('certIssueDateText').textContent = new Date().toLocaleDateString('ko-KR');
+  document.getElementById('certArea').style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(initCert, 200));
+</script>
+</body>
+</html>
