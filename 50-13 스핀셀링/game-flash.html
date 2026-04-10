@@ -6,8 +6,8 @@
 <title>SPIN 플래시카드</title>
 <link rel="stylesheet" href="common.css">
 <style>
-.fc-container { max-width: 700px; margin: 0 auto; padding: 32px 24px; }
-.fc-stats { display: flex; gap: 12px; margin-bottom: 24px; }
+.fc-container { max-width: 720px; margin: 0 auto; padding: 32px 24px; }
+.fc-stats { display: flex; gap: 12px; margin-bottom: 20px; }
 .fc-stat { flex: 1; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
 .fc-stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 .fc-stat-value { font-size: 22px; font-weight: 900; margin-top: 4px; }
@@ -16,35 +16,47 @@
 .fc-filter-btn { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--card); font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-muted); }
 .fc-filter-btn.active { background: var(--accent2); color: white; border-color: var(--accent2); }
 
-.fc-card-wrap { perspective: 1000px; margin-bottom: 24px; }
-.fc-card { width: 100%; min-height: 320px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
-.fc-card.flipped { transform: rotateY(180deg); }
-
-.fc-card-side { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 16px; padding: 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
-.fc-card-front { background: linear-gradient(135deg, var(--card), var(--pastel-blue)); border: 2px solid var(--border); }
-.fc-card-back { background: linear-gradient(135deg, var(--card), var(--pastel-green)); border: 2px solid var(--border); transform: rotateY(180deg); }
-
-.fc-industry { font-size: 12px; color: var(--blue); font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-.fc-question { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.6; max-width: 90%; }
-.fc-hint { position: absolute; bottom: 16px; font-size: 11px; color: var(--text-disabled); }
-
-.fc-spin-badge { display: inline-block; padding: 12px 24px; border-radius: 12px; font-size: 32px; font-weight: 900; margin-bottom: 16px; }
-.fc-spin-badge.S { background: #e8f4fd; color: #2980b9; }
-.fc-spin-badge.P { background: #fef5e7; color: #d68910; }
-.fc-spin-badge.I { background: #fdedec; color: #c0392b; }
-.fc-spin-badge.N { background: #eafaf1; color: #1e8449; }
-.fc-spin-name { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 16px; }
-.fc-tip { font-size: 14px; color: var(--text-tertiary); line-height: 1.7; max-width: 90%; }
-
-.fc-actions { display: flex; gap: 12px; }
-.fc-action-btn { flex: 1; padding: 16px; border-radius: 12px; border: none; font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
-.fc-know { background: linear-gradient(135deg, var(--green), var(--green-light)); color: white; }
-.fc-know:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(30,132,73,0.3); }
-.fc-dont-know { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; }
-.fc-dont-know:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(192,57,43,0.3); }
-
 .fc-progress { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
 .fc-progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transition: width 0.3s; }
+
+.fc-question-card { background: linear-gradient(135deg, var(--card), var(--pastel-blue)); border: 2px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; min-height: 180px; display: flex; flex-direction: column; justify-content: center; }
+.fc-industry { font-size: 12px; color: var(--blue); font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.fc-question { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.7; }
+
+.fc-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+.fc-option { padding: 18px; border: 2px solid var(--border); border-radius: 12px; background: var(--card); font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fc-option-letter { font-size: 24px; font-weight: 900; }
+.fc-option-name { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.fc-option:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.fc-option.S:hover:not(:disabled), .fc-option.S.selected { border-color: #2980b9; background: #e8f4fd; }
+.fc-option.S:hover:not(:disabled) .fc-option-letter, .fc-option.S.selected .fc-option-letter { color: #2980b9; }
+.fc-option.P:hover:not(:disabled), .fc-option.P.selected { border-color: #d68910; background: #fef5e7; }
+.fc-option.P:hover:not(:disabled) .fc-option-letter, .fc-option.P.selected .fc-option-letter { color: #d68910; }
+.fc-option.I:hover:not(:disabled), .fc-option.I.selected { border-color: #c0392b; background: #fdedec; }
+.fc-option.I:hover:not(:disabled) .fc-option-letter, .fc-option.I.selected .fc-option-letter { color: #c0392b; }
+.fc-option.N:hover:not(:disabled), .fc-option.N.selected { border-color: #1e8449; background: #eafaf1; }
+.fc-option.N:hover:not(:disabled) .fc-option-letter, .fc-option.N.selected .fc-option-letter { color: #1e8449; }
+.fc-option.correct { background: #eafaf1 !important; border-color: #1e8449 !important; }
+.fc-option.correct .fc-option-letter { color: #1e8449; }
+.fc-option.wrong { background: #fdedec !important; border-color: #c0392b !important; }
+.fc-option.wrong .fc-option-letter { color: #c0392b; }
+.fc-option:disabled { cursor: not-allowed; }
+
+.fc-feedback { display: none; padding: 18px 22px; border-radius: 14px; margin-bottom: 20px; }
+.fc-feedback.show { display: block; animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.fc-feedback.correct { background: rgba(30,132,73,0.08); border: 2px solid rgba(30,132,73,0.25); }
+.fc-feedback.wrong { background: rgba(192,57,43,0.08); border: 2px solid rgba(192,57,43,0.25); }
+.fc-fb-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+.fc-feedback.correct .fc-fb-title { color: var(--green); }
+.fc-feedback.wrong .fc-fb-title { color: var(--accent); }
+.fc-fb-answer { font-size: 14px; color: var(--text); margin-bottom: 8px; line-height: 1.6; }
+.fc-fb-answer strong { padding: 2px 8px; border-radius: 6px; font-weight: 800; }
+.fc-fb-tip { font-size: 13px; color: var(--text-tertiary); line-height: 1.7; padding: 12px 14px; background: rgba(255,255,255,0.6); border-radius: 10px; margin-top: 8px; }
+
+.fc-next-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--blue), var(--blue-light)); color: white; font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; display: none; }
+.fc-next-btn.show { display: block; }
+.fc-next-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(36,113,163,0.3); }
 </style>
 </head>
 <body>
@@ -67,15 +79,15 @@
 <div class="fc-container">
   <div class="card" style="margin-bottom:20px;">
     <div class="card-title"><span class="icon">🃏</span> SPIN 플래시카드</div>
-    <p style="color:var(--text-tertiary); font-size:13px;">카드를 클릭하면 뒤집힙니다. 질문을 보고 SPIN 유형을 떠올린 후 답을 확인하세요.</p>
-    <details class="game-guide" open style="margin-top:14px;">
+    <p style="color:var(--text-tertiary); font-size:13px;">질문을 보고 S/P/I/N 4가지 중 정답을 선택하세요. 오답 시 정답과 활용팁을 확인할 수 있습니다.</p>
+    <details class="game-guide" style="margin-top:14px;">
       <summary style="cursor:pointer; font-size:13px; font-weight:700; color:var(--accent2); padding:10px 14px; background:var(--pastel-blue); border:1px solid rgba(36,113,163,0.15); border-radius:10px; user-select:none;">📖 게임 가이드 — 클릭하여 펼치기/접기</summary>
       <div style="margin-top:12px; padding:18px 22px; background:var(--bg); border:1px solid var(--border); border-radius:12px;">
         <div style="display:grid; gap:14px;">
-          <div><strong style="color:var(--accent2); font-size:13px;">🎯 목적</strong><br><span style="font-size:13px; color:var(--text-tertiary); line-height:1.7;">132개의 우수 SPIN 질문 패턴을 반복 학습하여 본인의 영업 어휘로 만듭니다. 출퇴근 시간이나 자투리 시간에 활용하기 좋은 개인 학습 도구입니다.</span></div>
-          <div><strong style="color:var(--accent2); font-size:13px;">🏆 목표</strong><br><span style="font-size:13px; color:var(--text-tertiary); line-height:1.7;">가능한 많은 카드를 "안다"로 분류하고, "모른다"로 분류된 카드는 다시 학습합니다.</span></div>
-          <div><strong style="color:var(--accent2); font-size:13px;">📝 참가 방법</strong><br><ol style="font-size:13px; color:var(--text-tertiary); line-height:1.8; margin:4px 0 0 18px;"><li>상단 필터로 학습할 SPIN 유형 선택 (전체/S/P/I/N)</li><li>카드 앞면의 질문을 읽고 어떤 유형인지 떠올립니다</li><li>카드를 클릭하여 뒤집고 정답과 활용팁 확인</li><li>✅ 안다 / ❌ 모른다 버튼으로 분류</li></ol></div>
-          <div><strong style="color:var(--accent2); font-size:13px;">⚔️ 대결 방식 & 점수</strong><br><ul style="font-size:13px; color:var(--text-tertiary); line-height:1.8; margin:4px 0 0 18px;"><li><strong>개인 학습</strong> — 시간 제한 없음, 자기 페이스로 진행</li><li>"안다" 1개당: <strong>+10점</strong> 적립</li><li>전체 132개 카드 학습 시 최대 1,320점</li><li>특정 유형만 집중 학습 가능 (S/P/I/N 필터)</li></ul></div>
+          <div><strong style="color:var(--accent2); font-size:13px;">🎯 목적</strong><br><span style="font-size:13px; color:var(--text-tertiary); line-height:1.7;">132개의 우수 SPIN 질문 패턴을 4지선다로 학습. 정답/오답 즉시 피드백으로 SPIN 분류 능력을 키웁니다.</span></div>
+          <div><strong style="color:var(--accent2); font-size:13px;">🏆 목표</strong><br><span style="font-size:13px; color:var(--text-tertiary); line-height:1.7;">제시된 SPIN 질문이 S/P/I/N 중 어떤 유형인지 정확히 분류합니다.</span></div>
+          <div><strong style="color:var(--accent2); font-size:13px;">📝 참가 방법</strong><br><ol style="font-size:13px; color:var(--text-tertiary); line-height:1.8; margin:4px 0 0 18px;"><li>상단 필터로 학습할 SPIN 유형 선택 (전체/S/P/I/N)</li><li>화면의 SPIN 질문을 읽습니다</li><li>하단 4지선다(S/P/I/N) 중 정답을 클릭</li><li>정답/오답 결과 + 활용팁 확인</li><li>다음 카드 버튼으로 진행</li></ol></div>
+          <div><strong style="color:var(--accent2); font-size:13px;">⚔️ 대결 방식 & 점수</strong><br><ul style="font-size:13px; color:var(--text-tertiary); line-height:1.8; margin:4px 0 0 18px;"><li><strong>개인 학습</strong> — 시간 제한 없음, 자기 페이스로 진행</li><li>정답 1개당: <strong>+10점</strong></li><li>오답 시 점수 차감 없음 (학습 친화적)</li><li>전체 132개 카드 학습 시 최대 1,320점</li></ul></div>
         </div>
       </div>
     </details>
@@ -83,8 +95,8 @@
 
   <div class="fc-stats">
     <div class="fc-stat"><div class="fc-stat-label">진행</div><div class="fc-stat-value" id="fcProgress" style="color:var(--blue);">0/0</div></div>
-    <div class="fc-stat"><div class="fc-stat-label">안다</div><div class="fc-stat-value" id="fcKnown" style="color:var(--green);">0</div></div>
-    <div class="fc-stat"><div class="fc-stat-label">모른다</div><div class="fc-stat-value" id="fcUnknown" style="color:var(--accent);">0</div></div>
+    <div class="fc-stat"><div class="fc-stat-label">정답</div><div class="fc-stat-value" id="fcCorrect" style="color:var(--green);">0</div></div>
+    <div class="fc-stat"><div class="fc-stat-label">오답</div><div class="fc-stat-value" id="fcWrong" style="color:var(--accent);">0</div></div>
   </div>
 
   <div class="fc-controls">
@@ -97,25 +109,25 @@
 
   <div class="fc-progress"><div class="fc-progress-fill" id="fcProgressFill" style="width:0%"></div></div>
 
-  <div class="fc-card-wrap">
-    <div class="fc-card" id="fcCard" onclick="flipCard()">
-      <div class="fc-card-side fc-card-front">
-        <div class="fc-industry" id="fcIndustry"></div>
-        <div class="fc-question" id="fcQuestion"></div>
-        <div class="fc-hint">👆 클릭하여 답 확인</div>
-      </div>
-      <div class="fc-card-side fc-card-back">
-        <div class="fc-spin-badge" id="fcBadge">S</div>
-        <div class="fc-spin-name" id="fcSpinName">상황질문</div>
-        <div class="fc-tip" id="fcTip"></div>
-      </div>
-    </div>
+  <div class="fc-question-card">
+    <div class="fc-industry" id="fcIndustry"></div>
+    <div class="fc-question" id="fcQuestion"></div>
   </div>
 
-  <div class="fc-actions">
-    <button class="fc-action-btn fc-dont-know" onclick="markCard(false)">❌ 모른다</button>
-    <button class="fc-action-btn fc-know" onclick="markCard(true)">✅ 안다</button>
+  <div class="fc-options">
+    <button class="fc-option S" onclick="answer('S')"><span class="fc-option-letter">S</span><span class="fc-option-name">상황질문</span></button>
+    <button class="fc-option P" onclick="answer('P')"><span class="fc-option-letter">P</span><span class="fc-option-name">문제질문</span></button>
+    <button class="fc-option I" onclick="answer('I')"><span class="fc-option-letter">I</span><span class="fc-option-name">시사질문</span></button>
+    <button class="fc-option N" onclick="answer('N')"><span class="fc-option-letter">N</span><span class="fc-option-name">해결질문</span></button>
   </div>
+
+  <div class="fc-feedback" id="fcFeedback">
+    <div class="fc-fb-title" id="fcFbTitle"></div>
+    <div class="fc-fb-answer" id="fcFbAnswer"></div>
+    <div class="fc-fb-tip" id="fcFbTip"></div>
+  </div>
+
+  <button class="fc-next-btn" id="fcNextBtn" onclick="nextCard()">다음 카드 →</button>
 </div>
 
 <div id="footerPlaceholder"></div>
@@ -127,11 +139,24 @@
 <script>
 let cards = [];
 let currentIdx = 0;
-let known = 0;
-let unknown = 0;
+let correct = 0;
+let wrong = 0;
 let activeFilter = 'all';
+let answered = false;
 
-const TYPE_NAMES = { S: '상황질문', P: '문제질문', I: '시사질문', N: '해결질문' };
+const TYPE_NAMES = { S: '상황질문 (Situation)', P: '문제질문 (Problem)', I: '시사질문 (Implication)', N: '해결질문 (Need-Payoff)' };
+const TYPE_DESC = {
+  S: '고객의 현재 상황과 배경을 파악하는 사실 확인 질문',
+  P: '고객의 어려움/불만/문제점을 탐색하는 잠재니즈 질문',
+  I: '문제의 영향과 결과를 심화시켜 잠재니즈를 현재니즈로 전환',
+  N: '해결책의 가치와 이점을 고객이 직접 말하게 하는 질문'
+};
+const TYPE_BADGE_COLOR = {
+  S: 'background:#e8f4fd;color:#2980b9;',
+  P: 'background:#fef5e7;color:#d68910;',
+  I: 'background:#fdedec;color:#c0392b;',
+  N: 'background:#eafaf1;color:#1e8449;'
+};
 
 function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
 
@@ -145,39 +170,73 @@ function setFilter(type, btn) {
 function startGame() {
   cards = activeFilter === 'all' ? shuffle(SPIN_QUESTIONS) : shuffle(SPIN_QUESTIONS.filter(q => q.type === activeFilter));
   currentIdx = 0;
-  known = 0;
-  unknown = 0;
+  correct = 0;
+  wrong = 0;
   showCard();
 }
 
 function showCard() {
   if (currentIdx >= cards.length) {
-    alert('모든 카드를 확인했습니다!\n안다: ' + known + ' / 모른다: ' + unknown);
-    saveGameScore('flash', 'SPIN 플래시카드', known * 10, { known: known, unknown: unknown });
+    alert('모든 카드를 완료했습니다!\n정답: ' + correct + ' / 오답: ' + wrong);
+    saveGameScore('flash', 'SPIN 플래시카드', correct * 10, { correct: correct, wrong: wrong });
     currentIdx = 0;
+    correct = 0;
+    wrong = 0;
+    showCard();
     return;
   }
+  answered = false;
   const c = cards[currentIdx];
-  document.getElementById('fcCard').classList.remove('flipped');
   document.getElementById('fcIndustry').textContent = '📍 ' + c.ind;
   document.getElementById('fcQuestion').textContent = '"' + c.q + '"';
-  document.getElementById('fcBadge').textContent = c.type;
-  document.getElementById('fcBadge').className = 'fc-spin-badge ' + c.type;
-  document.getElementById('fcSpinName').textContent = TYPE_NAMES[c.type];
-  document.getElementById('fcTip').textContent = '💡 ' + c.tip;
   document.getElementById('fcProgress').textContent = (currentIdx + 1) + '/' + cards.length;
-  document.getElementById('fcKnown').textContent = known;
-  document.getElementById('fcUnknown').textContent = unknown;
+  document.getElementById('fcCorrect').textContent = correct;
+  document.getElementById('fcWrong').textContent = wrong;
   document.getElementById('fcProgressFill').style.width = ((currentIdx + 1) / cards.length * 100) + '%';
+  document.getElementById('fcFeedback').classList.remove('show');
+  document.getElementById('fcNextBtn').classList.remove('show');
+  document.querySelectorAll('.fc-option').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('correct', 'wrong', 'selected');
+  });
 }
 
-function flipCard() {
-  document.getElementById('fcCard').classList.toggle('flipped');
+function answer(choice) {
+  if (answered) return;
+  answered = true;
+  const c = cards[currentIdx];
+  const isCorrect = choice === c.type;
+
+  document.querySelectorAll('.fc-option').forEach(b => { b.disabled = true; });
+  document.querySelector('.fc-option.' + c.type).classList.add('correct');
+  if (!isCorrect) {
+    document.querySelector('.fc-option.' + choice).classList.add('wrong');
+  }
+
+  const fb = document.getElementById('fcFeedback');
+  const fbTitle = document.getElementById('fcFbTitle');
+  const fbAnswer = document.getElementById('fcFbAnswer');
+  const fbTip = document.getElementById('fcFbTip');
+
+  if (isCorrect) {
+    correct++;
+    fb.className = 'fc-feedback correct show';
+    fbTitle.textContent = '✅ 정답입니다!';
+    fbAnswer.innerHTML = '이 질문은 <strong style="' + TYPE_BADGE_COLOR[c.type] + '">' + c.type + ' · ' + TYPE_NAMES[c.type] + '</strong> 입니다.<br><span style="font-size:13px; color:var(--text-muted);">' + TYPE_DESC[c.type] + '</span>';
+  } else {
+    wrong++;
+    fb.className = 'fc-feedback wrong show';
+    fbTitle.textContent = '❌ 오답입니다';
+    fbAnswer.innerHTML = '당신의 선택: <strong style="' + TYPE_BADGE_COLOR[choice] + '">' + choice + '</strong> &nbsp;→&nbsp; 정답: <strong style="' + TYPE_BADGE_COLOR[c.type] + '">' + c.type + ' · ' + TYPE_NAMES[c.type] + '</strong><br><span style="font-size:13px; color:var(--text-muted);">' + TYPE_DESC[c.type] + '</span>';
+  }
+  fbTip.innerHTML = '💡 <strong>활용팁:</strong> ' + c.tip;
+
+  document.getElementById('fcCorrect').textContent = correct;
+  document.getElementById('fcWrong').textContent = wrong;
+  document.getElementById('fcNextBtn').classList.add('show');
 }
 
-function markCard(isKnown) {
-  if (isKnown) known++;
-  else unknown++;
+function nextCard() {
   currentIdx++;
   showCard();
 }
