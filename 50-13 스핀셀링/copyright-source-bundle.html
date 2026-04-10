@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>SPIN Selling AI 교육 플랫폼 — 소스코드 통합 문서 (저작권 등록용)</title>
+<style>
+@page { size: A4; margin: 20mm 15mm; }
+@media print {
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+  .file-section { page-break-before: always; }
+  .cover, .toc-page { page-break-after: always; }
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  color: #000;
+  background: #fff;
+  font-size: 10.5pt;
+  line-height: 1.55;
+}
+.container {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 10mm 10mm;
+  background: #fff;
+}
+/* ===== 표지 ===== */
+.cover {
+  min-height: 257mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 3px double #000;
+  padding: 40mm 20mm;
+}
+.cover .doc-type {
+  font-size: 13pt;
+  letter-spacing: 8px;
+  margin-bottom: 30mm;
+  font-weight: 600;
+}
+.cover .title {
+  font-size: 28pt;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 10mm;
+}
+.cover .subtitle {
+  font-size: 16pt;
+  font-weight: 500;
+  margin-bottom: 40mm;
+  color: #333;
+}
+.cover .info-table {
+  width: 75%;
+  margin: 20mm auto 0;
+  border-collapse: collapse;
+  font-size: 11pt;
+}
+.cover .info-table th,
+.cover .info-table td {
+  border: 1px solid #000;
+  padding: 10px 16px;
+  text-align: left;
+}
+.cover .info-table th {
+  background: #f0f0f0;
+  width: 35%;
+  font-weight: 700;
+}
+.cover .footer-line {
+  margin-top: 30mm;
+  font-size: 10pt;
+  color: #555;
+}
+/* ===== TOC ===== */
+.toc-page {
+  padding: 20mm 0 0;
+}
+.toc-title {
+  font-size: 20pt;
+  font-weight: 900;
+  border-bottom: 3px solid #000;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+.toc-intro {
+  font-size: 10pt;
+  color: #333;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+.toc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10pt;
+}
+.toc-table th,
+.toc-table td {
+  border: 1px solid #000;
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.toc-table th {
+  background: #e8e8e8;
+  font-weight: 700;
+}
+.toc-num { width: 10%; text-align: center; }
+.toc-name { width: 25%; font-weight: 700; }
+.toc-desc { width: 50%; }
+.toc-lines { width: 15%; text-align: center; }
+.toc-note {
+  margin-top: 16px;
+  padding: 10px 14px;
+  background: #f6f6f6;
+  border-left: 4px solid #000;
+  font-size: 9.5pt;
+  line-height: 1.6;
+}
+/* ===== 파일 섹션 ===== */
+.file-section {
+  padding-top: 6mm;
+}
+.file-header {
+  border-top: 3px solid #000;
+  border-bottom: 1px solid #000;
+  padding: 8px 0;
+  margin-bottom: 8px;
+}
+.file-name {
+  font-size: 13pt;
+  font-weight: 900;
+}
+.file-meta {
+  font-size: 9pt;
+  color: #444;
+  margin-top: 3px;
+  font-family: 'Consolas', monospace;
+}
+pre.code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 8.5pt;
+  line-height: 1.35;
+  color: #000;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.ln {
+  display: inline-block;
+  min-width: 3.5em;
+  text-align: right;
+  color: #888;
+  user-select: none;
+  margin-right: 6px;
+  border-right: 1px solid #ddd;
+  padding-right: 6px;
+}
+/* ===== 푸터 (페이지 하단 저작권) ===== */
+.copyright-footer {
+  margin-top: 14mm;
+  padding-top: 6mm;
+  border-top: 1px solid #000;
+  font-size: 9pt;
+  text-align: center;
+  color: #333;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ========== 표지 ========== -->
+  <section class="cover">
+    <div class="doc-type">COPYRIGHT REGISTRATION</div>
+    <div class="title">소스코드 통합 문서<br>— 저작권 등록용 —</div>
+    <div class="subtitle">SPIN Selling AI 교육 플랫폼<br>(Korn Ferry 공인 B2B 영업 훈련 시스템)</div>
+
+    <table class="info-table">
+      <tr><th>저작물명</th><td>SPIN Selling AI 교육 플랫폼</td></tr>
+      <tr><th>저작자</th><td>심재우 (SB Consulting)</td></tr>
+      <tr><th>자격</th><td>Global Certified SPIN Master Trainer<br>(Korn Ferry 국제공인 마스터트레이너)</td></tr>
+      <tr><th>저작물 종류</th><td>컴퓨터프로그램저작물 (웹 응용 프로그램)</td></tr>
+      <tr><th>개발 언어</th><td>HTML5, CSS3, JavaScript (ES6+), Supabase, Gemini AI</td></tr>
+      <tr><th>등록 기관</th><td>한국저작권위원회 (KCC)</td></tr>
+      <tr><th>작성일</th><td>2026년 4월</td></tr>
+    </table>
+
+    <div class="footer-line">
+      본 문서는 한국저작권위원회 컴퓨터프로그램저작물 등록 시 첨부용 소스코드 문서입니다.<br>
+      권장 첨부 범위(처음 20쪽 + 마지막 20쪽)에 맞춰 핵심 5개 파일을 발췌·수록합니다.
+    </div>
+  </section>
+
+  <!-- ========== 목차 ========== -->
+  <section class="toc-page page-break">
+    <div class="toc-title">수록 파일 목차</div>
+    <div class="toc-intro">
+      본 통합 문서는 SPIN Selling AI 교육 플랫폼의 핵심 소스코드 5개 파일을 한국저작권위원회 권장 양식
+      (프로그램 앞 20쪽 + 뒤 20쪽)에 맞춰 수록한 것입니다. 각 파일은 새 페이지에서 시작하며, 좌측에 라인 번호가 표시됩니다.
+    </div>
+    <table class="toc-table">
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>파일명</th>
+          <th>역할 설명</th>
+          <th>행 수</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+  <tr>
+    <td class="toc-num">01</td>
+    <td class="toc-name">index.html</td>
+    <td class="toc-desc">랜딩 페이지 (세션 선택, 비밀번호 모달, 관리자 패널)</td>
+    <td class="toc-lines">387</td>
+  </tr>
+  <tr>
+    <td class="toc-num">02</td>
+    <td class="toc-name">common.js</td>
+    <td class="toc-desc">공통 로직 — 세션/사용자/점수/네비게이션/푸터</td>
+    <td class="toc-lines">754</td>
+  </tr>
+  <tr>
+    <td class="toc-num">03</td>
+    <td class="toc-name">common.css (발췌)</td>
+    <td class="toc-desc">전역 스타일시트 (처음 200줄)</td>
+    <td class="toc-lines">200/1552</td>
+  </tr>
+  <tr>
+    <td class="toc-num">04</td>
+    <td class="toc-name">spin-knowledge-base.js</td>
+    <td class="toc-desc">RAG 지식베이스 (SPIN 방법론 + 플랫폼 가이드)</td>
+    <td class="toc-lines">104</td>
+  </tr>
+  <tr>
+    <td class="toc-num">05</td>
+    <td class="toc-name">chatbot.js</td>
+    <td class="toc-desc">SPIN AI Bot — Gemini 2.0 Flash RAG 챗봇</td>
+    <td class="toc-lines">467</td>
+  </tr>
+      </tbody>
+    </table>
+    <div class="toc-note">
+      <strong>포함 원칙.</strong>
+      프로젝트 전체는 100여 개 파일, 약 5만 행 규모입니다. 본 문서에는 플랫폼의 진입점(index.html), 공통 로직(common.js),
+      전역 스타일의 대표 발췌(common.css 1~200행), RAG 지식베이스(spin-knowledge-base.js), AI 챗봇 엔진(chatbot.js)을 수록하여
+      저작물의 창작적 표현을 대표할 수 있도록 구성했습니다.
+    </div>
+  </section>
+
+  <!-- ========== 파일별 소스 ========== -->
+  
+  <section class="file-section">
+    <div class="file-header">
+      <div class="file-name">① index.html — 랜딩 페이지 (세션 선택 + 관리자 패널)</div>
+      <div class="file-meta">index.html  (전체 388행)</div>
+    </div>
+    <pre class="code"><span class="ln">  1</span>  &lt;!DOCTYPE html&gt;
+<span class="ln">  2</span>  &lt;html lang="ko"&gt;
+<span class="ln">  3</span>  &lt;head&gt;
+<span class="ln">  4</span>  &lt;meta charset="UTF-8"&gt;
+<span class="ln">  5</span>  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+<span class="ln">  6</span>  &lt;title&gt;SPIN Selling - AI 교육 플랫폼&lt;/title&gt;
+<span class="ln">  7</span>  &lt;link rel="stylesheet" href="common.css"&gt;
+<span class="ln">  8</span>  &lt;style&gt;
+<span class="ln">  9</span>  /* ========== SESSION CARDS ========== */
+<span class="ln"> 10</span>  .session-card {
+<span class="ln"> 11</span>    display: flex;
+<span class="ln"> 12</span>    align-items: center;
+<span class="ln"> 13</span>    justify-content: space-between;
+<span class="ln"> 14</span>    padding: 20px 24px;
+<span class="ln"> 15</span>    background: var(--card);
+<span class="ln"> 16</span>    border: 2px solid var(--border);
+<span class="ln"> 17</span>    border-radius: 14px;
+<span class="ln"> 18</span>    margin-bottom: 10px;
+<span class="ln"> 19</span>    cursor: pointer;
+<span class="ln"> 20</span>    transition: all 0.2s;
+<span class="ln"> 21</span>  }
+<span class="ln"> 22</span>  
+<span class="ln"> 23</span>  .session-card:hover {
+<span class="ln"> 24</span>    border-color: var(--accent);
+<span class="ln"> 25</span>    box-shadow: var(--shadow-hover);
+<span class="ln"> 26</span>    transform: translateX(4px);
+<span class="ln"> 27</span>  }
+<span class="ln"> 28</span>  
+<span class="ln"> 29</span>  .session-card-name {
+<span class="ln"> 30</span>    font-size: 18px;
+<span class="ln"> 31</span>    font-weight: 800;
+<span class="ln"> 32</span>    color: var(--text);
+<span class="ln"> 33</span>  }
+<span class="ln"> 34</span>  
+<span class="ln"> 35</span>  .session-card-date {
+<span class="ln"> 36</span>    font-size: 13px;
+<span class="ln"> 37</span>    color: var(--text-muted);
+<span class="ln"> 38</span>    margin-top: 2px;
+<span class="ln"> 39</span>  }
+<span class="ln"> 40</span>  
+<span class="ln"> 41</span>  .session-card-arrow {
+<span class="ln"> 42</span>    font-size: 24px;
+<span class="ln"> 43</span>    color: var(--accent);
+<span class="ln"> 44</span>    font-weight: 700;
+<span class="ln"> 45</span>  }
+<span class="ln"> 46</span>  
+<span class="ln"> 47</span>  /* Admin link */
+<span class="ln"> 48</span>  .admin-link {
+<span class="ln"> 49</span>    display: inline-flex;
+<span class="ln"> 50</span>    align-items: center;
+<span class="ln"> 51</span>    gap: 6px;
+<span class="ln"> 52</span>    margin-top: 24px;
+<span class="ln"> 53</span>    padding: 10px 20px;
+<span class="ln"> 54</span>    background: var(--bg);
+<span class="ln"> 55</span>    border: 1px dashed var(--border);
+<span class="ln"> 56</span>    border-radius: 10px;
+<span class="ln"> 57</span>    font-size: 13px;
+<span class="ln"> 58</span>    font-weight: 600;
+<span class="ln"> 59</span>    color: var(--text-muted);
+<span class="ln"> 60</span>    cursor: pointer;
+<span class="ln"> 61</span>    transition: all 0.2s;
+<span class="ln"> 62</span>    text-decoration: none;
+<span class="ln"> 63</span>  }
+<span class="ln"> 64</span>  
+<span class="ln"> 65</span>  .admin-link:hover {
+<span class="ln"> 66</span>    border-color: var(--text-muted);
+<span class="ln"> 67</span>    color: var(--text);
+<span class="ln"> 68</span>    background: var(--card);
+<span class="ln"> 69</span>  }
+<span class="ln"> 70</span>  &lt;/style&gt;
+<span class="ln"> 71</span>  &lt;link rel="manifest" href="manifest.json"&gt;
+<span class="ln"> 72</span>  &lt;meta name="theme-color" content="#0a2240"&gt;
+<span class="ln"> 73</span>  &lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;
+<span class="ln"> 74</span>  &lt;/head&gt;
+<span class="ln"> 75</span>  &lt;body&gt;
+<span class="ln"> 76</span>  
+<span class="ln"> 77</span>  &lt;div class="auth-overlay hidden" id="authLogin"&gt;&lt;/div&gt;
+<span class="ln"> 78</span>  &lt;div class="auth-overlay hidden" id="authSignup"&gt;&lt;/div&gt;
+<span class="ln"> 79</span>  
+<span class="ln"> 80</span>  &lt;div id="mainApp" style="display:none;"&gt;
+<span class="ln"> 81</span>  
+<span class="ln"> 82</span>  &lt;!-- Header --&gt;
+<span class="ln"> 83</span>  &lt;div class="header"&gt;
+<span class="ln"> 84</span>    &lt;div class="logo"&gt;
+<span class="ln"> 85</span>      &lt;a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;"&gt;
+<span class="ln"> 86</span>        &lt;img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img"&gt;
+<span class="ln"> 87</span>        &lt;div&gt;
+<span class="ln"> 88</span>          &lt;div class="logo-text"&gt;SPIN Selling &lt;span style="color:var(--gold-light);"&gt;AI&lt;/span&gt;&lt;/div&gt;
+<span class="ln"> 89</span>          &lt;div class="logo-sub"&gt;AI-Powered Training&lt;/div&gt;
+<span class="ln"> 90</span>        &lt;/div&gt;
+<span class="ln"> 91</span>      &lt;/a&gt;
+<span class="ln"> 92</span>    &lt;/div&gt;
+<span class="ln"> 93</span>    &lt;div class="header-right"&gt;
+<span class="ln"> 94</span>      &lt;div class="team-badge" id="headerTeam"&gt;&lt;/div&gt;
+<span class="ln"> 95</span>      &lt;div class="score-display" id="headerScore" style="display:none;"&gt;0 점&lt;/div&gt;
+<span class="ln"> 96</span>    &lt;/div&gt;
+<span class="ln"> 97</span>  &lt;/div&gt;
+<span class="ln"> 98</span>  
+<span class="ln"> 99</span>  &lt;div id="navPlaceholder" data-active="home"&gt;&lt;/div&gt;
+<span class="ln">100</span>  
+<span class="ln">101</span>  &lt;div class="main"&gt;
+<span class="ln">102</span>  &lt;div class="section"&gt;
+<span class="ln">103</span>  
+<span class="ln">104</span>  &lt;!-- ========== 랜딩: 현재교육 선택 ========== --&gt;
+<span class="ln">105</span>  
+<span class="ln">106</span>    &lt;div class="hero" style="padding:0; overflow:hidden; border-radius:var(--radius);"&gt;
+<span class="ln">107</span>      &lt;img src="cover-spin.png" alt="SPIN 3.0 Sales Performance" style="width:100%; display:block; border-radius:var(--radius);"&gt;
+<span class="ln">108</span>    &lt;/div&gt;
+<span class="ln">109</span>  
+<span class="ln">110</span>    &lt;div class="card"&gt;
+<span class="ln">111</span>      &lt;div class="card-title"&gt;&lt;span class="icon"&gt;🏢&lt;/span&gt; 현재 진행 중인 교육&lt;/div&gt;
+<span class="ln">112</span>      &lt;div id="sessionList" style="font-size:13px; color:var(--text-tertiary);"&gt;불러오는 중...&lt;/div&gt;
+<span class="ln">113</span>    &lt;/div&gt;
+<span class="ln">114</span>  
+<span class="ln">115</span>  
+<span class="ln">116</span>    &lt;!-- 관리자 패널 (숨김) --&gt;
+<span class="ln">117</span>    &lt;div id="adminPanel" style="display:none; margin-top:24px;"&gt;
+<span class="ln">118</span>      &lt;div class="card" style="border-left:4px solid #e74c3c;"&gt;
+<span class="ln">119</span>        &lt;div class="card-title"&gt;&lt;span class="icon"&gt;🔧&lt;/span&gt; 시스템 관리자&lt;/div&gt;
+<span class="ln">120</span>        &lt;p style="color:var(--text-tertiary); margin-bottom:16px; font-size:13px;"&gt;
+<span class="ln">121</span>          새 교육 세션을 생성하고 교육생 명단을 등록합니다.
+<span class="ln">122</span>        &lt;/p&gt;
+<span class="ln">123</span>  
+<span class="ln">124</span>        &lt;div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;"&gt;
+<span class="ln">125</span>          &lt;input type="text" id="newCompanyName" placeholder="교육 회사명 (예: 현대자동차)" style="flex:2; min-width:200px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text);"&gt;
+<span class="ln">126</span>          &lt;input type="text" id="newTrainingDate" placeholder="교육일 (예: 2026.04.14~15)" style="flex:1; min-width:160px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text);"&gt;
+<span class="ln">127</span>          &lt;input type="text" id="newPassword" placeholder="입장 비밀번호 (숫자)" style="flex:1; min-width:120px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; background:var(--bg); color:var(--text); letter-spacing:2px;"&gt;
+<span class="ln">128</span>          &lt;button class="btn btn-primary" onclick="handleCreateSession()"&gt;교육 생성&lt;/button&gt;
+<span class="ln">129</span>        &lt;/div&gt;
+<span class="ln">130</span>  
+<span class="ln">131</span>        &lt;div id="adminSessionList" style="margin-top:16px;"&gt;&lt;/div&gt;
+<span class="ln">132</span>      &lt;/div&gt;
+<span class="ln">133</span>    &lt;/div&gt;
+<span class="ln">134</span>  
+<span class="ln">135</span>  &lt;/div&gt;
+<span class="ln">136</span>  &lt;/div&gt;
+<span class="ln">137</span>  
+<span class="ln">138</span>  &lt;!-- 비밀번호 확인 모달 --&gt;
+<span class="ln">139</span>  &lt;div class="modal-overlay" id="pwModal"&gt;
+<span class="ln">140</span>    &lt;div class="modal" style="max-width:360px; text-align:center;"&gt;
+<span class="ln">141</span>      &lt;h2 style="font-size:18px; margin-bottom:4px;"&gt;입장 비밀번호&lt;/h2&gt;
+<span class="ln">142</span>      &lt;p style="font-size:13px; color:var(--text-tertiary); margin-bottom:20px;" id="pwModalSession"&gt;&lt;/p&gt;
+<span class="ln">143</span>      &lt;input type="password" id="pwInput" inputmode="numeric" maxlength="10" placeholder="비밀번호 입력"
+<span class="ln">144</span>        style="width:100%; padding:14px; border:2px solid var(--border); border-radius:12px; font-family:inherit; font-size:20px; font-weight:700; text-align:center; letter-spacing:6px; color:var(--text); background:var(--bg); transition:border-color 0.2s; margin-bottom:8px;"
+<span class="ln">145</span>        onkeyup="if(event.key==='Enter') checkPassword()"&gt;
+<span class="ln">146</span>      &lt;div id="pwError" style="display:none; font-size:12px; color:var(--accent); font-weight:600; margin-bottom:12px;"&gt;&lt;/div&gt;
+<span class="ln">147</span>      &lt;div style="display:flex; gap:8px;"&gt;
+<span class="ln">148</span>        &lt;button onclick="closeModal('pwModal')" class="btn btn-secondary" style="flex:1;"&gt;취소&lt;/button&gt;
+<span class="ln">149</span>        &lt;button onclick="checkPassword()" class="btn btn-primary" style="flex:1;"&gt;입장&lt;/button&gt;
+<span class="ln">150</span>      &lt;/div&gt;
+<span class="ln">151</span>    &lt;/div&gt;
+<span class="ln">152</span>  &lt;/div&gt;
+<span class="ln">153</span>  
+<span class="ln">154</span>  &lt;div id="footerPlaceholder"&gt;&lt;/div&gt;
+<span class="ln">155</span>  
+<span class="ln">156</span>  &lt;/div&gt;&lt;!-- /mainApp --&gt;
+<span class="ln">157</span>  
+<span class="ln">158</span>  &lt;script src="common.js"&gt;&lt;/script&gt;
+<span class="ln">159</span>  &lt;script&gt;
+<span class="ln">160</span>  // ========== SESSION LIST ==========
+<span class="ln">161</span>  async function loadSessionList() {
+<span class="ln">162</span>    const sessions = await fetchSessions();
+<span class="ln">163</span>    const listEl = document.getElementById('sessionList');
+<span class="ln">164</span>  
+<span class="ln">165</span>    if (sessions.length === 0) {
+<span class="ln">166</span>      listEl.innerHTML = '&lt;p style="color:var(--text-disabled); text-align:center; padding:24px;"&gt;진행 중인 교육이 없습니다.&lt;br&gt;시스템 관리자에게 교육 생성을 요청하세요.&lt;/p&gt;';
+<span class="ln">167</span>      return;
+<span class="ln">168</span>    }
+<span class="ln">169</span>  
+<span class="ln">170</span>    // 각 세션별 교육생 수 조회
+<span class="ln">171</span>    const sessionCards = await Promise.all(sessions.map(async s =&gt; {
+<span class="ln">172</span>      const res = await fetch(
+<span class="ln">173</span>        `${SUPABASE_URL}/rest/v1/spin_members?session_id=eq.${s.id}&amp;name=neq.&amp;select=id`,
+<span class="ln">174</span>        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+<span class="ln">175</span>      );
+<span class="ln">176</span>      const members = await res.json();
+<span class="ln">177</span>      const memberCount = Array.isArray(members) ? members.length : 0;
+<span class="ln">178</span>      const date = s.training_date || '';
+<span class="ln">179</span>      return `
+<span class="ln">180</span>        &lt;div class="session-card" onclick="selectSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}', '${date.replace(/'/g,"\\'")}')"&gt;
+<span class="ln">181</span>          &lt;div&gt;
+<span class="ln">182</span>            &lt;div class="session-card-name"&gt;${s.company_name}&lt;/div&gt;
+<span class="ln">183</span>            &lt;div style="display:flex; align-items:center; gap:12px; margin-top:4px;"&gt;
+<span class="ln">184</span>              ${date ? `&lt;span class="session-card-date" style="margin:0;"&gt;${date}&lt;/span&gt;` : ''}
+<span class="ln">185</span>              &lt;span style="font-size:12px; font-weight:600; color:var(--blue);"&gt;교육생 ${memberCount}명&lt;/span&gt;
+<span class="ln">186</span>            &lt;/div&gt;
+<span class="ln">187</span>          &lt;/div&gt;
+<span class="ln">188</span>          &lt;span class="session-card-arrow"&gt;&amp;#8250;&lt;/span&gt;
+<span class="ln">189</span>        &lt;/div&gt;
+<span class="ln">190</span>      `;
+<span class="ln">191</span>    }));
+<span class="ln">192</span>  
+<span class="ln">193</span>    listEl.innerHTML = sessionCards.join('');
+<span class="ln">194</span>  }
+<span class="ln">195</span>  
+<span class="ln">196</span>  // 비밀번호 확인 후 입장
+<span class="ln">197</span>  let pendingSession = null;
+<span class="ln">198</span>  
+<span class="ln">199</span>  function selectSession(id, companyName, trainingDate) {
+<span class="ln">200</span>    pendingSession = { id, company_name: companyName, training_date: trainingDate };
+<span class="ln">201</span>    document.getElementById('pwModalSession').textContent = companyName;
+<span class="ln">202</span>    document.getElementById('pwInput').value = '';
+<span class="ln">203</span>    document.getElementById('pwError').style.display = 'none';
+<span class="ln">204</span>    document.getElementById('pwInput').style.borderColor = 'var(--border)';
+<span class="ln">205</span>    document.getElementById('pwModal').classList.add('active');
+<span class="ln">206</span>    setTimeout(() =&gt; document.getElementById('pwInput').focus(), 100);
+<span class="ln">207</span>  }
+<span class="ln">208</span>  
+<span class="ln">209</span>  async function checkPassword() {
+<span class="ln">210</span>    const input = document.getElementById('pwInput');
+<span class="ln">211</span>    const errorEl = document.getElementById('pwError');
+<span class="ln">212</span>    const entered = input.value.trim();
+<span class="ln">213</span>  
+<span class="ln">214</span>    if (!entered) {
+<span class="ln">215</span>      errorEl.textContent = '비밀번호를 입력하세요';
+<span class="ln">216</span>      errorEl.style.display = 'block';
+<span class="ln">217</span>      input.style.borderColor = 'var(--accent)';
+<span class="ln">218</span>      return;
+<span class="ln">219</span>    }
+<span class="ln">220</span>  
+<span class="ln">221</span>    const savedPw = await fetchSessionPassword(pendingSession.id);
+<span class="ln">222</span>  
+<span class="ln">223</span>    if (savedPw &amp;&amp; entered !== savedPw) {
+<span class="ln">224</span>      errorEl.textContent = '비밀번호가 틀립니다';
+<span class="ln">225</span>      errorEl.style.display = 'block';
+<span class="ln">226</span>      input.style.borderColor = 'var(--accent)';
+<span class="ln">227</span>      input.select();
+<span class="ln">228</span>      return;
+<span class="ln">229</span>    }
+<span class="ln">230</span>  
+<span class="ln">231</span>    // 비밀번호 일치 또는 비밀번호 미설정 → company.html로 이동
+<span class="ln">232</span>    closeModal('pwModal');
+<span class="ln">233</span>    saveSessionId(pendingSession);
+<span class="ln">234</span>    clearUser();
+<span class="ln">235</span>    clearRole();
+<span class="ln">236</span>    location.href = 'company.html';
+<span class="ln">237</span>  }
+<span class="ln">238</span>  
+<span class="ln">239</span>  // ========== ADMIN ==========
+<span class="ln">240</span>  const ADMIN_PW = '9633';
+<span class="ln">241</span>  
+<span class="ln">242</span>  function showAdminPanel() {
+<span class="ln">243</span>    const pw = prompt('관리자 비밀번호를 입력하세요');
+<span class="ln">244</span>    if (pw !== ADMIN_PW) {
+<span class="ln">245</span>      if (pw !== null) alert('비밀번호가 틀립니다');
+<span class="ln">246</span>      return;
+<span class="ln">247</span>    }
+<span class="ln">248</span>    const panel = document.getElementById('adminPanel');
+<span class="ln">249</span>    panel.style.display = 'block';
+<span class="ln">250</span>    loadAdminSessionList();
+<span class="ln">251</span>    setTimeout(() =&gt; panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+<span class="ln">252</span>  }
+<span class="ln">253</span>  
+<span class="ln">254</span>  async function handleCreateSession() {
+<span class="ln">255</span>    const name = document.getElementById('newCompanyName').value.trim();
+<span class="ln">256</span>    const date = document.getElementById('newTrainingDate').value.trim();
+<span class="ln">257</span>    const password = document.getElementById('newPassword').value.trim();
+<span class="ln">258</span>    if (!name) { alert('교육 회사명을 입력하세요.'); return; }
+<span class="ln">259</span>    if (!password) { alert('입장 비밀번호를 설정하세요.'); document.getElementById('newPassword').focus(); return; }
+<span class="ln">260</span>  
+<span class="ln">261</span>    const btn = event.target;
+<span class="ln">262</span>    btn.textContent = '생성 중...';
+<span class="ln">263</span>    btn.disabled = true;
+<span class="ln">264</span>  
+<span class="ln">265</span>    const session = await createSession(name, date, password);
+<span class="ln">266</span>    btn.textContent = '교육 생성';
+<span class="ln">267</span>    btn.disabled = false;
+<span class="ln">268</span>  
+<span class="ln">269</span>    document.getElementById('newCompanyName').value = '';
+<span class="ln">270</span>    document.getElementById('newTrainingDate').value = '';
+<span class="ln">271</span>    document.getElementById('newPassword').value = '';
+<span class="ln">272</span>  
+<span class="ln">273</span>    alert(`"${name}" 교육이 생성되었습니다.\n입장 비밀번호: ${password}\n팀 편성 페이지에서 교육생 명단을 등록하세요.`);
+<span class="ln">274</span>  
+<span class="ln">275</span>    // 관리자로 바로 팀 편성 이동
+<span class="ln">276</span>    saveSessionId({ id: session.id, company_name: session.company_name, training_date: session.training_date });
+<span class="ln">277</span>    saveRole('admin');
+<span class="ln">278</span>    location.href = 'team-setup.html';
+<span class="ln">279</span>  }
+<span class="ln">280</span>  
+<span class="ln">281</span>  async function loadAdminSessionList() {
+<span class="ln">282</span>    const sessions = await fetchSessions();
+<span class="ln">283</span>    const el = document.getElementById('adminSessionList');
+<span class="ln">284</span>    if (sessions.length === 0) {
+<span class="ln">285</span>      el.innerHTML = '&lt;p style="color:var(--text-disabled);"&gt;생성된 교육이 없습니다.&lt;/p&gt;';
+<span class="ln">286</span>      return;
+<span class="ln">287</span>    }
+<span class="ln">288</span>  
+<span class="ln">289</span>    el.innerHTML = '&lt;div style="font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:8px;"&gt;기존 교육 관리&lt;/div&gt;' +
+<span class="ln">290</span>      sessions.map(s =&gt; {
+<span class="ln">291</span>        const isEnded = s.team_names &amp;&amp; s.team_names.ended;
+<span class="ln">292</span>        return `
+<span class="ln">293</span>        &lt;div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:${isEnded ? 'rgba(192,57,43,0.03)' : 'var(--bg)'}; border:1px solid ${isEnded ? 'rgba(192,57,43,0.15)' : 'var(--border)'}; border-radius:8px; margin-bottom:6px;"&gt;
+<span class="ln">294</span>          &lt;div style="display:flex; align-items:center; gap:8px;"&gt;
+<span class="ln">295</span>            &lt;span style="font-weight:700; font-size:13px; ${isEnded ? 'color:var(--text-muted);' : ''}"&gt;${s.company_name}&lt;/span&gt;
+<span class="ln">296</span>            ${isEnded ? '&lt;span style="color:#c0392b; font-size:11px; font-weight:800;"&gt;교육종료&lt;/span&gt;' : ''}
+<span class="ln">297</span>            &lt;span style="color:var(--text-muted); font-size:11px;"&gt;${s.training_date || ''}&lt;/span&gt;
+<span class="ln">298</span>          &lt;/div&gt;
+<span class="ln">299</span>          &lt;div style="display:flex; gap:6px;"&gt;
+<span class="ln">300</span>            &lt;button onclick="adminToggleEnded('${s.id}', ${!isEnded})"
+<span class="ln">301</span>              style="font-size:11px; padding:4px 12px; background:${isEnded ? 'rgba(30,132,73,0.08)' : 'rgba(212,136,15,0.08)'}; color:${isEnded ? 'var(--green)' : 'var(--gold)'}; border:1px solid ${isEnded ? 'rgba(30,132,73,0.2)' : 'rgba(212,136,15,0.2)'}; border-radius:6px; cursor:pointer; font-family:inherit; font-weight:600;"&gt;${isEnded ? '재개' : '종료'}&lt;/button&gt;
+<span class="ln">302</span>            &lt;button onclick="adminEnterSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}', '${(s.training_date||'').replace(/'/g,"\\'")}')"
+<span class="ln">303</span>              class="btn btn-secondary" style="font-size:11px; padding:4px 12px;"&gt;팀 편성&lt;/button&gt;
+<span class="ln">304</span>            &lt;button onclick="adminDeleteSession('${s.id}', '${s.company_name.replace(/'/g,"\\'")}')"
+<span class="ln">305</span>              style="font-size:11px; padding:4px 12px; background:rgba(192,57,43,0.08); color:var(--accent); border:1px solid rgba(192,57,43,0.2); border-radius:6px; cursor:pointer; font-family:inherit; font-weight:600; transition:all 0.2s;"
+<span class="ln">306</span>              onmouseover="this.style.background='var(--accent)';this.style.color='white'" onmouseout="this.style.background='rgba(192,57,43,0.08)';this.style.color='var(--accent)'"&gt;삭제&lt;/button&gt;
+<span class="ln">307</span>          &lt;/div&gt;
+<span class="ln">308</span>        &lt;/div&gt;`;
+<span class="ln">309</span>      }).join('');
+<span class="ln">310</span>  }
+<span class="ln">311</span>  
+<span class="ln">312</span>  async function adminToggleEnded(sessionId, ended) {
+<span class="ln">313</span>    const res = await fetch(
+<span class="ln">314</span>      `${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${sessionId}&amp;select=team_names`,
+<span class="ln">315</span>      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+<span class="ln">316</span>    );
+<span class="ln">317</span>    const data = await res.json();
+<span class="ln">318</span>    const teamNames = (data &amp;&amp; data[0] &amp;&amp; data[0].team_names) || {};
+<span class="ln">319</span>    teamNames.ended = ended;
+<span class="ln">320</span>  
+<span class="ln">321</span>    await fetch(`${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${sessionId}`, {
+<span class="ln">322</span>      method: 'PATCH',
+<span class="ln">323</span>      headers: SB_HEADERS,
+<span class="ln">324</span>      body: JSON.stringify({ team_names: teamNames })
+<span class="ln">325</span>    });
+<span class="ln">326</span>  
+<span class="ln">327</span>    loadAdminSessionList();
+<span class="ln">328</span>  }
+<span class="ln">329</span>  
+<span class="ln">330</span>  async function adminDeleteSession(id, name) {
+<span class="ln">331</span>    if (!confirm(`"${name}" 교육을 삭제하시겠습니까?\n팀원 데이터도 모두 삭제됩니다.`)) return;
+<span class="ln">332</span>  
+<span class="ln">333</span>    // 세션을 삭제 표시 (company_name을 빈 문자열로)
+<span class="ln">334</span>    await fetch(`${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${id}`, {
+<span class="ln">335</span>      method: 'PATCH',
+<span class="ln">336</span>      headers: SB_HEADERS,
+<span class="ln">337</span>      body: JSON.stringify({ company_name: '', memo: '[deleted]' })
+<span class="ln">338</span>    });
+<span class="ln">339</span>  
+<span class="ln">340</span>    // 멤버 이름 초기화
+<span class="ln">341</span>    await fetch(`${SUPABASE_URL}/rest/v1/spin_members?session_id=eq.${id}`, {
+<span class="ln">342</span>      method: 'PATCH',
+<span class="ln">343</span>      headers: SB_HEADERS,
+<span class="ln">344</span>      body: JSON.stringify({ name: '', score_quiz: 0, score_needs: 0, score_scenario: 0, score_practice: 0, score_roleplay: 0, score_fab: 0 })
+<span class="ln">345</span>    });
+<span class="ln">346</span>  
+<span class="ln">347</span>    alert(`"${name}" 교육이 삭제되었습니다.`);
+<span class="ln">348</span>    loadAdminSessionList();
+<span class="ln">349</span>    loadSessionList();
+<span class="ln">350</span>  }
+<span class="ln">351</span>  
+<span class="ln">352</span>  function adminEnterSession(id, name, date) {
+<span class="ln">353</span>    saveSessionId({ id, company_name: name, training_date: date });
+<span class="ln">354</span>    saveRole('admin');
+<span class="ln">355</span>    location.href = 'team-setup.html';
+<span class="ln">356</span>  }
+<span class="ln">357</span>  
+<span class="ln">358</span>  // ========== INIT ==========
+<span class="ln">359</span>  document.addEventListener('DOMContentLoaded', function() {
+<span class="ln">360</span>    const session = getSavedSession();
+<span class="ln">361</span>    const role = getSavedRole();
+<span class="ln">362</span>    const user = getSavedUser();
+<span class="ln">363</span>  
+<span class="ln">364</span>    // 이미 로그인 상태면 company.html로
+<span class="ln">365</span>    if (session &amp;&amp; (role === 'trainer' || role === 'trainee' || role === 'manager') &amp;&amp; user) {
+<span class="ln">366</span>      location.href = 'company.html';
+<span class="ln">367</span>      return;
+<span class="ln">368</span>    }
+<span class="ln">369</span>  
+<span class="ln">370</span>    // 세션만 있으면 company.html로 (역할 선택 화면)
+<span class="ln">371</span>    if (session &amp;&amp; !role) {
+<span class="ln">372</span>      location.href = 'company.html';
+<span class="ln">373</span>      return;
+<span class="ln">374</span>    }
+<span class="ln">375</span>  
+<span class="ln">376</span>    // 랜딩 표시
+<span class="ln">377</span>    loadSessionList();
+<span class="ln">378</span>  
+<span class="ln">379</span>    if (localStorage.getItem('spin_open_admin') === '1') {
+<span class="ln">380</span>      localStorage.removeItem('spin_open_admin');
+<span class="ln">381</span>      setTimeout(() =&gt; showAdminPanel(), 500);
+<span class="ln">382</span>    }
+<span class="ln">383</span>  });
+<span class="ln">384</span>  &lt;/script&gt;
+<span class="ln">385</span>  &lt;script&gt;if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');&lt;/script&gt;
+<span class="ln">386</span>  &lt;/body&gt;
+<span class="ln">387</span>  &lt;/html&gt;
+<span class="ln">388</span>  </pre>
+  </section>
+
+  <section class="file-section">
+    <div class="file-header">
+      <div class="file-name">② common.js — 공통 로직 (세션/사용자/점수/네비게이션)</div>
+      <div class="file-meta">common.js  (전체 755행)</div>
+    </div>
+    <pre class="code"><span class="ln">  1</span>  // ========== SUPABASE CONFIG ==========
+<span class="ln">  2</span>  const SUPABASE_URL = 'https://xwpxulvywjthliphjuie.supabase.co';
+<span class="ln">  3</span>  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3cHh1bHZ5d2p0aGxpcGhqdWllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MjA3NTIsImV4cCI6MjA5MTA5Njc1Mn0.RauiZnZ2D-0hcHaoiUWkf-3dvb6QtGv5Q0RjZrLjaME';
+<span class="ln">  4</span>  const SB_HEADERS = {
+<span class="ln">  5</span>    'apikey': SUPABASE_KEY,
+<span class="ln">  6</span>    'Authorization': `Bearer ${SUPABASE_KEY}`,
+<span class="ln">  7</span>    'Content-Type': 'application/json'
+<span class="ln">  8</span>  };
+<span class="ln">  9</span>  
+<span class="ln"> 10</span>  // ========== STATE ==========
+<span class="ln"> 11</span>  const state = {
+<span class="ln"> 12</span>    session: null, // { id, company_name, training_date }
+<span class="ln"> 13</span>    user: null,    // { id, team_id, name, slot }
+<span class="ln"> 14</span>    personalScore: 0,
+<span class="ln"> 15</span>    spinCounts: { S: 0, P: 0, I: 0, N: 0 },
+<span class="ln"> 16</span>    quizCorrect: 0,
+<span class="ln"> 17</span>    quizTotal: 0,
+<span class="ln"> 18</span>    activities: [],
+<span class="ln"> 19</span>    currentQuiz: null,
+<span class="ln"> 20</span>    currentQuizIdx: 0,
+<span class="ln"> 21</span>    currentQuizQuestions: [],
+<span class="ln"> 22</span>    selectedSpinType: 'S',
+<span class="ln"> 23</span>    practiceHistory: [],
+<span class="ln"> 24</span>    roleplayMessages: [],
+<span class="ln"> 25</span>    roleplayScenario: null,
+<span class="ln"> 26</span>    roleplayTurnCount: 0
+<span class="ln"> 27</span>  };
+<span class="ln"> 28</span>  
+<span class="ln"> 29</span>  // ========== STORAGE HELPER (file:// 호환) ==========
+<span class="ln"> 30</span>  // file:// 프로토콜에서는 localStorage가 페이지 간 공유 안 됨
+<span class="ln"> 31</span>  // → window.name을 공유 저장소로 사용 (같은 탭에서 페이지 이동 시 유지)
+<span class="ln"> 32</span>  const _store = {};
+<span class="ln"> 33</span>  function _initStore() {
+<span class="ln"> 34</span>    try {
+<span class="ln"> 35</span>      if (window.name &amp;&amp; window.name.startsWith('{')) {
+<span class="ln"> 36</span>        Object.assign(_store, JSON.parse(window.name));
+<span class="ln"> 37</span>      }
+<span class="ln"> 38</span>    } catch(e) {}
+<span class="ln"> 39</span>  }
+<span class="ln"> 40</span>  _initStore();
+<span class="ln"> 41</span>  
+<span class="ln"> 42</span>  function _getItem(key) {
+<span class="ln"> 43</span>    // 1차: localStorage 시도
+<span class="ln"> 44</span>    try {
+<span class="ln"> 45</span>      const v = localStorage.getItem(key);
+<span class="ln"> 46</span>      if (v) return v;
+<span class="ln"> 47</span>    } catch(e) {}
+<span class="ln"> 48</span>    // 2차: window.name 저장소
+<span class="ln"> 49</span>    return _store[key] || null;
+<span class="ln"> 50</span>  }
+<span class="ln"> 51</span>  
+<span class="ln"> 52</span>  function _setItem(key, value) {
+<span class="ln"> 53</span>    try { localStorage.setItem(key, value); } catch(e) {}
+<span class="ln"> 54</span>    _store[key] = value;
+<span class="ln"> 55</span>    try { window.name = JSON.stringify(_store); } catch(e) {}
+<span class="ln"> 56</span>  }
+<span class="ln"> 57</span>  
+<span class="ln"> 58</span>  function _removeItem(key) {
+<span class="ln"> 59</span>    try { localStorage.removeItem(key); } catch(e) {}
+<span class="ln"> 60</span>    delete _store[key];
+<span class="ln"> 61</span>    try { window.name = JSON.stringify(_store); } catch(e) {}
+<span class="ln"> 62</span>  }
+<span class="ln"> 63</span>  
+<span class="ln"> 64</span>  // ========== SESSION MANAGEMENT ==========
+<span class="ln"> 65</span>  function getSavedSession() {
+<span class="ln"> 66</span>    return JSON.parse(_getItem('spin_session_id') || 'null');
+<span class="ln"> 67</span>  }
+<span class="ln"> 68</span>  
+<span class="ln"> 69</span>  function saveSessionId(session) {
+<span class="ln"> 70</span>    _setItem('spin_session_id', JSON.stringify(session));
+<span class="ln"> 71</span>    state.session = session;
+<span class="ln"> 72</span>  }
+<span class="ln"> 73</span>  
+<span class="ln"> 74</span>  function clearSessionId() {
+<span class="ln"> 75</span>    _removeItem('spin_session_id');
+<span class="ln"> 76</span>    state.session = null;
+<span class="ln"> 77</span>  }
+<span class="ln"> 78</span>  
+<span class="ln"> 79</span>  // Create new training session + 20 members
+<span class="ln"> 80</span>  async function createSession(companyName, trainingDate, password) {
+<span class="ln"> 81</span>    // 1. Create session (memo에 비밀번호 저장)
+<span class="ln"> 82</span>    const res = await fetch(`${SUPABASE_URL}/rest/v1/spin_sessions`, {
+<span class="ln"> 83</span>      method: 'POST',
+<span class="ln"> 84</span>      headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+<span class="ln"> 85</span>      body: JSON.stringify({
+<span class="ln"> 86</span>        company_name: companyName,
+<span class="ln"> 87</span>        training_date: trainingDate || '',
+<span class="ln"> 88</span>        memo: password || '',
+<span class="ln"> 89</span>        team_names: { A: '팀 A', B: '팀 B', C: '팀 C', D: '팀 D', E: '팀 E' }
+<span class="ln"> 90</span>      })
+<span class="ln"> 91</span>    });
+<span class="ln"> 92</span>    const sessions = await res.json();
+<span class="ln"> 93</span>    const session = sessions[0];
+<span class="ln"> 94</span>  
+<span class="ln"> 95</span>    // 2. Create 35 members (5 teams x 7)
+<span class="ln"> 96</span>    const members = [];
+<span class="ln"> 97</span>    ['A','B','C','D','E'].forEach(team =&gt; {
+<span class="ln"> 98</span>      for (let slot = 0; slot &lt; 7; slot++) {
+<span class="ln"> 99</span>        members.push({
+<span class="ln">100</span>          team_id: team,
+<span class="ln">101</span>          slot: slot,
+<span class="ln">102</span>          name: '',
+<span class="ln">103</span>          session_id: session.id,
+<span class="ln">104</span>          score_quiz: 0, score_needs: 0, score_scenario: 0,
+<span class="ln">105</span>          score_practice: 0, score_roleplay: 0, score_fab: 0
+<span class="ln">106</span>        });
+<span class="ln">107</span>      }
+<span class="ln">108</span>    });
+<span class="ln">109</span>  
+<span class="ln">110</span>    await fetch(`${SUPABASE_URL}/rest/v1/spin_members`, {
+<span class="ln">111</span>      method: 'POST',
+<span class="ln">112</span>      headers: SB_HEADERS,
+<span class="ln">113</span>      body: JSON.stringify(members)
+<span class="ln">114</span>    });
+<span class="ln">115</span>  
+<span class="ln">116</span>    return session;
+<span class="ln">117</span>  }
+<span class="ln">118</span>  
+<span class="ln">119</span>  // Fetch all sessions (삭제된 세션 제외)
+<span class="ln">120</span>  async function fetchSessions() {
+<span class="ln">121</span>    const res = await fetch(
+<span class="ln">122</span>      `${SUPABASE_URL}/rest/v1/spin_sessions?company_name=neq.&amp;select=*&amp;order=created_at.desc`,
+<span class="ln">123</span>      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+<span class="ln">124</span>    );
+<span class="ln">125</span>    return await res.json();
+<span class="ln">126</span>  }
+<span class="ln">127</span>  
+<span class="ln">128</span>  // Fetch session password (stored in memo)
+<span class="ln">129</span>  async function fetchSessionPassword(sessionId) {
+<span class="ln">130</span>    const res = await fetch(
+<span class="ln">131</span>      `${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${sessionId}&amp;select=memo`,
+<span class="ln">132</span>      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+<span class="ln">133</span>    );
+<span class="ln">134</span>    const data = await res.json();
+<span class="ln">135</span>    return (data &amp;&amp; data[0] &amp;&amp; data[0].memo) || '';
+<span class="ln">136</span>  }
+<span class="ln">137</span>  
+<span class="ln">138</span>  // Fetch current session's team names
+<span class="ln">139</span>  async function fetchTeamNames() {
+<span class="ln">140</span>    const session = getSavedSession();
+<span class="ln">141</span>    if (!session) return { A: '팀 A', B: '팀 B', C: '팀 C', D: '팀 D', E: '팀 E' };
+<span class="ln">142</span>    const res = await fetch(
+<span class="ln">143</span>      `${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${session.id}&amp;select=team_names`,
+<span class="ln">144</span>      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+<span class="ln">145</span>    );
+<span class="ln">146</span>    const data = await res.json();
+<span class="ln">147</span>    return (data &amp;&amp; data[0] &amp;&amp; data[0].team_names) || { A: '팀 A', B: '팀 B', C: '팀 C', D: '팀 D', E: '팀 E' };
+<span class="ln">148</span>  }
+<span class="ln">149</span>  
+<span class="ln">150</span>  // Update team name in session
+<span class="ln">151</span>  async function updateTeamName(teamKey, newName) {
+<span class="ln">152</span>    const session = getSavedSession();
+<span class="ln">153</span>    if (!session) return;
+<span class="ln">154</span>    const names = await fetchTeamNames();
+<span class="ln">155</span>    names[teamKey] = newName;
+<span class="ln">156</span>    await fetch(
+<span class="ln">157</span>      `${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${session.id}`,
+<span class="ln">158</span>      { method: 'PATCH', headers: SB_HEADERS, body: JSON.stringify({ team_names: names }) }
+<span class="ln">159</span>    );
+<span class="ln">160</span>  }
+<span class="ln">161</span>  
+<span class="ln">162</span>  // Save trainer name to Supabase session
+<span class="ln">163</span>  async function saveTrainerName(name) {
+<span class="ln">164</span>    const session = getSavedSession();
+<span class="ln">165</span>    if (!session) return;
+<span class="ln">166</span>    const data = await fetchTeamNames();
+<span class="ln">167</span>    data.trainer_name = name;
+<span class="ln">168</span>    await fetch(
+<span class="ln">169</span>      `${SUPABASE_URL}/rest/v1/spin_sessions?id=eq.${session.id}`,
+<span class="ln">170</span>      { method: 'PATCH', headers: SB_HEADERS, body: JSON.stringify({ team_names: data }) }
+<span class="ln">171</span>    );
+<span class="ln">172</span>  }
+<span class="ln">173</span>  
+<span class="ln">174</span>  // Fetch trainer name from Supabase session
+<span class="ln">175</span>  async function fetchTrainerName() {
+<span class="ln">176</span>    const data = await fetchTeamNames();
+<span class="ln">177</span>    return data.trainer_name || '';
+<span class="ln">178</span>  }
+<span class="ln">179</span>  
+<span class="ln">180</span>  // ========== ACCESS CODE ==========
+<span class="ln">181</span>  function getMemberCode(memberId) {
+<span class="ln">182</span>    const code = ((memberId * 7919 + 104729) % 10000);
+<span class="ln">183</span>    return String(code).padStart(4, '0');
+<span class="ln">184</span>  }
+<span class="ln">185</span>  
+<span class="ln">186</span>  // ========== ROLE MANAGEMENT ==========
+<span class="ln">187</span>  // roles: 'admin', 'trainer', 'trainee'
+<span class="ln">188</span>  function getSavedRole() {
+<span class="ln">189</span>    return localStorage.getItem('spin_role') || null;
+<span class="ln">190</span>  }
+<span class="ln">191</span>  
+<span class="ln">192</span>  function saveRole(role) {
+<span class="ln">193</span>    localStorage.setItem('spin_role', role);
+<span class="ln">194</span>  }
+<span class="ln">195</span>  
+<span class="ln">196</span>  function clearRole() {
+<span class="ln">197</span>    localStorage.removeItem('spin_role');
+<span class="ln">198</span>  }
+<span class="ln">199</span>  
+<span class="ln">200</span>  function isTrainer() {
+<span class="ln">201</span>    return getSavedRole() === 'trainer';
+<span class="ln">202</span>  }
+<span class="ln">203</span>  
+<span class="ln">204</span>  function isAdmin() {
+<span class="ln">205</span>    return getSavedRole() === 'admin';
+<span class="ln">206</span>  }
+<span class="ln">207</span>  
+<span class="ln">208</span>  // ========== USER IDENTITY ==========
+<span class="ln">209</span>  function getSavedUser() {
+<span class="ln">210</span>    return JSON.parse(localStorage.getItem('spin_current_user') || 'null');
+<span class="ln">211</span>  }
+<span class="ln">212</span>  
+<span class="ln">213</span>  function saveUser(user) {
+<span class="ln">214</span>    localStorage.setItem('spin_current_user', JSON.stringify(user));
+<span class="ln">215</span>    state.user = user;
+<span class="ln">216</span>  }
+<span class="ln">217</span>  
+<span class="ln">218</span>  function clearUser() {
+<span class="ln">219</span>    localStorage.removeItem('spin_current_user');
+<span class="ln">220</span>    state.user = null;
+<span class="ln">221</span>  }
+<span class="ln">222</span>  
+<span class="ln">223</span>  // Fetch members for current session
+<span class="ln">224</span>  async function fetchAllMembers() {
+<span class="ln">225</span>    const session = getSavedSession();
+<span class="ln">226</span>    if (!session) return [];
+<span class="ln">227</span>    const res = await fetch(
+<span class="ln">228</span>      `${SUPABASE_URL}/rest/v1/spin_members?session_id=eq.${session.id}&amp;select=*&amp;order=team_id,slot`,
+<span class="ln">229</span>      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+<span class="ln">230</span>    );
+<span class="ln">231</span>    return await res.json();
+<span class="ln">232</span>  }
+<span class="ln">233</span>  
+<span class="ln">234</span>  // Update member score
+<span class="ln">235</span>  async function supabaseAddScore(memberId, category, points) {
+<span class="ln">236</span>    const res = await fetch(
+<span class="ln">237</span>      `${SUPABASE_URL}/rest/v1/spin_members?id=eq.${memberId}&amp;select=score_${category}`,
+<span class="ln">238</span>      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+<span class="ln">239</span>    );
+<span class="ln">240</span>    const data = await res.json();
+<span class="ln">241</span>    if (!data || !data[0]) return;
+<span class="ln">242</span>  
+<span class="ln">243</span>    const currentScore = data[0][`score_${category}`] || 0;
+<span class="ln">244</span>    const newScore = currentScore + points;
+<span class="ln">245</span>  
+<span class="ln">246</span>    await fetch(
+<span class="ln">247</span>      `${SUPABASE_URL}/rest/v1/spin_members?id=eq.${memberId}`,
+<span class="ln">248</span>      {
+<span class="ln">249</span>        method: 'PATCH',
+<span class="ln">250</span>        headers: SB_HEADERS,
+<span class="ln">251</span>        body: JSON.stringify({ [`score_${category}`]: newScore, updated_at: new Date().toISOString() })
+<span class="ln">252</span>      }
+<span class="ln">253</span>    );
+<span class="ln">254</span>  }
+<span class="ln">255</span>  
+<span class="ln">256</span>  // ========== SESSION BAR (shows current company) ==========
+<span class="ln">257</span>  function getSessionBarHTML() {
+<span class="ln">258</span>    const session = getSavedSession();
+<span class="ln">259</span>    if (!session) return '';
+<span class="ln">260</span>    return `
+<span class="ln">261</span>  &lt;div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); padding:8px 24px; text-align:center; position:sticky; top:74px; z-index:98; box-shadow:0 2px 8px rgba(0,0,0,0.15);"&gt;
+<span class="ln">262</span>    &lt;span style="color:#ffffff; font-size:12px; font-weight:500;"&gt;현재 교육&lt;/span&gt;
+<span class="ln">263</span>    &lt;span style="color:var(--gold-light); font-size:18px; font-weight:800; margin-left:8px;"&gt;${session.company_name}&lt;/span&gt;
+<span class="ln">264</span>    ${session.training_date ? `&lt;span style="color:#ffffff; font-size:11px; margin-left:8px;"&gt;${session.training_date}&lt;/span&gt;` : ''}
+<span class="ln">265</span>    &lt;button onclick="switchSession()" style="margin-left:12px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;"&gt;변경&lt;/button&gt;
+<span class="ln">266</span>  &lt;/div&gt;`;
+<span class="ln">267</span>  }
+<span class="ln">268</span>  
+<span class="ln">269</span>  function switchSession() {
+<span class="ln">270</span>    clearSessionId();
+<span class="ln">271</span>    clearUser();
+<span class="ln">272</span>    clearRole();
+<span class="ln">273</span>    location.href = 'index.html';
+<span class="ln">274</span>  }
+<span class="ln">275</span>  
+<span class="ln">276</span>  // ========== USER IDENTITY BAR ==========
+<span class="ln">277</span>  function getUserBarHTML() {
+<span class="ln">278</span>    const role = getSavedRole();
+<span class="ln">279</span>    const user = getSavedUser();
+<span class="ln">280</span>  
+<span class="ln">281</span>    if (role === 'admin') {
+<span class="ln">282</span>      return `
+<span class="ln">283</span>  &lt;div id="userIdentityBar" style="display:none; background:linear-gradient(135deg, #0f172a, #1e293b); border-bottom:1px solid rgba(255,255,255,0.1); padding:8px 24px;"&gt;
+<span class="ln">284</span>    &lt;div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;"&gt;
+<span class="ln">285</span>      &lt;div style="display:flex; align-items:center; gap:10px;"&gt;
+<span class="ln">286</span>        &lt;span style="background:#e74c3c; color:white; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px;"&gt;ADMIN&lt;/span&gt;
+<span class="ln">287</span>        &lt;span style="color:#ffffff; font-size:13px; font-weight:600;"&gt;시스템 관리자&lt;/span&gt;
+<span class="ln">288</span>      &lt;/div&gt;
+<span class="ln">289</span>      &lt;button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;"&gt;로그아웃&lt;/button&gt;
+<span class="ln">290</span>    &lt;/div&gt;
+<span class="ln">291</span>  &lt;/div&gt;`;
+<span class="ln">292</span>    }
+<span class="ln">293</span>  
+<span class="ln">294</span>    if ((role === 'trainer' || role === 'manager') &amp;&amp; user) {
+<span class="ln">295</span>      return `
+<span class="ln">296</span>  &lt;div id="userIdentityBar" style="display:none; background:linear-gradient(135deg, #1a1a2e, #16213e); border-bottom:1px solid rgba(255,255,255,0.1); padding:8px 24px;"&gt;
+<span class="ln">297</span>    &lt;div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;"&gt;
+<span class="ln">298</span>      &lt;div style="display:flex; align-items:center; gap:10px;"&gt;
+<span class="ln">299</span>        &lt;span style="background:var(--gold); color:#1a1a2e; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px;"&gt;TRAINER&lt;/span&gt;
+<span class="ln">300</span>        &lt;span style="color:#ffffff; font-size:14px; font-weight:700;"&gt;${user.name}&lt;/span&gt;
+<span class="ln">301</span>      &lt;/div&gt;
+<span class="ln">302</span>      &lt;button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;"&gt;변경&lt;/button&gt;
+<span class="ln">303</span>    &lt;/div&gt;
+<span class="ln">304</span>  &lt;/div&gt;`;
+<span class="ln">305</span>    }
+<span class="ln">306</span>  
+<span class="ln">307</span>    if (role === 'trainee' &amp;&amp; user) {
+<span class="ln">308</span>      return `
+<span class="ln">309</span>  &lt;div id="userIdentityBar" style="display:none; background:var(--card); border-bottom:1px solid var(--border); padding:10px 24px;"&gt;
+<span class="ln">310</span>    &lt;div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; gap:12px;"&gt;
+<span class="ln">311</span>      &lt;span style="background:rgba(192,57,43,0.08); color:var(--accent); padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700;"&gt;팀 ${user.team_id}&lt;/span&gt;
+<span class="ln">312</span>      &lt;span style="font-size:14px; font-weight:700; color:var(--text);"&gt;${user.name}&lt;/span&gt;
+<span class="ln">313</span>      &lt;button onclick="changeUser()" style="background:none; border:1px solid var(--border); border-radius:6px; padding:3px 10px; font-size:11px; cursor:pointer; color:var(--text-muted); font-family:inherit;"&gt;변경&lt;/button&gt;
+<span class="ln">314</span>    &lt;/div&gt;
+<span class="ln">315</span>  &lt;/div&gt;`;
+<span class="ln">316</span>    }
+<span class="ln">317</span>  
+<span class="ln">318</span>    // 미로그인 상태 — 리다이렉트로 처리되므로 빈 바
+<span class="ln">319</span>    return '';
+<span class="ln">320</span>  }
+<span class="ln">321</span>  
+<span class="ln">322</span>  let allMembersCache = null;
+<span class="ln">323</span>  
+<span class="ln">324</span>  function changeUser() {
+<span class="ln">325</span>    clearUser();
+<span class="ln">326</span>    clearRole();
+<span class="ln">327</span>    allMembersCache = null;
+<span class="ln">328</span>    location.href = 'index.html';
+<span class="ln">329</span>  }
+<span class="ln">330</span>  
+<span class="ln">331</span>  function updateHeaderUser(user) {
+<span class="ln">332</span>    const headerTeam = document.getElementById('headerTeam');
+<span class="ln">333</span>    if (!headerTeam) return;
+<span class="ln">334</span>  
+<span class="ln">335</span>    const role = getSavedRole();
+<span class="ln">336</span>    if (!user &amp;&amp; !role) {
+<span class="ln">337</span>      headerTeam.style.display = 'none';
+<span class="ln">338</span>      return;
+<span class="ln">339</span>    }
+<span class="ln">340</span>  
+<span class="ln">341</span>    headerTeam.style.display = 'flex';
+<span class="ln">342</span>    headerTeam.style.alignItems = 'center';
+<span class="ln">343</span>    headerTeam.style.gap = '8px';
+<span class="ln">344</span>  
+<span class="ln">345</span>    if (role === 'admin') {
+<span class="ln">346</span>      headerTeam.innerHTML = '&lt;span&gt;관리자&lt;/span&gt;';
+<span class="ln">347</span>    } else if (role === 'manager' &amp;&amp; user) {
+<span class="ln">348</span>      headerTeam.innerHTML = `&lt;span&gt;매니저 | ${user.name}&lt;/span&gt;&lt;a href="scoreboard.html" style="background:rgba(245,166,35,0.2); border:1px solid rgba(245,166,35,0.4); color:var(--gold-light); padding:3px 10px; border-radius:6px; font-size:10px; font-weight:700; text-decoration:none; font-family:inherit;"&gt;📊 스코어보드&lt;/a&gt;&lt;button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;"&gt;변경&lt;/button&gt;`;
+<span class="ln">349</span>    } else if (role === 'trainer' &amp;&amp; user) {
+<span class="ln">350</span>      headerTeam.innerHTML = `&lt;span&gt;강사 | ${user.name}&lt;/span&gt;&lt;a href="scoreboard.html" style="background:rgba(245,166,35,0.2); border:1px solid rgba(245,166,35,0.4); color:var(--gold-light); padding:3px 10px; border-radius:6px; font-size:10px; font-weight:700; text-decoration:none; font-family:inherit;"&gt;📊 스코어보드&lt;/a&gt;&lt;button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;"&gt;변경&lt;/button&gt;`;
+<span class="ln">351</span>    } else if (role === 'trainee' &amp;&amp; user) {
+<span class="ln">352</span>      headerTeam.innerHTML = `&lt;span&gt;팀 ${user.team_id} | ${user.name}&lt;/span&gt;&lt;a href="company.html" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit; text-decoration:none; margin-left:4px;"&gt;내 대시보드&lt;/a&gt;&lt;button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;"&gt;변경&lt;/button&gt;`;
+<span class="ln">353</span>    } else {
+<span class="ln">354</span>      headerTeam.style.display = 'none';
+<span class="ln">355</span>    }
+<span class="ln">356</span>  }
+<span class="ln">357</span>  
+<span class="ln">358</span>  function switchIdentity() {
+<span class="ln">359</span>    // 세션은 유지하고 역할/유저만 초기화 → company.html의 본인 선택 화면으로
+<span class="ln">360</span>    clearUser();
+<span class="ln">361</span>    clearRole();
+<span class="ln">362</span>    location.href = 'company.html';
+<span class="ln">363</span>  }
+<span class="ln">364</span>  
+<span class="ln">365</span>  function restoreUser() {
+<span class="ln">366</span>    const user = getSavedUser();
+<span class="ln">367</span>    const role = getSavedRole();
+<span class="ln">368</span>    if (user) {
+<span class="ln">369</span>      state.user = user;
+<span class="ln">370</span>    }
+<span class="ln">371</span>    updateHeaderUser(user);
+<span class="ln">372</span>  }
+<span class="ln">373</span>  
+<span class="ln">374</span>  // ========== SCORE MANAGEMENT ==========
+<span class="ln">375</span>  function addScore(points, category) {
+<span class="ln">376</span>    state.personalScore += points;
+<span class="ln">377</span>    const headerScore = document.getElementById('headerScore');
+<span class="ln">378</span>    if (headerScore) {
+<span class="ln">379</span>      headerScore.textContent = `${state.personalScore} 점`;
+<span class="ln">380</span>      headerScore.style.display = 'block';
+<span class="ln">381</span>    }
+<span class="ln">382</span>  
+<span class="ln">383</span>    if (state.user &amp;&amp; state.user.id) {
+<span class="ln">384</span>      supabaseAddScore(state.user.id, category, points);
+<span class="ln">385</span>    }
+<span class="ln">386</span>  }
+<span class="ln">387</span>  
+<span class="ln">388</span>  function addActivity(text) {
+<span class="ln">389</span>    const now = new Date();
+<span class="ln">390</span>    const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+<span class="ln">391</span>    state.activities.push(`[${time}] ${text}`);
+<span class="ln">392</span>  }
+<span class="ln">393</span>  
+<span class="ln">394</span>  // ========== ACTIVITY LOG (Supabase) ==========
+<span class="ln">395</span>  async function saveActivityLog(activityType, activityData, score) {
+<span class="ln">396</span>    const session = getSavedSession();
+<span class="ln">397</span>    const user = getSavedUser();
+<span class="ln">398</span>    if (!session || !user || !user.id) return;
+<span class="ln">399</span>  
+<span class="ln">400</span>    try {
+<span class="ln">401</span>      await fetch(`${SUPABASE_URL}/rest/v1/spin_activities`, {
+<span class="ln">402</span>        method: 'POST',
+<span class="ln">403</span>        headers: SB_HEADERS,
+<span class="ln">404</span>        body: JSON.stringify({
+<span class="ln">405</span>          session_id: session.id,
+<span class="ln">406</span>          member_id: user.id,
+<span class="ln">407</span>          activity_type: activityType,
+<span class="ln">408</span>          activity_data: activityData,
+<span class="ln">409</span>          score: score || 0
+<span class="ln">410</span>        })
+<span class="ln">411</span>      });
+<span class="ln">412</span>    } catch (e) {
+<span class="ln">413</span>      console.log('Activity log save failed:', e);
+<span class="ln">414</span>    }
+<span class="ln">415</span>  }
+<span class="ln">416</span>  
+<span class="ln">417</span>  // 세션의 모든 활동 로그 조회
+<span class="ln">418</span>  async function fetchActivityLogs(sessionId) {
+<span class="ln">419</span>    const res = await fetch(
+<span class="ln">420</span>      `${SUPABASE_URL}/rest/v1/spin_activities?session_id=eq.${sessionId}&amp;select=*,spin_members(name,team_id)&amp;order=created_at.desc`,
+<span class="ln">421</span>      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+<span class="ln">422</span>    );
+<span class="ln">423</span>    return await res.json();
+<span class="ln">424</span>  }
+<span class="ln">425</span>  
+<span class="ln">426</span>  // 특정 멤버의 활동 로그 조회
+<span class="ln">427</span>  async function fetchMemberLogs(memberId) {
+<span class="ln">428</span>    const res = await fetch(
+<span class="ln">429</span>      `${SUPABASE_URL}/rest/v1/spin_activities?member_id=eq.${memberId}&amp;select=*&amp;order=created_at.desc`,
+<span class="ln">430</span>      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+<span class="ln">431</span>    );
+<span class="ln">432</span>    return await res.json();
+<span class="ln">433</span>  }
+<span class="ln">434</span>  
+<span class="ln">435</span>  // ========== UTILS ==========
+<span class="ln">436</span>  function shuffleArray(arr) {
+<span class="ln">437</span>    for (let i = arr.length - 1; i &gt; 0; i--) {
+<span class="ln">438</span>      const j = Math.floor(Math.random() * (i + 1));
+<span class="ln">439</span>      [arr[i], arr[j]] = [arr[j], arr[i]];
+<span class="ln">440</span>    }
+<span class="ln">441</span>  }
+<span class="ln">442</span>  
+<span class="ln">443</span>  function getTypeName(type) {
+<span class="ln">444</span>    const names = { S: '상황질문', P: '문제질문', I: '시사질문', N: '해결질문' };
+<span class="ln">445</span>    return names[type];
+<span class="ln">446</span>  }
+<span class="ln">447</span>  
+<span class="ln">448</span>  function closeModal(id) {
+<span class="ln">449</span>    document.getElementById(id).classList.remove('active');
+<span class="ln">450</span>  }
+<span class="ln">451</span>  
+<span class="ln">452</span>  // ========== FLOW NAVIGATION ==========
+<span class="ln">453</span>  const FLOW_ORDER = [
+<span class="ln">454</span>    { page: 'team-setup.html', label: '팀 편성', icon: '👥' },
+<span class="ln">455</span>    { page: 'prereading.html', label: '프리리딩', icon: '📖' },
+<span class="ln">456</span>    { page: 'quiz.html', label: '개념 퀴즈', icon: '📝' },
+<span class="ln">457</span>    { page: 'needs.html', label: '니즈 구분', icon: '🎯' },
+<span class="ln">458</span>    { page: 'scenario.html', label: 'SPIN 질문구분', icon: '🔍' },
+<span class="ln">459</span>    { page: 'practice.html', label: '질문 연습', icon: '💬' },
+<span class="ln">460</span>    { page: 'spin-needs.html', label: 'SPIN질문&amp;니즈 구분', icon: '🔎' },
+<span class="ln">461</span>    { page: 'fab.html', label: 'FAB/BAF', icon: '🧩' },
+<span class="ln">462</span>    { page: 'roleplay.html', label: 'AI 롤플레이', icon: '🎭' },
+<span class="ln">463</span>    { page: 'callplan.html', label: '콜플랜 작성', icon: '📋' },
+<span class="ln">464</span>    { page: 'spin-tools.html', label: '스핀도구들', icon: '🛠' }
+<span class="ln">465</span>  ];
+<span class="ln">466</span>  
+<span class="ln">467</span>  function getFlowNavHTML(currentPage) {
+<span class="ln">468</span>    const idx = FLOW_ORDER.findIndex(f =&gt; currentPage.includes(f.page));
+<span class="ln">469</span>    if (idx &lt; 0 || idx &gt;= FLOW_ORDER.length - 1) return '';
+<span class="ln">470</span>  
+<span class="ln">471</span>    const next = FLOW_ORDER[idx + 1];
+<span class="ln">472</span>    const prev = idx &gt; 0 ? FLOW_ORDER[idx - 1] : null;
+<span class="ln">473</span>  
+<span class="ln">474</span>    let html = '&lt;div style="display:flex; justify-content:space-between; align-items:center; margin-top:32px; padding:20px 24px; background:var(--card); border:1px solid var(--border); border-radius:14px;"&gt;';
+<span class="ln">475</span>  
+<span class="ln">476</span>    if (prev) {
+<span class="ln">477</span>      html += `&lt;a href="${prev.page}" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--text-tertiary); font-size:13px; font-weight:600; transition:color 0.2s;"&gt;
+<span class="ln">478</span>        &lt;span style="font-size:18px;"&gt;&amp;#8249;&lt;/span&gt; ${prev.icon} ${prev.label}
+<span class="ln">479</span>      &lt;/a&gt;`;
+<span class="ln">480</span>    } else {
+<span class="ln">481</span>      html += '&lt;div&gt;&lt;/div&gt;';
+<span class="ln">482</span>    }
+<span class="ln">483</span>  
+<span class="ln">484</span>    html += `&lt;a href="${next.page}" style="display:flex; align-items:center; gap:8px; text-decoration:none; background:var(--accent); color:white; padding:10px 24px; border-radius:10px; font-size:14px; font-weight:700; transition:all 0.2s; box-shadow:0 2px 8px rgba(192,57,43,0.2);"&gt;
+<span class="ln">485</span>      다음: ${next.icon} ${next.label} &lt;span style="font-size:18px;"&gt;&amp;#8250;&lt;/span&gt;
+<span class="ln">486</span>    &lt;/a&gt;`;
+<span class="ln">487</span>  
+<span class="ln">488</span>    html += '&lt;/div&gt;';
+<span class="ln">489</span>    return html;
+<span class="ln">490</span>  }
+<span class="ln">491</span>  
+<span class="ln">492</span>  // ========== AUTH (kept, unused) ==========
+<span class="ln">493</span>  function getUsers() { return {}; }
+<span class="ln">494</span>  function saveUsers() {}
+<span class="ln">495</span>  function getCurrentSession() { return null; }
+<span class="ln">496</span>  function saveSession() {}
+<span class="ln">497</span>  function clearSession() {}
+<span class="ln">498</span>  function showAuthScreen() {}
+<span class="ln">499</span>  function showAuthError() {}
+<span class="ln">500</span>  function doSignup() {}
+<span class="ln">501</span>  function doLogin() {}
+<span class="ln">502</span>  function doLogout() { switchSession(); }
+<span class="ln">503</span>  function enterApp() {}
+<span class="ln">504</span>  function checkAutoLogin() {}
+<span class="ln">505</span>  
+<span class="ln">506</span>  // ========== COMMON HTML GENERATORS ==========
+<span class="ln">507</span>  function getNavHTML(activePage) {
+<span class="ln">508</span>    const role = getSavedRole();
+<span class="ln">509</span>    const adminOnly = [];
+<span class="ln">510</span>    const adminTrainer = ['team-setup'];
+<span class="ln">511</span>  
+<span class="ln">512</span>    const items = [
+<span class="ln">513</span>      { page: 'index.html', section: 'home', icon: '🏠', label: '홈' },
+<span class="ln">514</span>      { page: 'team-setup.html', section: 'team-setup', icon: '👥', label: '팀 편성' },
+<span class="ln">515</span>      { page: 'prereading.html', section: 'prereading', icon: '📖', label: '1.프리리딩' },
+<span class="ln">516</span>      { page: 'quiz.html', section: 'quiz', icon: '📝', label: '2.퀴즈' },
+<span class="ln">517</span>      { page: 'needs.html', section: 'needs', icon: '🎯', label: '3.니즈 구분' },
+<span class="ln">518</span>      { page: 'scenario.html', section: 'scenario', icon: '🔍', label: '4.SPIN 질문구분' },
+<span class="ln">519</span>      { page: 'practice.html', section: 'practice', icon: '💬', label: '5.질문 연습' },
+<span class="ln">520</span>      { page: 'spin-needs.html', section: 'spin-needs', icon: '🔎', label: '6.SPIN질문&amp;니즈 구분' },
+<span class="ln">521</span>      { page: 'fab.html', section: 'fab', icon: '🧩', label: '7.FAB/BAF' },
+<span class="ln">522</span>      { page: 'roleplay.html', section: 'roleplay', icon: '🎭', label: '8.롤플레이' },
+<span class="ln">523</span>      { page: 'callplan.html', section: 'callplan', icon: '📋', label: '9.콜플랜 작성' },
+<span class="ln">524</span>      { page: 'spin-tools.html', section: 'spin-tools', icon: '🛠', label: '10.스핀도구들' }
+<span class="ln">525</span>    ];
+<span class="ln">526</span>  
+<span class="ln">527</span>    let filtered;
+<span class="ln">528</span>    if (role === 'admin') {
+<span class="ln">529</span>      filtered = items;
+<span class="ln">530</span>    } else if (role === 'trainer' || role === 'manager') {
+<span class="ln">531</span>      filtered = items.filter(i =&gt; !adminOnly.includes(i.section));
+<span class="ln">532</span>    } else {
+<span class="ln">533</span>      filtered = items.filter(i =&gt; !adminOnly.includes(i.section) &amp;&amp; !adminTrainer.includes(i.section));
+<span class="ln">534</span>    }
+<span class="ln">535</span>  
+<span class="ln">536</span>    const spinToolsSubmenu = `
+<span class="ln">537</span>      &lt;div class="nav-submenu"&gt;
+<span class="ln">538</span>        &lt;a href="spin-tools.html" class="nav-sub-item"&gt;&lt;span&gt;🛠&lt;/span&gt; 스핀 도구 메인&lt;/a&gt;
+<span class="ln">539</span>        &lt;div class="nav-sub-divider"&gt;📚 자료 / 협업&lt;/div&gt;
+<span class="ln">540</span>        &lt;a href="spin-library.html" class="nav-sub-item"&gt;&lt;span&gt;📚&lt;/span&gt; 1. SPIN 질문 라이브러리&lt;/a&gt;
+<span class="ln">541</span>        &lt;a href="materials.html" class="nav-sub-item"&gt;&lt;span&gt;📂&lt;/span&gt; 2. 교육 자료실&lt;/a&gt;
+<span class="ln">542</span>        &lt;a href="collab-board.html" class="nav-sub-item"&gt;&lt;span&gt;📌&lt;/span&gt; 3. 팀 협업 보드&lt;/a&gt;
+<span class="ln">543</span>        &lt;div class="nav-sub-divider"&gt;🎮 학습 게임&lt;/div&gt;
+<span class="ln">544</span>        &lt;a href="games-hub.html" class="nav-sub-item" style="background:rgba(245,166,35,0.1);"&gt;&lt;span&gt;🎮&lt;/span&gt; 게임 허브 (5종 모음)&lt;/a&gt;
+<span class="ln">545</span>        &lt;a href="game-quiz-race.html" class="nav-sub-item"&gt;&lt;span&gt;🏁&lt;/span&gt; 1. 퀴즈 레이스&lt;/a&gt;
+<span class="ln">546</span>        &lt;a href="game-match.html" class="nav-sub-item"&gt;&lt;span&gt;🧩&lt;/span&gt; 2. 매칭 게임&lt;/a&gt;
+<span class="ln">547</span>        &lt;a href="game-flash.html" class="nav-sub-item"&gt;&lt;span&gt;🃏&lt;/span&gt; 3. 플래시카드&lt;/a&gt;
+<span class="ln">548</span>        &lt;a href="game-order.html" class="nav-sub-item"&gt;&lt;span&gt;🔢&lt;/span&gt; 4. 순서 정렬&lt;/a&gt;
+<span class="ln">549</span>        &lt;a href="game-industry.html" class="nav-sub-item"&gt;&lt;span&gt;🎯&lt;/span&gt; 5. 다음 질문 선택&lt;/a&gt;
+<span class="ln">550</span>        &lt;a href="game-leaderboard.html" class="nav-sub-item" style="background:rgba(245,166,35,0.1); color:var(--gold-light);"&gt;&lt;span&gt;🏆&lt;/span&gt; 게임 리더보드&lt;/a&gt;
+<span class="ln">551</span>      &lt;/div&gt;`;
+<span class="ln">552</span>  
+<span class="ln">553</span>    return '&lt;div class="nav" id="mainNav"&gt;' +
+<span class="ln">554</span>      filtered.map(item =&gt; {
+<span class="ln">555</span>        const isHome = item.section === 'home';
+<span class="ln">556</span>        const isSpinTools = item.section === 'spin-tools';
+<span class="ln">557</span>        const onclick = isHome ? ' onclick="clearSessionId();clearUser();clearRole();"' : '';
+<span class="ln">558</span>        if (isSpinTools) {
+<span class="ln">559</span>          return `&lt;div class="nav-item-wrap" onmouseenter="showSubmenu(this)" onmouseleave="hideSubmenuDelayed(this)"&gt;&lt;a href="${item.page}" class="nav-item${item.section === activePage ? ' active' : ''}"&gt;&lt;span class="nav-icon"&gt;${item.icon}&lt;/span&gt; ${item.label} ▾&lt;/a&gt;${spinToolsSubmenu}&lt;/div&gt;`;
+<span class="ln">560</span>        }
+<span class="ln">561</span>        return `&lt;a href="${item.page}"${onclick} class="nav-item${item.section === activePage ? ' active' : ''}"&gt;&lt;span class="nav-icon"&gt;${item.icon}&lt;/span&gt; ${item.label}&lt;/a&gt;`;
+<span class="ln">562</span>      }).join('') +
+<span class="ln">563</span>      '&lt;/div&gt;';
+<span class="ln">564</span>  }
+<span class="ln">565</span>  
+<span class="ln">566</span>  let _submenuTimer = null;
+<span class="ln">567</span>  function showSubmenu(wrap) {
+<span class="ln">568</span>    if (_submenuTimer) { clearTimeout(_submenuTimer); _submenuTimer = null; }
+<span class="ln">569</span>    const submenu = wrap.querySelector('.nav-submenu');
+<span class="ln">570</span>    if (!submenu) return;
+<span class="ln">571</span>    const rect = wrap.getBoundingClientRect();
+<span class="ln">572</span>    const submenuWidth = 260;
+<span class="ln">573</span>    let leftPos = rect.right - submenuWidth;
+<span class="ln">574</span>    if (leftPos &lt; 8) leftPos = 8;
+<span class="ln">575</span>    submenu.style.position = 'fixed';
+<span class="ln">576</span>    submenu.style.top = rect.bottom + 'px';
+<span class="ln">577</span>    submenu.style.left = leftPos + 'px';
+<span class="ln">578</span>    submenu.style.right = 'auto';
+<span class="ln">579</span>    submenu.style.display = 'block';
+<span class="ln">580</span>    submenu.style.zIndex = '99999';
+<span class="ln">581</span>    // 서브메뉴 위로 마우스 이동 시에도 유지
+<span class="ln">582</span>    submenu.onmouseenter = function() { if (_submenuTimer) { clearTimeout(_submenuTimer); _submenuTimer = null; } };
+<span class="ln">583</span>    submenu.onmouseleave = function() { submenu.style.display = 'none'; };
+<span class="ln">584</span>  }
+<span class="ln">585</span>  function hideSubmenuDelayed(wrap) {
+<span class="ln">586</span>    const submenu = wrap.querySelector('.nav-submenu');
+<span class="ln">587</span>    if (!submenu) return;
+<span class="ln">588</span>    _submenuTimer = setTimeout(() =&gt; { submenu.style.display = 'none'; }, 250);
+<span class="ln">589</span>  }
+<span class="ln">590</span>  
+<span class="ln">591</span>  function toggleDarkMode() {
+<span class="ln">592</span>    const current = document.documentElement.getAttribute('data-theme');
+<span class="ln">593</span>    const next = current === 'dark' ? 'light' : 'dark';
+<span class="ln">594</span>    document.documentElement.setAttribute('data-theme', next);
+<span class="ln">595</span>    localStorage.setItem('spin_theme', next);
+<span class="ln">596</span>  }
+<span class="ln">597</span>  // 페이지 로드 시 테마 복원
+<span class="ln">598</span>  (function(){ const t = localStorage.getItem('spin_theme'); if (t) document.documentElement.setAttribute('data-theme', t); })();
+<span class="ln">599</span>  
+<span class="ln">600</span>  function getFooterHTML() {
+<span class="ln">601</span>    return `
+<span class="ln">602</span>  &lt;footer class="footer"&gt;
+<span class="ln">603</span>    &lt;div class="footer-inner"&gt;
+<span class="ln">604</span>      &lt;div class="footer-top"&gt;
+<span class="ln">605</span>        &lt;div class="footer-brand"&gt;
+<span class="ln">606</span>          &lt;div class="footer-logo"&gt;
+<span class="ln">607</span>            &lt;img src="logo-kornferry.png" alt="Korn Ferry" class="footer-logo-img"&gt;
+<span class="ln">608</span>          &lt;/div&gt;
+<span class="ln">609</span>          &lt;p class="footer-desc"&gt;Korn Ferry(Huthwaite) 35,000건 영업 연구 기반&lt;br&gt;세계 최고의 B2B 영업 방법론을 AI와 함께 체화하는 실전형 훈련 플랫폼&lt;/p&gt;
+<span class="ln">610</span>        &lt;/div&gt;
+<span class="ln">611</span>        &lt;div class="footer-links"&gt;
+<span class="ln">612</span>          &lt;div class="footer-col"&gt;
+<span class="ln">613</span>            &lt;h4&gt;교육 프로그램&lt;/h4&gt;
+<span class="ln">614</span>            &lt;a href="quiz.html"&gt;개념 퀴즈&lt;/a&gt;
+<span class="ln">615</span>            &lt;a href="needs.html"&gt;IN/EN 구분 실습&lt;/a&gt;
+<span class="ln">616</span>            &lt;a href="scenario.html"&gt;SPIN 질문구분&lt;/a&gt;
+<span class="ln">617</span>            &lt;a href="practice.html"&gt;질문 연습&lt;/a&gt;
+<span class="ln">618</span>          &lt;/div&gt;
+<span class="ln">619</span>          &lt;div class="footer-col"&gt;
+<span class="ln">620</span>            &lt;h4&gt;실전 훈련&lt;/h4&gt;
+<span class="ln">621</span>            &lt;a href="roleplay.html"&gt;AI 롤플레이&lt;/a&gt;
+<span class="ln">622</span>            &lt;a href="fab.html"&gt;FAB/BAF 연습&lt;/a&gt;
+<span class="ln">623</span>            &lt;a href="callplan.html"&gt;콜플랜 작성&lt;/a&gt;
+<span class="ln">624</span>            &lt;a href="spin-tools.html"&gt;스핀 도구들&lt;/a&gt;
+<span class="ln">625</span>          &lt;/div&gt;
+<span class="ln">626</span>          &lt;div class="footer-col"&gt;
+<span class="ln">627</span>            &lt;h4&gt;SPIN 방법론&lt;/h4&gt;
+<span class="ln">628</span>            &lt;span&gt;S - 상황질문 (Situation)&lt;/span&gt;
+<span class="ln">629</span>            &lt;span&gt;P - 문제질문 (Problem)&lt;/span&gt;
+<span class="ln">630</span>            &lt;span&gt;I - 시사질문 (Implication)&lt;/span&gt;
+<span class="ln">631</span>            &lt;span&gt;N - 해결질문 (Need-Payoff)&lt;/span&gt;
+<span class="ln">632</span>          &lt;/div&gt;
+<span class="ln">633</span>        &lt;/div&gt;
+<span class="ln">634</span>      &lt;/div&gt;
+<span class="ln">635</span>      &lt;div class="footer-divider"&gt;&lt;/div&gt;
+<span class="ln">636</span>      &lt;div class="footer-bottom"&gt;
+<span class="ln">637</span>        &lt;div class="footer-copy"&gt;
+<span class="ln">638</span>          &lt;span&gt;&amp;copy; 2024 Korn Ferry SPIN Selling Official Program&lt;/span&gt;
+<span class="ln">639</span>          &lt;span class="footer-sep"&gt;|&lt;/span&gt;
+<span class="ln">640</span>          &lt;span&gt;심재우 대표 &amp;middot; SB Consulting&lt;/span&gt;
+<span class="ln">641</span>          &lt;span class="footer-sep"&gt;|&lt;/span&gt;
+<span class="ln">642</span>          &lt;span&gt;Global Certified SPIN Master Trainer (국제공인 마스터트레이너)&lt;/span&gt;
+<span class="ln">643</span>        &lt;/div&gt;
+<span class="ln">644</span>        &lt;div class="footer-badges"&gt;
+<span class="ln">645</span>          &lt;span class="footer-badge"&gt;Korn Ferry Certified&lt;/span&gt;
+<span class="ln">646</span>          &lt;span class="footer-badge accent"&gt;AI-Enhanced&lt;/span&gt;
+<span class="ln">647</span>          &lt;a href="report-sample.html" style="background:rgba(245,166,35,0.15); border:1px solid rgba(245,166,35,0.3); color:var(--gold-light); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--gold-light)'"&gt;📋 AI리포트 샘플&lt;/a&gt;
+<span class="ln">648</span>          &lt;a href="admin.html" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#ffffff'"&gt;🔧 관리자&lt;/a&gt;
+<span class="ln">649</span>          &lt;a href="manual.html" style="background:rgba(46,204,113,0.15); border:1px solid rgba(46,204,113,0.3); color:#2ecc71; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#2ecc71'"&gt;📘 매뉴얼&lt;/a&gt;
+<span class="ln">650</span>          &lt;a href="#" onclick="event.preventDefault();if(prompt('비밀번호:')==='9633')window.open('architecture.svg','_blank');else alert('비밀번호가 틀립니다');" style="background:rgba(36,113,163,0.15); border:1px solid rgba(36,113,163,0.3); color:#3498db; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#3498db'"&gt;🏗 구조도&lt;/a&gt;
+<span class="ln">651</span>          &lt;button onclick="toggleDarkMode()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit;"&gt;🌙 다크모드&lt;/button&gt;
+<span class="ln">652</span>        &lt;/div&gt;
+<span class="ln">653</span>      &lt;/div&gt;
+<span class="ln">654</span>    &lt;/div&gt;
+<span class="ln">655</span>  &lt;/footer&gt;`;
+<span class="ln">656</span>  }
+<span class="ln">657</span>  
+<span class="ln">658</span>  // ========== INIT ==========
+<span class="ln">659</span>  document.addEventListener('DOMContentLoaded', function() {
+<span class="ln">660</span>    const pathname = window.location.pathname;
+<span class="ln">661</span>    const isHome = pathname.endsWith('index.html') || pathname.endsWith('/');
+<span class="ln">662</span>    const isCompany = pathname.includes('company');
+<span class="ln">663</span>    const isScoreboard = pathname.includes('scoreboard');
+<span class="ln">664</span>    const isPrereading = pathname.includes('prereading');
+<span class="ln">665</span>    const isAdmin = pathname.includes('admin');
+<span class="ln">666</span>    const session = getSavedSession();
+<span class="ln">667</span>  
+<span class="ln">668</span>    const role = getSavedRole();
+<span class="ln">669</span>  
+<span class="ln">670</span>    // 세션 없음 → 랜딩 페이지로
+<span class="ln">671</span>    if (!session &amp;&amp; !isHome &amp;&amp; !isPrereading &amp;&amp; !isAdmin) {
+<span class="ln">672</span>      location.href = 'index.html';
+<span class="ln">673</span>      return;
+<span class="ln">674</span>    }
+<span class="ln">675</span>  
+<span class="ln">676</span>    // 세션 있지만 역할 없음 → company.html로 (역할 선택)
+<span class="ln">677</span>    if (session &amp;&amp; !role &amp;&amp; !isHome &amp;&amp; !isCompany &amp;&amp; !isPrereading &amp;&amp; !isAdmin) {
+<span class="ln">678</span>      location.href = 'company.html';
+<span class="ln">679</span>      return;
+<span class="ln">680</span>    }
+<span class="ln">681</span>  
+<span class="ln">682</span>    // 교육생인데 유저 미선택 → company.html로
+<span class="ln">683</span>    if (role === 'trainee' &amp;&amp; !getSavedUser() &amp;&amp; !isHome &amp;&amp; !isCompany &amp;&amp; !isPrereading &amp;&amp; !isAdmin) {
+<span class="ln">684</span>      location.href = 'company.html';
+<span class="ln">685</span>      return;
+<span class="ln">686</span>    }
+<span class="ln">687</span>  
+<span class="ln">688</span>    // Inject session bar (세션이 있고 홈이 아닐 때)
+<span class="ln">689</span>    const headerEl = document.querySelector('.header');
+<span class="ln">690</span>    if (session &amp;&amp; headerEl &amp;&amp; !isHome) {
+<span class="ln">691</span>      headerEl.insertAdjacentHTML('afterend', getSessionBarHTML());
+<span class="ln">692</span>    }
+<span class="ln">693</span>  
+<span class="ln">694</span>    // Inject nav
+<span class="ln">695</span>    const navPlaceholder = document.getElementById('navPlaceholder');
+<span class="ln">696</span>    if (navPlaceholder) {
+<span class="ln">697</span>      const activePage = navPlaceholder.dataset.active;
+<span class="ln">698</span>      navPlaceholder.outerHTML = getNavHTML(activePage);
+<span class="ln">699</span>    }
+<span class="ln">700</span>  
+<span class="ln">701</span>    // Inject user identity bar (not on home/scoreboard)
+<span class="ln">702</span>    const nav = document.getElementById('mainNav');
+<span class="ln">703</span>    if (nav &amp;&amp; !isScoreboard &amp;&amp; !isHome &amp;&amp; session) {
+<span class="ln">704</span>      nav.insertAdjacentHTML('afterend', getUserBarHTML());
+<span class="ln">705</span>      const bar = document.getElementById('userIdentityBar');
+<span class="ln">706</span>      if (bar) bar.style.display = 'block';
+<span class="ln">707</span>    }
+<span class="ln">708</span>  
+<span class="ln">709</span>    // Inject flow navigation
+<span class="ln">710</span>    const flowNavPlaceholder = document.getElementById('flowNavPlaceholder');
+<span class="ln">711</span>    if (flowNavPlaceholder) {
+<span class="ln">712</span>      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+<span class="ln">713</span>      const flowHTML = getFlowNavHTML(currentPage);
+<span class="ln">714</span>      if (flowHTML) {
+<span class="ln">715</span>        flowNavPlaceholder.outerHTML = '&lt;div class="main"&gt;' + flowHTML + '&lt;/div&gt;';
+<span class="ln">716</span>      } else {
+<span class="ln">717</span>        flowNavPlaceholder.remove();
+<span class="ln">718</span>      }
+<span class="ln">719</span>    }
+<span class="ln">720</span>  
+<span class="ln">721</span>    // Inject footer
+<span class="ln">722</span>    const footerPlaceholder = document.getElementById('footerPlaceholder');
+<span class="ln">723</span>    if (footerPlaceholder) {
+<span class="ln">724</span>      footerPlaceholder.outerHTML = getFooterHTML();
+<span class="ln">725</span>    }
+<span class="ln">726</span>  
+<span class="ln">727</span>    // Show main app
+<span class="ln">728</span>    const mainApp = document.getElementById('mainApp');
+<span class="ln">729</span>    if (mainApp) mainApp.style.display = 'block';
+<span class="ln">730</span>  
+<span class="ln">731</span>    // Hide auth overlays
+<span class="ln">732</span>    const authLogin = document.getElementById('authLogin');
+<span class="ln">733</span>    const authSignup = document.getElementById('authSignup');
+<span class="ln">734</span>    if (authLogin) authLogin.classList.add('hidden');
+<span class="ln">735</span>    if (authSignup) authSignup.classList.add('hidden');
+<span class="ln">736</span>  
+<span class="ln">737</span>    // Restore session state
+<span class="ln">738</span>    if (session) {
+<span class="ln">739</span>      state.session = session;
+<span class="ln">740</span>    }
+<span class="ln">741</span>  
+<span class="ln">742</span>    // Restore saved user
+<span class="ln">743</span>    restoreUser();
+<span class="ln">744</span>  
+<span class="ln">745</span>    // Load chatbot (지식베이스 먼저, 그 다음 챗봇)
+<span class="ln">746</span>    const kbScript = document.createElement('script');
+<span class="ln">747</span>    kbScript.src = 'spin-knowledge-base.js';
+<span class="ln">748</span>    kbScript.onload = function() {
+<span class="ln">749</span>      const cbScript = document.createElement('script');
+<span class="ln">750</span>      cbScript.src = 'chatbot.js';
+<span class="ln">751</span>      document.body.appendChild(cbScript);
+<span class="ln">752</span>    };
+<span class="ln">753</span>    document.body.appendChild(kbScript);
+<span class="ln">754</span>  });
+<span class="ln">755</span>  </pre>
+  </section>
+
+  <section class="file-section">
+    <div class="file-header">
+      <div class="file-name">③ common.css — 전역 스타일 (처음 200줄 발췌)</div>
+      <div class="file-meta">common.css  (1–200 행 발췌 · 전체 1553행)</div>
+    </div>
+    <pre class="code"><span class="ln">  1</span>  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&amp;family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap');
+<span class="ln">  2</span>  
+<span class="ln">  3</span>  :root {
+<span class="ln">  4</span>    --primary: #0a2240;
+<span class="ln">  5</span>    --secondary: #071a33;
+<span class="ln">  6</span>    --accent: #c0392b;
+<span class="ln">  7</span>    --accent-light: #e74c3c;
+<span class="ln">  8</span>    --accent2: #0d3161;
+<span class="ln">  9</span>    --gold: #d4880f;
+<span class="ln"> 10</span>    --gold-light: #f5a623;
+<span class="ln"> 11</span>    --green: #1e8449;
+<span class="ln"> 12</span>    --green-light: #27ae60;
+<span class="ln"> 13</span>    --blue: #2471a3;
+<span class="ln"> 14</span>    --blue-light: #3498db;
+<span class="ln"> 15</span>    --purple: #7d3c98;
+<span class="ln"> 16</span>    --purple-light: #9b59b6;
+<span class="ln"> 17</span>    --orange: #ca6f1e;
+<span class="ln"> 18</span>    --bg: #f0f3f8;
+<span class="ln"> 19</span>    --bg-warm: #fefefe;
+<span class="ln"> 20</span>    --card: #ffffff;
+<span class="ln"> 21</span>    /* text-clean: 글자 투명도 최대 (모든 텍스트 진하게, WCAG AAA 목표) */
+<span class="ln"> 22</span>    --text: #000000;              /* L1: 제목, 헤더 — 21:1 AAA */
+<span class="ln"> 23</span>    --text-secondary: #000000;    /* L2: 본문, 라벨 — 21:1 AAA */
+<span class="ln"> 24</span>    --text-tertiary: #1e293b;     /* L3: 보조 설명 — 12.7:1 AAA */
+<span class="ln"> 25</span>    --text-muted: #334155;        /* L4: 힌트, 메타 — 8.5:1 AAA */
+<span class="ln"> 26</span>    --text-disabled: #475569;     /* L5: 비활성 — 6.5:1 AA */
+<span class="ln"> 27</span>    --text-inverse: #ffffff;      /* 어두운 배경 위 텍스트 */
+<span class="ln"> 28</span>    --text-success: #15803d;      /* 성공 — 5.8:1 AA */
+<span class="ln"> 29</span>    --text-error: #b91c1c;        /* 에러 — 6.3:1 AA */
+<span class="ln"> 30</span>    --text-warning: #a16207;      /* 경고 — 4.7:1 AA */
+<span class="ln"> 31</span>    /* 어두운 배경(헤더/히어로/푸터) 위 텍스트 위계 */
+<span class="ln"> 32</span>    --text-on-dark: #ffffff;            /* 제목 — 100% */
+<span class="ln"> 33</span>    --text-on-dark-secondary: #ffffff;                /* 본문 — 100% */
+<span class="ln"> 34</span>    --text-on-dark-tertiary: #ffffff;                 /* 보조 — 100% */
+<span class="ln"> 35</span>    --text-on-dark-muted: #ffffff;      /* 메타 — 100% */
+<span class="ln"> 36</span>    /* 파스텔톤 배경 */
+<span class="ln"> 37</span>    --pastel-blue: #e8eef6;
+<span class="ln"> 38</span>    --pastel-green: #eefbf4;
+<span class="ln"> 39</span>    --pastel-gold: #fef9ee;
+<span class="ln"> 40</span>    --pastel-red: #fef2f0;
+<span class="ln"> 41</span>    --pastel-purple: #f0ecf6;
+<span class="ln"> 42</span>    --kf-navy: #0a2240;
+<span class="ln"> 43</span>    --kf-navy-light: #0d2d52;
+<span class="ln"> 44</span>    --kf-navy-bg: #f0f3f8;
+<span class="ln"> 45</span>    --border: #e2e8f0;
+<span class="ln"> 46</span>    --border-light: #f0f3f7;
+<span class="ln"> 47</span>    --glow: rgba(26,58,107,0.06);
+<span class="ln"> 48</span>    --radius: 16px;
+<span class="ln"> 49</span>    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 24px rgba(0,0,0,0.06);
+<span class="ln"> 50</span>    --shadow-lg: 0 4px 12px rgba(0,0,0,0.04), 0 20px 60px rgba(0,0,0,0.08);
+<span class="ln"> 51</span>    --shadow-hover: 0 8px 30px rgba(26,58,107,0.12);
+<span class="ln"> 52</span>  }
+<span class="ln"> 53</span>  
+<span class="ln"> 54</span>  [data-theme="dark"] {
+<span class="ln"> 55</span>    --primary: #1a3a5c;
+<span class="ln"> 56</span>    --secondary: #0f2744;
+<span class="ln"> 57</span>    --bg: #0f172a;
+<span class="ln"> 58</span>    --bg-warm: #1e293b;
+<span class="ln"> 59</span>    --card: #1e293b;
+<span class="ln"> 60</span>    --text: #e2e8f0;
+<span class="ln"> 61</span>    --text-secondary: #cbd5e1;
+<span class="ln"> 62</span>    --text-tertiary: #94a3b8;
+<span class="ln"> 63</span>    --text-muted: #64748b;
+<span class="ln"> 64</span>    --text-disabled: #475569;
+<span class="ln"> 65</span>    --border: #334155;
+<span class="ln"> 66</span>    --border-light: #1e293b;
+<span class="ln"> 67</span>    --pastel-blue: #1e293b;
+<span class="ln"> 68</span>    --pastel-green: #1a2e23;
+<span class="ln"> 69</span>    --pastel-gold: #2a2517;
+<span class="ln"> 70</span>    --pastel-red: #2a1a1a;
+<span class="ln"> 71</span>    --pastel-purple: #231e2e;
+<span class="ln"> 72</span>    --kf-navy-bg: #0f172a;
+<span class="ln"> 73</span>    --glow: rgba(200,220,255,0.06);
+<span class="ln"> 74</span>    --shadow: 0 1px 3px rgba(0,0,0,0.2), 0 4px 24px rgba(0,0,0,0.3);
+<span class="ln"> 75</span>    --shadow-lg: 0 4px 12px rgba(0,0,0,0.2), 0 20px 60px rgba(0,0,0,0.4);
+<span class="ln"> 76</span>    --shadow-hover: 0 8px 30px rgba(0,0,0,0.3);
+<span class="ln"> 77</span>  }
+<span class="ln"> 78</span>  
+<span class="ln"> 79</span>  * { margin: 0; padding: 0; box-sizing: border-box; }
+<span class="ln"> 80</span>  
+<span class="ln"> 81</span>  body {
+<span class="ln"> 82</span>    font-family: 'Noto Sans KR', 'Inter', sans-serif;
+<span class="ln"> 83</span>    background: var(--bg);
+<span class="ln"> 84</span>    color: var(--text);
+<span class="ln"> 85</span>    min-height: 100vh;
+<span class="ln"> 86</span>    overflow-x: hidden;
+<span class="ln"> 87</span>    -webkit-font-smoothing: antialiased;
+<span class="ln"> 88</span>  }
+<span class="ln"> 89</span>  
+<span class="ln"> 90</span>  body::before {
+<span class="ln"> 91</span>    content: '';
+<span class="ln"> 92</span>    position: fixed;
+<span class="ln"> 93</span>    top: 0;
+<span class="ln"> 94</span>    left: 0;
+<span class="ln"> 95</span>    width: 100%;
+<span class="ln"> 96</span>    height: 100%;
+<span class="ln"> 97</span>    background:
+<span class="ln"> 98</span>      radial-gradient(ellipse at 0% 0%, rgba(26,58,107,0.03) 0%, transparent 60%),
+<span class="ln"> 99</span>      radial-gradient(ellipse at 100% 100%, rgba(192,57,43,0.02) 0%, transparent 60%);
+<span class="ln">100</span>    z-index: -1;
+<span class="ln">101</span>    pointer-events: none;
+<span class="ln">102</span>  }
+<span class="ln">103</span>  
+<span class="ln">104</span>  /* Header */
+<span class="ln">105</span>  .header {
+<span class="ln">106</span>    background: linear-gradient(135deg, var(--primary), var(--secondary));
+<span class="ln">107</span>    border-bottom: none;
+<span class="ln">108</span>    padding: 16px 40px;
+<span class="ln">109</span>    display: flex;
+<span class="ln">110</span>    align-items: center;
+<span class="ln">111</span>    justify-content: space-between;
+<span class="ln">112</span>    position: sticky;
+<span class="ln">113</span>    top: 0;
+<span class="ln">114</span>    z-index: 100;
+<span class="ln">115</span>    box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+<span class="ln">116</span>  }
+<span class="ln">117</span>  
+<span class="ln">118</span>  .logo {
+<span class="ln">119</span>    display: flex;
+<span class="ln">120</span>    align-items: center;
+<span class="ln">121</span>    gap: 14px;
+<span class="ln">122</span>  }
+<span class="ln">123</span>  
+<span class="ln">124</span>  .logo-img {
+<span class="ln">125</span>    height: 36px;
+<span class="ln">126</span>    width: auto;
+<span class="ln">127</span>  }
+<span class="ln">128</span>  
+<span class="ln">129</span>  .logo-text {
+<span class="ln">130</span>    font-size: 19px;
+<span class="ln">131</span>    font-weight: 800;
+<span class="ln">132</span>    color: var(--text-on-dark);
+<span class="ln">133</span>    letter-spacing: -0.3px;
+<span class="ln">134</span>  }
+<span class="ln">135</span>  
+<span class="ln">136</span>  .logo-sub {
+<span class="ln">137</span>    font-size: 10px;
+<span class="ln">138</span>    color: #ffffff;
+<span class="ln">139</span>    letter-spacing: 2.5px;
+<span class="ln">140</span>    text-transform: uppercase;
+<span class="ln">141</span>    font-weight: 600;
+<span class="ln">142</span>  }
+<span class="ln">143</span>  
+<span class="ln">144</span>  .header-right {
+<span class="ln">145</span>    display: flex;
+<span class="ln">146</span>    align-items: center;
+<span class="ln">147</span>    gap: 12px;
+<span class="ln">148</span>  }
+<span class="ln">149</span>  
+<span class="ln">150</span>  .team-badge {
+<span class="ln">151</span>    background: rgba(255,255,255,0.12);
+<span class="ln">152</span>    border: 1px solid rgba(255,255,255,0.2);
+<span class="ln">153</span>    padding: 7px 18px;
+<span class="ln">154</span>    border-radius: 24px;
+<span class="ln">155</span>    font-size: 12px;
+<span class="ln">156</span>    font-weight: 600;
+<span class="ln">157</span>    color: var(--text-on-dark);
+<span class="ln">158</span>    cursor: pointer;
+<span class="ln">159</span>    display: none;
+<span class="ln">160</span>    backdrop-filter: blur(8px);
+<span class="ln">161</span>  }
+<span class="ln">162</span>  
+<span class="ln">163</span>  .score-display {
+<span class="ln">164</span>    background: rgba(245,166,35,0.15);
+<span class="ln">165</span>    border: 1px solid rgba(245,166,35,0.35);
+<span class="ln">166</span>    padding: 7px 16px;
+<span class="ln">167</span>    border-radius: 24px;
+<span class="ln">168</span>    font-size: 13px;
+<span class="ln">169</span>    font-weight: 700;
+<span class="ln">170</span>    color: var(--gold-light);
+<span class="ln">171</span>    display: none;
+<span class="ln">172</span>  }
+<span class="ln">173</span>  
+<span class="ln">174</span>  /* Navigation */
+<span class="ln">175</span>  .nav {
+<span class="ln">176</span>    display: flex;
+<span class="ln">177</span>    background: linear-gradient(135deg, #0d2d52 0%, #0a2240 50%, #0d2d52 100%);
+<span class="ln">178</span>    border-bottom: 2px solid rgba(10,34,64,0.3);
+<span class="ln">179</span>    overflow-x: auto;
+<span class="ln">180</span>    overflow-y: visible;
+<span class="ln">181</span>    scrollbar-width: none;
+<span class="ln">182</span>    box-shadow: 0 2px 8px rgba(10,34,64,0.2);
+<span class="ln">183</span>    position: sticky;
+<span class="ln">184</span>    top: 74px;
+<span class="ln">185</span>    z-index: 99;
+<span class="ln">186</span>  }
+<span class="ln">187</span>  .nav::-webkit-scrollbar { display: none; }
+<span class="ln">188</span>  
+<span class="ln">189</span>  .nav-item {
+<span class="ln">190</span>    flex: none;
+<span class="ln">191</span>    padding: 10px 12px;
+<span class="ln">192</span>    font-size: 13px;
+<span class="ln">193</span>    font-weight: 700;
+<span class="ln">194</span>    color: #ffffff;
+<span class="ln">195</span>    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+<span class="ln">196</span>    cursor: pointer;
+<span class="ln">197</span>    border-bottom: 2.5px solid transparent;
+<span class="ln">198</span>    transition: all 0.25s;
+<span class="ln">199</span>    white-space: nowrap;
+<span class="ln">200</span>    display: flex;</pre>
+  </section>
+
+  <section class="file-section">
+    <div class="file-header">
+      <div class="file-name">④ spin-knowledge-base.js — RAG 지식베이스</div>
+      <div class="file-meta">spin-knowledge-base.js  (전체 105행)</div>
+    </div>
+    <pre class="code"><span class="ln">  1</span>  // ========== SPIN Selling 지식 베이스 (RAG용) ==========
+<span class="ln">  2</span>  // 플랫폼의 모든 정보를 청크로 분할하여 챗봇 RAG에 활용
+<span class="ln">  3</span>  
+<span class="ln">  4</span>  const SPIN_KB = [
+<span class="ln">  5</span>    // ===== SPIN 방법론 핵심 =====
+<span class="ln">  6</span>    { id: 'spin-1', tag: 'SPIN 방법론', tags: ['SPIN', '질문', '유형', '방법론', '개념'], content: 'SPIN Selling은 Korn Ferry(구 Huthwaite)의 35,000건 영업 상담 연구를 기반으로 한 B2B 영업 방법론입니다. S(Situation/상황), P(Problem/문제), I(Implication/시사), N(Need-Payoff/해결) 4가지 질문 유형을 순서대로 활용하여 고객의 잠재니즈를 현재니즈로 전환합니다.' },
+<span class="ln">  7</span>    { id: 'spin-2', tag: '상황질문(S)', tags: ['S', '상황', 'situation', '배경', '사실'], content: '상황질문(S)은 고객의 현재 상황, 배경, 사실을 파악하는 질문입니다. 예: "현재 어떤 시스템을 사용하고 계신가요?", "팀 규모는 어떻게 되나요?". 너무 많이 하면 고객이 지루해하므로 최소한으로 사용해야 합니다. 사전 조사로 답을 알 수 있는 질문은 생략하세요.' },
+<span class="ln">  8</span>    { id: 'spin-3', tag: '문제질문(P)', tags: ['P', '문제', 'problem', '어려움', '불만', '잠재니즈'], content: '문제질문(P)은 고객의 어려움, 불만, 문제점을 탐색하는 질문입니다. 예: "현재 시스템에서 불편한 점은 없으신가요?", "처리 시간이 오래 걸리는 경우가 있나요?". 잠재니즈(Implied Needs)를 끌어내는 핵심 질문이며, 고객이 인지하지 못한 문제까지 발견할 수 있어야 합니다.' },
+<span class="ln">  9</span>    { id: 'spin-4', tag: '시사질문(I)', tags: ['I', '시사', 'implication', '영향', '결과', '심화'], content: '시사질문(I)은 문제의 영향과 결과를 심화시키는 질문입니다. 예: "그 문제가 팀 생산성에 어떤 영향을 미치고 있나요?", "그로 인한 추가 비용은 얼마나 되나요?". 대형 영업에서 가장 중요한 질문 유형이며, 고객이 문제의 심각성을 스스로 깨닫게 합니다. 잠재니즈를 현재니즈로 전환하는 핵심 도구입니다.' },
+<span class="ln"> 10</span>    { id: 'spin-5', tag: '해결질문(N)', tags: ['N', '해결', 'need-payoff', '가치', '이점', '솔루션'], content: '해결질문(N)은 해결책의 가치와 이점을 고객이 스스로 말하게 하는 질문입니다. 예: "만약 처리 시간을 50% 줄일 수 있다면 어떤 도움이 될까요?", "이 문제가 해결되면 어떤 변화가 있을까요?". 현재니즈(Explicit Needs)를 강화하고, 고객이 솔루션의 가치를 직접 표현하게 만드는 강력한 기법입니다.' },
+<span class="ln"> 11</span>    { id: 'spin-6', tag: '잠재니즈 vs 현재니즈', tags: ['니즈', '잠재', '현재', 'implied', 'explicit'], content: '잠재니즈(Implied Needs)는 고객이 문제, 어려움, 불만을 표현하는 것입니다("~가 어렵다", "~에 문제가 있다"). 현재니즈(Explicit Needs)는 고객이 해결책에 대한 명확한 욕구/바람을 표현하는 것입니다("~가 필요하다", "~를 원한다"). 영업의 핵심은 잠재니즈를 시사질문(I)을 통해 현재니즈로 전환하는 것입니다.' },
+<span class="ln"> 12</span>    { id: 'spin-7', tag: '대형 영업 vs 소형 영업', tags: ['대형', '소형', '영업', '복잡'], content: '소형 영업은 단순 제품, 1회 상담, 클로징 기법이 중요합니다. 대형 영업은 복잡한 솔루션, 다수의 의사결정자, 장기 사이클이 특징이며 SPIN 질문법이 특히 효과적입니다. I/N 질문의 비중이 높을수록 대형 영업의 성공률이 상승합니다.' },
+<span class="ln"> 13</span>    { id: 'spin-8', tag: 'SPIN 순서', tags: ['순서', '흐름', '단계', 'S→P→I→N'], content: 'SPIN 질문의 자연스러운 순서는 S → P → I → N입니다. 1) 상황질문(S)으로 배경 파악 → 2) 문제질문(P)으로 잠재니즈 발견 → 3) 시사질문(I)으로 문제 심화 → 4) 해결질문(N)으로 가치 확인. 이 순서를 지켜야 자연스럽게 고객이 솔루션의 필요성을 직접 표현하게 됩니다.' },
+<span class="ln"> 14</span>  
+<span class="ln"> 15</span>    // ===== FAB/BAF =====
+<span class="ln"> 16</span>    { id: 'fab-1', tag: 'FAB 정의', tags: ['FAB', 'feature', 'advantage', 'benefit', '특징', '장점', '이점'], content: 'FAB는 Feature(특징) - Advantage(장점) - Benefit(이점)의 약자로, 제품/서비스를 고객에게 설명하는 프레임워크입니다. Feature는 사실적 특성, Advantage는 그 특징이 어떻게 도움이 되는지, Benefit은 고객의 현재니즈를 충족시키는 구체적 가치입니다.' },
+<span class="ln"> 17</span>    { id: 'fab-2', tag: 'BAF', tags: ['BAF', '역순'], content: 'BAF는 Benefit-Advantage-Feature의 역순 제시 방법입니다. 먼저 고객 이점(Benefit)을 말하고, 장점(Advantage), 특징(Feature) 순으로 설명합니다. 고객 중심 프레젠테이션에서 더 효과적입니다. 고객은 자신에게 어떤 가치가 있는지 가장 먼저 듣고 싶어합니다.' },
+<span class="ln"> 18</span>  
+<span class="ln"> 19</span>    // ===== 콜플랜 =====
+<span class="ln"> 20</span>    { id: 'callplan-1', tag: '콜플랜 6단계', tags: ['콜플랜', 'call plan', '준비', '계획'], content: '효과적인 콜플랜은 6단계입니다: 1) 상담 목적 설정(Advance 목표) - 다음 단계로 진전시킬 구체적 행동. 2) 고객 배경 정보 정리 - 업종, 규모, 이슈. 3) SPIN 질문 준비 - S/P/I/N 각 3개씩. 4) FAB/BAF 시나리오 - 핵심 가치 제안. 5) 예상 반론 및 대응 - 고객 우려 사항. 6) 다음 단계(Advance) 계획 - 후속 미팅 일정 확보.' },
+<span class="ln"> 21</span>    { id: 'callplan-2', tag: 'Advance', tags: ['advance', '진전', '다음 단계'], content: 'Advance(진전)는 SPIN Selling의 핵심 개념으로, 매 미팅이 실질적으로 다음 단계로 나아가게 하는 구체적 행동을 의미합니다. 단순한 "관심 표명"이나 "긍정적 반응"이 아닌, 구체적인 다음 약속(데모, 견적 요청, 의사결정자 미팅 등)을 확보해야 진전입니다.' },
+<span class="ln"> 22</span>  
+<span class="ln"> 23</span>    // ===== 온톨로지 분석 =====
+<span class="ln"> 24</span>    { id: 'onto-1', tag: '온톨로지 역량 분석', tags: ['온톨로지', 'ontology', '약점', '역량', '진단'], content: '온톨로지 기반 역량 분석은 5단계 체계입니다: 약점 → 이슈 → 근본원인 → 전략 → 실행과제. 예를 들어, "S 과다 사용"이라는 약점은 "정보 수집에만 치중"이라는 이슈로 이어지고, 근본원인은 "니즈 개발 역량 부족"이며, 전략은 "I/N 질문 훈련"이고, 실행과제는 "주 3회 시사질문 시나리오 연습"입니다.' },
+<span class="ln"> 25</span>    { id: 'onto-2', tag: 'I 미사용 진단', tags: ['시사질문', '미사용', '진단', '약점'], content: 'I질문(시사질문) 미사용은 가장 흔한 약점입니다. 결과: 문제 심화 실패 → 잠재니즈가 현재니즈로 전환 안됨 → 고객이 솔루션의 필요성을 인식하지 못함. 해결: 매 P질문 후 반드시 "그 문제가 ~에 어떤 영향을 미치나요?" 패턴의 I질문을 1개 이상 던지는 훈련.' },
+<span class="ln"> 26</span>    { id: 'onto-3', tag: 'N 미사용 진단', tags: ['해결질문', '미사용', '진단', '약점'], content: 'N질문(해결질문) 미사용 시: 고객이 솔루션의 가치를 스스로 표현하지 않음 → 영업 담당자가 일방적으로 설득해야 함 → 설득력 저하. 해결: 시사질문 후 자연스럽게 "만약 해결된다면 어떤 도움이 될까요?" 형식의 해결질문을 던져 고객이 직접 가치를 말하게 하기.' },
+<span class="ln"> 27</span>  
+<span class="ln"> 28</span>    // ===== 플랫폼 사용 가이드 =====
+<span class="ln"> 29</span>    { id: 'plat-1', tag: '교육 흐름', tags: ['교육', '시작', '입장', '로그인'], content: '교육 시작 흐름: 1) spin-selling.vercel.app 또는 jaiwshim-project.github.io/SPIN-Selling 접속 → 2) 교육 세션(회사명) 선택 → 3) 비밀번호 입력 → 4) 역할 선택(강사/매니저/교육생) → 5) 교육생은 팀과 이름 선택 후 진입 → 6) 12가지 활동 메뉴에서 학습 진행.' },
+<span class="ln"> 30</span>    { id: 'plat-2', tag: '12가지 학습 활동', tags: ['활동', '12', '학습', '메뉴'], content: '플랫폼의 12가지 학습 활동: 1.프리리딩(SPIN 3.0 PDF), 2.퀴즈, 3.니즈 구분, 4.SPIN 질문구분, 5.질문 연습, 6.SPIN질문&amp;니즈 구분, 7.FAB/BAF, 8.AI 롤플레이, 9.콜플랜 작성, 10.스핀도구들(허브), 11.사전/사후 설문, 12.AI 분석리포트.' },
+<span class="ln"> 31</span>    { id: 'plat-3', tag: '점수 체계', tags: ['점수', '카테고리', '만점', 'score'], content: '점수 체계: 각 문제 10점 기준. 카테고리별 만점 - 퀴즈 80, 니즈 80, 질문구분 100, 질문연습 120, 롤플레이 100, FAB 90. 총점 만점 600점. 게임 점수도 본인 점수에 누적됩니다.' },
+<span class="ln"> 32</span>    { id: 'plat-4', tag: '강사 권한', tags: ['강사', '매니저', '권한', '관리'], content: '강사와 교육매니저의 권한: 팀 편성, 점수 조회(스코어보드), 코칭 리포트, AI 분석리포트 생성, 온톨로지 그래프, 수료증 발급, 30일 팔로업 관리, 교육생 접속 현황 실시간 확인. 매니저는 강사와 동일 권한이지만 교육 활동에 참여하지 않습니다.' },
+<span class="ln"> 33</span>    { id: 'plat-5', tag: '교육생 활동', tags: ['교육생', '학습', '참여'], content: '교육생은 12가지 활동을 순서대로 또는 자유롭게 진행할 수 있습니다. 모든 활동은 점수가 자동으로 기록되며, 본인 대시보드에서 진행률 프로그레스바로 확인 가능합니다. 본인의 AI 분석리포트도 직접 조회할 수 있습니다.' },
+<span class="ln"> 34</span>  
+<span class="ln"> 35</span>    // ===== 학습 게임 =====
+<span class="ln"> 36</span>    { id: 'game-hub', tag: '학습 게임 5종', tags: ['게임', '5종', '학습', 'game'], content: '학습 게임 5종: 1) 퀴즈 레이스(10문제, 30초/문제, 콤보 보너스), 2) 매칭 게임(60초, 라운드당 4쌍 매칭), 3) 플래시카드(132개 카드, S/P/I/N 4지선다), 4) 순서 정렬(SPIN 흐름 학습, 무한 라운드), 5) 다음 질문 선택(시나리오 분석, 10문제). 모두 점수가 본인 계정에 자동 누적되며 게임 리더보드에서 Top 10과 팀별 합산을 확인할 수 있습니다.' },
+<span class="ln"> 37</span>    { id: 'game-1', tag: '퀴즈 레이스 게임', tags: ['퀴즈', '레이스', 'quiz race', '콤보'], content: '퀴즈 레이스 게임: SPIN 질문을 보고 30초 안에 S/P/I/N 4지선다 중 정답을 선택. 총 10문제. 정답 +10점, 연속 정답 시 콤보 보너스 +5점/연속. 시간 초과나 오답 시 콤보 리셋. 최대 약 145점.' },
+<span class="ln"> 38</span>    { id: 'game-2', tag: '매칭 게임', tags: ['매칭', 'matching', '짝맞추기'], content: '매칭 게임: 왼쪽 4개 질문과 오른쪽 4개 SPIN 유형 카드를 짝맞추기. 60초 시간 제한 내에 무한 라운드 진행. 라운드당 4쌍 매칭. 정답 +25점, 라운드 클리어 보너스 +50점, 오답 -5점.' },
+<span class="ln"> 39</span>    { id: 'game-3', tag: '플래시카드 게임', tags: ['플래시카드', 'flashcard', '4지선다'], content: '플래시카드 게임: 132개 SPIN 질문 카드 중 무작위로 표시. 질문을 보고 S/P/I/N 4지선다 중 정답 선택. 시간 제한 없음. 정답 시 유형 설명, 오답 시 본인 선택과 정답 비교 + 활용팁 제공. 정답 1개당 10점.' },
+<span class="ln"> 40</span>    { id: 'game-4', tag: '순서 정렬 게임', tags: ['순서', '정렬', '흐름'], content: '순서 정렬 게임: 한 산업의 4개 SPIN 질문을 무작위로 표시. S→P→I→N 순서로 정렬. 클릭한 순서대로 1, 2, 3, 4 번호 매겨짐. 무한 라운드, 정답 라운드당 50점.' },
+<span class="ln"> 41</span>    { id: 'game-5', tag: '다음 질문 선택 게임', tags: ['다음', '선택', '시나리오'], content: '다음 질문 선택 게임: 고객 상황과 발언을 시나리오로 제시. 그 상황에서 영업담당자가 다음에 던져야 할 SPIN 질문 유형(S/P/I/N) 선택. 총 10문제, 정답 +25점/오답 -5점. 정답 시 효과적인 예시 질문 제공.' },
+<span class="ln"> 42</span>  
+<span class="ln"> 43</span>    // ===== 부가 기능 =====
+<span class="ln"> 44</span>    { id: 'feat-1', tag: 'AI 챗봇', tags: ['챗봇', 'AI', 'bot', '도우미'], content: 'SPIN AI Bot은 Gemini 2.0 Flash API 기반의 AI 도우미입니다. 우하단 녹색 플로팅 버튼으로 모든 페이지에서 접근 가능. 교육생의 점수와 약점을 분석하여 개인화된 코칭을 제공합니다. RAG 시스템으로 플랫폼의 모든 정보(이 지식베이스)를 검색하여 답변합니다.' },
+<span class="ln"> 45</span>    { id: 'feat-2', tag: '수료증', tags: ['수료증', 'certificate', '인쇄', 'PDF'], content: '교육 수료증(certificate.html)은 강사 대시보드에서 발급 가능. 교육생 정보(이름, 회사, 교육일, 총점)가 자동 채워지며 A4 가로 방향으로 인쇄/PDF 저장 가능. Korn Ferry 네이비 + 골드 보더 디자인.' },
+<span class="ln"> 46</span>    { id: 'feat-3', tag: 'SPIN 질문 라이브러리', tags: ['라이브러리', 'library', '132', '산업'], content: 'SPIN 질문 라이브러리(spin-library.html)는 11개 산업별 132개 우수 SPIN 질문 데이터베이스입니다. 산업 필터(IT, 제조, 금융, 의료, 유통, 건설, 자동차, 에너지, 교육, 컨설팅, 식품), SPIN 유형 필터(S/P/I/N), 키워드 검색 지원. 각 질문에 활용팁 포함.' },
+<span class="ln"> 47</span>    { id: 'feat-4', tag: '교육 자료실', tags: ['자료실', 'materials', '카테고리'], content: '교육 자료실(materials.html)은 14개 교육 자료를 4개 카테고리(리딩/템플릿/케이스/참고)로 정리합니다. SPIN 3.0 교재, 콜플랜 템플릿, FAB 분석 시트, 산업별 영업 사례, 온톨로지 가이드 등.' },
+<span class="ln"> 48</span>    { id: 'feat-5', tag: '협업 보드', tags: ['협업', 'collab', '보드', '팀'], content: '팀 협업 보드(collab-board.html)는 팀별로 SPIN 질문을 함께 작성하고 공유하는 실시간 보드입니다. S/P/I/N 유형 선택 후 질문 작성, 좋아요 기능, 10초마다 자동 동기화.' },
+<span class="ln"> 49</span>    { id: 'feat-6', tag: '음성 롤플레이', tags: ['음성', 'voice', '롤플레이', 'AI', '대화'], content: '음성 롤플레이(voice-roleplay.html)는 Web Speech API와 Gemini AI를 결합한 실시간 음성 대화 게임입니다. 마이크로 SPIN 질문을 던지면 AI 고객이 음성으로 응답합니다. SPIN 질문 유형이 실시간으로 카운트됩니다.' },
+<span class="ln"> 50</span>    { id: 'feat-7', tag: '교육 통계 대시보드', tags: ['통계', 'stats', '대시보드', '분석'], content: '교육 통계 대시보드(stats-dashboard.html)는 전체 교육 이력을 통합 분석합니다. 총 교육 횟수, 교육생 수, 활동 건수, 평균 점수, 카테고리별 평균 점수 바차트, SPIN 유형별 비율, 교육 이력 테이블.' },
+<span class="ln"> 51</span>    { id: 'feat-8', tag: '팀 대항전', tags: ['팀', '대항전', 'battle', '실시간'], content: '팀 대항전 모드(team-battle.html)는 대형 스크린용으로 설계된 실시간 팀별 점수 경쟁 페이지입니다. 5팀 점수를 막대 그래프로 표시, 1위 팀에 골드 글로우, 10초마다 자동 갱신, 전체화면 모드 지원.' },
+<span class="ln"> 52</span>    { id: 'feat-9', tag: '30일 팔로업', tags: ['30일', '팔로업', 'followup', '리마인더'], content: '30일 팔로업 프로그램(followup.html)은 교육 후 4주간의 주간 리마인더 콘텐츠입니다. 1주차 S/P 질문 실전 적용, 2주차 시사질문 도전, 3주차 해결질문 + FAB, 4주차 종합 실전 + 자기 평가.' },
+<span class="ln"> 53</span>    { id: 'feat-10', tag: 'LMS 연동', tags: ['LMS', 'xAPI', 'export', 'CSV'], content: 'LMS 연동(lms-export.html)은 교육 데이터를 xAPI JSON 또는 CSV 형식으로 내보내 기업 LMS에 연동합니다. 수료자 명단, 6개 영역 점수, 수료 여부 등 포함.' },
+<span class="ln"> 54</span>    { id: 'feat-11', tag: '게임 리더보드', tags: ['리더보드', 'leaderboard', '순위', 'top'], content: '게임 리더보드(game-leaderboard.html)는 5개 게임의 Top 10 개인 순위와 팀별 합산 점수를 표시합니다. 6개 탭(전체 + 5개 게임)으로 필터링 가능, 5초마다 자동 갱신, 1~3위 메달 표시.' },
+<span class="ln"> 55</span>    { id: 'feat-12', tag: '다크모드', tags: ['다크', 'dark', '모드', '테마'], content: '다크모드는 푸터의 🌙 다크모드 버튼으로 토글합니다. 라이트/다크 테마 전환 시 사용자 설정이 localStorage에 저장되어 다음 방문 시에도 유지됩니다.' },
+<span class="ln"> 56</span>    { id: 'feat-13', tag: 'PWA 앱 설치', tags: ['PWA', '앱', '설치', '모바일'], content: 'PWA(Progressive Web App) 지원: 모바일 브라우저에서 "홈 화면에 추가" 옵션으로 앱처럼 설치 가능. 오프라인 시 기본 화면 제공. manifest.json + service worker 기반.' }
+<span class="ln"> 57</span>  ];
+<span class="ln"> 58</span>  
+<span class="ln"> 59</span>  // 한국어 토큰화 (간단한 N-gram + 공백 분리)
+<span class="ln"> 60</span>  function tokenize(text) {
+<span class="ln"> 61</span>    if (!text) return [];
+<span class="ln"> 62</span>    const tokens = new Set();
+<span class="ln"> 63</span>    // 공백 분리 단어
+<span class="ln"> 64</span>    text.toLowerCase().split(/[\s,.()/\[\]"'?!\-—~+:;]+/).forEach(w =&gt; { if (w.length &gt;= 2) tokens.add(w); });
+<span class="ln"> 65</span>    // 2-gram (한국어 대응)
+<span class="ln"> 66</span>    const clean = text.replace(/\s+/g, '');
+<span class="ln"> 67</span>    for (let i = 0; i &lt; clean.length - 1; i++) {
+<span class="ln"> 68</span>      const bg = clean.slice(i, i + 2);
+<span class="ln"> 69</span>      if (/[가-힣A-Za-z]{2}/.test(bg)) tokens.add(bg.toLowerCase());
+<span class="ln"> 70</span>    }
+<span class="ln"> 71</span>    return [...tokens];
+<span class="ln"> 72</span>  }
+<span class="ln"> 73</span>  
+<span class="ln"> 74</span>  // BM25 스타일 검색
+<span class="ln"> 75</span>  function searchKB(query, topK) {
+<span class="ln"> 76</span>    topK = topK || 5;
+<span class="ln"> 77</span>    const queryTokens = tokenize(query);
+<span class="ln"> 78</span>    if (queryTokens.length === 0) return [];
+<span class="ln"> 79</span>  
+<span class="ln"> 80</span>    const scored = SPIN_KB.map(chunk =&gt; {
+<span class="ln"> 81</span>      const chunkText = chunk.tag + ' ' + (chunk.tags || []).join(' ') + ' ' + chunk.content;
+<span class="ln"> 82</span>      const chunkTokens = tokenize(chunkText);
+<span class="ln"> 83</span>      const chunkSet = new Set(chunkTokens);
+<span class="ln"> 84</span>  
+<span class="ln"> 85</span>      let score = 0;
+<span class="ln"> 86</span>      queryTokens.forEach(qt =&gt; {
+<span class="ln"> 87</span>        if (chunkSet.has(qt)) score += 1;
+<span class="ln"> 88</span>        // tag 매칭은 가중치
+<span class="ln"> 89</span>        if (chunk.tag &amp;&amp; chunk.tag.toLowerCase().includes(qt)) score += 3;
+<span class="ln"> 90</span>        if (chunk.tags &amp;&amp; chunk.tags.some(t =&gt; t.toLowerCase() === qt)) score += 5;
+<span class="ln"> 91</span>      });
+<span class="ln"> 92</span>  
+<span class="ln"> 93</span>      return { chunk: chunk, score: score };
+<span class="ln"> 94</span>    });
+<span class="ln"> 95</span>  
+<span class="ln"> 96</span>    return scored
+<span class="ln"> 97</span>      .filter(x =&gt; x.score &gt; 0)
+<span class="ln"> 98</span>      .sort((a, b) =&gt; b.score - a.score)
+<span class="ln"> 99</span>      .slice(0, topK)
+<span class="ln">100</span>      .map(x =&gt; x.chunk);
+<span class="ln">101</span>  }
+<span class="ln">102</span>  
+<span class="ln">103</span>  window.SPIN_KB = SPIN_KB;
+<span class="ln">104</span>  window.searchKB = searchKB;
+<span class="ln">105</span>  </pre>
+  </section>
+
+  <section class="file-section">
+    <div class="file-header">
+      <div class="file-name">⑤ chatbot.js — SPIN AI Bot (Gemini RAG 챗봇)</div>
+      <div class="file-meta">chatbot.js  (전체 468행)</div>
+    </div>
+    <pre class="code"><span class="ln">  1</span>  // ========== SPIN Selling AI Chatbot (Gemini RAG) ==========
+<span class="ln">  2</span>  (function() {
+<span class="ln">  3</span>    'use strict';
+<span class="ln">  4</span>  
+<span class="ln">  5</span>    const GEMINI_KEY = 'AIzaSyB8cc_lctW4vpEieT2CiiNkmTLZ8xH9WtU';
+<span class="ln">  6</span>    const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
+<span class="ln">  7</span>  
+<span class="ln">  8</span>    const SPIN_KNOWLEDGE = `당신은 Korn Ferry 공인 SPIN Selling AI 교육 도우미입니다.
+<span class="ln">  9</span>  SPIN Selling 방법론과 이 교육 플랫폼 사용법에 대해 전문적으로 답변합니다.
+<span class="ln"> 10</span>  반드시 한국어로 답변하고, 간결하면서도 실용적인 조언을 제공하세요.
+<span class="ln"> 11</span>  
+<span class="ln"> 12</span>  === SPIN Selling 핵심 지식 ===
+<span class="ln"> 13</span>  
+<span class="ln"> 14</span>  【SPIN 질문 유형】
+<span class="ln"> 15</span>  S (Situation/상황질문): 고객의 현재 상황, 배경, 사실을 파악하는 질문
+<span class="ln"> 16</span>  - 목적: 고객의 현재 상태를 이해
+<span class="ln"> 17</span>  - 예시: "현재 어떤 시스템을 사용하고 계시나요?", "영업팀 규모는 어떻게 되나요?"
+<span class="ln"> 18</span>  - 주의: 너무 많으면 고객이 지루해함. 최소한으로 사용
+<span class="ln"> 19</span>  
+<span class="ln"> 20</span>  P (Problem/문제질문): 고객의 어려움, 불만, 문제점을 탐색하는 질문
+<span class="ln"> 21</span>  - 목적: 잠재니즈(Implied Needs) 발견
+<span class="ln"> 22</span>  - 예시: "현재 시스템에서 불편한 점은 없으신가요?", "처리 시간이 오래 걸리는 경우가 있나요?"
+<span class="ln"> 23</span>  - 잠재니즈를 끌어내는 핵심 질문
+<span class="ln"> 24</span>  
+<span class="ln"> 25</span>  I (Implication/시사질문): 문제의 영향과 결과를 심화시키는 질문
+<span class="ln"> 26</span>  - 목적: 잠재니즈를 현재니즈로 발전시킴 (문제의 심각성 인식)
+<span class="ln"> 27</span>  - 예시: "그 문제가 팀 생산성에 어떤 영향을 미치고 있나요?", "그로 인한 추가 비용은 얼마나 되나요?"
+<span class="ln"> 28</span>  - 대형 영업에서 가장 중요한 질문. 고객이 문제의 심각성을 스스로 깨닫게 함
+<span class="ln"> 29</span>  
+<span class="ln"> 30</span>  N (Need-Payoff/해결질문): 해결책의 가치와 이점을 고객이 스스로 말하게 하는 질문
+<span class="ln"> 31</span>  - 목적: 현재니즈(Explicit Needs)를 강화, 고객이 솔루션의 가치를 직접 표현
+<span class="ln"> 32</span>  - 예시: "만약 처리 시간을 50% 줄일 수 있다면 어떤 도움이 될까요?", "이 문제가 해결되면 어떤 변화가 있을까요?"
+<span class="ln"> 33</span>  - 고객이 스스로 솔루션의 필요성을 말하게 하는 강력한 기법
+<span class="ln"> 34</span>  
+<span class="ln"> 35</span>  【니즈 구분】
+<span class="ln"> 36</span>  잠재니즈 (Implied Needs): 고객이 문제, 어려움, 불만을 표현하는 것
+<span class="ln"> 37</span>  - "~가 어렵다", "~에 문제가 있다", "~가 불만이다"
+<span class="ln"> 38</span>  현재니즈 (Explicit Needs): 고객이 해결책에 대한 명확한 욕구/바람을 표현하는 것
+<span class="ln"> 39</span>  - "~가 필요하다", "~를 원한다", "~를 찾고 있다"
+<span class="ln"> 40</span>  
+<span class="ln"> 41</span>  【SPIN과 구매 사이클】
+<span class="ln"> 42</span>  1. 니즈 인식 단계: S→P 질문으로 잠재니즈 발견
+<span class="ln"> 43</span>  2. 대안 평가 단계: I 질문으로 문제 심화, N 질문으로 해결 가치 확인
+<span class="ln"> 44</span>  3. 의구심 해소 단계: FAB/BAF로 제안
+<span class="ln"> 45</span>  4. 의사결정 단계: 클로징
+<span class="ln"> 46</span>  
+<span class="ln"> 47</span>  【FAB vs BAF】
+<span class="ln"> 48</span>  FAB (Feature-Advantage-Benefit):
+<span class="ln"> 49</span>  - Feature(특징): 제품/서비스의 사실적 특성
+<span class="ln"> 50</span>  - Advantage(장점): 그 특징이 어떻게 도움이 되는지
+<span class="ln"> 51</span>  - Benefit(이점): 고객의 현재니즈를 충족시키는 구체적 가치
+<span class="ln"> 52</span>  
+<span class="ln"> 53</span>  BAF (Benefit-Advantage-Feature): 역순 제시
+<span class="ln"> 54</span>  - 먼저 고객 이점을 말하고, 장점, 특징 순으로 설명
+<span class="ln"> 55</span>  - 고객 중심 프레젠테이션에 더 효과적
+<span class="ln"> 56</span>  
+<span class="ln"> 57</span>  【콜플랜 (Call Plan)】
+<span class="ln"> 58</span>  효과적인 영업 상담 준비의 6단계:
+<span class="ln"> 59</span>  1. 상담 목적 설정 (Advance 목표)
+<span class="ln"> 60</span>  2. 고객 배경 정보 정리
+<span class="ln"> 61</span>  3. SPIN 질문 준비 (S→P→I→N 순서)
+<span class="ln"> 62</span>  4. FAB/BAF 시나리오 준비
+<span class="ln"> 63</span>  5. 예상 반론 및 대응 준비
+<span class="ln"> 64</span>  6. 다음 단계(Advance) 계획
+<span class="ln"> 65</span>  
+<span class="ln"> 66</span>  【대형 영업 vs 소형 영업】
+<span class="ln"> 67</span>  - 소형 영업: 단순 제품, 1회 상담, 클로징 기법 중요
+<span class="ln"> 68</span>  - 대형 영업: 복잡한 솔루션, 다수 의사결정자, 장기 사이클
+<span class="ln"> 69</span>    → SPIN이 특히 효과적. I/N 질문의 비중이 높을수록 성공률 상승
+<span class="ln"> 70</span>  
+<span class="ln"> 71</span>  【온톨로지 기반 역량 분석】
+<span class="ln"> 72</span>  약점 → 이슈 → 근본원인 → 전략 → 실행과제
+<span class="ln"> 73</span>  - S 과다 사용 → 정보 수집에만 치중 → 니즈 개발 역량 부족 → I/N 질문 훈련 필요
+<span class="ln"> 74</span>  - I 미사용 → 문제 심화 실패 → 잠재니즈가 현재니즈로 전환 안됨 → 시사질문 시나리오 연습
+<span class="ln"> 75</span>  - N 미사용 → 고객이 솔루션 가치를 말하지 않음 → 해결질문 활용법 학습
+<span class="ln"> 76</span>  
+<span class="ln"> 77</span>  === 플랫폼 사용 가이드 ===
+<span class="ln"> 78</span>  
+<span class="ln"> 79</span>  【접속 방법】
+<span class="ln"> 80</span>  1. spin-selling.vercel.app 접속
+<span class="ln"> 81</span>  2. 교육 세션 선택 (비밀번호 입력)
+<span class="ln"> 82</span>  3. 역할 선택: 강사/교육매니저/교육생
+<span class="ln"> 83</span>  4. 교육생은 팀과 이름을 선택하여 입장
+<span class="ln"> 84</span>  
+<span class="ln"> 85</span>  【12가지 학습 활동】
+<span class="ln"> 86</span>  1. 프리리딩: SPIN 3.0 교재 PDF 미리 읽기 (로그인 불필요)
+<span class="ln"> 87</span>  2. 퀴즈: SPIN 개념, 구매사이클, 질문유형, 고급 문제
+<span class="ln"> 88</span>  3. 니즈 구분: 잠재니즈/현재니즈 식별 연습
+<span class="ln"> 89</span>  4. SPIN 질문 구분: 시나리오 속 질문이 S/P/I/N 중 무엇인지 분류
+<span class="ln"> 90</span>  5. 질문 연습: 11개 산업별 시나리오로 SPIN 질문 직접 작성
+<span class="ln"> 91</span>  6. SPIN질문&amp;니즈 구분: 대화에서 질문 유형과 니즈를 동시에 분석
+<span class="ln"> 92</span>  7. FAB/BAF: 특징-장점-이점 연습
+<span class="ln"> 93</span>  8. 롤플레이: AI 고객과 실전 대화 연습 (10개 산업, 3단계 난이도)
+<span class="ln"> 94</span>  9. 콜플랜 작성: 6개 섹션 콜플랜 + AI 평가
+<span class="ln"> 95</span>  10. 스핀도구들: 스코어보드, 코칭리포트, AI분석리포트
+<span class="ln"> 96</span>  11. 사전/사후 설문조사
+<span class="ln"> 97</span>  12. AI 분석리포트: 개인별 역량 진단 + 이메일 발송
+<span class="ln"> 98</span>  
+<span class="ln"> 99</span>  【점수 체계】
+<span class="ln">100</span>  - 각 문제 10점, 카테고리별 만점이 다름
+<span class="ln">101</span>  - 퀴즈: 80점, 니즈: 80점, 시나리오: 100점, 질문연습: 120점, 롤플레이: 100점, FAB: 90점
+<span class="ln">102</span>  - 총점: 600점 만점
+<span class="ln">103</span>  
+<span class="ln">104</span>  답변 시 참고:
+<span class="ln">105</span>  - 구체적인 예시를 들어 설명하세요
+<span class="ln">106</span>  - SPIN 질문 작성법을 물으면 산업/상황에 맞는 예시를 제공하세요
+<span class="ln">107</span>  - 플랫폼 기능 질문에는 단계별로 안내하세요
+<span class="ln">108</span>  - 모르는 내용은 솔직히 말하세요`;
+<span class="ln">109</span>  
+<span class="ln">110</span>    let isOpen = false;
+<span class="ln">111</span>    let isLoading = false;
+<span class="ln">112</span>    let chatHistory = [];
+<span class="ln">113</span>  
+<span class="ln">114</span>    // === UI 생성 ===
+<span class="ln">115</span>    function createChatbotUI() {
+<span class="ln">116</span>      const container = document.createElement('div');
+<span class="ln">117</span>      container.id = 'chatbot-container';
+<span class="ln">118</span>      container.innerHTML = `
+<span class="ln">119</span>      &lt;style&gt;
+<span class="ln">120</span>        #chatbot-container { --cb-primary: #0a2240; --cb-primary-hover: #0d2d52; --cb-gold: #f5a623; --cb-bg: #ffffff; --cb-surface: #f8fafc; --cb-border: #e2e8f0; --cb-text: #1e293b; --cb-text2: #64748b; --cb-user-bg: #0a2240; --cb-ai-bg: #f1f5f9; --cb-shadow: 0 20px 60px rgba(0,0,0,0.18); --cb-font: 'Noto Sans KR', 'Inter', -apple-system, sans-serif; }
+<span class="ln">121</span>        .cb-toggle { position:fixed; bottom:24px; right:24px; min-width:60px; height:60px; border-radius:30px; background:linear-gradient(135deg, #27ae60, #2ecc71); color:white; border:none; cursor:pointer; box-shadow:0 4px 20px rgba(46,204,113,0.4); display:flex; align-items:center; justify-content:center; gap:8px; padding:0 18px; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); z-index:10000; }
+<span class="ln">122</span>        .cb-toggle:hover { transform:scale(1.08); box-shadow:0 6px 28px rgba(46,204,113,0.5); }
+<span class="ln">123</span>        .cb-toggle-label { font-family:var(--cb-font); font-size:14px; font-weight:800; letter-spacing:0.5px; }
+<span class="ln">124</span>        .cb-toggle svg { width:26px; height:26px; transition:transform 0.3s; }
+<span class="ln">125</span>        .cb-toggle.active .cb-icon-chat { display:none; }
+<span class="ln">126</span>        .cb-toggle.active .cb-icon-close { display:block; }
+<span class="ln">127</span>        .cb-toggle.active .cb-toggle-label { display:none; }
+<span class="ln">128</span>        .cb-toggle.active { width:60px; min-width:60px; padding:0; border-radius:50%; }
+<span class="ln">129</span>        .cb-toggle .cb-icon-close { display:none; }
+<span class="ln">130</span>        .cb-window { position:fixed; bottom:100px; right:24px; width:400px; height:560px; background:var(--cb-bg); border-radius:20px; box-shadow:var(--cb-shadow); display:flex; flex-direction:column; overflow:hidden; z-index:9999; transform:translateY(20px) scale(0.95); opacity:0; visibility:hidden; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); border:1px solid var(--cb-border); }
+<span class="ln">131</span>        .cb-window.open { transform:translateY(0) scale(1); opacity:1; visibility:visible; }
+<span class="ln">132</span>        .cb-header { padding:16px 20px; background:linear-gradient(135deg, var(--cb-primary), #0d3161); display:flex; align-items:center; justify-content:space-between; }
+<span class="ln">133</span>        .cb-header-info { display:flex; align-items:center; gap:12px; }
+<span class="ln">134</span>        .cb-header-avatar { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; }
+<span class="ln">135</span>        .cb-header-title { font-family:var(--cb-font); font-size:15px; font-weight:700; color:#ffffff; }
+<span class="ln">136</span>        .cb-header-status { font-family:var(--cb-font); font-size:11px; color:rgba(255,255,255,0.8); display:flex; align-items:center; gap:4px; }
+<span class="ln">137</span>        .cb-header-dot { width:6px; height:6px; border-radius:50%; background:#2ecc71; }
+<span class="ln">138</span>        .cb-header-close { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); cursor:pointer; color:white; padding:6px; border-radius:8px; transition:background 0.2s; display:flex; align-items:center; justify-content:center; }
+<span class="ln">139</span>        .cb-header-close:hover { background:rgba(255,255,255,0.2); }
+<span class="ln">140</span>        .cb-messages { flex:1; overflow-y:auto; padding:16px 16px; display:flex; flex-direction:column; gap:12px; background:var(--cb-surface); }
+<span class="ln">141</span>        .cb-messages::-webkit-scrollbar { width:4px; }
+<span class="ln">142</span>        .cb-messages::-webkit-scrollbar-thumb { background:var(--cb-border); border-radius:2px; }
+<span class="ln">143</span>        .cb-msg { display:flex; gap:8px; max-width:88%; animation:cbFadeIn 0.3s ease; }
+<span class="ln">144</span>        .cb-msg.user { align-self:flex-end; flex-direction:row-reverse; }
+<span class="ln">145</span>        .cb-msg.ai { align-self:flex-start; }
+<span class="ln">146</span>        .cb-avatar { width:28px; height:28px; border-radius:50%; background:var(--cb-primary); color:white; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
+<span class="ln">147</span>        .cb-bubble { padding:10px 14px; border-radius:16px; font-family:var(--cb-font); font-size:13.5px; line-height:1.65; word-break:break-word; }
+<span class="ln">148</span>        .cb-msg.user .cb-bubble { background:var(--cb-user-bg); color:#ffffff; border-bottom-right-radius:4px; }
+<span class="ln">149</span>        .cb-msg.ai .cb-bubble { background:var(--cb-ai-bg); color:var(--cb-text); border-bottom-left-radius:4px; }
+<span class="ln">150</span>        .cb-bubble strong { font-weight:700; }
+<span class="ln">151</span>        .cb-bubble code { background:rgba(0,0,0,0.06); padding:1px 5px; border-radius:4px; font-size:12px; font-family:'Consolas',monospace; }
+<span class="ln">152</span>        .cb-bubble pre { background:#1e293b; color:#e2e8f0; padding:10px 12px; border-radius:8px; overflow-x:auto; font-size:12px; margin:8px 0; }
+<span class="ln">153</span>        .cb-bubble ul, .cb-bubble ol { margin:6px 0; padding-left:18px; }
+<span class="ln">154</span>        .cb-bubble li { margin:2px 0; }
+<span class="ln">155</span>        .cb-typing { display:flex; gap:4px; padding:10px 14px; background:var(--cb-ai-bg); border-radius:16px; border-bottom-left-radius:4px; width:fit-content; }
+<span class="ln">156</span>        .cb-typing-dot { width:7px; height:7px; border-radius:50%; background:var(--cb-text2); animation:cbBounce 1.4s ease-in-out infinite; }
+<span class="ln">157</span>        .cb-typing-dot:nth-child(2) { animation-delay:0.2s; }
+<span class="ln">158</span>        .cb-typing-dot:nth-child(3) { animation-delay:0.4s; }
+<span class="ln">159</span>        @keyframes cbBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+<span class="ln">160</span>        @keyframes cbFadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+<span class="ln">161</span>        .cb-input-area { padding:12px 16px; background:var(--cb-bg); border-top:1px solid var(--cb-border); display:flex; align-items:flex-end; gap:8px; }
+<span class="ln">162</span>        .cb-input { flex:1; border:1.5px solid var(--cb-border); border-radius:12px; padding:10px 14px; font-family:var(--cb-font); font-size:13.5px; color:var(--cb-text); background:var(--cb-surface); outline:none; resize:none; max-height:80px; min-height:40px; transition:border-color 0.2s; line-height:1.5; }
+<span class="ln">163</span>        .cb-input:focus { border-color:var(--cb-primary); }
+<span class="ln">164</span>        .cb-input::placeholder { color:var(--cb-text2); }
+<span class="ln">165</span>        .cb-send { width:40px; height:40px; border-radius:50%; background:var(--cb-primary); color:white; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; }
+<span class="ln">166</span>        .cb-send:hover { background:var(--cb-primary-hover); }
+<span class="ln">167</span>        .cb-send:disabled { background:var(--cb-border); cursor:not-allowed; }
+<span class="ln">168</span>        .cb-welcome { text-align:center; padding:32px 20px; }
+<span class="ln">169</span>        .cb-welcome-icon { font-size:48px; margin-bottom:12px; }
+<span class="ln">170</span>        .cb-welcome-title { font-size:16px; font-weight:700; color:var(--cb-text); margin-bottom:6px; font-family:var(--cb-font); }
+<span class="ln">171</span>        .cb-welcome-desc { font-size:13px; color:var(--cb-text2); line-height:1.6; font-family:var(--cb-font); margin-bottom:16px; }
+<span class="ln">172</span>        .cb-suggestions { display:flex; flex-direction:column; gap:6px; }
+<span class="ln">173</span>        .cb-suggest-btn { background:white; border:1.5px solid var(--cb-border); border-radius:10px; padding:8px 14px; font-family:var(--cb-font); font-size:12px; color:var(--cb-text); cursor:pointer; text-align:left; transition:all 0.2s; }
+<span class="ln">174</span>        .cb-suggest-btn:hover { border-color:var(--cb-primary); background:#f0f3f8; }
+<span class="ln">175</span>        .cb-badge { position:absolute; top:-4px; right:-4px; width:18px; height:18px; border-radius:50%; background:var(--cb-gold); color:var(--cb-primary); font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; display:none; }
+<span class="ln">176</span>        @media(max-width:480px) { .cb-window { bottom:0; right:0; width:100%; height:100%; border-radius:0; } .cb-toggle { bottom:16px; right:16px; } }
+<span class="ln">177</span>      &lt;/style&gt;
+<span class="ln">178</span>      &lt;button class="cb-toggle" id="cbToggle" aria-label="SPIN AI 채팅"&gt;
+<span class="ln">179</span>        &lt;svg class="cb-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;"&gt;&lt;path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/&gt;&lt;/svg&gt;
+<span class="ln">180</span>        &lt;svg class="cb-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;"&gt;&lt;line x1="18" y1="6" x2="6" y2="18"/&gt;&lt;line x1="6" y1="6" x2="18" y2="18"/&gt;&lt;/svg&gt;
+<span class="ln">181</span>        &lt;span class="cb-toggle-label"&gt;SPIN AI Bot&lt;/span&gt;
+<span class="ln">182</span>      &lt;/button&gt;
+<span class="ln">183</span>      &lt;div class="cb-window" id="cbWindow"&gt;
+<span class="ln">184</span>        &lt;div class="cb-header"&gt;
+<span class="ln">185</span>          &lt;div class="cb-header-info"&gt;
+<span class="ln">186</span>            &lt;div class="cb-header-avatar"&gt;🤖&lt;/div&gt;
+<span class="ln">187</span>            &lt;div&gt;
+<span class="ln">188</span>              &lt;div class="cb-header-title"&gt;SPIN AI 도우미&lt;/div&gt;
+<span class="ln">189</span>              &lt;div class="cb-header-status"&gt;&lt;span class="cb-header-dot"&gt;&lt;/span&gt; 온라인&lt;/div&gt;
+<span class="ln">190</span>            &lt;/div&gt;
+<span class="ln">191</span>          &lt;/div&gt;
+<span class="ln">192</span>          &lt;button class="cb-header-close" id="cbClose" aria-label="닫기"&gt;
+<span class="ln">193</span>            &lt;svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"&gt;&lt;line x1="18" y1="6" x2="6" y2="18"/&gt;&lt;line x1="6" y1="6" x2="18" y2="18"/&gt;&lt;/svg&gt;
+<span class="ln">194</span>          &lt;/button&gt;
+<span class="ln">195</span>        &lt;/div&gt;
+<span class="ln">196</span>        &lt;div class="cb-messages" id="cbMessages"&gt;
+<span class="ln">197</span>          &lt;div class="cb-welcome" id="cbWelcome"&gt;
+<span class="ln">198</span>            &lt;div class="cb-welcome-icon"&gt;🎓&lt;/div&gt;
+<span class="ln">199</span>            &lt;div class="cb-welcome-title"&gt;SPIN Selling AI 도우미&lt;/div&gt;
+<span class="ln">200</span>            &lt;div class="cb-welcome-desc"&gt;SPIN Selling 방법론과 플랫폼 사용법에 대해&lt;br&gt;무엇이든 물어보세요!&lt;/div&gt;
+<span class="ln">201</span>            &lt;div class="cb-suggestions"&gt;
+<span class="ln">202</span>              &lt;button class="cb-suggest-btn" onclick="window._cbSuggest(this.textContent)"&gt;💡 SPIN 질문 유형의 차이점을 알려주세요&lt;/button&gt;
+<span class="ln">203</span>              &lt;button class="cb-suggest-btn" onclick="window._cbSuggest(this.textContent)"&gt;📝 시사질문(I)을 잘 만드는 방법은?&lt;/button&gt;
+<span class="ln">204</span>              &lt;button class="cb-suggest-btn" onclick="window._cbSuggest(this.textContent)"&gt;🎯 잠재니즈와 현재니즈의 차이는?&lt;/button&gt;
+<span class="ln">205</span>              &lt;button class="cb-suggest-btn" onclick="window._cbSuggest(this.textContent)"&gt;🎭 롤플레이에서 높은 점수 받는 팁&lt;/button&gt;
+<span class="ln">206</span>            &lt;/div&gt;
+<span class="ln">207</span>          &lt;/div&gt;
+<span class="ln">208</span>        &lt;/div&gt;
+<span class="ln">209</span>        &lt;div class="cb-input-area"&gt;
+<span class="ln">210</span>          &lt;textarea class="cb-input" id="cbInput" placeholder="SPIN Selling에 대해 물어보세요..." rows="1"&gt;&lt;/textarea&gt;
+<span class="ln">211</span>          &lt;button class="cb-send" id="cbSend" aria-label="전송"&gt;
+<span class="ln">212</span>            &lt;svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"&gt;&lt;line x1="22" y1="2" x2="11" y2="13"/&gt;&lt;polygon points="22 2 15 22 11 13 2 9 22 2"/&gt;&lt;/svg&gt;
+<span class="ln">213</span>          &lt;/button&gt;
+<span class="ln">214</span>        &lt;/div&gt;
+<span class="ln">215</span>      &lt;/div&gt;`;
+<span class="ln">216</span>      document.body.appendChild(container);
+<span class="ln">217</span>    }
+<span class="ln">218</span>  
+<span class="ln">219</span>    // === 마크다운 렌더링 ===
+<span class="ln">220</span>    function renderMd(text) {
+<span class="ln">221</span>      return text
+<span class="ln">222</span>        .replace(/```(\w*)\n([\s\S]*?)```/g, function(m, lang, code) { return '&lt;pre&gt;&lt;code&gt;' + code.replace(/&lt;/g,'&amp;lt;') + '&lt;/code&gt;&lt;/pre&gt;'; })
+<span class="ln">223</span>        .replace(/`([^`]+)`/g, '&lt;code&gt;$1&lt;/code&gt;')
+<span class="ln">224</span>        .replace(/\*\*(.*?)\*\*/g, '&lt;strong&gt;$1&lt;/strong&gt;')
+<span class="ln">225</span>        .replace(/\*(.*?)\*/g, '&lt;em&gt;$1&lt;/em&gt;')
+<span class="ln">226</span>        .replace(/^- (.+)/gm, '&lt;li&gt;$1&lt;/li&gt;')
+<span class="ln">227</span>        .replace(/(&lt;li&gt;.*&lt;\/li&gt;)/s, '&lt;ul&gt;$1&lt;/ul&gt;')
+<span class="ln">228</span>        .replace(/\n/g, '&lt;br&gt;');
+<span class="ln">229</span>    }
+<span class="ln">230</span>  
+<span class="ln">231</span>    // === 메시지 추가 ===
+<span class="ln">232</span>    function addMsg(content, role) {
+<span class="ln">233</span>      const welcome = document.getElementById('cbWelcome');
+<span class="ln">234</span>      if (welcome) welcome.remove();
+<span class="ln">235</span>  
+<span class="ln">236</span>      const msgs = document.getElementById('cbMessages');
+<span class="ln">237</span>      const div = document.createElement('div');
+<span class="ln">238</span>      div.className = 'cb-msg ' + role;
+<span class="ln">239</span>  
+<span class="ln">240</span>      if (role === 'ai') {
+<span class="ln">241</span>        div.innerHTML = '&lt;div class="cb-avatar"&gt;🤖&lt;/div&gt;&lt;div class="cb-bubble"&gt;' + renderMd(content) + '&lt;/div&gt;';
+<span class="ln">242</span>      } else {
+<span class="ln">243</span>        div.innerHTML = '&lt;div class="cb-bubble"&gt;' + content.replace(/&lt;/g,'&amp;lt;').replace(/\n/g,'&lt;br&gt;') + '&lt;/div&gt;';
+<span class="ln">244</span>      }
+<span class="ln">245</span>      msgs.appendChild(div);
+<span class="ln">246</span>      msgs.scrollTop = msgs.scrollHeight;
+<span class="ln">247</span>    }
+<span class="ln">248</span>  
+<span class="ln">249</span>    function showTyping() {
+<span class="ln">250</span>      const msgs = document.getElementById('cbMessages');
+<span class="ln">251</span>      const div = document.createElement('div');
+<span class="ln">252</span>      div.className = 'cb-msg ai';
+<span class="ln">253</span>      div.id = 'cbTyping';
+<span class="ln">254</span>      div.innerHTML = '&lt;div class="cb-avatar"&gt;🤖&lt;/div&gt;&lt;div class="cb-typing"&gt;&lt;div class="cb-typing-dot"&gt;&lt;/div&gt;&lt;div class="cb-typing-dot"&gt;&lt;/div&gt;&lt;div class="cb-typing-dot"&gt;&lt;/div&gt;&lt;/div&gt;';
+<span class="ln">255</span>      msgs.appendChild(div);
+<span class="ln">256</span>      msgs.scrollTop = msgs.scrollHeight;
+<span class="ln">257</span>    }
+<span class="ln">258</span>  
+<span class="ln">259</span>    function hideTyping() {
+<span class="ln">260</span>      const t = document.getElementById('cbTyping');
+<span class="ln">261</span>      if (t) t.remove();
+<span class="ln">262</span>    }
+<span class="ln">263</span>  
+<span class="ln">264</span>    // === Gemini Embedding API ===
+<span class="ln">265</span>    const GEMINI_EMBED_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=' + GEMINI_KEY;
+<span class="ln">266</span>    let _kbEmbeddings = null;
+<span class="ln">267</span>  
+<span class="ln">268</span>    async function embedText(text) {
+<span class="ln">269</span>      try {
+<span class="ln">270</span>        const res = await fetch(GEMINI_EMBED_URL, {
+<span class="ln">271</span>          method: 'POST',
+<span class="ln">272</span>          headers: { 'Content-Type': 'application/json' },
+<span class="ln">273</span>          body: JSON.stringify({ model: 'models/gemini-embedding-001', content: { parts: [{ text: text }] } })
+<span class="ln">274</span>        });
+<span class="ln">275</span>        const data = await res.json();
+<span class="ln">276</span>        return data.embedding &amp;&amp; data.embedding.values;
+<span class="ln">277</span>      } catch(e) { return null; }
+<span class="ln">278</span>    }
+<span class="ln">279</span>  
+<span class="ln">280</span>    function cosineSim(a, b) {
+<span class="ln">281</span>      let dot = 0, na = 0, nb = 0;
+<span class="ln">282</span>      for (let i = 0; i &lt; a.length; i++) { dot += a[i]*b[i]; na += a[i]*a[i]; nb += b[i]*b[i]; }
+<span class="ln">283</span>      return dot / (Math.sqrt(na) * Math.sqrt(nb) + 1e-8);
+<span class="ln">284</span>    }
+<span class="ln">285</span>  
+<span class="ln">286</span>    async function ensureKBEmbeddings() {
+<span class="ln">287</span>      if (_kbEmbeddings) return _kbEmbeddings;
+<span class="ln">288</span>      if (typeof SPIN_KB === 'undefined') return null;
+<span class="ln">289</span>      try {
+<span class="ln">290</span>        const cached = localStorage.getItem('spin_kb_embeddings_v1');
+<span class="ln">291</span>        if (cached) {
+<span class="ln">292</span>          const parsed = JSON.parse(cached);
+<span class="ln">293</span>          if (parsed.length === SPIN_KB.length) { _kbEmbeddings = parsed; return _kbEmbeddings; }
+<span class="ln">294</span>        }
+<span class="ln">295</span>      } catch(e) {}
+<span class="ln">296</span>      try {
+<span class="ln">297</span>        const embeddings = await Promise.all(SPIN_KB.map(c =&gt; embedText(c.tag + '. ' + c.content)));
+<span class="ln">298</span>        _kbEmbeddings = embeddings;
+<span class="ln">299</span>        try { localStorage.setItem('spin_kb_embeddings_v1', JSON.stringify(embeddings)); } catch(e) {}
+<span class="ln">300</span>        return _kbEmbeddings;
+<span class="ln">301</span>      } catch(e) { return null; }
+<span class="ln">302</span>    }
+<span class="ln">303</span>  
+<span class="ln">304</span>    async function vectorSearch(query, topK) {
+<span class="ln">305</span>      const qEmb = await embedText(query);
+<span class="ln">306</span>      if (!qEmb) return [];
+<span class="ln">307</span>      const kbEmbs = await ensureKBEmbeddings();
+<span class="ln">308</span>      if (!kbEmbs || typeof SPIN_KB === 'undefined') return [];
+<span class="ln">309</span>      const scored = SPIN_KB.map((c, i) =&gt; ({ chunk: c, score: kbEmbs[i] ? cosineSim(qEmb, kbEmbs[i]) : 0 }));
+<span class="ln">310</span>      return scored.sort((a, b) =&gt; b.score - a.score).slice(0, topK || 5).map(x =&gt; x.chunk);
+<span class="ln">311</span>    }
+<span class="ln">312</span>  
+<span class="ln">313</span>    async function hybridSearch(query) {
+<span class="ln">314</span>      const kwResults = (typeof searchKB === 'function') ? searchKB(query, 5) : [];
+<span class="ln">315</span>      let vecResults = [];
+<span class="ln">316</span>      try { vecResults = await vectorSearch(query, 5); } catch(e) {}
+<span class="ln">317</span>      const seen = {};
+<span class="ln">318</span>      const merged = [];
+<span class="ln">319</span>      [...kwResults, ...vecResults].forEach(c =&gt; {
+<span class="ln">320</span>        if (c &amp;&amp; !seen[c.id]) { seen[c.id] = true; merged.push(c); }
+<span class="ln">321</span>      });
+<span class="ln">322</span>      return merged.slice(0, 6);
+<span class="ln">323</span>    }
+<span class="ln">324</span>  
+<span class="ln">325</span>    // === Gemini API 호출 ===
+<span class="ln">326</span>    async function callGemini(userMsg) {
+<span class="ln">327</span>      // RAG: 지식베이스 검색
+<span class="ln">328</span>      let ragContext = '';
+<span class="ln">329</span>      try {
+<span class="ln">330</span>        const chunks = await hybridSearch(userMsg);
+<span class="ln">331</span>        if (chunks &amp;&amp; chunks.length &gt; 0) {
+<span class="ln">332</span>          ragContext = '\n\n=== 플랫폼 지식베이스 (RAG) ===\n' +
+<span class="ln">333</span>            chunks.map((c, i) =&gt; '[' + (i + 1) + '] ' + c.tag + ':\n' + c.content).join('\n\n') +
+<span class="ln">334</span>            '\n\n위 참고문서를 우선 활용하여 답변하세요.';
+<span class="ln">335</span>        }
+<span class="ln">336</span>      } catch(e) {}
+<span class="ln">337</span>  
+<span class="ln">338</span>      // 교육생 개인화 데이터
+<span class="ln">339</span>      let personalContext = '';
+<span class="ln">340</span>      try {
+<span class="ln">341</span>        const userStr = localStorage.getItem('spin_user') || (window._store &amp;&amp; window._store.spin_user) || '';
+<span class="ln">342</span>        if (userStr) {
+<span class="ln">343</span>          const user = JSON.parse(userStr);
+<span class="ln">344</span>          if (user &amp;&amp; user.name) {
+<span class="ln">345</span>            const scores = {
+<span class="ln">346</span>              quiz: user.score_quiz || 0,
+<span class="ln">347</span>              needs: user.score_needs || 0,
+<span class="ln">348</span>              scenario: user.score_scenario || 0,
+<span class="ln">349</span>              practice: user.score_practice || 0,
+<span class="ln">350</span>              roleplay: user.score_roleplay || 0,
+<span class="ln">351</span>              fab: user.score_fab || 0
+<span class="ln">352</span>            };
+<span class="ln">353</span>            const total = Object.values(scores).reduce((s, v) =&gt; s + v, 0);
+<span class="ln">354</span>            const maxScores = { quiz: 80, needs: 80, scenario: 100, practice: 120, roleplay: 100, fab: 90 };
+<span class="ln">355</span>  
+<span class="ln">356</span>            // 약점 분석
+<span class="ln">357</span>            const weakest = Object.entries(scores).sort((a, b) =&gt; (a[1] / maxScores[a[0]]) - (b[1] / maxScores[b[0]]))[0];
+<span class="ln">358</span>            const strongest = Object.entries(scores).sort((a, b) =&gt; (b[1] / maxScores[b[0]]) - (a[1] / maxScores[a[0]]))[0];
+<span class="ln">359</span>  
+<span class="ln">360</span>            personalContext = '\n\n=== 현재 교육생 정보 ===\n' +
+<span class="ln">361</span>              '이름: ' + user.name + '\n' +
+<span class="ln">362</span>              '팀: ' + (user.team_id || '미정') + '\n' +
+<span class="ln">363</span>              '점수: 퀴즈 ' + scores.quiz + '/80, 니즈 ' + scores.needs + '/80, 질문구분 ' + scores.scenario + '/100, 질문연습 ' + scores.practice + '/120, 롤플레이 ' + scores.roleplay + '/100, FAB ' + scores.fab + '/90\n' +
+<span class="ln">364</span>              '총점: ' + total + '/600\n' +
+<span class="ln">365</span>              '강점: ' + strongest[0] + ' (' + strongest[1] + '점)\n' +
+<span class="ln">366</span>              '약점: ' + weakest[0] + ' (' + weakest[1] + '점)\n' +
+<span class="ln">367</span>              '개인화 지침: 이 교육생의 약점(' + weakest[0] + ')을 중심으로 맞춤 코칭을 제공하세요. 이름을 불러주세요.';
+<span class="ln">368</span>          }
+<span class="ln">369</span>        }
+<span class="ln">370</span>      } catch(e) {}
+<span class="ln">371</span>  
+<span class="ln">372</span>      const contents = [
+<span class="ln">373</span>        { role: 'user', parts: [{ text: SPIN_KNOWLEDGE + ragContext + personalContext + '\n\n---\n\n사용자 질문: ' + (chatHistory.length === 0 ? '' : '이전 대화:\n' + chatHistory.slice(-8).map(h =&gt; h.role + ': ' + h.content).join('\n') + '\n\n현재 질문: ') + userMsg }] }
+<span class="ln">374</span>      ];
+<span class="ln">375</span>  
+<span class="ln">376</span>      const res = await fetch(GEMINI_URL, {
+<span class="ln">377</span>        method: 'POST',
+<span class="ln">378</span>        headers: { 'Content-Type': 'application/json' },
+<span class="ln">379</span>        body: JSON.stringify({
+<span class="ln">380</span>          contents: contents,
+<span class="ln">381</span>          generationConfig: {
+<span class="ln">382</span>            temperature: 0.4,
+<span class="ln">383</span>            maxOutputTokens: 1024,
+<span class="ln">384</span>            topP: 0.9
+<span class="ln">385</span>          }
+<span class="ln">386</span>        })
+<span class="ln">387</span>      });
+<span class="ln">388</span>  
+<span class="ln">389</span>      if (!res.ok) throw new Error('API ' + res.status);
+<span class="ln">390</span>      const data = await res.json();
+<span class="ln">391</span>      return data.candidates[0].content.parts[0].text;
+<span class="ln">392</span>    }
+<span class="ln">393</span>  
+<span class="ln">394</span>    // === 전송 ===
+<span class="ln">395</span>    async function sendMessage() {
+<span class="ln">396</span>      const input = document.getElementById('cbInput');
+<span class="ln">397</span>      const msg = input.value.trim();
+<span class="ln">398</span>      if (!msg || isLoading) return;
+<span class="ln">399</span>  
+<span class="ln">400</span>      addMsg(msg, 'user');
+<span class="ln">401</span>      chatHistory.push({ role: 'user', content: msg });
+<span class="ln">402</span>      input.value = '';
+<span class="ln">403</span>      input.style.height = 'auto';
+<span class="ln">404</span>  
+<span class="ln">405</span>      isLoading = true;
+<span class="ln">406</span>      document.getElementById('cbSend').disabled = true;
+<span class="ln">407</span>      showTyping();
+<span class="ln">408</span>  
+<span class="ln">409</span>      try {
+<span class="ln">410</span>        const reply = await callGemini(msg);
+<span class="ln">411</span>        hideTyping();
+<span class="ln">412</span>        addMsg(reply, 'ai');
+<span class="ln">413</span>        chatHistory.push({ role: 'ai', content: reply });
+<span class="ln">414</span>      } catch (e) {
+<span class="ln">415</span>        hideTyping();
+<span class="ln">416</span>        addMsg('죄송합니다. 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'ai');
+<span class="ln">417</span>        console.error('Chatbot error:', e);
+<span class="ln">418</span>      } finally {
+<span class="ln">419</span>        isLoading = false;
+<span class="ln">420</span>        document.getElementById('cbSend').disabled = false;
+<span class="ln">421</span>        input.focus();
+<span class="ln">422</span>      }
+<span class="ln">423</span>    }
+<span class="ln">424</span>  
+<span class="ln">425</span>    // === 제안 질문 클릭 ===
+<span class="ln">426</span>    window._cbSuggest = function(text) {
+<span class="ln">427</span>      document.getElementById('cbInput').value = text.replace(/^[^\s]+\s/, '');
+<span class="ln">428</span>      sendMessage();
+<span class="ln">429</span>    };
+<span class="ln">430</span>  
+<span class="ln">431</span>    // === 초기화 ===
+<span class="ln">432</span>    function init() {
+<span class="ln">433</span>      createChatbotUI();
+<span class="ln">434</span>  
+<span class="ln">435</span>      const toggle = document.getElementById('cbToggle');
+<span class="ln">436</span>      const win = document.getElementById('cbWindow');
+<span class="ln">437</span>      const close = document.getElementById('cbClose');
+<span class="ln">438</span>      const send = document.getElementById('cbSend');
+<span class="ln">439</span>      const input = document.getElementById('cbInput');
+<span class="ln">440</span>  
+<span class="ln">441</span>      function toggleChat() {
+<span class="ln">442</span>        isOpen = !isOpen;
+<span class="ln">443</span>        win.classList.toggle('open', isOpen);
+<span class="ln">444</span>        toggle.classList.toggle('active', isOpen);
+<span class="ln">445</span>        if (isOpen) input.focus();
+<span class="ln">446</span>      }
+<span class="ln">447</span>  
+<span class="ln">448</span>      toggle.addEventListener('click', toggleChat);
+<span class="ln">449</span>      close.addEventListener('click', toggleChat);
+<span class="ln">450</span>      send.addEventListener('click', sendMessage);
+<span class="ln">451</span>  
+<span class="ln">452</span>      input.addEventListener('keydown', function(e) {
+<span class="ln">453</span>        if (e.key === 'Enter' &amp;&amp; !e.shiftKey) { e.preventDefault(); sendMessage(); }
+<span class="ln">454</span>      });
+<span class="ln">455</span>  
+<span class="ln">456</span>      input.addEventListener('input', function() {
+<span class="ln">457</span>        this.style.height = 'auto';
+<span class="ln">458</span>        this.style.height = Math.min(this.scrollHeight, 80) + 'px';
+<span class="ln">459</span>      });
+<span class="ln">460</span>    }
+<span class="ln">461</span>  
+<span class="ln">462</span>    if (document.readyState === 'loading') {
+<span class="ln">463</span>      document.addEventListener('DOMContentLoaded', init);
+<span class="ln">464</span>    } else {
+<span class="ln">465</span>      init();
+<span class="ln">466</span>    }
+<span class="ln">467</span>  })();
+<span class="ln">468</span>  </pre>
+  </section>
+
+  <!-- ========== 저작권 푸터 ========== -->
+  <div class="copyright-footer">
+    &copy; 2024–2026 심재우 (SB Consulting) · SPIN Selling AI 교육 플랫폼 · All Rights Reserved.<br>
+    Global Certified SPIN Master Trainer (Korn Ferry 국제공인 마스터트레이너) · 한국저작권위원회 등록용 소스코드 통합 문서
+  </div>
+
+</div>
+</body>
+</html>

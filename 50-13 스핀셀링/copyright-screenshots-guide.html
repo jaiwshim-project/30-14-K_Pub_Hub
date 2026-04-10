@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>SPIN Selling AI 교육 플랫폼 — 화면 캡처 가이드 (저작권 등록용)</title>
+<style>
+@page { size: A4; margin: 20mm 15mm; }
+@media print {
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+  .cover, .toc-page, .spec-page { page-break-after: always; }
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  color: #000;
+  background: #fff;
+  font-size: 10.5pt;
+  line-height: 1.55;
+}
+.container {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 10mm 10mm;
+  background: #fff;
+}
+/* ===== 표지 ===== */
+.cover {
+  min-height: 257mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 3px double #000;
+  padding: 40mm 20mm;
+}
+.cover .doc-type {
+  font-size: 13pt;
+  letter-spacing: 8px;
+  margin-bottom: 30mm;
+  font-weight: 600;
+}
+.cover .title {
+  font-size: 26pt;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 10mm;
+}
+.cover .subtitle {
+  font-size: 15pt;
+  font-weight: 500;
+  margin-bottom: 30mm;
+  color: #333;
+}
+.cover .info-table {
+  width: 80%;
+  margin: 20mm auto 0;
+  border-collapse: collapse;
+  font-size: 11pt;
+}
+.cover .info-table th,
+.cover .info-table td {
+  border: 1px solid #000;
+  padding: 10px 16px;
+  text-align: left;
+}
+.cover .info-table th {
+  background: #f0f0f0;
+  width: 35%;
+  font-weight: 700;
+}
+.cover .footer-line {
+  margin-top: 20mm;
+  font-size: 10pt;
+  color: #555;
+}
+/* ===== 공통 헤더 ===== */
+h1.section-title {
+  font-size: 20pt;
+  font-weight: 900;
+  border-bottom: 3px solid #000;
+  padding-bottom: 6px;
+  margin: 0 0 14px 0;
+}
+h2.sub-title {
+  font-size: 14pt;
+  font-weight: 800;
+  margin: 20px 0 10px 0;
+  padding: 6px 10px;
+  background: #e8e8e8;
+  border-left: 4px solid #000;
+}
+p.intro {
+  font-size: 10.5pt;
+  margin: 0 0 12px 0;
+  line-height: 1.7;
+}
+.note-box {
+  padding: 10px 14px;
+  background: #f6f6f6;
+  border: 1px solid #999;
+  border-left: 4px solid #000;
+  font-size: 10pt;
+  line-height: 1.65;
+  margin: 10px 0 14px 0;
+}
+/* ===== 캡처 사양 페이지 ===== */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10pt;
+  margin-bottom: 14px;
+}
+.spec-table th,
+.spec-table td {
+  border: 1px solid #000;
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.spec-table th {
+  background: #e8e8e8;
+  font-weight: 700;
+  width: 25%;
+}
+/* ===== 화면 목록 메인 표 ===== */
+.sc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+  margin-bottom: 12px;
+}
+.sc-table th,
+.sc-table td {
+  border: 1px solid #000;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.sc-table th {
+  background: #d8d8d8;
+  font-weight: 800;
+  text-align: center;
+  font-size: 9.5pt;
+}
+.sc-table .col-num { width: 6%; text-align: center; font-weight: 800; }
+.sc-table .col-name { width: 20%; font-weight: 700; }
+.sc-table .col-file { width: 18%; font-family: 'Consolas', monospace; font-size: 8.5pt; color: #222; }
+.sc-table .col-feat { width: 36%; }
+.sc-table .col-cap { width: 20%; font-size: 8.5pt; color: #333; }
+.sc-table tr:nth-child(even) td { background: #fafafa; }
+/* ===== 카테고리 밴드 ===== */
+.cat-row td {
+  background: #333 !important;
+  color: #fff !important;
+  font-weight: 800;
+  text-align: center;
+  font-size: 10pt;
+  letter-spacing: 2px;
+  padding: 5px 8px !important;
+}
+/* ===== 푸터 ===== */
+.copyright-footer {
+  margin-top: 14mm;
+  padding-top: 6mm;
+  border-top: 1px solid #000;
+  font-size: 9pt;
+  text-align: center;
+  color: #333;
+}
+/* ===== 파일명 규칙 박스 ===== */
+.filename-box {
+  padding: 10px 14px;
+  background: #fff;
+  border: 1.5px solid #000;
+  font-family: 'Consolas', monospace;
+  font-size: 9.5pt;
+  line-height: 1.8;
+  margin: 8px 0 14px 0;
+}
+.filename-box strong { font-family: 'Malgun Gothic', sans-serif; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ========== 표지 ========== -->
+  <section class="cover">
+    <div class="doc-type">COPYRIGHT REGISTRATION</div>
+    <div class="title">화면 캡처 가이드<br>— 저작권 등록용 —</div>
+    <div class="subtitle">SPIN Selling AI 교육 플랫폼<br>30개 핵심 화면 캡처 목록 및 사양</div>
+
+    <table class="info-table">
+      <tr><th>저작물명</th><td>SPIN Selling AI 교육 플랫폼</td></tr>
+      <tr><th>저작자</th><td>심재우 (SB Consulting)</td></tr>
+      <tr><th>문서 유형</th><td>화면 캡처 제출용 가이드 (30장)</td></tr>
+      <tr><th>등록 기관</th><td>한국저작권위원회 (KCC)</td></tr>
+      <tr><th>등록 구분</th><td>컴퓨터프로그램저작물 — 화면 구성(UI) 증빙</td></tr>
+      <tr><th>권장 해상도</th><td>1920 × 1080 (FHD) 또는 1440 × 900</td></tr>
+      <tr><th>파일 형식</th><td>PNG (무손실)</td></tr>
+      <tr><th>작성일</th><td>2026년 4월</td></tr>
+    </table>
+
+    <div class="footer-line">
+      본 가이드는 한국저작권위원회 등록 시 소스코드와 함께 첨부할 화면 캡처 30장의<br>
+      파일 목록, 캡처 방법, 파일명 규칙을 정리한 지침서입니다.
+    </div>
+  </section>
+
+  <!-- ========== 캡처 사양 페이지 ========== -->
+  <section class="spec-page page-break">
+    <h1 class="section-title">1. 캡처 사양 및 제출 규칙</h1>
+
+    <p class="intro">
+      한국저작권위원회는 컴퓨터프로그램저작물 등록 시 실제 구동 화면을 증빙 자료로 함께 제출할 것을 권장합니다.
+      본 플랫폼의 30개 핵심 화면을 다음 사양에 맞춰 캡처·제출합니다.
+    </p>
+
+    <h2 class="sub-title">[1-1] 캡처 권장 사양</h2>
+    <table class="spec-table">
+      <tr><th>해상도</th><td>1920 × 1080 (Full HD) 1순위 · 1440 × 900 2순위 — 브라우저 전체 창 또는 <code>document.body</code> 전체 길이</td></tr>
+      <tr><th>파일 형식</th><td>PNG (무손실, 투명 배경 없음). JPG는 텍스트 번짐으로 비권장</td></tr>
+      <tr><th>컬러 모드</th><td>sRGB 24bit. 다크모드 사용 시 라이트 테마로 통일 권장</td></tr>
+      <tr><th>브라우저</th><td>Chrome 최신 버전 (배율 100%). 주소창/북마크바 숨김 상태 권장</td></tr>
+      <tr><th>캡처 도구</th><td>
+        ① Chrome DevTools → "Capture full size screenshot" (F12 → Ctrl+Shift+P)<br>
+        ② puppeteer-core (이 프로젝트에 글로벌 설치됨)<br>
+        ③ PowerShell + System.Drawing (CLAUDE.md 스크립트)
+      </td></tr>
+      <tr><th>해상도 예외</th><td>수료증(30번) 및 팀 대항전(28번)은 가로 방향/대형 스크린 화면이므로 가로 1920 기준</td></tr>
+    </table>
+
+    <h2 class="sub-title">[1-2] 파일명 규칙</h2>
+    <div class="filename-box">
+      <strong>형식:</strong>  spin-screenshot-NN.png  (NN은 01~30)<br>
+      <strong>예시:</strong>  spin-screenshot-01.png → 랜딩 페이지<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spin-screenshot-02.png → 비밀번호 입력 모달<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spin-screenshot-30.png → 수료증
+    </div>
+
+    <h2 class="sub-title">[1-3] 개인정보 마스킹 지침</h2>
+    <div class="note-box">
+      저작권 등록 자료는 위원회 내부 자료로 보존되지만, 교육생 실명·이메일·회사 기밀은
+      반드시 마스킹한 상태로 캡처합니다.<br>
+      · 실명은 "홍길동", "김철수" 등 더미 이름으로 대체<br>
+      · 회사명은 "A사", "샘플기업" 등으로 대체<br>
+      · 이메일은 <code>test@example.com</code> 사용<br>
+      · 점수·팀 편성 등 학습 데이터는 <strong>실제 더미 데이터로 채워진 상태에서 캡처</strong>하여 기능이 보이도록 합니다
+    </div>
+
+    <h2 class="sub-title">[1-4] 화면 캡처 제출 구성</h2>
+    <div class="note-box">
+      총 30장을 <strong>spin-screenshots.zip</strong> 하나의 압축 파일로 제출합니다.<br>
+      각 캡처는 해당 페이지에서 가장 대표적인 상태(교육 중 일반적인 사용 화면)로 캡처합니다.<br>
+      모달이 포함된 화면(2번)은 모달이 열린 상태로 캡처합니다.
+    </div>
+  </section>
+
+  <!-- ========== 화면 목록 ========== -->
+  <section class="page-break">
+    <h1 class="section-title">2. 화면 캡처 목록 (30장)</h1>
+
+    <p class="intro">
+      SPIN Selling AI 교육 플랫폼의 핵심 화면 30개를 학습 흐름 순서로 정리했습니다.
+      각 화면은 저작물의 창작적 표현(UI 구성·교육 방법론·AI 기능)을 대표합니다.
+    </p>
+
+    <table class="sc-table">
+      <thead>
+        <tr>
+          <th class="col-num">번호</th>
+          <th class="col-name">화면명</th>
+          <th class="col-file">파일 (URL)</th>
+          <th class="col-feat">핵심 기능 / 캡션</th>
+          <th class="col-cap">캡처 권장 사항</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="cat-row"><td colspan="5">A. 진입 · 인증 플로우 (1 ~ 3)</td></tr>
+
+        <tr>
+          <td class="col-num">01</td>
+          <td class="col-name">랜딩 페이지</td>
+          <td class="col-file">index.html</td>
+          <td class="col-feat">히어로 이미지 + 진행 중 교육 세션 카드 목록. 교육생이 자신이 참여할 회사명을 선택하는 시작 화면.</td>
+          <td class="col-cap">FHD 전체, 세션 2~3개 등록된 상태</td>
+        </tr>
+        <tr>
+          <td class="col-num">02</td>
+          <td class="col-name">비밀번호 입력 모달</td>
+          <td class="col-file">index.html (pwModal)</td>
+          <td class="col-feat">세션 선택 후 4자리 숫자 비밀번호를 입력하는 모달. 회사별 입장 제어로 데이터 분리.</td>
+          <td class="col-cap">모달 열린 상태로 캡처</td>
+        </tr>
+        <tr>
+          <td class="col-num">03</td>
+          <td class="col-name">역할 선택 화면</td>
+          <td class="col-file">company.html</td>
+          <td class="col-feat">강사/교육매니저/교육생 중 역할 선택 + 팀(A~E) + 이름(슬롯) 선택. 역할에 따라 권한이 분기됨.</td>
+          <td class="col-cap">3개 역할 카드 모두 보이게</td>
+        </tr>
+
+        <tr class="cat-row"><td colspan="5">B. 대시보드 및 관리자 (4 ~ 7)</td></tr>
+
+        <tr>
+          <td class="col-num">04</td>
+          <td class="col-name">교육생 대시보드</td>
+          <td class="col-file">company.html (trainee)</td>
+          <td class="col-feat">12개 학습 활동 카드(프리리딩·퀴즈·니즈·SPIN·질문연습·FAB·롤플레이·콜플랜 등) + 본인 진행률/점수 바.</td>
+          <td class="col-cap">12개 카드가 모두 보이는 세로 스크롤 포함</td>
+        </tr>
+        <tr>
+          <td class="col-num">05</td>
+          <td class="col-name">강사 대시보드</td>
+          <td class="col-file">company.html (trainer)</td>
+          <td class="col-feat">강사 전용 관리 도구(스코어보드/코칭리포트/AI리포트/수료증 등) + 팀별 평균 진행률 요약.</td>
+          <td class="col-cap">관리 툴바가 포함되도록 FHD</td>
+        </tr>
+        <tr>
+          <td class="col-num">06</td>
+          <td class="col-name">시스템 관리자 페이지</td>
+          <td class="col-file">admin.html</td>
+          <td class="col-feat">세션 생성/삭제/종료 토글, 교육생 명단 등록, 비밀번호 설정, LMS 내보내기 등 마스터 권한 도구.</td>
+          <td class="col-cap">관리자 패널 펼친 상태</td>
+        </tr>
+        <tr>
+          <td class="col-num">07</td>
+          <td class="col-name">팀 편성 페이지</td>
+          <td class="col-file">team-setup.html</td>
+          <td class="col-feat">5개 팀 × 7명 슬롯에 교육생 이름을 드래그·입력하여 팀을 편성. 팀명 변경 및 일괄 저장.</td>
+          <td class="col-cap">5개 팀 카드 가로 배열 전체</td>
+        </tr>
+
+        <tr class="cat-row"><td colspan="5">C. 핵심 학습 플로우 (8 ~ 15)</td></tr>
+
+        <tr>
+          <td class="col-num">08</td>
+          <td class="col-name">프리리딩 (PDF 뷰어)</td>
+          <td class="col-file">prereading.html</td>
+          <td class="col-feat">SPIN 3.0 ILT 한글 교재 PDF 인라인 뷰어. 로그인 불필요, 교육 전 사전 학습용.</td>
+          <td class="col-cap">PDF 1페이지가 보이는 상태</td>
+        </tr>
+        <tr>
+          <td class="col-num">09</td>
+          <td class="col-name">퀴즈 진행 화면</td>
+          <td class="col-file">quiz.html</td>
+          <td class="col-feat">SPIN 개념·구매사이클·질문유형 4개 카테고리, 총 80점 만점 객관식 퀴즈. 진행률 바 + 점수 누적.</td>
+          <td class="col-cap">문제 1개 풀이 중 상태</td>
+        </tr>
+        <tr>
+          <td class="col-num">10</td>
+          <td class="col-name">니즈 구분</td>
+          <td class="col-file">needs.html</td>
+          <td class="col-feat">잠재니즈(Implied)/현재니즈(Explicit) 식별 연습. 고객 발언을 카드로 분류. 만점 80점.</td>
+          <td class="col-cap">카드 드래그 드롭 영역 포함</td>
+        </tr>
+        <tr>
+          <td class="col-num">11</td>
+          <td class="col-name">SPIN 질문 분류</td>
+          <td class="col-file">scenario.html</td>
+          <td class="col-feat">시나리오 속 질문이 S/P/I/N 중 무엇인지 분류. 산업별 상황 + 객관식 4지선다. 만점 100점.</td>
+          <td class="col-cap">시나리오 지문 + 선택지 노출</td>
+        </tr>
+        <tr>
+          <td class="col-num">12</td>
+          <td class="col-name">질문 연습</td>
+          <td class="col-file">practice.html</td>
+          <td class="col-feat">11개 산업(IT/제조/금융/의료 등) 시나리오로 SPIN 질문을 직접 작성. AI가 적절성 평가 후 점수.</td>
+          <td class="col-cap">산업 선택 → 질문 작성 화면</td>
+        </tr>
+        <tr>
+          <td class="col-num">13</td>
+          <td class="col-name">FAB/BAF</td>
+          <td class="col-file">fab.html</td>
+          <td class="col-feat">Feature(특징)-Advantage(장점)-Benefit(이점) 프레임워크 연습. 제품을 고객 이점으로 변환.</td>
+          <td class="col-cap">3단 구조 입력 폼 전체</td>
+        </tr>
+        <tr>
+          <td class="col-num">14</td>
+          <td class="col-name">롤플레이 산업 선택</td>
+          <td class="col-file">roleplay.html</td>
+          <td class="col-feat">10개 산업 × 3단계 난이도 시나리오 선택. Gemini AI가 고객 역할을 연기하는 실전 대화 훈련.</td>
+          <td class="col-cap">산업 카드 그리드 전체</td>
+        </tr>
+        <tr>
+          <td class="col-num">15</td>
+          <td class="col-name">콜플랜 작성</td>
+          <td class="col-file">callplan.html</td>
+          <td class="col-feat">6개 섹션 콜플랜(상담목적/배경/SPIN/FAB/반론/Advance) 작성 + Gemini AI 자동 평가 리포트.</td>
+          <td class="col-cap">6개 섹션 모두 입력된 상태</td>
+        </tr>
+
+        <tr class="cat-row"><td colspan="5">D. 도구 · 리포트 · 매뉴얼 (16 ~ 22)</td></tr>
+
+        <tr>
+          <td class="col-num">16</td>
+          <td class="col-name">스코어보드</td>
+          <td class="col-file">scoreboard.html</td>
+          <td class="col-feat">5개 팀 × 7명 점수 매트릭스. 6개 카테고리별 점수 + 팀 합계 + 개인 총점. 실시간 갱신.</td>
+          <td class="col-cap">FHD, 전체 매트릭스 표시</td>
+        </tr>
+        <tr>
+          <td class="col-num">17</td>
+          <td class="col-name">코칭 리포트</td>
+          <td class="col-file">coaching.html</td>
+          <td class="col-feat">강사가 교육생 개별로 작성하는 관찰 코멘트 + 강점/약점/액션 플랜 리포트. 저장 및 인쇄 가능.</td>
+          <td class="col-cap">리포트 본문 전체</td>
+        </tr>
+        <tr>
+          <td class="col-num">18</td>
+          <td class="col-name">AI 분석리포트</td>
+          <td class="col-file">my-report.html</td>
+          <td class="col-feat">Gemini AI가 개인 점수·약점을 분석해 생성하는 맞춤 역량 진단서. 이메일 발송 기능 포함.</td>
+          <td class="col-cap">AI 생성 리포트 본문 전체</td>
+        </tr>
+        <tr>
+          <td class="col-num">19</td>
+          <td class="col-name">온톨로지 그래프</td>
+          <td class="col-file">ontology.html</td>
+          <td class="col-feat">약점 → 이슈 → 근본원인 → 전략 → 실행과제 5단계 역량 진단 그래프(SVG 기반).</td>
+          <td class="col-cap">그래프 전체 + 범례</td>
+        </tr>
+        <tr>
+          <td class="col-num">20</td>
+          <td class="col-name">교육 매뉴얼</td>
+          <td class="col-file">manual.html</td>
+          <td class="col-feat">35개 기능 카드 + 사용법 + FAQ. 프리미엄 화이트 테마로 제작된 플랫폼 공식 매뉴얼.</td>
+          <td class="col-cap">35개 카드 중 상단 2~3행</td>
+        </tr>
+        <tr>
+          <td class="col-num">21</td>
+          <td class="col-name">SPIN 질문 라이브러리</td>
+          <td class="col-file">spin-library.html</td>
+          <td class="col-feat">11개 산업 × 132개 우수 질문 DB. 산업·유형·키워드 필터. 각 질문에 활용팁 포함.</td>
+          <td class="col-cap">필터 UI + 질문 카드 5~6개</td>
+        </tr>
+        <tr>
+          <td class="col-num">22</td>
+          <td class="col-name">교육 자료실</td>
+          <td class="col-file">materials.html</td>
+          <td class="col-feat">14개 교육 자료(교재·템플릿·케이스·참고) 4개 카테고리 분류. PDF/이미지 프리뷰.</td>
+          <td class="col-cap">자료 카드 그리드 전체</td>
+        </tr>
+
+        <tr class="cat-row"><td colspan="5">E. 게임 허브 (23 ~ 28)</td></tr>
+
+        <tr>
+          <td class="col-num">23</td>
+          <td class="col-name">게임 허브</td>
+          <td class="col-file">games-hub.html</td>
+          <td class="col-feat">5종 학습 게임 진입 페이지 — 퀴즈레이스·매칭·플래시카드·순서정렬·다음질문선택.</td>
+          <td class="col-cap">5개 게임 카드 전체</td>
+        </tr>
+        <tr>
+          <td class="col-num">24</td>
+          <td class="col-name">퀴즈 레이스</td>
+          <td class="col-file">game-quiz-race.html</td>
+          <td class="col-feat">30초/문제 타이머 + 10문제 + 콤보 보너스 4지선다 레이스 게임. 최대 약 145점.</td>
+          <td class="col-cap">타이머·점수·문제 모두 보이게</td>
+        </tr>
+        <tr>
+          <td class="col-num">25</td>
+          <td class="col-name">매칭 게임</td>
+          <td class="col-file">game-match.html</td>
+          <td class="col-feat">60초 내 질문 4개 ↔ SPIN 유형 4개 매칭. 라운드 클리어 보너스. 무한 라운드.</td>
+          <td class="col-cap">매칭 카드 8개 배치 상태</td>
+        </tr>
+        <tr>
+          <td class="col-num">26</td>
+          <td class="col-name">플래시카드</td>
+          <td class="col-file">game-flash.html</td>
+          <td class="col-feat">132개 SPIN 질문 카드 무작위 출제. 질문을 S/P/I/N 중 선택. 정답 설명 + 활용팁 제공.</td>
+          <td class="col-cap">질문 카드 + 4개 선택지</td>
+        </tr>
+        <tr>
+          <td class="col-num">27</td>
+          <td class="col-name">게임 리더보드</td>
+          <td class="col-file">game-leaderboard.html</td>
+          <td class="col-feat">5개 게임별 Top 10 + 팀별 합산 점수. 6개 탭 + 5초 자동 갱신 + 1~3위 메달.</td>
+          <td class="col-cap">전체 탭 + 리더보드 표</td>
+        </tr>
+        <tr>
+          <td class="col-num">28</td>
+          <td class="col-name">팀 대항전 모드</td>
+          <td class="col-file">team-battle.html</td>
+          <td class="col-feat">대형 스크린용 실시간 팀 점수 막대 그래프. 1위 팀 골드 글로우. 전체화면 모드 지원.</td>
+          <td class="col-cap">전체화면 모드로 FHD 캡처</td>
+        </tr>
+
+        <tr class="cat-row"><td colspan="5">F. AI 기능 · 수료 (29 ~ 30)</td></tr>
+
+        <tr>
+          <td class="col-num">29</td>
+          <td class="col-name">SPIN AI Bot 챗봇</td>
+          <td class="col-file">chatbot.js (floating)</td>
+          <td class="col-feat">모든 페이지 우하단 플로팅 챗봇. Gemini 2.0 Flash + RAG 지식베이스 + 개인화 코칭 기능.</td>
+          <td class="col-cap">챗봇 창 열린 상태, 대화 2~3턴</td>
+        </tr>
+        <tr>
+          <td class="col-num">30</td>
+          <td class="col-name">수료증</td>
+          <td class="col-file">certificate.html</td>
+          <td class="col-feat">A4 가로 수료증. 이름·회사·교육일·총점 자동 채움. Korn Ferry 네이비 + 골드 보더 디자인.</td>
+          <td class="col-cap">가로 1920 × 세로 1200 정도, 전체 보더 포함</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <h2 class="sub-title">3. 제출 체크리스트</h2>
+    <div class="note-box">
+      ☐ 30장 모두 PNG 형식, 파일명 <code>spin-screenshot-01.png ~ spin-screenshot-30.png</code>으로 저장<br>
+      ☐ 개인정보(실명·이메일·회사명)가 모두 더미 데이터로 마스킹되었는지 확인<br>
+      ☐ 해상도 1920×1080 또는 1440×900 준수(수료증·팀대항전은 전체화면 가로)<br>
+      ☐ 다크모드가 아닌 라이트 테마로 통일되어 있는지 확인<br>
+      ☐ 브라우저 주소창·북마크바·확장프로그램 아이콘이 보이지 않는지 확인<br>
+      ☐ 30장을 <code>spin-screenshots.zip</code> 하나로 압축하여 소스코드 문서와 함께 제출<br>
+      ☐ 본 가이드(<code>copyright-screenshots-guide.html</code>) 인쇄본도 동봉
+    </div>
+
+  </section>
+
+  <!-- ========== 저작권 푸터 ========== -->
+  <div class="copyright-footer">
+    &copy; 2024–2026 심재우 (SB Consulting) · SPIN Selling AI 교육 플랫폼 · All Rights Reserved.<br>
+    Global Certified SPIN Master Trainer (Korn Ferry 국제공인 마스터트레이너) · 한국저작권위원회 등록용 화면 캡처 가이드
+  </div>
+
+</div>
+</body>
+</html>

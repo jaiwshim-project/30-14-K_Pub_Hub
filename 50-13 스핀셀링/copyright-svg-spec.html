@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>시스템 구조도 v2.0 — 미술저작물 명세서</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+
+@page {
+  size: A4;
+  margin: 25mm 20mm;
+  @bottom-center {
+    content: counter(page) " / " counter(pages);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 9pt;
+    color: #64748b;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  font-size: 11pt;
+  line-height: 1.7;
+  color: #1e293b;
+  background: #ffffff;
+}
+
+/* ======================== 표지 ======================== */
+.cover {
+  page-break-after: always;
+  min-height: 247mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, #0a2240 0%, #1e3a6f 50%, #0a2240 100%);
+  color: #ffffff;
+  padding: 40mm 20mm;
+  margin: -25mm -20mm;
+  position: relative;
+}
+
+.cover::before {
+  content: "";
+  position: absolute;
+  top: 20mm;
+  left: 20mm;
+  right: 20mm;
+  bottom: 20mm;
+  border: 2px solid #c9a961;
+  pointer-events: none;
+}
+
+.cover-badge {
+  font-size: 10pt;
+  letter-spacing: 4pt;
+  color: #c9a961;
+  margin-bottom: 20mm;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.cover-title {
+  font-size: 28pt;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 8mm 0;
+  line-height: 1.3;
+  letter-spacing: -0.5pt;
+}
+
+.cover-subtitle {
+  font-size: 14pt;
+  font-weight: 400;
+  color: #e2e8f0;
+  margin: 0 0 15mm 0;
+}
+
+.cover-divider {
+  width: 60mm;
+  height: 1px;
+  background: #c9a961;
+  margin: 10mm auto;
+}
+
+.cover-work {
+  font-size: 13pt;
+  font-weight: 600;
+  color: #c9a961;
+  margin: 8mm 0;
+  padding: 0 10mm;
+}
+
+.cover-meta {
+  font-size: 11pt;
+  color: #cbd5e1;
+  line-height: 2;
+  margin-top: 15mm;
+}
+
+.cover-meta strong {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.cover-footer {
+  position: absolute;
+  bottom: 30mm;
+  left: 0;
+  right: 0;
+  font-size: 9pt;
+  color: #94a3b8;
+  letter-spacing: 2pt;
+}
+
+/* ======================== 본문 ======================== */
+.page {
+  page-break-after: always;
+  padding-top: 5mm;
+}
+
+.page:last-child {
+  page-break-after: auto;
+}
+
+h1 {
+  font-size: 20pt;
+  font-weight: 700;
+  color: #0a2240;
+  border-bottom: 3px solid #0a2240;
+  padding-bottom: 4mm;
+  margin: 0 0 8mm 0;
+}
+
+h1 .num {
+  color: #c9a961;
+  margin-right: 4mm;
+}
+
+h2 {
+  font-size: 14pt;
+  font-weight: 600;
+  color: #0a2240;
+  margin: 8mm 0 4mm 0;
+  padding-left: 3mm;
+  border-left: 4px solid #c9a961;
+}
+
+h3 {
+  font-size: 12pt;
+  font-weight: 600;
+  color: #1e3a6f;
+  margin: 6mm 0 3mm 0;
+}
+
+p {
+  margin: 0 0 4mm 0;
+  text-align: justify;
+}
+
+ul, ol {
+  padding-left: 6mm;
+  margin: 0 0 4mm 0;
+}
+
+li {
+  margin-bottom: 1.5mm;
+}
+
+strong {
+  color: #0a2240;
+  font-weight: 600;
+}
+
+/* ======================== 정보 테이블 ======================== */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 4mm 0 6mm 0;
+  font-size: 10.5pt;
+}
+
+.info-table th,
+.info-table td {
+  padding: 3mm 4mm;
+  border: 1px solid #cbd5e1;
+  text-align: left;
+  vertical-align: top;
+}
+
+.info-table th {
+  background: #0a2240;
+  color: #ffffff;
+  font-weight: 600;
+  width: 30%;
+}
+
+.info-table tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+/* ======================== 색상 팔레트 ======================== */
+.palette {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3mm;
+  margin: 4mm 0 6mm 0;
+}
+
+.swatch {
+  border: 1px solid #e2e8f0;
+  border-radius: 2mm;
+  overflow: hidden;
+  font-size: 9pt;
+  page-break-inside: avoid;
+}
+
+.swatch-color {
+  height: 18mm;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 2mm;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 8pt;
+}
+
+.swatch-label {
+  padding: 2mm 3mm;
+  background: #f8fafc;
+}
+
+.swatch-label strong {
+  display: block;
+  font-size: 9pt;
+  color: #0a2240;
+}
+
+/* ======================== SVG 임베드 ======================== */
+.svg-frame {
+  border: 2px solid #0a2240;
+  border-radius: 3mm;
+  padding: 5mm;
+  background: #ffffff;
+  margin: 5mm 0;
+  page-break-inside: avoid;
+}
+
+.svg-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.svg-caption {
+  text-align: center;
+  font-size: 9pt;
+  color: #64748b;
+  margin-top: 3mm;
+  font-style: italic;
+}
+
+/* ======================== 코드 블록 ======================== */
+.code-block {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 5mm;
+  border-radius: 2mm;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 8pt;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 4mm 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  page-break-inside: avoid;
+}
+
+.code-block .tag {
+  color: #7dd3fc;
+}
+
+.code-block .attr {
+  color: #fbbf24;
+}
+
+.code-block .str {
+  color: #86efac;
+}
+
+.code-block .comment {
+  color: #64748b;
+  font-style: italic;
+}
+
+/* ======================== 하이라이트 박스 ======================== */
+.highlight {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-left: 4px solid #c9a961;
+  padding: 4mm 5mm;
+  margin: 4mm 0;
+  border-radius: 0 2mm 2mm 0;
+  font-size: 10.5pt;
+}
+
+.highlight strong {
+  color: #78350f;
+}
+
+.note-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 2mm;
+  padding: 4mm 5mm;
+  margin: 4mm 0;
+  font-size: 10pt;
+}
+
+.note-box .note-title {
+  font-weight: 600;
+  color: #1e40af;
+  margin-bottom: 2mm;
+}
+
+/* ======================== 레이아웃 그리드 ======================== */
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm;
+  margin: 4mm 0;
+}
+
+.layout-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 2mm;
+  padding: 4mm;
+  background: #f8fafc;
+  page-break-inside: avoid;
+}
+
+.layout-card .layer-num {
+  display: inline-block;
+  width: 8mm;
+  height: 8mm;
+  line-height: 8mm;
+  text-align: center;
+  background: #0a2240;
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: 700;
+  margin-right: 2mm;
+  font-size: 9pt;
+}
+
+.layout-card h4 {
+  margin: 0 0 2mm 0;
+  font-size: 11pt;
+  color: #0a2240;
+}
+
+.layout-card .range {
+  font-family: 'Consolas', monospace;
+  font-size: 8.5pt;
+  color: #64748b;
+}
+
+.layout-card .desc {
+  font-size: 9pt;
+  color: #475569;
+  margin-top: 2mm;
+}
+
+/* ======================== 창작성 카드 ======================== */
+.creativity-list {
+  counter-reset: crt;
+  list-style: none;
+  padding: 0;
+  margin: 4mm 0;
+}
+
+.creativity-list li {
+  counter-increment: crt;
+  position: relative;
+  padding: 4mm 5mm 4mm 18mm;
+  margin-bottom: 3mm;
+  background: #f8fafc;
+  border-left: 3px solid #c9a961;
+  border-radius: 0 2mm 2mm 0;
+  page-break-inside: avoid;
+}
+
+.creativity-list li::before {
+  content: counter(crt);
+  position: absolute;
+  left: 4mm;
+  top: 4mm;
+  width: 10mm;
+  height: 10mm;
+  line-height: 10mm;
+  text-align: center;
+  background: #0a2240;
+  color: #c9a961;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 11pt;
+}
+
+.creativity-list li strong {
+  display: block;
+  color: #0a2240;
+  margin-bottom: 1mm;
+}
+
+/* ======================== 버전 비교 ======================== */
+.version-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4mm;
+  margin: 4mm 0;
+}
+
+.version-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 2mm;
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+
+.version-card .v-head {
+  padding: 3mm 4mm;
+  background: #0a2240;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 11pt;
+}
+
+.version-card.v2 .v-head {
+  background: linear-gradient(135deg, #0a2240 0%, #c9a961 100%);
+}
+
+.version-card .v-body {
+  padding: 4mm;
+  background: #f8fafc;
+  font-size: 9.5pt;
+}
+
+.version-card ul {
+  margin: 0;
+  padding-left: 5mm;
+}
+
+/* ======================== 저작권 푸터 ======================== */
+.copyright-footer {
+  margin-top: 10mm;
+  padding: 6mm;
+  background: #0a2240;
+  color: #ffffff;
+  border-radius: 2mm;
+  text-align: center;
+  font-size: 10pt;
+  page-break-inside: avoid;
+}
+
+.copyright-footer strong {
+  display: block;
+  color: #c9a961;
+  font-size: 11pt;
+  margin-bottom: 2mm;
+}
+</style>
+</head>
+<body>
+
+<!-- ==================================================== -->
+<!-- 표지                                                  -->
+<!-- ==================================================== -->
+<div class="cover">
+  <div class="cover-badge">COPYRIGHT REGISTRATION</div>
+  <div class="cover-title">시스템 구조도 v2.0</div>
+  <div class="cover-subtitle">미술저작물 등록 명세서</div>
+  <div class="cover-divider"></div>
+  <div class="cover-work">SPIN Selling AI 교육 플랫폼<br>시스템 아키텍처 다이어그램</div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <strong>저작자</strong> &nbsp;&nbsp;&nbsp; 심재우 (SB Consulting)<br>
+    <strong>창작일</strong> &nbsp;&nbsp;&nbsp; 2026년 4월<br>
+    <strong>등록기관</strong> &nbsp;&nbsp; 한국저작권위원회<br>
+    <strong>저작물 종류</strong> &nbsp; 미술저작물 (도형저작물)
+  </div>
+  <div class="cover-footer">SB CONSULTING &nbsp;·&nbsp; KORN FERRY PARTNER &nbsp;·&nbsp; 2026</div>
+</div>
+
+<!-- ==================================================== -->
+<!-- 1. 저작물 개요                                        -->
+<!-- ==================================================== -->
+<div class="page">
+  <h1><span class="num">1.</span>저작물 개요</h1>
+
+  <p>
+    본 명세서는 <strong>SPIN Selling AI 교육 플랫폼</strong>의 전체 시스템 구조를 시각화한
+    SVG 다이어그램 <strong>architecture.svg</strong>에 대한 미술저작물 등록용 기술 명세서이다.
+    해당 저작물은 20년 이상의 SPIN Selling 교육 경험을 바탕으로 설계된 복잡한 교육 플랫폼의
+    3계층 아키텍처와 6개 기능 그룹을 한눈에 파악할 수 있도록 독창적으로 시각화한 도형저작물이다.
+  </p>
+
+  <table class="info-table">
+    <tr><th>저작물명</th><td>SPIN Selling AI 교육 플랫폼 시스템 아키텍처 다이어그램</td></tr>
+    <tr><th>영문명</th><td>SPIN Selling AI Training Platform — System Architecture Diagram</td></tr>
+    <tr><th>저작물 종류</th><td>미술저작물 (도형저작물 / Graphic Work)</td></tr>
+    <tr><th>파일 형식</th><td>SVG (Scalable Vector Graphics) — W3C 표준 벡터 그래픽</td></tr>
+    <tr><th>파일명</th><td>architecture.svg</td></tr>
+    <tr><th>캔버스 크기</th><td>viewBox 1200 × 1420 (픽셀 단위 가상 좌표계)</td></tr>
+    <tr><th>색상 구성</th><td>4가지 기본 색상 + 그라데이션 (Korn Ferry Navy #0a2240 기반)</td></tr>
+    <tr><th>코드 분량</th><td>약 400~600줄 SVG 마크업 코드</td></tr>
+    <tr><th>버전</th><td>v2.0 (2026년 4월 전면 개정판)</td></tr>
+    <tr><th>저작자</th><td>심재우 (SB Consulting)</td></tr>
+    <tr><th>창작일</th><td>2026년 4월 초순</td></tr>
+  </table>
+
+  <div class="highlight">
+    <strong>핵심 요약.</strong> 본 다이어그램은 일반적인 3계층 시스템 구조도를 확장하여,
+    학습 게임 시스템·AI 통합·부가 기능 그룹까지 총 <strong>6개 영역</strong>으로 재분류하였으며,
+    Korn Ferry의 브랜드 색상 체계(네이비 + 골드)를 적용하여 50개 이상의 컴포넌트를
+    카테고리별로 색상 코딩한 것이 특징이다.
+  </div>
+</div>
+
+<!-- ==================================================== -->
+<!-- 2. 창작 의도 및 배경                                  -->
+<!-- ==================================================== -->
+<div class="page">
+  <h1><span class="num">2.</span>창작 의도 및 배경</h1>
+
+  <h2>2.1 창작 배경</h2>
+  <p>
+    저작자는 Huthwaite International의 공식 파트너이자 Korn Ferry의 SPIN Selling 교육 전문 컨설턴트로서
+    20년 이상의 기업 영업교육 경험을 축적해 왔다. 이 과정에서 전통적인 오프라인 교육이 가지는
+    한계 — 반복 학습의 어려움, 개별 피드백의 부족, 학습 성과 측정의 한계 — 를 극복하기 위해
+    AI 기반의 교육 플랫폼을 직접 기획·설계하였다.
+  </p>
+
+  <p>
+    이 플랫폼은 60개 이상의 HTML 페이지, 학습 게임 5종, AI 챗봇 2종(Gemini/OpenAI),
+    Supabase 기반 데이터 계층을 포함하는 복합 시스템으로, 그 구조가 매우 복잡하다.
+    교육 담당자·강사·학습자·개발자 등 다양한 이해관계자가 이 시스템의 전체상을
+    한눈에 파악할 수 있도록 시각화한 결과물이 본 저작물이다.
+  </p>
+
+  <h2>2.2 기존 다이어그램과의 차별점</h2>
+  <ul>
+    <li><strong>6개 기능 그룹으로 확장</strong> — 일반적인 3계층(클라이언트/서버/데이터)
+      구조를 넘어, 학습 게임·AI 통합·부가 기능을 별도 그룹으로 분리하여 시각화</li>
+    <li><strong>Korn Ferry 브랜드 색상 체계</strong> — 네이비 #0a2240 기반 헤더 +
+      골드 #c9a961 액센트로 브랜드 일관성 확보</li>
+    <li><strong>계층 간 데이터 흐름 시각화</strong> — 점선 곡선 화살표로 정보 전달 경로 표현</li>
+    <li><strong>50+ 컴포넌트의 체계적 배치</strong> — 카테고리별 색상 코딩으로 직관적 이해 지원</li>
+    <li><strong>한국어 레이블 + 이모지 병기</strong> — 국내 사용자의 가독성 극대화</li>
+  </ul>
+
+  <div class="note-box">
+    <div class="note-title">창작 목적</div>
+    본 다이어그램은 단순한 기술 문서가 아니라, SPIN Selling 교육 철학을 시각적으로 표현한
+    저작자 고유의 디자인 언어이다. 복잡한 시스템을 아름답고 명료하게 전달하는 것 자체를
+    하나의 미적 목표로 삼아 제작되었다.
+  </div>
+</div>
+
+<!-- ==================================================== -->
+<!-- 3. 저작물 전체 이미지                                  -->
+<!-- ==================================================== -->
+<div class="page">
+  <h1><span class="num">3.</span>저작물 전체 이미지</h1>
+
+  <p>
+    아래는 본 명세서가 설명하는 저작물 <strong>architecture.svg</strong>의
+    전체 이미지이다. SVG 벡터 형식으로 제작되어 어떤 해상도에서도
+    선명하게 표시되며, 인쇄 시에도 왜곡 없이 재현된다.
+  </p>
+
+  <div class="svg-frame">
+    <img src="architecture.svg" alt="SPIN Selling AI 교육 플랫폼 시스템 아키텍처 다이어그램">
+    <div class="svg-caption">
+      [그림 1] SPIN Selling AI 교육 플랫폼 시스템 아키텍처 다이어그램 v2.0<br>
+      © 2026 심재우 (SB Consulting) — 무단 복제·수정·배포 금지
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================== -->
+<!-- 4. 시각적 구성 요소                                    -->
+<!-- ==================================================== -->
+<div class="page">
+  <h1><span class="num">4.</span>시각적 구성 요소</h1>
+
+  <h2>4.1 색상 체계 (Color Palette)</h2>
+  <p>
+    본 저작물은 기능 그룹별로 구분된 4가지 기본 색상에 Korn Ferry Navy를 더한 총 5색 체계를 사용한다.
+    각 색상은 그라데이션을 통해 깊이감을 부여하였으며, 배경은 회백색 그라데이션으로 통일하였다.
+  </p>
+
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-color" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">#2563eb</div>
+      <div class="swatch-label"><strong>Frontend Blue</strong>클라이언트 계층</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:linear-gradient(135deg,#16a34a,#15803d);">#16a34a</div>
+      <div class="swatch-label"><strong>Backend Green</strong>서버 계층 / AI</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:linear-gradient(135deg,#d97706,#b45309);">#d97706</div>
+      <div class="swatch-label"><strong>Data Amber</strong>데이터베이스</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">#7c3aed</div>
+      <div class="swatch-label"><strong>Service Violet</strong>외부 서비스 / 게임</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:linear-gradient(135deg,#0a2240,#1e3a6f);">#0a2240</div>
+      <div class="swatch-label"><strong>KF Navy</strong>헤더 / 브랜드</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:linear-gradient(135deg,#c9a961,#a58843);color:#0a2240;">#c9a961</div>
+      <div class="swatch-label"><strong>KF Gold</strong>액센트 / 하이라이트</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:linear-gradient(135deg,#f8fafc,#f1f5f9);color:#475569;">#f8fafc</div>
+      <div class="swatch-label"><strong>BG Gray</strong>배경 그라데이션</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);color:#1e40af;">#eff6ff</div>
+      <div class="swatch-label"><strong>Card Blue</strong>카드 배경</div>
+    </div>
+  </div>
+
+  <h2>4.2 캔버스 레이아웃 (viewBox 1200 × 1420)</h2>
+  <p>
+    저작물은 수직 확장형 레이아웃으로, 6개의 기능 영역이 위에서 아래로 배치된다.
+    각 영역은 고유한 색상 헤더와 둥근 모서리 박스(rx 8~12)로 구분되며,
+    드롭쉐도우 필터로 입체감을 부여하였다.
+  </p>
+
+  <div class="layout-grid">
+    <div class="layout-card">
+      <h4><span class="layer-num">1</span>클라이언트 계층</h4>
+      <div class="range">y: 60 ~ 280</div>
+      <div class="desc">4가지 역할(관리자·강사·매니저·학습자)별 60+ HTML 페이지 분류. PWA 지원.</div>
+    </div>
+    <div class="layout-card">
+      <h4><span class="layer-num">2</span>서버 계층</h4>
+      <div class="range">y: 320 ~ 520</div>
+      <div class="desc">Supabase REST API, Realtime, Edge Functions, 인증/권한 모듈.</div>
+    </div>
+    <div class="layout-card">
+      <h4><span class="layer-num">3</span>데이터 계층</h4>
+      <div class="range">y: 560 ~ 700</div>
+      <div class="desc">PostgreSQL 3개 테이블 (sessions, participants, reports). Storage.</div>
+    </div>
+    <div class="layout-card">
+      <h4><span class="layer-num">4</span>외부 서비스</h4>
+      <div class="range">y: 740 ~ 880</div>
+      <div class="desc">6개 외부 API 연동 — Gemini, OpenAI, Supabase, Vercel, Analytics 등.</div>
+    </div>
+    <div class="layout-card">
+      <h4><span class="layer-num">5</span>학습 게임 시스템</h4>
+      <div class="range">y: 930 ~ 1130</div>
+      <div class="desc">5종 게임(Flash·Match·Order·Quiz Race·Industry) + 게임 허브 + 리더보드.</div>
+    </div>
+    <div class="layout-card">
+      <h4><span class="layer-num">6</span>AI 챗봇 + 부가 기능</h4>
+      <div class="range">y: 1160 ~ 1380</div>
+      <div class="desc">SPIN AI Bot + 12개 부가 기능 페이지(로드맵·FAB·매뉴얼 등).</div>
+    </div>
+  </div>
+
+  <h2>4.3 디자인 요소</h2>
+  <ul>
+    <li><strong>둥근 모서리 박스</strong> — rx 값 8~12로 부드러운 인상 연출</li>
+    <li><strong>그라데이션 헤더</strong> — 각 그룹별 고유 색상의 좌→우 그라데이션</li>
+    <li><strong>드롭쉐도우 필터</strong> — feDropShadow로 깊이감 부여 (opacity 0.08~0.12)</li>
+    <li><strong>점선 화살표</strong> — stroke-dasharray로 데이터 흐름 표현</li>
+    <li><strong>한국어 레이블</strong> — Segoe UI 폰트로 한글·영문 혼용 가독성 확보</li>
+    <li><strong>이모지 병기</strong> — 핵심 기능에 이모지를 배치하여 직관성 향상</li>
+  </ul>
+</div>
+
+<!-- ==================================================== -->
+<!-- 5. 창작성 인정 요소                                    -->
+<!-- ==================================================== -->
+<div class="page">
+  <h1><span class="num">5.</span>창작성 인정 요소</h1>
+
+  <p>
+    본 저작물은 단순한 기술 다이어그램을 넘어, 아래 7가지 측면에서 저작자의
+    독창적 표현이 구현된 미술저작물로서 창작성을 인정받을 수 있다.
+  </p>
+
+  <ol class="creativity-list">
+    <li>
+      <strong>6그룹 확장 구조</strong>
+      일반적인 3계층(클라이언트·서버·DB) 다이어그램의 한계를 극복하고,
+      학습 게임·AI 통합·부가 기능을 별도 그룹으로 분리한 독자적 분류 체계.
+      교육 플랫폼의 특성을 반영한 저작자 고유의 설계.
+    </li>
+    <li>
+      <strong>Korn Ferry 브랜드 일관성</strong>
+      네이비 #0a2240 + 골드 #c9a961 의 2색 브랜드 체계를 헤더·타이틀·액센트에
+      일관되게 적용하여, 플랫폼 전체의 시각적 정체성을 구축.
+    </li>
+    <li>
+      <strong>카테고리 색상 코딩</strong>
+      6개 기능 그룹을 각각 Blue / Green / Amber / Violet 계열로 구분하고,
+      같은 그룹 내 하위 요소는 명도 단계로 세분화하여 한눈에 구조를 파악할 수 있게 함.
+    </li>
+    <li>
+      <strong>계층 간 데이터 흐름 시각화</strong>
+      점선 곡선 화살표(marker + stroke-dasharray 조합)로 클라이언트→서버→데이터
+      흐름과 외부 API 호출 방향을 명료하게 표현.
+    </li>
+    <li>
+      <strong>이모지 + 한국어 레이블의 직관적 결합</strong>
+      핵심 기능에 이모지를 앞세우고 한국어 명칭을 병기하여, 기술 문서임에도
+      학습자·강사·관리자 모두가 직관적으로 이해 가능하도록 설계.
+    </li>
+    <li>
+      <strong>컴포넌트 카드 디자인</strong>
+      50개 이상의 페이지·기능을 개별 카드로 표현하고, 카드별 배경·테두리·그림자를
+      통일된 스타일로 적용하여 시각적 리듬감을 형성.
+    </li>
+    <li>
+      <strong>수직 확장 레이아웃</strong>
+      viewBox 1420 높이의 세로 긴 캔버스를 채택하여, 모든 컴포넌트를 스크롤 없이
+      한 화면에 담을 수 있도록 구성. A4 인쇄 및 웹 임베드 양쪽에 최적화.
+    </li>
+  </ol>
+</div>
+
+<!-- ==================================================== -->
+<!-- 6. 발전 과정 (v1.0 → v2.0)                             -->
+<!-- ==================================================== -->
+<div class="page">
+  <h1><span class="num">6.</span>발전 과정 (v1.0 → v2.0)</h1>
+
+  <p>
+    본 저작물은 2025년에 최초 제작된 v1.0을 기반으로, 플랫폼 기능 확장에 따라
+    2026년 4월에 v2.0으로 전면 개정되었다. 두 버전의 주요 차이점은 다음과 같다.
+  </p>
+
+  <div class="version-compare">
+    <div class="version-card v1">
+      <div class="v-head">v1.0 (2025년)</div>
+      <div class="v-body">
+        <ul>
+          <li>viewBox 1200 × 920</li>
+          <li>25개 HTML 페이지</li>
+          <li>3계층 단순 구조</li>
+          <li>기본 3색 팔레트</li>
+          <li>학습 게임 미포함</li>
+          <li>AI 챗봇 미통합</li>
+          <li>단일 헤더 디자인</li>
+        </ul>
+      </div>
+    </div>
+    <div class="version-card v2">
+      <div class="v-head">v2.0 (2026년 4월)</div>
+      <div class="v-body">
+        <ul>
+          <li>viewBox 1200 × 1420</li>
+          <li>50+ HTML 페이지</li>
+          <li>6그룹 확장 구조</li>
+          <li>5색 + KF 브랜드 팔레트</li>
+          <li>5종 학습 게임 추가</li>
+          <li>SPIN AI Bot 통합</li>
+          <li>그룹별 그라데이션 헤더</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h2>6.1 v2.0 주요 개선 사항</h2>
+  <ul>
+    <li><strong>신규 그룹 추가</strong> — 학습 게임 시스템, AI 챗봇 통합, 부가 기능 3개 그룹 신설</li>
+    <li><strong>캔버스 확장</strong> — 세로 높이를 920에서 1420으로 확장 (약 54% 증가)</li>
+    <li><strong>브랜드 체계 도입</strong> — Korn Ferry Navy + Gold 색상 체계 전면 적용</li>
+    <li><strong>그라데이션 헤더</strong> — 단색 헤더에서 그라데이션 헤더로 업그레이드</li>
+    <li><strong>드롭쉐도우 필터</strong> — feDropShadow 2종(shadow, shadowSm) 도입</li>
+    <li><strong>화살표 마커</strong> — 4색 arrow marker로 데이터 흐름 방향 시각화</li>
+  </ul>
+</div>
+
+<!-- ==================================================== -->
+<!-- 7. SVG 원본 코드 발췌                                  -->
+<!-- ==================================================== -->
+<div class="page">
+  <h1><span class="num">7.</span>SVG 원본 코드 발췌</h1>
+
+  <p>
+    아래는 본 저작물 <strong>architecture.svg</strong>의 실제 소스 코드 중
+    상단부(정의·배경·클라이언트 계층 헤더)를 발췌한 것이다. 전체 코드는 약 400~600줄
+    분량이며, 저작자가 직접 수작업으로 작성하였다.
+  </p>
+
+  <div class="code-block">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1420"&gt;
+  &lt;defs&gt;
+    &lt;!-- Gradients --&gt;
+    &lt;linearGradient id="headerClient" x1="0" y1="0" x2="1" y2="0"&gt;
+      &lt;stop offset="0%" stop-color="#1e40af"/&gt;
+      &lt;stop offset="100%" stop-color="#2563eb"/&gt;
+    &lt;/linearGradient&gt;
+    &lt;linearGradient id="headerServer" x1="0" y1="0" x2="1" y2="0"&gt;
+      &lt;stop offset="0%" stop-color="#15803d"/&gt;
+      &lt;stop offset="100%" stop-color="#16a34a"/&gt;
+    &lt;/linearGradient&gt;
+    &lt;linearGradient id="headerData" x1="0" y1="0" x2="1" y2="0"&gt;
+      &lt;stop offset="0%" stop-color="#b45309"/&gt;
+      &lt;stop offset="100%" stop-color="#d97706"/&gt;
+    &lt;/linearGradient&gt;
+    &lt;linearGradient id="headerExt" x1="0" y1="0" x2="1" y2="0"&gt;
+      &lt;stop offset="0%" stop-color="#6d28d9"/&gt;
+      &lt;stop offset="100%" stop-color="#7c3aed"/&gt;
+    &lt;/linearGradient&gt;
+    &lt;linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1"&gt;
+      &lt;stop offset="0%" stop-color="#f8fafc"/&gt;
+      &lt;stop offset="100%" stop-color="#f1f5f9"/&gt;
+    &lt;/linearGradient&gt;
+    &lt;!-- Shadow filter --&gt;
+    &lt;filter id="shadow" x="-4%" y="-4%" width="108%" height="112%"&gt;
+      &lt;feDropShadow dx="0" dy="2" stdDeviation="4"
+                    flood-color="#0a2240" flood-opacity="0.12"/&gt;
+    &lt;/filter&gt;
+    &lt;filter id="shadowSm" x="-4%" y="-4%" width="108%" height="112%"&gt;
+      &lt;feDropShadow dx="0" dy="1" stdDeviation="2"
+                    flood-color="#0a2240" flood-opacity="0.08"/&gt;
+    &lt;/filter&gt;
+    &lt;!-- Arrow marker --&gt;
+    &lt;marker id="arrowBlue" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto"&gt;
+      &lt;polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/&gt;
+    &lt;/marker&gt;
+    &lt;marker id="arrowGreen" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto"&gt;
+      &lt;polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/&gt;
+    &lt;/marker&gt;
+    &lt;marker id="arrowOrange" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto"&gt;
+      &lt;polygon points="0 0, 10 3.5, 0 7" fill="#d97706"/&gt;
+    &lt;/marker&gt;
+    &lt;marker id="arrowPurple" markerWidth="10" markerHeight="7"
+            refX="10" refY="3.5" orient="auto"&gt;
+      &lt;polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/&gt;
+    &lt;/marker&gt;
+  &lt;/defs&gt;
+
+  &lt;!-- Background --&gt;
+  &lt;rect width="1200" height="1420" rx="12" fill="url(#bgGrad)"/&gt;
+
+  &lt;!-- Title --&gt;
+  &lt;text x="600" y="42" text-anchor="middle"
+        font-family="'Segoe UI', sans-serif"
+        font-size="22" font-weight="700"
+        fill="#0a2240"&gt;SPIN Selling AI 교육 플랫폼 아키텍처&lt;/text&gt;
+
+  &lt;!-- LAYER 1: CLIENT (Browser) --&gt;
+  &lt;g filter="url(#shadow)"&gt;
+    &lt;rect x="30" y="80" width="760" height="310" rx="10"
+          fill="#ffffff" stroke="#bfdbfe" stroke-width="1"/&gt;
+    &lt;rect x="30" y="80" width="760" height="36" rx="10"
+          fill="url(#headerClient)"/&gt;
+    &lt;text x="56" y="104" font-family="'Segoe UI', sans-serif"
+          font-size="14" font-weight="600" fill="#ffffff"&gt;
+      클라이언트 계층 — 브라우저 (50+ HTML 페이지, PWA 지원)
+    &lt;/text&gt;
+  &lt;/g&gt;
+  ...
+&lt;/svg&gt;</div>
+
+  <div class="note-box">
+    <div class="note-title">코드 진정성</div>
+    위 코드는 <code>C:/01 클로드코드/50-13 스핀셀링/architecture.svg</code> 파일의
+    1~60행 원본을 발췌한 것이다. 전체 400~600줄 규모의 SVG 마크업은 저작자가 직접 수작업으로
+    작성하였으며, 외부 도구나 템플릿의 단순 변형이 아니다.
+  </div>
+</div>
+
+<!-- ==================================================== -->
+<!-- 8. 정보 구조 및 활용                                   -->
+<!-- ==================================================== -->
+<div class="page">
+  <h1><span class="num">8.</span>정보 구조 및 활용 용도</h1>
+
+  <h2>8.1 시각화된 정보 구조</h2>
+  <p>본 저작물은 아래 50개 이상의 컴포넌트를 체계적으로 시각화하고 있다.</p>
+
+  <table class="info-table">
+    <tr><th>클라이언트 계층</th><td>60+ HTML 페이지 (관리자·강사·매니저·학습자 4개 역할별 분류)</td></tr>
+    <tr><th>서버 계층</th><td>Supabase REST API + Realtime + Edge Functions + Auth</td></tr>
+    <tr><th>데이터 계층</th><td>3개 PostgreSQL 테이블 (sessions, participants, reports) + Storage</td></tr>
+    <tr><th>외부 서비스</th><td>6개 외부 API — Gemini, OpenAI, Supabase, Vercel, GA4, Sentry</td></tr>
+    <tr><th>학습 게임 시스템</th><td>5종 게임(Flash·Match·Order·Quiz Race·Industry) + 허브 + 리더보드</td></tr>
+    <tr><th>AI 통합</th><td>SPIN AI Bot + Gemini API + OpenAI API (프리미엄 티어)</td></tr>
+    <tr><th>부가 기능</th><td>12개 페이지 (로드맵·FAB·매뉴얼·온톨로지·경쟁사 분석 등)</td></tr>
+  </table>
+
+  <h2>8.2 활용 용도</h2>
+  <ul>
+    <li><strong>매뉴얼 임베드</strong> — SPIN Selling AI 교육 플랫폼의 매뉴얼 페이지
+      (manual.html)에 시스템 구조 이해용 공식 도식으로 임베드</li>
+    <li><strong>프레젠테이션 자료</strong> — 기업 교육 담당자 대상 플랫폼 소개 프레젠테이션의
+      핵심 슬라이드</li>
+    <li><strong>기술 문서</strong> — 개발자 온보딩 및 유지보수 가이드의 시스템 개요도</li>
+    <li><strong>저작권 등록 부속 자료</strong> — 한국저작권위원회 미술저작물 등록 시
+      저작물 원본 이미지로 제출</li>
+    <li><strong>마케팅 자료</strong> — 웹사이트·브로슈어·제안서의 시스템 구조 설명 이미지</li>
+  </ul>
+
+  <h2>8.3 저작권 보호 범위</h2>
+  <p>
+    본 저작물의 보호 범위는 <strong>전체 다이어그램의 시각적 표현</strong>과
+    <strong>SVG 소스 코드</strong> 양자 모두를 포함한다. 구체적으로 다음이 보호 대상이다.
+  </p>
+  <ul>
+    <li>전체 레이아웃 및 구성 방식 (6그룹 수직 확장 배치)</li>
+    <li>색상 체계 및 그라데이션 조합</li>
+    <li>카드 디자인 및 아이콘 배치</li>
+    <li>한국어 레이블의 선택과 배열</li>
+    <li>SVG 마크업 코드 자체</li>
+  </ul>
+
+  <div class="copyright-footer">
+    <strong>© 2026 심재우 (SB Consulting). All Rights Reserved.</strong>
+    본 저작물은 한국 저작권법 및 국제 저작권 협약에 의해 보호됩니다.<br>
+    무단 복제, 수정, 배포, 상업적 이용을 금지하며, 위반 시 민·형사상 책임을 물을 수 있습니다.<br>
+    문의 &nbsp;·&nbsp; SB Consulting &nbsp;·&nbsp; jaiwshim@gmail.com
+  </div>
+</div>
+
+</body>
+</html>
