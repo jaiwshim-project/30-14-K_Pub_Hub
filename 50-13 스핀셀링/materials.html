@@ -22,6 +22,9 @@
 .mat-tag.video { background: rgba(36,113,163,0.08); color: var(--blue); }
 .mat-tag.case { background: rgba(30,132,73,0.08); color: var(--green); }
 .mat-tag.template { background: rgba(212,136,15,0.08); color: var(--gold); }
+.mat-tag.coming { background: rgba(125,60,152,0.1); color: #7d3c98; font-weight: 700; }
+.mat-card-disabled { cursor: not-allowed; opacity: 0.55; filter: grayscale(0.3); }
+.mat-card-disabled:hover { border-color: var(--border); transform: none; box-shadow: none; }
 .mat-content { display: none; }
 .mat-content.active { display: block; }
 </style>
@@ -95,12 +98,15 @@ function renderMaterials() {
   const filtered = activeMatCat === 'all' ? MATERIALS : MATERIALS.filter(m => m.cat === activeMatCat);
   document.getElementById('matGrid').innerHTML = filtered.map(m => {
     const tagHTML = m.tags.map(t => '<span class="mat-tag ' + t + '">' + t.toUpperCase() + '</span>').join('');
-    const onclick = m.link ? ' onclick="location.href=\'' + m.link + '\'"' : '';
-    return '<div class="mat-card"' + onclick + '>' +
+    const hasLink = !!m.link;
+    const onclick = hasLink ? ' onclick="location.href=\'' + m.link + '\'"' : '';
+    const cardClass = hasLink ? 'mat-card' : 'mat-card mat-card-disabled';
+    const comingSoon = hasLink ? '' : '<span class="mat-tag coming">준비중</span>';
+    return '<div class="' + cardClass + '"' + onclick + '>' +
       '<div class="mat-card-icon">' + m.icon + '</div>' +
       '<div class="mat-card-title">' + m.title + '</div>' +
       '<div class="mat-card-desc">' + m.desc + '</div>' +
-      '<div class="mat-card-meta">' + tagHTML + '</div></div>';
+      '<div class="mat-card-meta">' + tagHTML + comingSoon + '</div></div>';
   }).join('');
 }
 
