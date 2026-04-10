@@ -177,6 +177,7 @@ body::before {
   background: linear-gradient(135deg, #0d2d52 0%, #0a2240 50%, #0d2d52 100%);
   border-bottom: 2px solid rgba(10,34,64,0.3);
   overflow-x: auto;
+  overflow-y: visible;
   scrollbar-width: none;
   box-shadow: 0 2px 8px rgba(10,34,64,0.2);
   position: sticky;
@@ -213,22 +214,21 @@ body::before {
   box-shadow: inset 0 -3px 0 var(--gold-light);
 }
 
-/* 서브메뉴 (드롭다운) */
+/* 서브메뉴 (드롭다운) — position:fixed로 overflow 회피 */
 .nav-item-wrap { position: relative; display: inline-block; }
 .nav-submenu {
   display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
+  position: fixed;
   min-width: 240px;
   background: linear-gradient(135deg, #0d2d52 0%, #0a2240 100%);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 0 0 12px 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.4);
   padding: 8px 0;
-  z-index: 200;
+  z-index: 9999;
 }
-.nav-item-wrap:hover .nav-submenu { display: block; }
+.nav-item-wrap:hover .nav-submenu,
+.nav-submenu:hover { display: block; }
 .nav-sub-item {
   display: flex;
   align-items: center;

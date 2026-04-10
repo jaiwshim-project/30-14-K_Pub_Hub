@@ -556,11 +556,24 @@ function getNavHTML(activePage) {
       const isSpinTools = item.section === 'spin-tools';
       const onclick = isHome ? ' onclick="clearSessionId();clearUser();clearRole();"' : '';
       if (isSpinTools) {
-        return `<div class="nav-item-wrap"><a href="${item.page}" class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label} ▾</a>${spinToolsSubmenu}</div>`;
+        return `<div class="nav-item-wrap" onmouseenter="positionSubmenu(this)"><a href="${item.page}" class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label} ▾</a>${spinToolsSubmenu}</div>`;
       }
       return `<a href="${item.page}"${onclick} class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label}</a>`;
     }).join('') +
     '</div>';
+}
+
+function positionSubmenu(wrap) {
+  const submenu = wrap.querySelector('.nav-submenu');
+  if (!submenu) return;
+  const rect = wrap.getBoundingClientRect();
+  submenu.style.top = (rect.bottom) + 'px';
+  // 우측 정렬, 화면 밖으로 나가지 않도록
+  const submenuWidth = 250;
+  let leftPos = rect.right - submenuWidth;
+  if (leftPos < 8) leftPos = 8;
+  submenu.style.left = leftPos + 'px';
+  submenu.style.right = 'auto';
 }
 
 function toggleDarkMode() {
