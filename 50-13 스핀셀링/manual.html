@@ -780,6 +780,20 @@ body {
 </head>
 <body>
 
+<!-- 접근 제한: 비밀번호 9633 -->
+<script>
+(function() {
+  if (sessionStorage.getItem('manual_tech_auth') === '1') return;
+  const pw = prompt('기술 매뉴얼 접근 비밀번호:');
+  if (pw !== '9633') {
+    alert('비밀번호가 올바르지 않습니다.');
+    location.href = 'manual-user.html';
+    return;
+  }
+  sessionStorage.setItem('manual_tech_auth', '1');
+})();
+</script>
+
 <!-- Navigation -->
 <nav class="nav">
   <div class="nav-inner">

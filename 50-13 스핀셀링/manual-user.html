@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling AI - 사용자 매뉴얼</title>
+<link rel="stylesheet" href="common.css">
+<style>
+:root {
+  --primary: #0a2240;
+  --accent: #f5a623;
+  --bg: #f8fafc;
+}
+
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); margin: 0; color: #1a1a1a; }
+
+/* 헤더 */
+.um-header {
+  background: linear-gradient(135deg, #0a2240, #0d3161);
+  color: white;
+  padding: 60px 24px 50px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.um-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(245,166,35,0.15), transparent 70%);
+  pointer-events: none;
+}
+.um-header-logo {
+  height: 48px;
+  margin-bottom: 12px;
+  filter: brightness(1.1);
+}
+.um-header h1 {
+  font-size: 36px;
+  font-weight: 900;
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+.um-header h1 span { color: var(--accent); }
+.um-header p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.9);
+  margin: 0;
+}
+.um-back {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  color: white;
+  text-decoration: none;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.um-back:hover { background: rgba(255,255,255,0.25); }
+
+/* 컨테이너 */
+.um-container { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+
+/* 섹션 */
+.um-section { margin-bottom: 56px; }
+.um-section-num {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-weight: 900;
+  text-align: center;
+  line-height: 32px;
+  font-size: 15px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.um-section h2 {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--primary);
+  margin: 0 0 8px;
+}
+.um-section-desc {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 24px;
+  line-height: 1.7;
+}
+
+/* 빠른 시작 카드 */
+.um-quick {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.um-quick-card {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+}
+.um-quick-num {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
+.um-quick-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+.um-quick-text {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.7;
+}
+
+/* 활동 카드 */
+.um-activities {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.um-activity {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all 0.2s;
+}
+.um-activity:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(10,34,64,0.08);
+}
+.um-activity-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 900;
+  text-align: center;
+  line-height: 32px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.um-activity-content { flex: 1; }
+.um-activity-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+.um-activity-desc {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* 게임 카드 */
+.um-games {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+.um-game {
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+}
+.um-game-icon { font-size: 36px; margin-bottom: 8px; }
+.um-game-title { font-size: 14px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+.um-game-desc { font-size: 11px; color: #64748b; line-height: 1.5; }
+
+/* FAQ */
+.um-faq { background: white; border-radius: 14px; padding: 4px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.um-faq-item { border-bottom: 1px solid #f1f5f9; }
+.um-faq-item:last-child { border-bottom: none; }
+.um-faq-q {
+  padding: 18px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.um-faq-q::after {
+  content: '+';
+  font-size: 20px;
+  font-weight: 400;
+  color: #94a3b8;
+  transition: transform 0.2s;
+}
+.um-faq-item.open .um-faq-q::after { transform: rotate(45deg); }
+.um-faq-a {
+  display: none;
+  padding: 0 24px 18px;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.8;
+}
+.um-faq-item.open .um-faq-a { display: block; }
+
+/* 역할별 가이드 */
+.um-roles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.um-role {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px;
+}
+.um-role-icon { font-size: 32px; margin-bottom: 8px; }
+.um-role-title { font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+.um-role-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.9;
+}
+
+/* 푸터 */
+.um-footer {
+  background: var(--primary);
+  color: rgba(255,255,255,0.85);
+  text-align: center;
+  padding: 32px 24px;
+  font-size: 13px;
+}
+.um-footer strong { color: var(--accent); }
+
+@media (max-width: 768px) {
+  .um-quick { grid-template-columns: 1fr; }
+  .um-activities { grid-template-columns: 1fr; }
+  .um-roles { grid-template-columns: 1fr; }
+  .um-header h1 { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+
+<header class="um-header">
+  <a href="javascript:history.back()" class="um-back">← 이전</a>
+  <img src="logo-kornferry.png" alt="Korn Ferry" class="um-header-logo">
+  <h1>SPIN Selling <span>사용자 매뉴얼</span></h1>
+  <p>교육생, 강사, 매니저를 위한 플랫폼 사용 가이드</p>
+</header>
+
+<div class="um-container">
+
+  <!-- 1. 빠른 시작 -->
+  <section class="um-section">
+    <h2><span class="um-section-num">1</span>빠른 시작 (3단계)</h2>
+    <p class="um-section-desc">처음 접속하는 분들을 위한 가장 간단한 시작 방법입니다.</p>
+    <div class="um-quick">
+      <div class="um-quick-card">
+        <div class="um-quick-num">01</div>
+        <div class="um-quick-title">교육 세션 선택</div>
+        <div class="um-quick-text">랜딩 페이지에서 본인이 참가할 교육(회사명)을 클릭하고 강사가 알려준 비밀번호를 입력합니다.</div>
+      </div>
+      <div class="um-quick-card">
+        <div class="um-quick-num">02</div>
+        <div class="um-quick-title">역할 선택</div>
+        <div class="um-quick-text">강사 / 교육 매니저 / 교육생 중 본인 역할을 선택합니다. 교육생은 본인 이름이 있는 팀을 클릭하세요.</div>
+      </div>
+      <div class="um-quick-card">
+        <div class="um-quick-num">03</div>
+        <div class="um-quick-title">학습 시작</div>
+        <div class="um-quick-text">대시보드에서 12가지 활동 카드 중 하나를 클릭하여 학습을 시작합니다. 모든 점수는 자동 저장됩니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 12가지 학습 활동 -->
+  <section class="um-section">
+    <h2><span class="um-section-num">2</span>12가지 학습 활동</h2>
+    <p class="um-section-desc">SPIN Selling 방법론을 단계별로 학습할 수 있는 12가지 활동입니다. 순서대로 진행하면 가장 효과적입니다.</p>
+    <div class="um-activities">
+      <div class="um-activity">
+        <div class="um-activity-num">1</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">📖 프리리딩</div>
+          <div class="um-activity-desc">SPIN 3.0 교재 PDF를 미리 읽고 SPIN 방법론의 기초를 익힙니다. 로그인 없이도 접근 가능합니다.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">2</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">📝 퀴즈</div>
+          <div class="um-activity-desc">SPIN 개념, 구매 사이클, 질문 유형 등 5개 카테고리의 퀴즈를 풉니다. 만점 80점.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">3</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">🎯 니즈 구분</div>
+          <div class="um-activity-desc">고객의 발언이 잠재니즈인지 현재니즈인지 구분하는 연습입니다. 만점 80점.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">4</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">🔍 SPIN 질문구분</div>
+          <div class="um-activity-desc">시나리오 속 질문이 S/P/I/N 중 어떤 유형인지 분류합니다. 만점 100점.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">5</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">💬 질문 연습</div>
+          <div class="um-activity-desc">11개 산업 시나리오를 보고 본인이 직접 SPIN 질문을 작성합니다. 만점 120점.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">6</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">🔎 SPIN질문 & 니즈 구분</div>
+          <div class="um-activity-desc">대화에서 질문 유형과 니즈를 동시에 분석하는 통합 연습입니다.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">7</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">🧩 FAB / BAF</div>
+          <div class="um-activity-desc">제품의 Feature(특징) → Advantage(장점) → Benefit(이점)을 정리하는 연습. 만점 90점.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">8</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">🎭 AI 롤플레이</div>
+          <div class="um-activity-desc">10개 산업 × 3단계 난이도의 AI 고객과 실전 대화 연습. AI가 자동 평가합니다. 만점 100점.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">9</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">📋 콜플랜 작성</div>
+          <div class="um-activity-desc">6단계 영업 상담 계획을 작성하고 AI가 100점 만점으로 평가합니다.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">10</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">🛠 스핀도구들</div>
+          <div class="um-activity-desc">SPIN 카드, 콜플랜 도구, 질문 라이브러리, 자료실, 협업보드, 학습 게임 5종 등 모든 도구가 모인 허브입니다.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">11</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">📋 사전/사후 설문</div>
+          <div class="um-activity-desc">교육 시작 전과 후에 SPIN 역량 자가평가와 만족도 설문에 참여합니다.</div>
+        </div>
+      </div>
+      <div class="um-activity">
+        <div class="um-activity-num">12</div>
+        <div class="um-activity-content">
+          <div class="um-activity-title">🤖 AI 분석리포트</div>
+          <div class="um-activity-desc">교육 완료 후 본인의 SPIN 역량 분석, 강점/약점, 30일 실행 계획이 담긴 개인 리포트를 받습니다.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 학습 게임 -->
+  <section class="um-section">
+    <h2><span class="um-section-num">3</span>학습 게임 5종</h2>
+    <p class="um-section-desc">132개 SPIN 질문으로 즐기는 5가지 학습 게임. <strong>10.스핀도구들 → 게임 허브</strong>에서 시작하세요. 점수는 본인 계정에 자동 누적되며 게임 리더보드에서 순위를 확인할 수 있습니다.</p>
+    <div class="um-games">
+      <div class="um-game">
+        <div class="um-game-icon">🏁</div>
+        <div class="um-game-title">1. 퀴즈 레이스</div>
+        <div class="um-game-desc">10문제, 30초/문제, 콤보 보너스</div>
+      </div>
+      <div class="um-game">
+        <div class="um-game-icon">🧩</div>
+        <div class="um-game-title">2. 매칭 게임</div>
+        <div class="um-game-desc">60초 안에 SPIN 짝맞추기</div>
+      </div>
+      <div class="um-game">
+        <div class="um-game-icon">🃏</div>
+        <div class="um-game-title">3. 플래시카드</div>
+        <div class="um-game-desc">132개 카드, 4지선다 학습</div>
+      </div>
+      <div class="um-game">
+        <div class="um-game-icon">🔢</div>
+        <div class="um-game-title">4. 순서 정렬</div>
+        <div class="um-game-desc">S→P→I→N 흐름 익히기</div>
+      </div>
+      <div class="um-game">
+        <div class="um-game-icon">🎯</div>
+        <div class="um-game-title">5. 다음 질문 선택</div>
+        <div class="um-game-desc">고객 상황 분석 후 SPIN 선택</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 역할별 가이드 -->
+  <section class="um-section">
+    <h2><span class="um-section-num">4</span>역할별 안내</h2>
+    <p class="um-section-desc">강사, 교육 매니저, 교육생 각자의 역할에 따라 사용할 수 있는 기능이 다릅니다.</p>
+    <div class="um-roles">
+      <div class="um-role">
+        <div class="um-role-icon">🎓</div>
+        <div class="um-role-title">교육생</div>
+        <ul class="um-role-list">
+          <li>12가지 학습 활동 참가</li>
+          <li>본인 점수 / 진행률 확인</li>
+          <li>학습 게임 5종 플레이</li>
+          <li>본인 AI 분석리포트 조회</li>
+          <li>SPIN AI Bot에게 질문</li>
+          <li>팀 협업 보드에 SPIN 질문 공유</li>
+        </ul>
+      </div>
+      <div class="um-role">
+        <div class="um-role-icon">👨‍🏫</div>
+        <div class="um-role-title">강사</div>
+        <ul class="um-role-list">
+          <li>교육생 명단 등록 / 팀 편성</li>
+          <li>전체 스코어보드 조회</li>
+          <li>코칭 리포트 작성</li>
+          <li>AI 분석리포트 생성 및 이메일 발송</li>
+          <li>온톨로지 역량 그래프 분석</li>
+          <li>수료증 발급</li>
+          <li>30일 팔로업 프로그램 관리</li>
+          <li>실시간 접속 현황 확인</li>
+        </ul>
+      </div>
+      <div class="um-role">
+        <div class="um-role-icon">👔</div>
+        <div class="um-role-title">교육 매니저</div>
+        <ul class="um-role-list">
+          <li>강사와 동일한 권한</li>
+          <li>교육 진행 모니터링</li>
+          <li>활동 결과 검토</li>
+          <li>학습에 직접 참가하지는 않음</li>
+        </ul>
+      </div>
+      <div class="um-role">
+        <div class="um-role-icon">🔧</div>
+        <div class="um-role-title">시스템 관리자</div>
+        <ul class="um-role-list">
+          <li>교육 세션 생성 / 삭제</li>
+          <li>전체 교육 통계 조회</li>
+          <li>교육 템플릿 관리</li>
+          <li>비밀번호: 9633</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 자주 묻는 질문 -->
+  <section class="um-section">
+    <h2><span class="um-section-num">5</span>자주 묻는 질문</h2>
+    <p class="um-section-desc">교육 참가 시 자주 발생하는 질문과 답변입니다.</p>
+    <div class="um-faq">
+      <div class="um-faq-item" onclick="this.classList.toggle('open')">
+        <div class="um-faq-q">교육 세션 비밀번호를 모릅니다</div>
+        <div class="um-faq-a">교육을 진행하는 강사 또는 교육 담당자에게 문의하세요. 각 교육 세션마다 비밀번호가 다릅니다.</div>
+      </div>
+      <div class="um-faq-item" onclick="this.classList.toggle('open')">
+        <div class="um-faq-q">제 이름이 명단에 없습니다</div>
+        <div class="um-faq-a">강사가 팀 편성에서 본인 이름을 등록해야 합니다. 강사에게 등록을 요청하세요.</div>
+      </div>
+      <div class="um-faq-item" onclick="this.classList.toggle('open')">
+        <div class="um-faq-q">점수가 저장되지 않습니다</div>
+        <div class="um-faq-a">교육생으로 정상 로그인했는지 확인하세요. 헤더 우측에 본인 이름과 팀이 표시되어야 점수가 저장됩니다.</div>
+      </div>
+      <div class="um-faq-item" onclick="this.classList.toggle('open')">
+        <div class="um-faq-q">SPIN AI Bot은 어떻게 사용하나요?</div>
+        <div class="um-faq-a">모든 페이지 우하단의 녹색 "🤖 SPIN AI Bot" 버튼을 클릭하면 채팅창이 열립니다. SPIN 방법론, 게임 사용법, 본인 점수에 대한 질문 등 무엇이든 물어보세요.</div>
+      </div>
+      <div class="um-faq-item" onclick="this.classList.toggle('open')">
+        <div class="um-faq-q">학습 게임은 어디서 시작하나요?</div>
+        <div class="um-faq-a">상단 메뉴 "10.스핀도구들" → "게임 허브"에서 5종 게임을 시작할 수 있습니다.</div>
+      </div>
+      <div class="um-faq-item" onclick="this.classList.toggle('open')">
+        <div class="um-faq-q">AI 분석리포트는 언제 받나요?</div>
+        <div class="um-faq-a">교육이 끝난 후 강사가 AI 분석리포트를 생성하면 등록된 이메일로 자동 발송됩니다. 본인 대시보드에서 직접 확인할 수도 있습니다.</div>
+      </div>
+      <div class="um-faq-item" onclick="this.classList.toggle('open')">
+        <div class="um-faq-q">다크모드를 사용하고 싶습니다</div>
+        <div class="um-faq-a">페이지 하단 푸터의 🌙 다크모드 버튼을 클릭하면 라이트/다크 테마가 전환됩니다. 설정은 자동 저장됩니다.</div>
+      </div>
+      <div class="um-faq-item" onclick="this.classList.toggle('open')">
+        <div class="um-faq-q">모바일에서 사용 가능한가요?</div>
+        <div class="um-faq-a">네, 모든 페이지가 모바일 반응형으로 디자인되어 스마트폰에서도 사용 가능합니다. 모바일 브라우저에서 "홈 화면에 추가"를 선택하면 앱처럼 사용할 수 있습니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 문의 -->
+  <section class="um-section">
+    <h2><span class="um-section-num">6</span>문의</h2>
+    <p class="um-section-desc">교육 진행 중 문제가 발생하면 다음 방법으로 문의하세요.</p>
+    <div style="background:white; border-radius:14px; padding:24px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div style="font-size:14px; color:#1a1a1a; line-height:2;">
+        📧 <strong>이메일</strong>: jaiwshim@gmail.com<br>
+        👤 <strong>강사</strong>: 심재우 대표 (SB Consulting)<br>
+        🏆 <strong>자격</strong>: Korn Ferry 공인 SPIN Master Trainer<br>
+        🤖 <strong>실시간 도움</strong>: 우하단 SPIN AI Bot에게 질문
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="um-footer">
+  &copy; 2026 SPIN Selling AI · <strong>심재우 대표 / SB Consulting</strong> · Korn Ferry Certified
+</footer>
+
+</body>
+</html>
