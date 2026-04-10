@@ -1030,6 +1030,167 @@ async function loadMemberReport(memberId) {
       </div>
     </div>`;
 
+    // === 10. 사전/사후 설문 비교 ===
+    const surveyPreQuestions = [
+      { id: 'pre_1', type: 'scale', text: 'SPIN Selling 방법론에 대해 얼마나 알고 계십니까?' },
+      { id: 'pre_2', type: 'scale', text: '현재 영업 상담에서 질문 기법을 얼마나 활용하고 계십니까?' },
+      { id: 'pre_3', type: 'scale', text: '고객의 잠재니즈와 현재니즈를 구분할 수 있습니까?' },
+      { id: 'pre_4', type: 'scale', text: '영업 상담 전 체계적인 콜플랜을 작성하고 계십니까?' },
+      { id: 'pre_5', type: 'scale', text: '고객의 문제를 심화시키는 질문(시사질문)을 활용하고 계십니까?' },
+      { id: 'pre_6', type: 'text', text: '현재 영업 활동에서 가장 어려운 점은 무엇입니까?' },
+      { id: 'pre_7', type: 'text', text: '이번 교육에서 가장 기대하는 것은 무엇입니까?' },
+      { id: 'pre_8', type: 'text', text: '이번 교육을 통해 얻고 싶은 구체적인 역량은 무엇입니까?' }
+    ];
+    const surveyPostQuestions = [
+      { id: 'post_1', type: 'scale', text: '교육 후 SPIN Selling 방법론에 대한 이해도가 향상되었습니까?' },
+      { id: 'post_2', type: 'scale', text: '교육에서 배운 질문 기법을 실전에서 활용할 수 있다고 생각합니까?' },
+      { id: 'post_3', type: 'scale', text: '잠재니즈와 현재니즈를 구분하는 능력이 향상되었습니까?' },
+      { id: 'post_4', type: 'scale', text: '시사질문(I)과 해결질문(N) 활용에 자신감이 생겼습니까?' },
+      { id: 'post_5', type: 'scale', text: '콜플랜 작성의 중요성을 이해하고 활용할 수 있습니까?' },
+      { id: 'post_6', type: 'scale', text: '교육 내용의 실무 적용 가능성은 어떻습니까?' },
+      { id: 'post_7', type: 'scale', text: '강사의 교육 진행에 대한 전반적인 만족도는?' },
+      { id: 'post_8', type: 'scale', text: 'AI 실습 플랫폼 활용에 대한 만족도는?' },
+      { id: 'post_9', type: 'text', text: '교육에서 가장 유익했던 내용은 무엇입니까?' },
+      { id: 'post_10', type: 'text', text: '교육 개선을 위한 제안 사항이 있으시면 적어주세요.' }
+    ];
+
+    // 해당 멤버의 설문 로그 조회
+    let surveyPreData = null;
+    let surveyPostData = null;
+    const surveyLogs = logs.filter(l => l.activity_type === 'survey_pre' || l.activity_type === 'survey_post');
+    surveyLogs.forEach(log => {
+      if (log.activity_type === 'survey_pre' && !surveyPreData) surveyPreData = log.activity_data || {};
+      if (log.activity_type === 'survey_post' && !surveyPostData) surveyPostData = log.activity_data || {};
+    });
+
+    html += `
+    <div class="report-section">
+      <div class="report-section-title">
+        <span class="report-section-num">10</span> 사전/사후 설문 비교
+      </div>`;
+
+    if (!surveyPreData && !surveyPostData) {
+      html += '<div style="text-align:center; padding:24px; color:var(--text-disabled); font-size:14px;">설문 미참가</div>';
+    } else {
+      // Scale 문항 비교 (사전 5문항 vs 사후 대응 문항)
+      const preScaleQs = surveyPreQuestions.filter(q => q.type === 'scale');
+      const postScaleQs = surveyPostQuestions.filter(q => q.type === 'scale');
+
+      html += '<div style="font-size:14px; font-weight:800; color:var(--text); margin-bottom:12px;">5점 척도 문항 비교</div>';
+
+      // 사전 설문 scale 결과
+      if (surveyPreData) {
+        html += '<div style="font-size:12px; font-weight:700; color:var(--blue); margin-bottom:8px;">사전 설문</div>';
+        preScaleQs.forEach(q => {
+          const val = parseFloat(surveyPreData[q.id]);
+          const score = !isNaN(val) ? val : '-';
+          const pct = !isNaN(val) ? (val / 5 * 100) : 0;
+          html += `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <div style="flex:2; font-size:12px; color:var(--text-secondary);">${q.text}</div>
+            <div style="flex:1; display:flex; align-items:center; gap:6px;">
+              <div style="flex:1; height:16px; background:var(--border-light); border-radius:8px; overflow:hidden;">
+                <div style="height:100%; width:${pct}%; background:var(--blue); border-radius:8px;"></div>
+              </div>
+              <span style="font-size:13px; font-weight:800; color:var(--blue); min-width:30px; text-align:right;">${score}</span>
+            </div>
+          </div>`;
+        });
+      } else {
+        html += '<div style="font-size:12px; color:var(--text-disabled); margin-bottom:12px;">사전 설문 미참가</div>';
+      }
+
+      // 사후 설문 scale 결과
+      if (surveyPostData) {
+        html += '<div style="font-size:12px; font-weight:700; color:var(--green); margin:16px 0 8px;">사후 설문</div>';
+        postScaleQs.forEach(q => {
+          const val = parseFloat(surveyPostData[q.id]);
+          const score = !isNaN(val) ? val : '-';
+          const pct = !isNaN(val) ? (val / 5 * 100) : 0;
+          html += `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <div style="flex:2; font-size:12px; color:var(--text-secondary);">${q.text}</div>
+            <div style="flex:1; display:flex; align-items:center; gap:6px;">
+              <div style="flex:1; height:16px; background:var(--border-light); border-radius:8px; overflow:hidden;">
+                <div style="height:100%; width:${pct}%; background:var(--green); border-radius:8px;"></div>
+              </div>
+              <span style="font-size:13px; font-weight:800; color:var(--green); min-width:30px; text-align:right;">${score}</span>
+            </div>
+          </div>`;
+        });
+      } else {
+        html += '<div style="font-size:12px; color:var(--text-disabled); margin:16px 0 12px;">사후 설문 미참가</div>';
+      }
+
+      // 사전/사후 모두 있으면 비교 바 차트 (대응 가능한 scale 문항 비교)
+      if (surveyPreData && surveyPostData) {
+        html += '<div style="font-size:14px; font-weight:800; color:var(--text); margin:24px 0 12px;">사전 vs 사후 점수 변화</div>';
+        html += '<table style="width:100%; border-collapse:collapse; margin-bottom:16px;">';
+        html += '<thead><tr><th style="text-align:left; padding:8px; font-size:11px; color:var(--text-muted); border-bottom:2px solid var(--border);">문항</th><th style="width:60px; text-align:center; padding:8px; font-size:11px; color:var(--blue); border-bottom:2px solid var(--border);">사전</th><th style="width:60px; text-align:center; padding:8px; font-size:11px; color:var(--green); border-bottom:2px solid var(--border);">사후</th><th style="width:60px; text-align:center; padding:8px; font-size:11px; color:var(--text-muted); border-bottom:2px solid var(--border);">변화</th></tr></thead><tbody>';
+
+        // 대응 비교: pre 1~5 vs post 1~5
+        const compareMap = [
+          { pre: 'pre_1', post: 'post_1', label: 'SPIN 방법론 이해도' },
+          { pre: 'pre_2', post: 'post_2', label: '질문 기법 활용도' },
+          { pre: 'pre_3', post: 'post_3', label: '니즈 구분 능력' },
+          { pre: 'pre_5', post: 'post_4', label: '시사질문/해결질문 활용' },
+          { pre: 'pre_4', post: 'post_5', label: '콜플랜 작성/활용' }
+        ];
+
+        compareMap.forEach(cm => {
+          const preVal = parseFloat(surveyPreData[cm.pre]);
+          const postVal = parseFloat(surveyPostData[cm.post]);
+          const pre = !isNaN(preVal) ? preVal : '-';
+          const post = !isNaN(postVal) ? postVal : '-';
+          let diff = '';
+          let diffColor = 'var(--text-muted)';
+          if (pre !== '-' && post !== '-') {
+            const d = (post - pre).toFixed(1);
+            diff = d > 0 ? '+' + d : d;
+            diffColor = d > 0 ? 'var(--green)' : d < 0 ? 'var(--accent)' : 'var(--text-muted)';
+          }
+          html += `<tr>
+            <td style="padding:8px; font-size:12px; border-bottom:1px solid var(--border-light);">${cm.label}</td>
+            <td style="text-align:center; padding:8px; font-weight:700; color:var(--blue); border-bottom:1px solid var(--border-light);">${pre}</td>
+            <td style="text-align:center; padding:8px; font-weight:700; color:var(--green); border-bottom:1px solid var(--border-light);">${post}</td>
+            <td style="text-align:center; padding:8px; font-weight:800; color:${diffColor}; border-bottom:1px solid var(--border-light);">${diff}</td>
+          </tr>`;
+        });
+
+        html += '</tbody></table>';
+      }
+
+      // Text 문항 비교
+      const preTextQs = surveyPreQuestions.filter(q => q.type === 'text');
+      const postTextQs = surveyPostQuestions.filter(q => q.type === 'text');
+
+      if ((surveyPreData && preTextQs.length > 0) || (surveyPostData && postTextQs.length > 0)) {
+        html += '<div style="font-size:14px; font-weight:800; color:var(--text); margin:20px 0 12px;">서술형 답변</div>';
+
+        if (surveyPreData) {
+          html += '<div style="font-size:12px; font-weight:700; color:var(--blue); margin-bottom:6px;">사전 설문</div>';
+          preTextQs.forEach(q => {
+            const val = surveyPreData[q.id];
+            html += `<div style="margin-bottom:8px; padding:10px 14px; background:rgba(36,113,163,0.04); border-left:3px solid var(--blue); border-radius:0 8px 8px 0;">
+              <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">${q.text}</div>
+              <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">${val && val.trim() ? val.trim() : '<span style="color:var(--text-disabled);">미응답</span>'}</div>
+            </div>`;
+          });
+        }
+
+        if (surveyPostData) {
+          html += '<div style="font-size:12px; font-weight:700; color:var(--green); margin:12px 0 6px;">사후 설문</div>';
+          postTextQs.forEach(q => {
+            const val = surveyPostData[q.id];
+            html += `<div style="margin-bottom:8px; padding:10px 14px; background:rgba(30,132,73,0.04); border-left:3px solid var(--green); border-radius:0 8px 8px 0;">
+              <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">${q.text}</div>
+              <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">${val && val.trim() ? val.trim() : '<span style="color:var(--text-disabled);">미응답</span>'}</div>
+            </div>`;
+          });
+        }
+      }
+    }
+
+    html += '</div>'; // /report-section 10
+
     // --- 리포트 푸터 ---
     html += `
     <div style="text-align:center; padding-top:20px; border-top:1px solid var(--border); font-size:11px; color:var(--text-disabled);">

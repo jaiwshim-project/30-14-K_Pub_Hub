@@ -37,11 +37,15 @@ function switchTab(tab) {
   document.getElementById('tabTeam').style.display = tab === 'team' ? 'block' : 'none';
   document.getElementById('tabIndividual').style.display = tab === 'individual' ? 'block' : 'none';
   document.getElementById('tabRanking').style.display = tab === 'ranking' ? 'block' : 'none';
+  document.getElementById('tabSurveyPre').style.display = tab === 'surveyPre' ? 'block' : 'none';
+  document.getElementById('tabSurveyPost').style.display = tab === 'surveyPost' ? 'block' : 'none';
 
   const tabs = document.querySelectorAll('.sb-tab');
   if (tab === 'team') tabs[0].classList.add('active');
   if (tab === 'individual') tabs[1].classList.add('active');
   if (tab === 'ranking') tabs[2].classList.add('active');
+  if (tab === 'surveyPre') tabs[3].classList.add('active');
+  if (tab === 'surveyPost') tabs[4].classList.add('active');
 
   loadAndRender(tab);
 }
@@ -53,6 +57,8 @@ async function loadAndRender(tab) {
   if (tab === 'team') renderTeamSetup(grouped, members);
   else if (tab === 'individual') renderIndividualScores(grouped);
   else if (tab === 'ranking') renderRanking(grouped, members);
+  else if (tab === 'surveyPre') loadSurveyResults('pre', members);
+  else if (tab === 'surveyPost') loadSurveyResults('post', members);
 }
 
 // ========== TAB 1: TEAM SETUP ==========
@@ -310,13 +316,159 @@ async function resetAllScores() {
   loadAndRender('individual');
 }
 
+// ========== SURVEY QUESTIONS ==========
+const PRE_QUESTIONS = [
+  { id: 'pre_1', type: 'scale', text: 'SPIN Selling 방법론에 대해 얼마나 알고 계십니까?' },
+  { id: 'pre_2', type: 'scale', text: '현재 영업 상담에서 질문 기법을 얼마나 활용하고 계십니까?' },
+  { id: 'pre_3', type: 'scale', text: '고객의 잠재니즈와 현재니즈를 구분할 수 있습니까?' },
+  { id: 'pre_4', type: 'scale', text: '영업 상담 전 체계적인 콜플랜을 작성하고 계십니까?' },
+  { id: 'pre_5', type: 'scale', text: '고객의 문제를 심화시키는 질문(시사질문)을 활용하고 계십니까?' },
+  { id: 'pre_6', type: 'text', text: '현재 영업 활동에서 가장 어려운 점은 무엇입니까?' },
+  { id: 'pre_7', type: 'text', text: '이번 교육에서 가장 기대하는 것은 무엇입니까?' },
+  { id: 'pre_8', type: 'text', text: '이번 교육을 통해 얻고 싶은 구체적인 역량은 무엇입니까?' }
+];
+
+const POST_QUESTIONS = [
+  { id: 'post_1', type: 'scale', text: '교육 후 SPIN Selling 방법론에 대한 이해도가 향상되었습니까?' },
+  { id: 'post_2', type: 'scale', text: '교육에서 배운 질문 기법을 실전에서 활용할 수 있다고 생각합니까?' },
+  { id: 'post_3', type: 'scale', text: '잠재니즈와 현재니즈를 구분하는 능력이 향상되었습니까?' },
+  { id: 'post_4', type: 'scale', text: '시사질문(I)과 해결질문(N) 활용에 자신감이 생겼습니까?' },
+  { id: 'post_5', type: 'scale', text: '콜플랜 작성의 중요성을 이해하고 활용할 수 있습니까?' },
+  { id: 'post_6', type: 'scale', text: '교육 내용의 실무 적용 가능성은 어떻습니까?' },
+  { id: 'post_7', type: 'scale', text: '강사의 교육 진행에 대한 전반적인 만족도는?' },
+  { id: 'post_8', type: 'scale', text: 'AI 실습 플랫폼 활용에 대한 만족도는?' },
+  { id: 'post_9', type: 'text', text: '교육에서 가장 유익했던 내용은 무엇입니까?' },
+  { id: 'post_10', type: 'text', text: '교육 개선을 위한 제안 사항이 있으시면 적어주세요.' }
+];
+
+async function loadSurveyResults(type, members) {
+  const session = getSavedSession();
+  if (!session) return;
+
+  const containerId = type === 'pre' ? 'surveyPreResults' : 'surveyPostResults';
+  const container = document.getElementById(containerId);
+  container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">불러오는 중...</div>';
+
+  const questions = type === 'pre' ? PRE_QUESTIONS : POST_QUESTIONS;
+  const totalMembers = members.filter(m => m.name).length;
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/spin_activities?session_id=eq.${session.id}&activity_type=eq.survey_${type}&select=*&order=created_at.desc`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const logs = await res.json();
+
+    if (!logs || logs.length === 0) {
+      container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-disabled);">아직 설문 응답이 없습니다.</div>';
+      return;
+    }
+
+    // 멤버별 최신 응답만 (중복 제출 시 최신 것만)
+    const memberAnswers = {};
+    logs.forEach(log => {
+      if (!memberAnswers[log.member_id]) {
+        memberAnswers[log.member_id] = log.activity_data || {};
+      }
+    });
+
+    const respondentCount = Object.keys(memberAnswers).length;
+    const memberMap = {};
+    members.forEach(m => { memberMap[m.id] = m; });
+
+    let html = '';
+
+    // 응답률
+    html += `<div style="display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:140px; text-align:center; padding:16px; background:var(--pastel-blue); border-radius:12px;">
+        <div style="font-size:28px; font-weight:900; color:var(--blue);">${respondentCount} / ${totalMembers}</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">응답률 ${totalMembers > 0 ? Math.round((respondentCount / totalMembers) * 100) : 0}%</div>
+      </div>
+    </div>`;
+
+    // Scale 문항: 평균 + 바 차트 + 개인별 응답
+    const scaleQuestions = questions.filter(q => q.type === 'scale');
+    const textQuestions = questions.filter(q => q.type === 'text');
+
+    if (scaleQuestions.length > 0) {
+      html += '<div style="font-size:15px; font-weight:800; color:var(--text); margin-bottom:12px;">5점 척도 문항</div>';
+
+      scaleQuestions.forEach(q => {
+        const scores = [];
+        Object.entries(memberAnswers).forEach(([mid, data]) => {
+          const val = parseFloat(data[q.id]);
+          if (!isNaN(val)) scores.push({ memberId: parseInt(mid), score: val });
+        });
+
+        const avg = scores.length > 0 ? (scores.reduce((s, x) => s + x.score, 0) / scores.length).toFixed(1) : '-';
+        const avgPct = scores.length > 0 ? (parseFloat(avg) / 5 * 100) : 0;
+        const barColor = avgPct >= 80 ? 'var(--green)' : avgPct >= 60 ? 'var(--blue)' : avgPct >= 40 ? 'var(--gold)' : 'var(--accent)';
+
+        html += `<div style="margin-bottom:16px; padding:14px; background:var(--bg); border:1px solid var(--border-light); border-radius:10px;">
+          <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px;">${q.text}</div>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+            <div style="flex:1; height:24px; background:var(--border-light); border-radius:12px; overflow:hidden;">
+              <div style="height:100%; width:${avgPct}%; background:${barColor}; border-radius:12px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; font-size:11px; color:white; font-weight:700; min-width:${avgPct > 0 ? '40px' : '0'};">${avg !== '-' ? avg : ''}</div>
+            </div>
+            <div style="font-size:18px; font-weight:900; color:${barColor}; min-width:50px; text-align:right;">${avg} / 5</div>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            ${scores.map(s => {
+              const m = memberMap[s.memberId];
+              const name = m ? m.name : '(알수없음)';
+              return `<span style="font-size:11px; padding:3px 8px; background:var(--card); border:1px solid var(--border-light); border-radius:6px;">${name}: <strong>${s.score}</strong></span>`;
+            }).join('')}
+          </div>
+        </div>`;
+      });
+    }
+
+    // Text 문항: 답변 목록
+    if (textQuestions.length > 0) {
+      html += '<div style="font-size:15px; font-weight:800; color:var(--text); margin:20px 0 12px;">서술형 문항</div>';
+
+      textQuestions.forEach(q => {
+        const answers = [];
+        Object.entries(memberAnswers).forEach(([mid, data]) => {
+          const val = data[q.id];
+          if (val && val.trim()) answers.push({ memberId: parseInt(mid), text: val.trim() });
+        });
+
+        html += `<div style="margin-bottom:16px; padding:14px; background:var(--bg); border:1px solid var(--border-light); border-radius:10px;">
+          <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:10px;">${q.text} <span style="font-size:11px; color:var(--text-muted);">(${answers.length}건)</span></div>`;
+
+        if (answers.length === 0) {
+          html += '<div style="font-size:12px; color:var(--text-disabled); padding:8px 0;">응답 없음</div>';
+        } else {
+          answers.forEach(a => {
+            const m = memberMap[a.memberId];
+            const name = m ? m.name : '(알수없음)';
+            const team = m ? m.team_id : '';
+            html += `<div style="display:flex; gap:8px; padding:8px 12px; background:var(--card); border:1px solid var(--border-light); border-radius:8px; margin-bottom:4px; align-items:flex-start;">
+              <span style="flex:none; font-size:11px; font-weight:700; color:var(--blue); min-width:60px;">${name}${team ? ' (팀' + team + ')' : ''}</span>
+              <span style="font-size:12px; color:var(--text-secondary); line-height:1.5;">${a.text}</span>
+            </div>`;
+          });
+        }
+
+        html += '</div>';
+      });
+    }
+
+    container.innerHTML = html;
+  } catch (err) {
+    console.error('Survey load error:', err);
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--accent);">설문 결과를 불러오는 중 오류가 발생했습니다.</div>';
+  }
+}
+
 // ========== AUTO REFRESH ==========
 function startAutoRefresh() {
   setInterval(async () => {
     const activeTab = document.querySelector('.sb-tab.active');
     if (!activeTab) return;
     const idx = [...document.querySelectorAll('.sb-tab')].indexOf(activeTab);
-    const tab = ['team', 'individual', 'ranking'][idx];
+    const tab = ['team', 'individual', 'ranking', 'surveyPre', 'surveyPost'][idx];
     if (document.activeElement && document.activeElement.classList.contains('score-cell-input')) return;
     if (document.activeElement && document.activeElement.classList.contains('sb-member-input')) return;
     await loadAndRender(tab);
