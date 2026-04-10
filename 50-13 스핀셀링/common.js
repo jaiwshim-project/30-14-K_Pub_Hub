@@ -537,9 +537,9 @@ function getNavHTML(activePage) {
     <div class="nav-submenu">
       <a href="spin-tools.html" class="nav-sub-item"><span>🛠</span> 스핀 도구 메인</a>
       <div class="nav-sub-divider">📚 자료 / 협업</div>
-      <a href="spin-library.html" class="nav-sub-item"><span>📚</span> SPIN 질문 라이브러리</a>
-      <a href="materials.html" class="nav-sub-item"><span>📂</span> 교육 자료실</a>
-      <a href="collab-board.html" class="nav-sub-item"><span>📌</span> 팀 협업 보드</a>
+      <a href="spin-library.html" class="nav-sub-item"><span>📚</span> 1. SPIN 질문 라이브러리</a>
+      <a href="materials.html" class="nav-sub-item"><span>📂</span> 2. 교육 자료실</a>
+      <a href="collab-board.html" class="nav-sub-item"><span>📌</span> 3. 팀 협업 보드</a>
       <div class="nav-sub-divider">🎮 학습 게임</div>
       <a href="games-hub.html" class="nav-sub-item" style="background:rgba(245,166,35,0.1);"><span>🎮</span> 게임 허브 (5종 모음)</a>
       <a href="game-quiz-race.html" class="nav-sub-item"><span>🏁</span> 1. 퀴즈 레이스</a>
