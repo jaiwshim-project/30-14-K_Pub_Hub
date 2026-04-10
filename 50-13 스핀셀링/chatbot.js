@@ -263,8 +263,42 @@ BAF (Benefit-Advantage-Feature): 역순 제시
 
   // === Gemini API 호출 ===
   async function callGemini(userMsg) {
+    // 교육생 개인화 데이터
+    let personalContext = '';
+    try {
+      const userStr = localStorage.getItem('spin_user') || (window._store && window._store.spin_user) || '';
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        if (user && user.name) {
+          const scores = {
+            quiz: user.score_quiz || 0,
+            needs: user.score_needs || 0,
+            scenario: user.score_scenario || 0,
+            practice: user.score_practice || 0,
+            roleplay: user.score_roleplay || 0,
+            fab: user.score_fab || 0
+          };
+          const total = Object.values(scores).reduce((s, v) => s + v, 0);
+          const maxScores = { quiz: 80, needs: 80, scenario: 100, practice: 120, roleplay: 100, fab: 90 };
+
+          // 약점 분석
+          const weakest = Object.entries(scores).sort((a, b) => (a[1] / maxScores[a[0]]) - (b[1] / maxScores[b[0]]))[0];
+          const strongest = Object.entries(scores).sort((a, b) => (b[1] / maxScores[b[0]]) - (a[1] / maxScores[a[0]]))[0];
+
+          personalContext = '\n\n=== 현재 교육생 정보 ===\n' +
+            '이름: ' + user.name + '\n' +
+            '팀: ' + (user.team_id || '미정') + '\n' +
+            '점수: 퀴즈 ' + scores.quiz + '/80, 니즈 ' + scores.needs + '/80, 질문구분 ' + scores.scenario + '/100, 질문연습 ' + scores.practice + '/120, 롤플레이 ' + scores.roleplay + '/100, FAB ' + scores.fab + '/90\n' +
+            '총점: ' + total + '/600\n' +
+            '강점: ' + strongest[0] + ' (' + strongest[1] + '점)\n' +
+            '약점: ' + weakest[0] + ' (' + weakest[1] + '점)\n' +
+            '개인화 지침: 이 교육생의 약점(' + weakest[0] + ')을 중심으로 맞춤 코칭을 제공하세요. 이름을 불러주세요.';
+        }
+      }
+    } catch(e) {}
+
     const contents = [
-      { role: 'user', parts: [{ text: SPIN_KNOWLEDGE + '\n\n---\n\n사용자 질문: ' + (chatHistory.length === 0 ? '' : '이전 대화:\n' + chatHistory.slice(-8).map(h => h.role + ': ' + h.content).join('\n') + '\n\n현재 질문: ') + userMsg }] }
+      { role: 'user', parts: [{ text: SPIN_KNOWLEDGE + personalContext + '\n\n---\n\n사용자 질문: ' + (chatHistory.length === 0 ? '' : '이전 대화:\n' + chatHistory.slice(-8).map(h => h.role + ': ' + h.content).join('\n') + '\n\n현재 질문: ') + userMsg }] }
     ];
 
     const res = await fetch(GEMINI_URL, {

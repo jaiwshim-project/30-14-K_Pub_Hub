@@ -74,6 +74,21 @@
 @media (max-width: 480px) {
   #quizCategoryGrid { grid-template-columns: repeat(2, 1fr); }
 }
+
+.quiz-timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(212,136,15,0.08);
+  border: 1px solid rgba(212,136,15,0.2);
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--gold);
+  font-family: 'Inter', monospace;
+}
+.quiz-timer.warning { color: var(--accent); background: rgba(192,57,43,0.08); border-color: rgba(192,57,43,0.2); }
 </style>
 </head>
 <body>
@@ -138,9 +153,14 @@
     </div>
 
     <div id="quizArea" style="display:none;">
-      <div class="quiz-progress">
-        <div class="quiz-bar"><div class="quiz-bar-fill" id="quizBarFill" style="width:0%"></div></div>
-        <div class="quiz-count" id="quizCount">1 / 10</div>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div class="quiz-progress" style="flex:1;">
+          <div class="quiz-bar"><div class="quiz-bar-fill" id="quizBarFill" style="width:0%"></div></div>
+          <div class="quiz-count" id="quizCount">1 / 10</div>
+        </div>
+        <div class="quiz-timer" id="quizTimerBox" style="display:none;">
+          ⏱ <span id="quizTimerDisplay">0:30</span>
+        </div>
       </div>
       <div class="quiz-category" id="quizCategory"></div>
       <div class="quiz-question" id="quizQuestion"></div>

@@ -229,6 +229,69 @@
 @media (max-width: 480px) {
   .sb-setup { grid-template-columns: 1fr; }
 }
+
+/* 리더보드 애니메이션 */
+@keyframes scoreSlideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scoreCountUp {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rankPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.score-row-animated {
+  animation: scoreSlideIn 0.4s ease forwards;
+  opacity: 0;
+}
+
+.score-count-animated {
+  animation: scoreCountUp 0.3s ease forwards;
+}
+
+.rank-badge-animated {
+  animation: rankPulse 0.6s ease;
+}
+
+/* 순위별 지연 */
+.score-row-animated:nth-child(1) { animation-delay: 0s; }
+.score-row-animated:nth-child(2) { animation-delay: 0.05s; }
+.score-row-animated:nth-child(3) { animation-delay: 0.1s; }
+.score-row-animated:nth-child(4) { animation-delay: 0.15s; }
+.score-row-animated:nth-child(5) { animation-delay: 0.2s; }
+.score-row-animated:nth-child(6) { animation-delay: 0.25s; }
+.score-row-animated:nth-child(7) { animation-delay: 0.3s; }
+.score-row-animated:nth-child(8) { animation-delay: 0.35s; }
+.score-row-animated:nth-child(9) { animation-delay: 0.4s; }
+.score-row-animated:nth-child(10) { animation-delay: 0.45s; }
+
+/* 1위 골드 글로우 */
+.rank-1-glow {
+  box-shadow: 0 0 20px rgba(245,166,35,0.3);
+  border: 2px solid var(--gold-light) !important;
+}
+
+/* 자동 새로고침 버튼 */
+.auto-refresh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: rgba(30,132,73,0.08);
+  border: 1px solid rgba(30,132,73,0.2);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -260,6 +323,10 @@
 <div class="section">
 
   <!-- Tab Bar -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+    <div></div>
+    <button class="auto-refresh-badge" onclick="toggleAutoRefresh(this)">▶ 자동 새로고침 (30초)</button>
+  </div>
   <div class="sb-tab-bar">
     <button class="sb-tab active" onclick="switchTab('team')">팀 편성 & 점수</button>
     <button class="sb-tab" onclick="switchTab('individual')">개인별 점수</button>

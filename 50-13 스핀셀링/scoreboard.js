@@ -127,11 +127,14 @@ function renderTeamScoreTable(grouped) {
         <td>${team.practice}${MAX_SUFFIX}/${CAT_MAX.practice * memberCount}</span></td>
         <td>${team.roleplay}${MAX_SUFFIX}/${CAT_MAX.roleplay * memberCount}</span></td>
         <td>${team.fab}${MAX_SUFFIX}/${CAT_MAX.fab * memberCount}</span></td>
-        <td class="score-total">${team.total}${MAX_SUFFIX}/${TOTAL_MAX * memberCount}</span></td>
+        <td class="score-total score-count-animated" data-target="${team.total}">${team.total}${MAX_SUFFIX}/${TOTAL_MAX * memberCount}</span></td>
         <td style="min-width:80px; font-weight:700; color:var(--blue);">${team.total} / ${teamMax}</td>
       </tr>
     `;
   }).join('');
+
+  applyRowAnimations('teamScoreBody');
+  animateScores();
 }
 
 // ========== TAB 2: INDIVIDUAL SCORES ==========
@@ -199,9 +202,12 @@ function renderIndividualScores(grouped) {
         <td>${p.score_practice || 0}${MAX_SUFFIX}/${CAT_MAX.practice}</span></td>
         <td>${p.score_roleplay || 0}${MAX_SUFFIX}/${CAT_MAX.roleplay}</span></td>
         <td>${p.score_fab || 0}${MAX_SUFFIX}/${CAT_MAX.fab}</span></td>
-        <td class="score-total">${p.total}${MAX_SUFFIX}/${TOTAL_MAX}</span></td>
+        <td class="score-total score-count-animated" data-target="${p.total}">${p.total}${MAX_SUFFIX}/${TOTAL_MAX}</span></td>
       </tr>`;
     }).join('');
+
+    applyRowAnimations('individualRankBody');
+    animateScores();
   }
 }
 
@@ -291,10 +297,13 @@ function renderRanking(grouped, members) {
         <td>${p.score_practice || 0}${MAX_SUFFIX}/${CAT_MAX.practice}</span></td>
         <td>${p.score_roleplay || 0}${MAX_SUFFIX}/${CAT_MAX.roleplay}</span></td>
         <td>${p.score_fab || 0}${MAX_SUFFIX}/${CAT_MAX.fab}</span></td>
-        <td class="score-total">${p.total}${MAX_SUFFIX}/${TOTAL_MAX}</span></td>
+        <td class="score-total score-count-animated" data-target="${p.total}">${p.total}${MAX_SUFFIX}/${TOTAL_MAX}</span></td>
       </tr>
     `;
   }).join('') || '<tr><td colspan="10" style="text-align:center; color:var(--text-muted); padding:24px;">팀원 이름을 먼저 등록하세요</td></tr>';
+
+  applyRowAnimations('personalRankBody');
+  animateScores();
 }
 
 // ========== UTILS ==========
@@ -462,7 +471,48 @@ async function loadSurveyResults(type, members) {
   }
 }
 
-// ========== AUTO REFRESH ==========
+// ========== LEADERBOARD ANIMATIONS ==========
+function animateScores() {
+  document.querySelectorAll('.score-count-animated').forEach(el => {
+    const target = parseInt(el.dataset.target || el.textContent);
+    let current = 0;
+    const step = Math.max(1, Math.ceil(target / 20));
+    const interval = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(interval); }
+      el.textContent = current;
+    }, 30);
+  });
+}
+
+function applyRowAnimations(tbodyId) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  tbody.querySelectorAll('tr:not(.sb-summary-row)').forEach(tr => {
+    tr.classList.add('score-row-animated');
+  });
+  tbody.querySelectorAll('.rank-badge').forEach(badge => {
+    badge.classList.add('rank-badge-animated');
+  });
+  // 1위 행에 골드 글로우
+  const firstRow = tbody.querySelector('tr:first-child');
+  if (firstRow) firstRow.classList.add('rank-1-glow');
+}
+
+// ========== AUTO REFRESH (30초 토글) ==========
+let autoRefreshInterval = null;
+function toggleAutoRefresh(btn) {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+    btn.textContent = '▶ 자동 새로고침 (30초)';
+  } else {
+    autoRefreshInterval = setInterval(() => location.reload(), 30000);
+    btn.textContent = '⏸ 새로고침 중지';
+  }
+}
+
+// ========== AUTO REFRESH (10초 탭 갱신) ==========
 function startAutoRefresh() {
   setInterval(async () => {
     const activeTab = document.querySelector('.sb-tab.active');

@@ -316,6 +316,20 @@
     </div>
   </div>
 
+  <!-- 진행률 프로그레스 바 -->
+  <div id="progressSection" style="display:none; margin-bottom:20px;">
+    <div style="background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:20px 24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:15px; font-weight:800; color:var(--text);">📊 나의 학습 진행률</span>
+        <span id="progressPercent" style="font-size:20px; font-weight:900; color:var(--accent2);">0%</span>
+      </div>
+      <div style="height:12px; background:var(--bg); border-radius:6px; overflow:hidden;">
+        <div id="progressBar" style="height:100%; width:0%; background:linear-gradient(90deg, var(--green), var(--green-light)); border-radius:6px; transition:width 0.6s ease;"></div>
+      </div>
+      <div id="progressDetail" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;"></div>
+    </div>
+  </div>
+
   <!-- 교육 활동 목록 -->
   <div style="margin-bottom:16px;">
     <h3 style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:4px;">교육 활동</h3>
@@ -613,6 +627,40 @@ function goToDashboard() {
   }
 
   showStep('stepDashboard');
+  updateProgress();
+}
+
+// ========== 진행률 업데이트 ==========
+function updateProgress() {
+  const user = getSavedUser();
+  const role = getSavedRole();
+  if (role !== 'trainee' || !user) return;
+
+  const section = document.getElementById('progressSection');
+  if (!section) return;
+  section.style.display = 'block';
+
+  const activities = [
+    { key: 'score_quiz', label: '퀴즈', max: 80, icon: '📝' },
+    { key: 'score_needs', label: '니즈', max: 80, icon: '🎯' },
+    { key: 'score_scenario', label: '질문구분', max: 100, icon: '🔍' },
+    { key: 'score_practice', label: '질문연습', max: 120, icon: '💬' },
+    { key: 'score_roleplay', label: '롤플레이', max: 100, icon: '🎭' },
+    { key: 'score_fab', label: 'FAB', max: 90, icon: '🧩' }
+  ];
+
+  let completed = 0;
+  const detail = activities.map(a => {
+    const score = user[a.key] || 0;
+    const done = score > 0;
+    if (done) completed++;
+    return '<span style="font-size:11px; padding:4px 10px; border-radius:6px; font-weight:600; background:' + (done ? 'rgba(30,132,73,0.1)' : 'var(--bg)') + '; color:' + (done ? 'var(--green)' : 'var(--text-disabled)') + ';">' + a.icon + ' ' + a.label + (done ? ' ✓' : '') + '</span>';
+  }).join('');
+
+  const percent = Math.round(completed / activities.length * 100);
+  document.getElementById('progressPercent').textContent = percent + '%';
+  document.getElementById('progressBar').style.width = percent + '%';
+  document.getElementById('progressDetail').innerHTML = detail;
 }
 
 // ========== INIT ==========

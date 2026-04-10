@@ -623,6 +623,15 @@
     </div>
   </div>
 
+  <!-- 교육 템플릿 -->
+  <div class="card" style="border-left:4px solid var(--blue); margin-bottom:24px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+      <div style="font-size:16px; font-weight:800; color:var(--text);">📋 교육 템플릿</div>
+      <button class="btn btn-secondary" style="font-size:11px; padding:6px 14px;" onclick="saveAsTemplate()">현재 설정 저장</button>
+    </div>
+    <div id="templateList" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+  </div>
+
   <!-- 통계 요약 -->
   <div class="stats-row">
     <div class="stat-card">
@@ -744,6 +753,7 @@ document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
   setupTabs();
+  loadTemplates();
   await loadAllData();
 }
 
@@ -1231,6 +1241,65 @@ function formatTime(isoStr) {
   } catch {
     return isoStr;
   }
+}
+// ========== 교육 템플릿 ==========
+const DEFAULT_TEMPLATES = [
+  { name: 'B2B 영업팀 (2일)', company: '', date: '', teams: 5, members: 7, icon: '🏢' },
+  { name: 'IT 기업 (1일)', company: '', date: '', teams: 3, members: 5, icon: '💻' },
+  { name: '제약/의료 (2일)', company: '', date: '', teams: 5, members: 7, icon: '💊' },
+  { name: '금융/보험 (1일)', company: '', date: '', teams: 4, members: 6, icon: '🏦' },
+  { name: '제조업 (2일)', company: '', date: '', teams: 5, members: 7, icon: '🏭' }
+];
+
+function loadTemplates() {
+  const saved = JSON.parse(localStorage.getItem('spin_templates') || 'null') || DEFAULT_TEMPLATES;
+  const container = document.getElementById('templateList');
+  if (!container) return;
+
+  container.innerHTML = saved.map((t, i) => `
+    <div style="background:var(--bg); border:1.5px solid var(--border); border-radius:12px; padding:14px 18px; cursor:pointer; transition:all 0.2s; min-width:160px; flex:1;"
+      onmouseover="this.style.borderColor='var(--blue)';this.style.transform='translateY(-2px)'"
+      onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'"
+      onclick="useTemplate(${i})">
+      <div style="font-size:24px; margin-bottom:6px;">${t.icon}</div>
+      <div style="font-size:13px; font-weight:700; color:var(--text);">${t.name}</div>
+      <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">${t.teams}팀 × ${t.members}명</div>
+    </div>
+  `).join('');
+}
+
+function useTemplate(index) {
+  const saved = JSON.parse(localStorage.getItem('spin_templates') || 'null') || DEFAULT_TEMPLATES;
+  const t = saved[index];
+  if (!t) return;
+
+  const company = prompt('교육 회사명을 입력하세요:', t.company || '');
+  if (!company) return;
+  const date = prompt('교육일을 입력하세요 (예: 2026.04.14~15):', t.date || '');
+  const pw = prompt('입장 비밀번호를 설정하세요:', '');
+  if (!pw) { alert('비밀번호를 설정해야 합니다.'); return; }
+
+  document.getElementById('adminNewCompany').value = company;
+  document.getElementById('adminNewDate').value = date || '';
+  document.getElementById('adminNewPw').value = pw;
+
+  if (confirm('"' + company + '" 교육을 생성하시겠습니까?')) {
+    adminCreateSession();
+  }
+}
+
+function saveAsTemplate() {
+  const name = prompt('템플릿 이름을 입력하세요:', '');
+  if (!name) return;
+  const icon = prompt('아이콘을 입력하세요 (이모지):', '📋');
+  const teams = parseInt(prompt('팀 수:', '5')) || 5;
+  const members = parseInt(prompt('팀당 인원:', '7')) || 7;
+
+  const saved = JSON.parse(localStorage.getItem('spin_templates') || 'null') || DEFAULT_TEMPLATES;
+  saved.push({ name, company: '', date: '', teams, members, icon: icon || '📋' });
+  localStorage.setItem('spin_templates', JSON.stringify(saved));
+  loadTemplates();
+  alert('템플릿이 저장되었습니다.');
 }
 </script>
 </body>

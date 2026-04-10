@@ -206,6 +206,40 @@ function updateScoreDisplay() {
   });
 }
 
+// ========== QUIZ TIMER ==========
+let quizTimer = null;
+let quizTimeLeft = 0;
+
+function startQuizTimer(seconds) {
+  quizTimeLeft = seconds;
+  clearInterval(quizTimer);
+  const timerBox = document.getElementById('quizTimerBox');
+  if (timerBox) timerBox.style.display = 'flex';
+  updateTimerDisplay();
+  quizTimer = setInterval(() => {
+    quizTimeLeft--;
+    updateTimerDisplay();
+    if (quizTimeLeft <= 0) {
+      clearInterval(quizTimer);
+      alert('시간 초과! 다음 문제로 넘어갑니다.');
+      nextQuiz();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('quizTimerDisplay');
+  if (!el) return;
+  const min = Math.floor(quizTimeLeft / 60);
+  const sec = quizTimeLeft % 60;
+  el.textContent = min + ':' + (sec < 10 ? '0' : '') + sec;
+  el.parentElement.classList.toggle('warning', quizTimeLeft <= 10);
+}
+
+function stopQuizTimer() {
+  clearInterval(quizTimer);
+}
+
 // ========== QUIZ FUNCTIONS ==========
 function startQuiz(category) {
   state.currentQuizCategory = category;
@@ -248,9 +282,12 @@ function showQuizQuestion() {
     div.onclick = () => selectQuizAnswer(i);
     optionsDiv.appendChild(div);
   });
+
+  startQuizTimer(30);
 }
 
 function selectQuizAnswer(selected) {
+  stopQuizTimer();
   const q = state.currentQuizQuestions[state.currentQuizIdx];
   const options = document.querySelectorAll('.quiz-option');
 
@@ -284,6 +321,9 @@ function nextQuiz() {
       score >= total * 0.8 ? '훌륭합니다! 핵심 개념을 잘 이해하고 계십니다.' :
       score >= total * 0.6 ? '좋습니다! 몇 가지 개념을 복습하면 더 좋겠습니다.' :
       '핵심 개념을 다시 한번 복습해보세요.';
+    stopQuizTimer();
+    const timerBox = document.getElementById('quizTimerBox');
+    if (timerBox) timerBox.style.display = 'none';
     document.getElementById('quizResultModal').classList.add('active');
     document.getElementById('quizArea').style.display = 'none';
     saveQuizScore(state.currentQuizCategory, score, total);
