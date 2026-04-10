@@ -259,10 +259,10 @@ function getSessionBarHTML() {
   if (!session) return '';
   return `
 <div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); padding:8px 24px; text-align:center; position:sticky; top:74px; z-index:98; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
-  <span style="color:rgba(255,255,255,0.9); font-size:12px; font-weight:500;">현재 교육</span>
+  <span style="color:#ffffff; font-size:12px; font-weight:500;">현재 교육</span>
   <span style="color:var(--gold-light); font-size:18px; font-weight:800; margin-left:8px;">${session.company_name}</span>
-  ${session.training_date ? `<span style="color:rgba(255,255,255,0.7); font-size:11px; margin-left:8px;">${session.training_date}</span>` : ''}
-  <button onclick="switchSession()" style="margin-left:12px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.9); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>
+  ${session.training_date ? `<span style="color:#ffffff; font-size:11px; margin-left:8px;">${session.training_date}</span>` : ''}
+  <button onclick="switchSession()" style="margin-left:12px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>
 </div>`;
 }
 
@@ -284,9 +284,9 @@ function getUserBarHTML() {
   <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
     <div style="display:flex; align-items:center; gap:10px;">
       <span style="background:#e74c3c; color:white; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px;">ADMIN</span>
-      <span style="color:rgba(255,255,255,0.7); font-size:13px; font-weight:600;">시스템 관리자</span>
+      <span style="color:#ffffff; font-size:13px; font-weight:600;">시스템 관리자</span>
     </div>
-    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.9); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">로그아웃</button>
+    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">로그아웃</button>
   </div>
 </div>`;
   }
@@ -297,9 +297,9 @@ function getUserBarHTML() {
   <div style="max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
     <div style="display:flex; align-items:center; gap:10px;">
       <span style="background:var(--gold); color:#1a1a2e; padding:3px 12px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px;">TRAINER</span>
-      <span style="color:rgba(255,255,255,0.9); font-size:14px; font-weight:700;">${user.name}</span>
+      <span style="color:#ffffff; font-size:14px; font-weight:700;">${user.name}</span>
     </div>
-    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.9); padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">변경</button>
+    <button onclick="changeUser()" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#ffffff; padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit;">변경</button>
   </div>
 </div>`;
   }
@@ -345,11 +345,11 @@ function updateHeaderUser(user) {
   if (role === 'admin') {
     headerTeam.innerHTML = '<span>관리자</span>';
   } else if (role === 'manager' && user) {
-    headerTeam.innerHTML = `<span>매니저 | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
+    headerTeam.innerHTML = `<span>매니저 | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
   } else if (role === 'trainer' && user) {
-    headerTeam.innerHTML = `<span>강사 | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
+    headerTeam.innerHTML = `<span>강사 | ${user.name}</span><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
   } else if (role === 'trainee' && user) {
-    headerTeam.innerHTML = `<span>팀 ${user.team_id} | ${user.name}</span><a href="company.html" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit; text-decoration:none; margin-left:4px;">내 대시보드</a><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
+    headerTeam.innerHTML = `<span>팀 ${user.team_id} | ${user.name}</span><a href="company.html" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit; text-decoration:none; margin-left:4px;">내 대시보드</a><button onclick="switchIdentity()" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); color:#ffffff; padding:3px 10px; border-radius:6px; font-size:10px; cursor:pointer; font-family:inherit;">변경</button>`;
   } else {
     headerTeam.style.display = 'none';
   }
@@ -590,7 +590,8 @@ function getFooterHTML() {
         <span class="footer-badge">Korn Ferry Certified</span>
         <span class="footer-badge accent">AI-Enhanced</span>
         <a href="report-sample.html" style="background:rgba(245,166,35,0.15); border:1px solid rgba(245,166,35,0.3); color:var(--gold-light); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--gold-light)'">📋 AI리포트 샘플</a>
-        <a href="admin.html" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.8); padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='rgba(255,255,255,0.8)'">🔧 관리자</a>
+        <a href="admin.html" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#ffffff'">🔧 관리자</a>
+        <a href="manual.html" style="background:rgba(46,204,113,0.15); border:1px solid rgba(46,204,113,0.3); color:#2ecc71; padding:4px 14px; border-radius:6px; font-size:11px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#2ecc71'">📘 매뉴얼</a>
       </div>
     </div>
   </div>
@@ -683,4 +684,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Restore saved user
   restoreUser();
+
+  // Load chatbot
+  const cbScript = document.createElement('script');
+  cbScript.src = 'chatbot.js';
+  document.body.appendChild(cbScript);
 });

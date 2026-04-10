@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling AI - 사용 매뉴얼</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ===== CSS Variables ===== */
+:root {
+  --primary: #0a2240;
+  --primary-light: #0d2d52;
+  --accent: #f5a623;
+  --accent-dark: #d4880f;
+  --gold: #f5a623;
+  --gold-light: #ffecc7;
+  --bg: #f0f3f8;
+  --bg-warm: #fefefe;
+  --card: #ffffff;
+  --text: #0a2240;
+  --text-secondary: #1e293b;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+  --pastel-blue: #e8eef6;
+  --pastel-green: #eefbf4;
+  --pastel-gold: #fef9ee;
+  --pastel-red: #fef2f0;
+  --pastel-purple: #f0ecf6;
+  --pastel-cyan: #ecfeff;
+  --border: #e2e8f0;
+  --radius: 16px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.04), 0 20px 60px rgba(0,0,0,0.08);
+  --shadow-hover: 0 8px 32px rgba(10,34,64,0.12);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] {
+  --primary: #1a3a5c;
+  --primary-light: #234b73;
+  --bg: #0f172a;
+  --bg-warm: #1e293b;
+  --card: #1e293b;
+  --text: #e2e8f0;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #0f172a;
+  --pastel-blue: #1e293b;
+  --pastel-green: #1a2e23;
+  --pastel-gold: #2a2517;
+  --pastel-red: #2a1a1a;
+  --pastel-purple: #231e2e;
+  --pastel-cyan: #1a2a2e;
+  --border: #334155;
+  --shadow: 0 1px 3px rgba(0,0,0,0.2), 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.2), 0 20px 60px rgba(0,0,0,0.4);
+  --shadow-hover: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+body {
+  font-family: 'Noto Sans KR', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Sticky Navigation ===== */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--primary);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 0 24px;
+}
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-inverse);
+  font-weight: 800;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.nav-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--primary);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.nav-links a:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dark-toggle {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.dark-toggle:hover { background: rgba(255,255,255,0.2); }
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* ===== Hero Section ===== */
+.hero {
+  background: linear-gradient(135deg, #0a2240 0%, #1a3a6c 50%, #0d2d52 100%);
+  color: #fff;
+  padding: 100px 24px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 40%, rgba(245,166,35,0.08) 0%, transparent 60%),
+              radial-gradient(circle at 70% 60%, rgba(245,166,35,0.05) 0%, transparent 50%);
+  animation: heroGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-20px, -10px); }
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245,166,35,0.15);
+  border: 1px solid rgba(245,166,35,0.3);
+  color: var(--accent);
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 28px;
+  letter-spacing: 0.5px;
+}
+
+.hero-logo {
+  width: 80px;
+  height: 80px;
+  background: var(--accent);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 900;
+  color: #0a2240;
+  margin: 0 auto 28px;
+  box-shadow: 0 8px 32px rgba(245,166,35,0.3);
+}
+
+.hero h1 {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 900;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.hero h1 span { color: var(--accent); }
+
+.hero-desc {
+  font-size: 18px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+
+.hero-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 36px;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #0a2240;
+  padding: 16px 36px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(245,166,35,0.3);
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(245,166,35,0.4);
+}
+
+/* ===== Section Base ===== */
+.section {
+  padding: 80px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-alt {
+  background: var(--bg-warm);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.section-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-dark);
+  background: var(--pastel-gold);
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.section-title {
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.section-desc {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ===== Quick Start (3 Steps) ===== */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.step-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 28px;
+  text-align: center;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.step-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: var(--transition);
+}
+
+.step-card:hover::before { transform: scaleX(1); }
+.step-card:hover { border-color: var(--accent); box-shadow: var(--shadow-hover); transform: translateY(-4px); }
+
+.step-num {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #0a2240, #1a3a6c);
+  color: #fff;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 900;
+  margin: 0 auto 20px;
+}
+
+.step-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.step-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ===== Feature Cards Grid (12) ===== */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  transition: var(--transition);
+  cursor: default;
+}
+
+.feature-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-3px);
+}
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.feature-card h3 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.feature-card p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.fi-blue { background: var(--pastel-blue); }
+.fi-green { background: var(--pastel-green); }
+.fi-gold { background: var(--pastel-gold); }
+.fi-red { background: var(--pastel-red); }
+.fi-purple { background: var(--pastel-purple); }
+.fi-cyan { background: var(--pastel-cyan); }
+
+/* ===== Accordion ===== */
+.accordion { max-width: 800px; margin: 0 auto; }
+
+.accordion-item {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.accordion-item.active { border-color: var(--accent); }
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition);
+}
+
+.accordion-header:hover { background: rgba(245,166,35,0.04); }
+
+.accordion-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.accordion-header h3 .acc-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.accordion-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--pastel-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--accent-dark);
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.accordion-item.active .accordion-arrow { transform: rotate(180deg); }
+
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-body-inner {
+  padding: 0 24px 24px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.accordion-body-inner ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.accordion-body-inner li { margin-bottom: 6px; }
+
+.accordion-body-inner strong { color: var(--text); }
+
+/* ===== Tech Stack ===== */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.tech-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.tech-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.tech-card-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.tech-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.tech-card p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ===== FAQ ===== */
+.faq-list { max-width: 800px; margin: 0 auto; }
+
+.faq-item {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.faq-item.active { border-color: var(--accent); }
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  gap: 16px;
+}
+
+.faq-question:hover { background: rgba(245,166,35,0.04); }
+
+.faq-toggle {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--pastel-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--accent-dark);
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.faq-item.active .faq-toggle { transform: rotate(45deg); }
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-answer-inner {
+  padding: 0 24px 24px;
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+/* ===== Contact / Footer ===== */
+.contact-section {
+  background: linear-gradient(135deg, #0a2240 0%, #1a3a6c 100%);
+  color: #fff;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.contact-section .section-title { color: #fff; }
+.contact-section .section-desc { color: #ffffff; }
+
+.contact-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  min-width: 260px;
+  flex: 1;
+  transition: var(--transition);
+}
+
+.contact-card:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+}
+
+.contact-card-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.contact-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.contact-card p {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.contact-card a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.contact-card a:hover { text-decoration: underline; }
+
+.footer {
+  background: #071a33;
+  color: #ffffff;
+  text-align: center;
+  padding: 24px;
+  font-size: 13px;
+}
+
+.footer a { color: var(--accent); text-decoration: none; }
+
+/* ===== Back to Top ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 48px;
+  height: 48px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: var(--transition);
+  z-index: 999;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { background: var(--accent); color: var(--primary); }
+
+/* ===== Scroll Animations ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .mobile-menu-btn { display: block; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+}
+
+@media (max-width: 600px) {
+  .hero { padding: 80px 20px 60px; }
+  .hero h1 { font-size: 28px; }
+  .section { padding: 56px 16px; }
+  .contact-cards { flex-direction: column; align-items: center; }
+  .contact-card { min-width: unset; width: 100%; }
+  .tech-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Mobile nav overlay */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--primary);
+  z-index: 999;
+  padding: 24px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-nav.open { display: flex; }
+
+.mobile-nav a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px 16px;
+  border-radius: 10px;
+  transition: var(--transition);
+}
+
+.mobile-nav a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* Version badge */
+.version-badge {
+  display: inline-block;
+  background: rgba(245,166,35,0.15);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <div class="nav-logo-icon">S</div>
+      SPIN Selling AI
+      <span class="version-badge">v1.0</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#quickstart">빠른 시작</a></li>
+      <li><a href="#features">기능</a></li>
+      <li><a href="#details">상세 설명</a></li>
+      <li><a href="#techstack">기술 스택</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact">문의</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="dark-toggle" onclick="toggleDark()" title="다크 모드 전환" aria-label="다크 모드 전환">&#9790;</button>
+      <button class="mobile-menu-btn" onclick="toggleMobile()" aria-label="메뉴 열기">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#quickstart" onclick="closeMobile()">빠른 시작</a>
+  <a href="#features" onclick="closeMobile()">기능</a>
+  <a href="#details" onclick="closeMobile()">상세 설명</a>
+  <a href="#techstack" onclick="closeMobile()">기술 스택</a>
+  <a href="#faq" onclick="closeMobile()">FAQ</a>
+  <a href="#contact" onclick="closeMobile()">문의</a>
+</div>
+
+<!-- 1. Hero -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-badge">&#9733; Korn Ferry Certified</div>
+    <div class="hero-logo">S</div>
+    <h1>SPIN Selling <span>AI</span></h1>
+    <p class="hero-desc">Korn Ferry SPIN 2.0 &amp; 3.0 기반 AI 교육 플랫폼</p>
+    <p class="hero-sub">심재우 대표 | SB Consulting | 사용 매뉴얼 v1.0</p>
+    <a href="#quickstart" class="hero-btn">&#9654; 시작하기</a>
+  </div>
+</section>
+
+<!-- 2. Quick Start -->
+<section class="section" id="quickstart">
+  <div class="section-header reveal">
+    <span class="section-label">Quick Start</span>
+    <h2 class="section-title">빠른 시작 가이드</h2>
+    <p class="section-desc">3단계만 거치면 바로 교육을 시작할 수 있습니다.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <div class="step-num">1</div>
+      <h3>교육 세션 생성</h3>
+      <p>관리자가 회사명, 교육일, 비밀번호를 설정하여 새로운 교육 세션을 생성합니다.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">2</div>
+      <h3>교육생 등록</h3>
+      <p>팀을 편성하고 교육생의 이름과 이메일을 입력하여 등록합니다.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">3</div>
+      <h3>교육 시작</h3>
+      <p>강사 또는 교육생이 회사 선택 &rarr; 비밀번호 입력 &rarr; 역할 선택 후 교육을 시작합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Features Grid (12) -->
+<div class="section-alt">
+<section class="section" id="features">
+  <div class="section-header reveal">
+    <span class="section-label">Features</span>
+    <h2 class="section-title">12가지 핵심 기능</h2>
+    <p class="section-desc">SPIN Selling 교육에 필요한 모든 기능을 제공합니다.</p>
+  </div>
+  <div class="features-grid">
+    <!-- 1 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-blue">&#128214;</div>
+      <h3>프리리딩</h3>
+      <p>SPIN 2.0 사전학습 PDF (28페이지). 교육 전 핵심 개념을 미리 학습합니다.</p>
+    </div>
+    <!-- 2 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-green">&#10003;</div>
+      <h3>SPIN 개념 퀴즈</h3>
+      <p>핵심개념, 구매사이클, SPIN 유형, 고급 문제 등 총 27문제로 이해도를 검증합니다.</p>
+    </div>
+    <!-- 3 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-gold">&#128269;</div>
+      <h3>니즈 구분</h3>
+      <p>잠재니즈(Implied Needs) vs 현재니즈(Explicit Needs) 구분 실습을 진행합니다.</p>
+    </div>
+    <!-- 4 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-purple">&#128172;</div>
+      <h3>SPIN 질문구분</h3>
+      <p>영업 대화에서 S(상황)/P(문제)/I(시사)/N(해결) 질문 유형을 분류합니다.</p>
+    </div>
+    <!-- 5 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-cyan">&#9998;</div>
+      <h3>질문 작성 연습</h3>
+      <p>12개 산업분야별 SPIN 질문을 직접 작성하고 AI가 실시간 평가합니다.</p>
+    </div>
+    <!-- 6 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-red">&#127919;</div>
+      <h3>SPIN질문&amp;니즈 구분</h3>
+      <p>비브라디페랑스 시나리오 기반 대화형 퀴즈로 질문과 니즈를 통합 실습합니다.</p>
+    </div>
+    <!-- 7 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-green">&#128142;</div>
+      <h3>FAB/BAF 연습</h3>
+      <p>Feature(특징), Advantage(장점), Benefit(이점)을 구분하고 활용하는 연습입니다.</p>
+    </div>
+    <!-- 8 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-blue">&#129302;</div>
+      <h3>AI 롤플레이</h3>
+      <p>10개 산업분야, 3단계 난이도로 AI 고객과 실전 상담 시뮬레이션을 진행합니다.</p>
+    </div>
+    <!-- 9 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-gold">&#128203;</div>
+      <h3>콜플랜 작성</h3>
+      <p>6개 섹션의 체계적 상담 계획을 작성하고 AI가 분석 평가합니다.</p>
+    </div>
+    <!-- 10 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-purple">&#128295;</div>
+      <h3>스핀 도구들</h3>
+      <p>사례분석 도구, 콜플랜 도구, 스코어보드, 코칭리포트 등 다양한 도구를 제공합니다.</p>
+    </div>
+    <!-- 11 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-red">&#128200;</div>
+      <h3>AI 분석리포트</h3>
+      <p>개인별 9+1섹션 AI 역량 진단 리포트를 생성하고 이메일로 발송합니다.</p>
+    </div>
+    <!-- 12 -->
+    <div class="feature-card reveal">
+      <div class="feature-icon fi-cyan">&#128202;</div>
+      <h3>사전/사후 설문조사</h3>
+      <p>교육 전후 자기평가와 만족도 조사를 실시하여 교육 효과를 측정합니다.</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- 4. Detailed Description (Accordion) -->
+<section class="section" id="details">
+  <div class="section-header reveal">
+    <span class="section-label">Details</span>
+    <h2 class="section-title">상세 기능 설명</h2>
+    <p class="section-desc">플랫폼의 핵심 구조와 평가 체계를 확인하세요.</p>
+  </div>
+  <div class="accordion">
+    <!-- 이해관계자 -->
+    <div class="accordion-item reveal">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3><span class="acc-icon fi-blue">&#128101;</span> 이해관계자</h3>
+        <div class="accordion-arrow">&#9660;</div>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          <ul>
+            <li><strong>시스템 관리자</strong> - 교육 세션 생성, 교육생 등록, 전체 데이터 관리</li>
+            <li><strong>강사</strong> - 교육 진행, 스코어보드 확인, 코칭리포트 작성, AI 분석리포트 발송</li>
+            <li><strong>교육 매니저</strong> - 교육 일정 관리, 교육생 출석 확인, 결과 리포트 조회</li>
+            <li><strong>교육생</strong> - SPIN 학습 활동 수행, 퀴즈/연습/롤플레이 참여, 리포트 수신</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- 점수 체계 -->
+    <div class="accordion-item reveal">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3><span class="acc-icon fi-gold">&#127942;</span> 점수 체계</h3>
+        <div class="accordion-arrow">&#9660;</div>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          <ul>
+            <li><strong>문제당 배점</strong> - 10점 기준</li>
+            <li><strong>활동별 만점</strong> - 80점 ~ 120점 (활동 유형에 따라 상이)</li>
+            <li><strong>총 만점</strong> - 600점</li>
+            <li>퀴즈, 니즈 구분, 질문구분, 질문 작성, FAB/BAF, 롤플레이, 콜플랜 등 각 활동의 점수가 합산됩니다.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- AI 평가 기준 -->
+    <div class="accordion-item reveal">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3><span class="acc-icon fi-green">&#129504;</span> AI 평가 기준</h3>
+        <div class="accordion-arrow">&#9660;</div>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          <ul>
+            <li><strong>SPIN 균형</strong> - S/P/I/N 질문의 적절한 비율 유지 여부</li>
+            <li><strong>질문 순서</strong> - SPIN 순서에 맞는 자연스러운 질문 흐름</li>
+            <li><strong>상황질문 비율</strong> - 과도한 상황질문(S) 사용을 제한</li>
+            <li><strong>시사질문 활용</strong> - 문제의 심각성을 부각하는 시사질문(I)의 효과적 활용</li>
+            <li><strong>해결질문</strong> - 고객이 스스로 해결책의 가치를 인식하도록 유도하는 해결질문(N) 품질</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- 온톨로지 분석 -->
+    <div class="accordion-item reveal">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3><span class="acc-icon fi-purple">&#128300;</span> 온톨로지 분석</h3>
+        <div class="accordion-arrow">&#9660;</div>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          <p>AI가 교육생의 학습 데이터를 체계적으로 분석합니다:</p>
+          <ul>
+            <li><strong>약점 파악</strong> - 학습 데이터에서 부족한 영역 식별</li>
+            <li><strong>이슈 도출</strong> - 약점으로 인한 실무 영향 분석</li>
+            <li><strong>근본원인 추적</strong> - 이슈의 근본적인 원인 규명</li>
+            <li><strong>개선전략 수립</strong> - 맞춤형 개선 전략 제시</li>
+            <li><strong>실행과제 제안</strong> - 구체적인 실행 항목과 우선순위 제시</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- 30일 실행계획 -->
+    <div class="accordion-item reveal">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3><span class="acc-icon fi-red">&#128197;</span> 30일 실행계획</h3>
+        <div class="accordion-arrow">&#9660;</div>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          <ul>
+            <li><strong>1주차: 개념복습</strong> - SPIN 핵심 개념 재정리, 프리리딩 자료 복습</li>
+            <li><strong>2주차: 집중훈련</strong> - 취약 영역 집중 연습, 질문 작성 반복 훈련</li>
+            <li><strong>3주차: 실전적용</strong> - 실제 고객 상담에 SPIN 기법 적용, 콜플랜 실행</li>
+            <li><strong>4주차: 자기점검</strong> - 실행 결과 자기평가, 개선점 도출, 지속 학습 계획 수립</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- 이메일 발송 -->
+    <div class="accordion-item reveal">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <h3><span class="acc-icon fi-cyan">&#128231;</span> 이메일 발송</h3>
+        <div class="accordion-arrow">&#9660;</div>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          <ul>
+            <li><strong>발송 방식</strong> - Supabase Edge Function + Resend API를 통한 자동 발송</li>
+            <li><strong>발송 내용</strong> - AI 분석리포트, 30일 실행계획, 온톨로지 분석 결과</li>
+            <li><strong>수신 대상</strong> - 교육생 개인 이메일 (등록 시 입력한 주소)</li>
+            <li><strong>발송 시점</strong> - 강사가 AI 분석리포트 생성 완료 후 수동 발송</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Tech Stack -->
+<div class="section-alt">
+<section class="section" id="techstack">
+  <div class="section-header reveal">
+    <span class="section-label">Tech Stack</span>
+    <h2 class="section-title">기술 스택</h2>
+    <p class="section-desc">검증된 기술로 안정적인 교육 환경을 제공합니다.</p>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-card reveal">
+      <div class="tech-card-icon">&#127912;</div>
+      <h3>프론트엔드</h3>
+      <p>HTML5, CSS3, JavaScript (ES6+)<br>Vanilla JS (프레임워크 없음)</p>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-card-icon">&#128451;</div>
+      <h3>백엔드</h3>
+      <p>Supabase<br>PostgreSQL, REST API, Edge Functions</p>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-card-icon">&#9729;</div>
+      <h3>배포</h3>
+      <p>Vercel (메인)<br>GitHub Pages (백업)</p>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-card-icon">&#128231;</div>
+      <h3>이메일</h3>
+      <p>Resend API<br>Edge Function 기반 발송</p>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-card-icon">&#127752;</div>
+      <h3>디자인</h3>
+      <p>Korn Ferry 네이비 테마<br>파스텔톤, 반응형 레이아웃</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- 6. FAQ -->
+<section class="section" id="faq">
+  <div class="section-header reveal">
+    <span class="section-label">FAQ</span>
+    <h2 class="section-title">자주 묻는 질문</h2>
+    <p class="section-desc">궁금한 점을 빠르게 확인하세요.</p>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>교육생은 어떻게 접속하나요?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          메인 페이지에서 회사(교육 세션)를 선택하고, 관리자가 설정한 비밀번호를 입력한 뒤, "교육생" 역할을 선택하면 바로 교육을 시작할 수 있습니다. 별도의 회원가입이 필요하지 않습니다.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>점수는 어떻게 계산되나요?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          문제당 10점을 기준으로 각 활동별 만점(80~120점)이 다릅니다. 퀴즈, 니즈 구분, 질문구분, 질문 작성, FAB/BAF, AI 롤플레이, 콜플랜 등 모든 활동 점수가 합산되어 총 600점 만점으로 평가됩니다.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>AI 분석리포트는 어디서 볼 수 있나요?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          강사가 AI 분석리포트를 생성하면, 교육생이 등록한 이메일로 자동 발송됩니다. 또한 플랫폼 내 "내 리포트" 메뉴에서도 직접 확인할 수 있습니다. 리포트에는 9+1섹션의 역량 진단, 온톨로지 분석, 30일 실행계획이 포함됩니다.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>강사와 교육생의 차이점은?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          강사는 전체 교육생의 스코어보드를 확인하고, 코칭리포트를 작성하며, AI 분석리포트를 생성 및 이메일 발송할 수 있습니다. 교육생은 자신의 학습 활동(퀴즈, 연습, 롤플레이 등)을 수행하고 개인 점수와 리포트를 확인할 수 있습니다.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>오프라인에서도 사용 가능한가요?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          현재 버전은 온라인 환경이 필요합니다. AI 평가, 데이터 저장, 이메일 발송 등 핵심 기능이 Supabase 서버와 연동되어 있어 인터넷 연결이 필수입니다. 프리리딩 PDF는 사전에 다운로드하여 오프라인에서 열람할 수 있습니다.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>교육생 수 제한이 있나요?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          하나의 교육 세션당 최대 35명(5팀 x 7명)까지 등록할 수 있습니다. 더 많은 인원이 필요한 경우 별도의 교육 세션을 추가로 생성하여 운영할 수 있습니다.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>이메일 발송은 어떻게 하나요?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          강사 화면에서 AI 분석리포트를 생성한 후, "이메일 발송" 버튼을 클릭하면 Supabase Edge Function과 Resend API를 통해 교육생의 등록 이메일로 자동 발송됩니다. 발송 상태는 실시간으로 확인할 수 있습니다.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>교육 데이터는 어디에 저장되나요?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          모든 교육 데이터는 Supabase의 PostgreSQL 데이터베이스에 안전하게 저장됩니다. 교육 세션 정보, 교육생 답변, 점수, AI 분석 결과 등이 체계적으로 관리되며, 교육 종료 후에도 데이터를 조회할 수 있습니다.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Contact -->
+<section class="contact-section" id="contact">
+  <div class="section-header">
+    <span class="section-label">Contact</span>
+    <h2 class="section-title">문의 / 지원</h2>
+    <p class="section-desc">궁금한 점이 있으시면 언제든 연락해 주세요.</p>
+  </div>
+  <div class="contact-cards">
+    <div class="contact-card">
+      <div class="contact-card-icon">&#128231;</div>
+      <h3>이메일</h3>
+      <p><a href="mailto:jaiwshim@gmail.com">jaiwshim@gmail.com</a></p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-card-icon">&#128187;</div>
+      <h3>GitHub</h3>
+      <p><a href="https://github.com/jaiwshim-project/spin-selling-ai" target="_blank">jaiwshim-project/spin-selling-ai</a></p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-card-icon">&#127891;</div>
+      <h3>강사</h3>
+      <p>심재우 대표<br>SB Consulting<br>Korn Ferry Certified<br>SPIN Master Trainer</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  &copy; 2024-2026 SPIN Selling AI | 심재우 대표 | SB Consulting | Korn Ferry Certified | <a href="#hero">맨 위로</a>
+</footer>
+
+<!-- Back to Top Button -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="맨 위로">&#8593;</button>
+
+<script>
+/* ===== Dark Mode Toggle ===== */
+function toggleDark() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('spin-manual-theme', isDark ? 'light' : 'dark');
+  document.querySelector('.dark-toggle').textContent = isDark ? '\u263E' : '\u2600';
+}
+
+// Restore saved theme
+(function() {
+  const saved = localStorage.getItem('spin-manual-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.querySelector('.dark-toggle').textContent = '\u2600';
+  }
+})();
+
+/* ===== Mobile Navigation ===== */
+function toggleMobile() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+
+function closeMobile() {
+  document.getElementById('mobileNav').classList.remove('open');
+}
+
+/* ===== Accordion ===== */
+function toggleAccordion(header) {
+  const item = header.parentElement;
+  const body = item.querySelector('.accordion-body');
+  const isActive = item.classList.contains('active');
+
+  // Close all
+  document.querySelectorAll('.accordion-item').forEach(function(el) {
+    el.classList.remove('active');
+    el.querySelector('.accordion-body').style.maxHeight = null;
+  });
+
+  // Open clicked
+  if (!isActive) {
+    item.classList.add('active');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+/* ===== FAQ Toggle ===== */
+function toggleFaq(question) {
+  var item = question.parentElement;
+  var answer = item.querySelector('.faq-answer');
+  var isActive = item.classList.contains('active');
+
+  // Close all
+  document.querySelectorAll('.faq-item').forEach(function(el) {
+    el.classList.remove('active');
+    el.querySelector('.faq-answer').style.maxHeight = null;
+  });
+
+  // Open clicked
+  if (!isActive) {
+    item.classList.add('active');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+}
+
+/* ===== Back to Top Button ===== */
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('backToTop');
+  if (window.scrollY > 400) {
+    btn.classList.add('visible');
+  } else {
+    btn.classList.remove('visible');
+  }
+});
+
+/* ===== Scroll Reveal Animation (IntersectionObserver) ===== */
+(function() {
+  var reveals = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(function(el) { observer.observe(el); });
+  } else {
+    // Fallback: show all
+    reveals.forEach(function(el) { el.classList.add('visible'); });
+  }
+})();
+</script>
+</body>
+</html>
