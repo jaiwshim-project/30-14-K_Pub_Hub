@@ -2,7 +2,7 @@
 (function() {
   'use strict';
 
-  const GEMINI_KEY = 'AIzaSyDmQRNn9M3ExdtlKyW68tXN6P47eufsiWk';
+  const GEMINI_KEY = 'AIzaSyB8cc_lctW4vpEieT2CiiNkmTLZ8xH9WtU';
   const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
 
   const SPIN_KNOWLEDGE = `당신은 Korn Ferry 공인 SPIN Selling AI 교육 도우미입니다.
@@ -262,7 +262,7 @@ BAF (Benefit-Advantage-Feature): 역순 제시
   }
 
   // === Gemini Embedding API ===
-  const GEMINI_EMBED_URL = 'https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=' + GEMINI_KEY;
+  const GEMINI_EMBED_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=' + GEMINI_KEY;
   let _kbEmbeddings = null;
 
   async function embedText(text) {
@@ -270,7 +270,7 @@ BAF (Benefit-Advantage-Feature): 역순 제시
       const res = await fetch(GEMINI_EMBED_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'models/text-embedding-004', content: { parts: [{ text: text }] } })
+        body: JSON.stringify({ model: 'models/gemini-embedding-001', content: { parts: [{ text: text }] } })
       });
       const data = await res.json();
       return data.embedding && data.embedding.values;
