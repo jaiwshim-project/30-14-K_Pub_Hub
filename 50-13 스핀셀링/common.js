@@ -542,11 +542,11 @@ function getNavHTML(activePage) {
       <a href="collab-board.html" class="nav-sub-item"><span>📌</span> 팀 협업 보드</a>
       <div class="nav-sub-divider">🎮 학습 게임</div>
       <a href="games-hub.html" class="nav-sub-item" style="background:rgba(245,166,35,0.1);"><span>🎮</span> 게임 허브 (5종 모음)</a>
-      <a href="game-quiz-race.html" class="nav-sub-item"><span>🏁</span> 퀴즈 레이스</a>
-      <a href="game-match.html" class="nav-sub-item"><span>🧩</span> 매칭 게임</a>
-      <a href="game-flash.html" class="nav-sub-item"><span>🃏</span> 플래시카드</a>
-      <a href="game-order.html" class="nav-sub-item"><span>🔢</span> 순서 정렬</a>
-      <a href="game-industry.html" class="nav-sub-item"><span>🎯</span> 다음 질문 선택</a>
+      <a href="game-quiz-race.html" class="nav-sub-item"><span>🏁</span> 1. 퀴즈 레이스</a>
+      <a href="game-match.html" class="nav-sub-item"><span>🧩</span> 2. 매칭 게임</a>
+      <a href="game-flash.html" class="nav-sub-item"><span>🃏</span> 3. 플래시카드</a>
+      <a href="game-order.html" class="nav-sub-item"><span>🔢</span> 4. 순서 정렬</a>
+      <a href="game-industry.html" class="nav-sub-item"><span>🎯</span> 5. 다음 질문 선택</a>
       <a href="game-leaderboard.html" class="nav-sub-item" style="background:rgba(245,166,35,0.1); color:var(--gold-light);"><span>🏆</span> 게임 리더보드</a>
     </div>`;
 
