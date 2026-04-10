@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling - 협업 보드</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.cb-container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+.cb-team-tabs { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+.cb-team-tab { flex: 1; padding: 10px; text-align: center; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--text-muted); transition: all 0.2s; border: none; background: transparent; font-family: inherit; }
+.cb-team-tab.active { background: var(--card); color: var(--accent2); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+
+.cb-add-form { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+.cb-add-row { display: flex; gap: 10px; align-items: flex-end; }
+.cb-spin-select { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 700; background: var(--bg); color: var(--text); }
+.cb-question-input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 14px; color: var(--text); background: var(--bg); }
+.cb-question-input:focus { outline: none; border-color: var(--accent2); }
+
+.cb-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.cb-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; transition: all 0.2s; }
+.cb-card:hover { border-color: var(--accent2); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.cb-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.cb-card-badge { padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 800; }
+.cb-card-badge.S { background: #e8f4fd; color: #2980b9; }
+.cb-card-badge.P { background: #fef5e7; color: #d68910; }
+.cb-card-badge.I { background: #fdedec; color: #c0392b; }
+.cb-card-badge.N { background: #eafaf1; color: #1e8449; }
+.cb-card-author { font-size: 11px; color: var(--text-muted); }
+.cb-card-text { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 10px; }
+.cb-card-footer { display: flex; justify-content: space-between; align-items: center; }
+.cb-card-time { font-size: 11px; color: var(--text-disabled); }
+.cb-like-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; color: var(--text-muted); transition: all 0.2s; }
+.cb-like-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.cb-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 15px; }
+.cb-refresh-info { text-align: center; font-size: 12px; color: var(--text-disabled); margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+<div id="mainApp" style="display:none;">
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="cb-container">
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title"><span class="icon">📌</span> 팀 협업 보드</div>
+    <p style="color:var(--text-tertiary); font-size:13px;">팀원들과 SPIN 질문을 함께 작성하고 공유하세요. 10초마다 자동 동기화됩니다.</p>
+  </div>
+
+  <div class="cb-team-tabs" id="cbTeamTabs"></div>
+
+  <div class="cb-add-form">
+    <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:10px;">✏️ 새 질문 카드 추가</div>
+    <div class="cb-add-row">
+      <select class="cb-spin-select" id="cbSpinType">
+        <option value="S">S 상황</option>
+        <option value="P">P 문제</option>
+        <option value="I">I 시사</option>
+        <option value="N">N 해결</option>
+      </select>
+      <input class="cb-question-input" id="cbQuestionInput" placeholder="SPIN 질문을 입력하세요..." onkeydown="if(event.key==='Enter') addCard()">
+      <button class="btn btn-primary" onclick="addCard()">추가</button>
+    </div>
+  </div>
+
+  <div class="cb-cards" id="cbCards"></div>
+  <div class="cb-refresh-info">🔄 10초마다 자동 동기화</div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+let activeTeam = 'A';
+let pollInterval = null;
+
+function initBoard() {
+  const user = getSavedUser();
+  if (user && user.team_id) activeTeam = user.team_id;
+
+  const tabs = document.getElementById('cbTeamTabs');
+  ['A','B','C','D','E'].forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'cb-team-tab' + (t === activeTeam ? ' active' : '');
+    btn.textContent = '팀 ' + t;
+    btn.onclick = function() { switchTeam(t, this); };
+    tabs.appendChild(btn);
+  });
+
+  loadCards();
+  pollInterval = setInterval(loadCards, 10000);
+}
+
+function switchTeam(team, btn) {
+  activeTeam = team;
+  document.querySelectorAll('.cb-team-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  loadCards();
+}
+
+async function loadCards() {
+  const session = getSavedSession();
+  if (!session) return;
+
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/spin_activities?session_id=eq.' + session.id + '&activity_type=eq.collab&select=*&order=created_at.desc',
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+    );
+    const all = await res.json();
+    const cards = all.filter(a => {
+      try { const d = JSON.parse(a.activity_data || '{}'); return d.team === activeTeam; } catch(e) { return false; }
+    });
+
+    const container = document.getElementById('cbCards');
+    if (cards.length === 0) {
+      container.innerHTML = '<div class="cb-empty">📝 아직 작성된 질문이 없습니다.<br>첫 번째 SPIN 질문을 추가해보세요!</div>';
+      return;
+    }
+
+    container.innerHTML = cards.map(c => {
+      const d = JSON.parse(c.activity_data || '{}');
+      const time = new Date(c.created_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+      const likes = d.likes || 0;
+      return '<div class="cb-card">' +
+        '<div class="cb-card-header"><span class="cb-card-badge ' + d.spinType + '">' + d.spinType + '</span><span class="cb-card-author">' + (c.member_name || '익명') + '</span></div>' +
+        '<div class="cb-card-text">"' + (d.question || '') + '"</div>' +
+        '<div class="cb-card-footer"><span class="cb-card-time">' + time + '</span><button class="cb-like-btn" onclick="likeCard(' + c.id + ', ' + likes + ')">👍 ' + likes + '</button></div></div>';
+    }).join('');
+  } catch(e) {
+    console.error('Board load error:', e);
+  }
+}
+
+async function addCard() {
+  const session = getSavedSession();
+  const user = getSavedUser();
+  if (!session) return;
+
+  const spinType = document.getElementById('cbSpinType').value;
+  const question = document.getElementById('cbQuestionInput').value.trim();
+  if (!question) { alert('질문을 입력하세요.'); return; }
+
+  const data = { team: activeTeam, spinType: spinType, question: question, likes: 0 };
+
+  await fetch(SUPABASE_URL + '/rest/v1/spin_activities', {
+    method: 'POST',
+    headers: SB_HEADERS,
+    body: JSON.stringify({
+      session_id: session.id,
+      member_id: user ? user.id : null,
+      member_name: user ? user.name : '익명',
+      activity_type: 'collab',
+      activity_data: JSON.stringify(data),
+      score: 0
+    })
+  });
+
+  document.getElementById('cbQuestionInput').value = '';
+  loadCards();
+}
+
+async function likeCard(actId, currentLikes) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/spin_activities?id=eq.' + actId + '&select=activity_data', {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+  });
+  const rows = await res.json();
+  if (!rows.length) return;
+  const d = JSON.parse(rows[0].activity_data || '{}');
+  d.likes = (d.likes || 0) + 1;
+
+  await fetch(SUPABASE_URL + '/rest/v1/spin_activities?id=eq.' + actId, {
+    method: 'PATCH',
+    headers: SB_HEADERS,
+    body: JSON.stringify({ activity_data: JSON.stringify(d) })
+  });
+  loadCards();
+}
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(initBoard, 200));
+</script>
+</body>
+</html>

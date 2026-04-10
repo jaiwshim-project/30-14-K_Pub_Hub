@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling - 음성 롤플레이</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.vr-container { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+
+.vr-status { text-align: center; margin-bottom: 24px; }
+.vr-status-text { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+.vr-status-text.listening { color: var(--accent); }
+.vr-status-text.speaking { color: var(--green); }
+
+.vr-mic-btn {
+  width: 80px; height: 80px; border-radius: 50%; border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: white; font-size: 32px; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(192,57,43,0.3);
+  transition: all 0.3s; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+}
+.vr-mic-btn:hover { transform: scale(1.08); }
+.vr-mic-btn.listening {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  animation: micPulse 1.5s infinite;
+}
+.vr-mic-btn.speaking {
+  background: linear-gradient(135deg, var(--green), var(--green-light));
+}
+@keyframes micPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(231,76,60,0.4); }
+  50% { box-shadow: 0 0 0 20px rgba(231,76,60,0); }
+}
+
+.vr-chat { max-height: 400px; overflow-y: auto; margin-bottom: 20px; }
+.vr-msg { padding: 12px 16px; border-radius: 14px; margin-bottom: 10px; max-width: 85%; line-height: 1.6; font-size: 14px; }
+.vr-msg.user { background: var(--accent2); color: white; margin-left: auto; border-bottom-right-radius: 4px; }
+.vr-msg.ai { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; }
+.vr-msg-label { font-size: 11px; font-weight: 700; margin-bottom: 4px; opacity: 0.7; }
+
+.vr-spin-count { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; }
+.vr-spin-item { text-align: center; padding: 10px 16px; background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; min-width: 70px; }
+.vr-spin-type { font-size: 18px; font-weight: 900; }
+.vr-spin-type.type-S { color: #2980b9; }
+.vr-spin-type.type-P { color: #d68910; }
+.vr-spin-type.type-I { color: #c0392b; }
+.vr-spin-type.type-N { color: #1e8449; }
+.vr-spin-num { font-size: 20px; font-weight: 900; color: var(--text); }
+
+.vr-input-row { display: flex; gap: 8px; }
+.vr-input { flex: 1; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 14px; color: var(--text); background: var(--bg); }
+.vr-input:focus { outline: none; border-color: var(--accent2); }
+
+.vr-scenario { background: var(--pastel-blue); border: 1.5px solid rgba(36,113,163,0.15); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; }
+.vr-scenario-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.vr-scenario-desc { font-size: 13px; color: var(--text-tertiary); line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+<div id="mainApp" style="display:none;">
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="vr-container">
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title"><span class="icon">🎙</span> 음성 롤플레이</div>
+    <p style="color:var(--text-tertiary); font-size:13px;">마이크로 말하면 AI 고객이 음성으로 응답합니다. SPIN 질문을 실전처럼 연습하세요.</p>
+  </div>
+
+  <div class="vr-scenario" id="vrScenario">
+    <div class="vr-scenario-title">📋 시나리오: IT 솔루션 영업</div>
+    <div class="vr-scenario-desc">당신은 클라우드 ERP 솔루션 영업 담당자입니다. 고객사 IT 담당 이사와 미팅 중입니다. 현재 레거시 시스템에 불만이 있지만 아직 교체를 결정하지 못한 상태입니다.</div>
+  </div>
+
+  <div class="vr-spin-count">
+    <div class="vr-spin-item"><div class="vr-spin-type type-S">S</div><div class="vr-spin-num" id="countS">0</div></div>
+    <div class="vr-spin-item"><div class="vr-spin-type type-P">P</div><div class="vr-spin-num" id="countP">0</div></div>
+    <div class="vr-spin-item"><div class="vr-spin-type type-I">I</div><div class="vr-spin-num" id="countI">0</div></div>
+    <div class="vr-spin-item"><div class="vr-spin-type type-N">N</div><div class="vr-spin-num" id="countN">0</div></div>
+  </div>
+
+  <div class="vr-chat" id="vrChat"></div>
+
+  <div class="vr-status">
+    <button class="vr-mic-btn" id="vrMicBtn" onclick="toggleMic()">🎤</button>
+    <div class="vr-status-text" id="vrStatusText">마이크를 눌러 말하세요</div>
+  </div>
+
+  <div class="vr-input-row">
+    <input class="vr-input" id="vrTextInput" placeholder="또는 텍스트로 입력..." onkeydown="if(event.key==='Enter') sendText()">
+    <button class="btn btn-primary" onclick="sendText()">전송</button>
+    <button class="btn btn-secondary" onclick="toggleTTS()">🔊</button>
+  </div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+const GEMINI_KEY = 'AIzaSyDmQRNn9M3ExdtlKyW68tXN6P47eufsiWk';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
+
+const SCENARIO_PROMPT = '당신은 IT 회사의 IT 담당 이사입니다. 현재 레거시 ERP 시스템을 사용 중이며, 시스템 장애와 유지보수 비용 증가로 불만이 있지만 교체에 대한 확신이 없습니다. 영업 담당자(사용자)의 SPIN 질문에 자연스럽게 답변하세요. 한국어로 2-3문장으로 답변하세요. 당신은 고객 역할만 합니다.';
+
+let recognition = null;
+let isListening = false;
+let ttsEnabled = true;
+let chatHistory = [];
+let spinCounts = { S: 0, P: 0, I: 0, N: 0 };
+
+// Speech Recognition 초기화
+function initSpeech() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('vrMicBtn').style.display = 'none';
+    document.getElementById('vrStatusText').textContent = '이 브라우저는 음성 인식을 지원하지 않습니다. 텍스트로 입력하세요.';
+    return;
+  }
+  recognition = new SR();
+  recognition.lang = 'ko-KR';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onresult = function(e) {
+    const text = e.results[0][0].transcript;
+    stopListening();
+    processUserMessage(text);
+  };
+  recognition.onerror = function() { stopListening(); };
+  recognition.onend = function() { if (isListening) stopListening(); };
+}
+
+function toggleMic() {
+  if (isListening) { stopListening(); }
+  else { startListening(); }
+}
+
+function startListening() {
+  if (!recognition) return;
+  isListening = true;
+  recognition.start();
+  document.getElementById('vrMicBtn').classList.add('listening');
+  document.getElementById('vrStatusText').textContent = '듣고 있습니다...';
+  document.getElementById('vrStatusText').classList.add('listening');
+}
+
+function stopListening() {
+  isListening = false;
+  try { recognition.stop(); } catch(e) {}
+  document.getElementById('vrMicBtn').classList.remove('listening');
+  document.getElementById('vrStatusText').textContent = '마이크를 눌러 말하세요';
+  document.getElementById('vrStatusText').classList.remove('listening');
+}
+
+function sendText() {
+  const input = document.getElementById('vrTextInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  processUserMessage(text);
+}
+
+async function processUserMessage(text) {
+  addMessage(text, 'user');
+  chatHistory.push({ role: 'user', content: text });
+  classifySPIN(text);
+
+  document.getElementById('vrStatusText').textContent = 'AI 고객이 생각 중...';
+
+  try {
+    const history = chatHistory.slice(-10).map(h => h.role + ': ' + h.content).join('\n');
+    const res = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: SCENARIO_PROMPT + '\n\n대화 기록:\n' + history + '\n\n영업 담당자: ' + text + '\n\n고객(당신):' }] }],
+        generationConfig: { temperature: 0.5, maxOutputTokens: 256 }
+      })
+    });
+    const data = await res.json();
+    const reply = data.candidates[0].content.parts[0].text;
+
+    addMessage(reply, 'ai');
+    chatHistory.push({ role: 'ai', content: reply });
+
+    if (ttsEnabled) speak(reply);
+    else document.getElementById('vrStatusText').textContent = '마이크를 눌러 말하세요';
+  } catch(e) {
+    addMessage('죄송합니다, 응답 생성에 실패했습니다.', 'ai');
+    document.getElementById('vrStatusText').textContent = '마이크를 눌러 말하세요';
+  }
+}
+
+function addMessage(text, role) {
+  const chat = document.getElementById('vrChat');
+  const div = document.createElement('div');
+  div.className = 'vr-msg ' + role;
+  div.innerHTML = '<div class="vr-msg-label">' + (role === 'user' ? '🧑 영업 담당자' : '👤 고객 (AI)') + '</div>' + text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function speak(text) {
+  const btn = document.getElementById('vrMicBtn');
+  btn.classList.add('speaking');
+  document.getElementById('vrStatusText').textContent = '고객이 말하고 있습니다...';
+  document.getElementById('vrStatusText').classList.add('speaking');
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'ko-KR';
+  utter.rate = 0.95;
+  utter.onend = function() {
+    btn.classList.remove('speaking');
+    document.getElementById('vrStatusText').textContent = '마이크를 눌러 말하세요';
+    document.getElementById('vrStatusText').classList.remove('speaking');
+  };
+  speechSynthesis.speak(utter);
+}
+
+function toggleTTS() {
+  ttsEnabled = !ttsEnabled;
+  alert(ttsEnabled ? '음성 응답 켜짐' : '음성 응답 꺼짐 (텍스트만)');
+}
+
+function classifySPIN(text) {
+  const lower = text.toLowerCase();
+  if (/현재|사용|규모|어떻게|운영|몇|어느/.test(text)) spinCounts.S++;
+  else if (/어려움|불만|문제|불편|힘든|안 되/.test(text)) spinCounts.P++;
+  else if (/영향|미치|결과|때문에|리스크|위험/.test(text)) spinCounts.I++;
+  else if (/만약|해결|가능하다면|도움|개선|변화/.test(text)) spinCounts.N++;
+
+  document.getElementById('countS').textContent = spinCounts.S;
+  document.getElementById('countP').textContent = spinCounts.P;
+  document.getElementById('countI').textContent = spinCounts.I;
+  document.getElementById('countN').textContent = spinCounts.N;
+}
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(initSpeech, 200));
+</script>
+</body>
+</html>
