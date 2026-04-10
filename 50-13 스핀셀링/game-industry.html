@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN 산업 맞히기</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.gi-container { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+.gi-stats { display: flex; gap: 12px; margin-bottom: 20px; }
+.gi-stat { flex: 1; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+.gi-stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.gi-stat-value { font-size: 22px; font-weight: 900; margin-top: 4px; }
+
+.gi-progress { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+.gi-progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transition: width 0.3s; }
+
+.gi-question-card { background: linear-gradient(135deg, var(--card), var(--pastel-blue)); border: 2px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 24px; text-align: center; }
+.gi-spin-type { display: inline-block; padding: 6px 16px; border-radius: 8px; font-size: 13px; font-weight: 800; margin-bottom: 16px; }
+.gi-spin-type.S { background: #e8f4fd; color: #2980b9; }
+.gi-spin-type.P { background: #fef5e7; color: #d68910; }
+.gi-spin-type.I { background: #fdedec; color: #c0392b; }
+.gi-spin-type.N { background: #eafaf1; color: #1e8449; }
+.gi-question { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.6; }
+.gi-question-label { font-size: 12px; color: var(--text-muted); margin-top: 16px; font-weight: 600; }
+
+.gi-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.gi-option { padding: 16px 12px; border: 2px solid var(--border); border-radius: 12px; background: var(--card); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; color: var(--text); }
+.gi-option:hover { border-color: var(--accent2); transform: translateY(-2px); background: var(--pastel-blue); }
+.gi-option.correct { background: #eafaf1; border-color: #1e8449; color: #1e8449; }
+.gi-option.wrong { background: #fdedec; border-color: #c0392b; color: #c0392b; }
+.gi-option:disabled { cursor: not-allowed; }
+
+.gi-feedback { padding: 14px 18px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; line-height: 1.6; display: none; text-align: center; }
+.gi-feedback.correct { background: rgba(30,132,73,0.08); border: 1px solid rgba(30,132,73,0.2); color: var(--green); }
+.gi-feedback.wrong { background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.2); color: var(--accent); }
+.gi-feedback.show { display: block; }
+
+.gi-result { text-align: center; padding: 40px 20px; }
+.gi-result-icon { font-size: 60px; margin-bottom: 16px; }
+.gi-result-score { font-size: 48px; font-weight: 900; color: var(--accent2); margin-bottom: 8px; }
+
+@media (max-width: 600px) { .gi-options { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+<div id="mainApp" style="display:none;">
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="gi-container">
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title"><span class="icon">🎯</span> SPIN 산업 맞히기</div>
+    <p style="color:var(--text-tertiary); font-size:13px;">질문을 보고 어떤 산업의 SPIN 질문인지 맞히세요. 30초 안에 정답을 선택하세요!</p>
+  </div>
+
+  <div id="giGame">
+    <div class="gi-stats">
+      <div class="gi-stat"><div class="gi-stat-label">문제</div><div class="gi-stat-value" id="giProgress" style="color:var(--blue);">1/10</div></div>
+      <div class="gi-stat"><div class="gi-stat-label">점수</div><div class="gi-stat-value" id="giScore" style="color:var(--gold);">0</div></div>
+      <div class="gi-stat"><div class="gi-stat-label">정답</div><div class="gi-stat-value" id="giCorrect" style="color:var(--green);">0</div></div>
+      <div class="gi-stat"><div class="gi-stat-label">시간</div><div class="gi-stat-value" id="giTimer" style="color:var(--accent);">30</div></div>
+    </div>
+    <div class="gi-progress"><div class="gi-progress-fill" id="giProgressFill" style="width:0%"></div></div>
+
+    <div class="gi-question-card">
+      <div class="gi-spin-type" id="giSpinType">S</div>
+      <div class="gi-question" id="giQuestion"></div>
+      <div class="gi-question-label">↑ 어떤 산업의 질문일까요?</div>
+    </div>
+
+    <div class="gi-feedback" id="giFeedback"></div>
+    <div class="gi-options" id="giOptions"></div>
+  </div>
+
+  <div id="giResult" class="gi-result" style="display:none;">
+    <div class="gi-result-icon">🎯</div>
+    <div class="gi-result-score" id="giFinalScore">0</div>
+    <div style="color:var(--text-muted); margin-bottom:8px;">최종 점수</div>
+    <div id="giResultDetail" style="font-size:14px; color:var(--text-tertiary); margin-bottom:24px;"></div>
+    <button class="btn btn-primary" onclick="startGame()">🔄 다시 시작</button>
+    <a href="spin-tools.html" class="btn btn-secondary" style="margin-left:8px;">← 스핀도구들</a>
+  </div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="spin-questions.js"></script>
+<script>
+const TOTAL = 10;
+const TIME_LIMIT = 30;
+const TYPE_NAMES = { S: 'S 상황질문', P: 'P 문제질문', I: 'I 시사질문', N: 'N 해결질문' };
+const INDUSTRIES = [...new Set(SPIN_QUESTIONS.map(q => q.ind))];
+
+let questions = [];
+let currentIdx = 0;
+let score = 0;
+let correct = 0;
+let timer = null;
+let timeLeft = 0;
+
+function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
+
+function startGame() {
+  questions = shuffle(SPIN_QUESTIONS).slice(0, TOTAL);
+  currentIdx = 0;
+  score = 0;
+  correct = 0;
+  document.getElementById('giGame').style.display = 'block';
+  document.getElementById('giResult').style.display = 'none';
+  showQuestion();
+}
+
+function showQuestion() {
+  if (currentIdx >= TOTAL) { showResult(); return; }
+  const q = questions[currentIdx];
+
+  document.getElementById('giSpinType').textContent = TYPE_NAMES[q.type];
+  document.getElementById('giSpinType').className = 'gi-spin-type ' + q.type;
+  document.getElementById('giQuestion').textContent = '"' + q.q + '"';
+  document.getElementById('giProgress').textContent = (currentIdx + 1) + '/' + TOTAL;
+  document.getElementById('giScore').textContent = score;
+  document.getElementById('giCorrect').textContent = correct;
+  document.getElementById('giProgressFill').style.width = (currentIdx / TOTAL * 100) + '%';
+  document.getElementById('giFeedback').classList.remove('show');
+
+  // 정답 + 무작위 5개 오답 = 6개 보기
+  const wrongs = shuffle(INDUSTRIES.filter(i => i !== q.ind)).slice(0, 5);
+  const options = shuffle([q.ind, ...wrongs]);
+
+  document.getElementById('giOptions').innerHTML = options.map(opt =>
+    '<button class="gi-option" data-ind="' + opt + '" onclick="answer(this)">' + opt + '</button>'
+  ).join('');
+
+  timeLeft = TIME_LIMIT;
+  document.getElementById('giTimer').textContent = timeLeft;
+  clearInterval(timer);
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('giTimer').textContent = timeLeft;
+    if (timeLeft <= 0) { clearInterval(timer); answer(null); }
+  }, 1000);
+}
+
+function answer(el) {
+  clearInterval(timer);
+  const q = questions[currentIdx];
+  const choice = el ? el.dataset.ind : null;
+  const isCorrect = choice === q.ind;
+
+  document.querySelectorAll('.gi-option').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.ind === q.ind) b.classList.add('correct');
+    else if (b === el) b.classList.add('wrong');
+  });
+
+  if (isCorrect) {
+    score += 20;
+    correct++;
+    document.getElementById('giFeedback').textContent = '✅ 정답! +20점';
+    document.getElementById('giFeedback').className = 'gi-feedback correct show';
+  } else {
+    score = Math.max(0, score - 5);
+    document.getElementById('giFeedback').textContent = '❌ ' + (choice ? '오답' : '시간 초과') + '. 정답: ' + q.ind;
+    document.getElementById('giFeedback').className = 'gi-feedback wrong show';
+  }
+
+  setTimeout(() => { currentIdx++; showQuestion(); }, 1800);
+}
+
+function showResult() {
+  document.getElementById('giGame').style.display = 'none';
+  document.getElementById('giResult').style.display = 'block';
+  document.getElementById('giFinalScore').textContent = score;
+  document.getElementById('giResultDetail').textContent = '정답 ' + correct + ' / ' + TOTAL + '개';
+}
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(startGame, 200));
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN 순서 정렬</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.so-container { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+.so-stats { display: flex; gap: 12px; margin-bottom: 20px; }
+.so-stat { flex: 1; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+.so-stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.so-stat-value { font-size: 22px; font-weight: 900; margin-top: 4px; }
+
+.so-industry-banner { background: linear-gradient(135deg, var(--primary), var(--accent2)); color: white; padding: 16px 24px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+.so-industry-label { font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+.so-industry-name { font-size: 20px; font-weight: 800; margin-top: 4px; }
+
+.so-instruction { background: var(--pastel-gold); border: 1px solid rgba(212,136,15,0.2); border-radius: 12px; padding: 12px 18px; margin-bottom: 20px; font-size: 13px; color: var(--gold); text-align: center; font-weight: 600; }
+
+.so-questions { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.so-q-card { background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 16px; }
+.so-q-card:hover { border-color: var(--accent2); transform: translateX(4px); }
+.so-q-num { width: 36px; height: 36px; border-radius: 50%; background: var(--bg); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: var(--text-muted); flex-shrink: 0; }
+.so-q-card.selected .so-q-num { background: var(--gold); color: white; border-color: var(--gold); }
+.so-q-card.selected { border-color: var(--gold); background: var(--pastel-gold); }
+.so-q-text { flex: 1; font-size: 14px; color: var(--text); line-height: 1.6; }
+.so-q-card.correct { background: rgba(30,132,73,0.08); border-color: var(--green); }
+.so-q-card.correct .so-q-num { background: var(--green); color: white; border-color: var(--green); }
+.so-q-card.wrong { background: rgba(192,57,43,0.08); border-color: var(--accent); animation: shake 0.4s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.so-actions { display: flex; gap: 8px; }
+.so-actions button { flex: 1; }
+</style>
+</head>
+<body>
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+<div id="mainApp" style="display:none;">
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="so-container">
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title"><span class="icon">🔢</span> SPIN 순서 정렬</div>
+    <p style="color:var(--text-tertiary); font-size:13px;">한 산업의 4개 질문을 S → P → I → N 순서로 정렬하세요. 클릭한 순서대로 번호가 매겨집니다.</p>
+  </div>
+
+  <div class="so-stats">
+    <div class="so-stat"><div class="so-stat-label">라운드</div><div class="so-stat-value" id="soRound" style="color:var(--accent2);">1</div></div>
+    <div class="so-stat"><div class="so-stat-label">정답</div><div class="so-stat-value" id="soCorrect" style="color:var(--green);">0</div></div>
+    <div class="so-stat"><div class="so-stat-label">시도</div><div class="so-stat-value" id="soAttempts" style="color:var(--gold);">0</div></div>
+  </div>
+
+  <div class="so-industry-banner">
+    <div class="so-industry-label">현재 산업</div>
+    <div class="so-industry-name" id="soIndustry">IT/소프트웨어</div>
+  </div>
+
+  <div class="so-instruction">💡 SPIN 순서대로 클릭: S(상황) → P(문제) → I(시사) → N(해결)</div>
+
+  <div class="so-questions" id="soQuestions"></div>
+
+  <div class="so-actions">
+    <button class="btn btn-secondary" onclick="resetSelection()">↻ 다시 선택</button>
+    <button class="btn btn-primary" onclick="checkAnswer()">정답 확인</button>
+    <button class="btn btn-blue" onclick="nextRound()">다음 ↓</button>
+  </div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="spin-questions.js"></script>
+<script>
+const INDUSTRIES = [...new Set(SPIN_QUESTIONS.map(q => q.ind))];
+let round = 0;
+let correctCount = 0;
+let attempts = 0;
+let currentQs = [];
+let userOrder = [];
+
+function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
+
+function startRound() {
+  round++;
+  document.getElementById('soRound').textContent = round;
+
+  const ind = INDUSTRIES[Math.floor(Math.random() * INDUSTRIES.length)];
+  document.getElementById('soIndustry').textContent = ind;
+
+  // 해당 산업에서 S/P/I/N 각 1개씩 선택
+  currentQs = ['S','P','I','N'].map(t => {
+    const pool = SPIN_QUESTIONS.filter(q => q.ind === ind && q.type === t);
+    return pool[Math.floor(Math.random() * pool.length)];
+  });
+
+  // 셔플하여 표시
+  const shuffled = shuffle(currentQs);
+  userOrder = [];
+
+  document.getElementById('soQuestions').innerHTML = shuffled.map((q, i) =>
+    '<div class="so-q-card" data-type="' + q.type + '" data-idx="' + i + '" onclick="selectQ(this)">' +
+    '<div class="so-q-num">?</div>' +
+    '<div class="so-q-text">"' + q.q + '"</div></div>'
+  ).join('');
+}
+
+function selectQ(el) {
+  if (userOrder.includes(el)) return;
+  if (userOrder.length >= 4) return;
+
+  userOrder.push(el);
+  const num = userOrder.length;
+  el.classList.add('selected');
+  el.querySelector('.so-q-num').textContent = num;
+}
+
+function resetSelection() {
+  userOrder.forEach(el => {
+    el.classList.remove('selected', 'wrong', 'correct');
+    el.querySelector('.so-q-num').textContent = '?';
+  });
+  userOrder = [];
+}
+
+function checkAnswer() {
+  if (userOrder.length !== 4) {
+    alert('4개 질문을 모두 순서대로 선택하세요.');
+    return;
+  }
+  attempts++;
+  document.getElementById('soAttempts').textContent = attempts;
+
+  const correctOrder = ['S','P','I','N'];
+  const isCorrect = userOrder.every((el, i) => el.dataset.type === correctOrder[i]);
+
+  if (isCorrect) {
+    correctCount++;
+    document.getElementById('soCorrect').textContent = correctCount;
+    userOrder.forEach(el => el.classList.add('correct'));
+    setTimeout(startRound, 1500);
+  } else {
+    userOrder.forEach((el, i) => {
+      if (el.dataset.type !== correctOrder[i]) el.classList.add('wrong');
+    });
+    setTimeout(() => {
+      userOrder.forEach(el => el.classList.remove('wrong'));
+    }, 1000);
+  }
+}
+
+function nextRound() {
+  startRound();
+}
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(startRound, 200));
+</script>
+</body>
+</html>

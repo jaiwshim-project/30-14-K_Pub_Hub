@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN 플래시카드</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.fc-container { max-width: 700px; margin: 0 auto; padding: 32px 24px; }
+.fc-stats { display: flex; gap: 12px; margin-bottom: 24px; }
+.fc-stat { flex: 1; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+.fc-stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.fc-stat-value { font-size: 22px; font-weight: 900; margin-top: 4px; }
+
+.fc-controls { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.fc-filter-btn { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--card); font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-muted); }
+.fc-filter-btn.active { background: var(--accent2); color: white; border-color: var(--accent2); }
+
+.fc-card-wrap { perspective: 1000px; margin-bottom: 24px; }
+.fc-card { width: 100%; min-height: 320px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
+.fc-card.flipped { transform: rotateY(180deg); }
+
+.fc-card-side { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 16px; padding: 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+.fc-card-front { background: linear-gradient(135deg, var(--card), var(--pastel-blue)); border: 2px solid var(--border); }
+.fc-card-back { background: linear-gradient(135deg, var(--card), var(--pastel-green)); border: 2px solid var(--border); transform: rotateY(180deg); }
+
+.fc-industry { font-size: 12px; color: var(--blue); font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.fc-question { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.6; max-width: 90%; }
+.fc-hint { position: absolute; bottom: 16px; font-size: 11px; color: var(--text-disabled); }
+
+.fc-spin-badge { display: inline-block; padding: 12px 24px; border-radius: 12px; font-size: 32px; font-weight: 900; margin-bottom: 16px; }
+.fc-spin-badge.S { background: #e8f4fd; color: #2980b9; }
+.fc-spin-badge.P { background: #fef5e7; color: #d68910; }
+.fc-spin-badge.I { background: #fdedec; color: #c0392b; }
+.fc-spin-badge.N { background: #eafaf1; color: #1e8449; }
+.fc-spin-name { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 16px; }
+.fc-tip { font-size: 14px; color: var(--text-tertiary); line-height: 1.7; max-width: 90%; }
+
+.fc-actions { display: flex; gap: 12px; }
+.fc-action-btn { flex: 1; padding: 16px; border-radius: 12px; border: none; font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
+.fc-know { background: linear-gradient(135deg, var(--green), var(--green-light)); color: white; }
+.fc-know:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(30,132,73,0.3); }
+.fc-dont-know { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: white; }
+.fc-dont-know:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(192,57,43,0.3); }
+
+.fc-progress { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+.fc-progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transition: width 0.3s; }
+</style>
+</head>
+<body>
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+<div id="mainApp" style="display:none;">
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="fc-container">
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title"><span class="icon">🃏</span> SPIN 플래시카드</div>
+    <p style="color:var(--text-tertiary); font-size:13px;">카드를 클릭하면 뒤집힙니다. 질문을 보고 SPIN 유형을 떠올린 후 답을 확인하세요.</p>
+  </div>
+
+  <div class="fc-stats">
+    <div class="fc-stat"><div class="fc-stat-label">진행</div><div class="fc-stat-value" id="fcProgress" style="color:var(--blue);">0/0</div></div>
+    <div class="fc-stat"><div class="fc-stat-label">안다</div><div class="fc-stat-value" id="fcKnown" style="color:var(--green);">0</div></div>
+    <div class="fc-stat"><div class="fc-stat-label">모른다</div><div class="fc-stat-value" id="fcUnknown" style="color:var(--accent);">0</div></div>
+  </div>
+
+  <div class="fc-controls">
+    <button class="fc-filter-btn active" onclick="setFilter('all', this)">전체</button>
+    <button class="fc-filter-btn" onclick="setFilter('S', this)">S 상황</button>
+    <button class="fc-filter-btn" onclick="setFilter('P', this)">P 문제</button>
+    <button class="fc-filter-btn" onclick="setFilter('I', this)">I 시사</button>
+    <button class="fc-filter-btn" onclick="setFilter('N', this)">N 해결</button>
+  </div>
+
+  <div class="fc-progress"><div class="fc-progress-fill" id="fcProgressFill" style="width:0%"></div></div>
+
+  <div class="fc-card-wrap">
+    <div class="fc-card" id="fcCard" onclick="flipCard()">
+      <div class="fc-card-side fc-card-front">
+        <div class="fc-industry" id="fcIndustry"></div>
+        <div class="fc-question" id="fcQuestion"></div>
+        <div class="fc-hint">👆 클릭하여 답 확인</div>
+      </div>
+      <div class="fc-card-side fc-card-back">
+        <div class="fc-spin-badge" id="fcBadge">S</div>
+        <div class="fc-spin-name" id="fcSpinName">상황질문</div>
+        <div class="fc-tip" id="fcTip"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fc-actions">
+    <button class="fc-action-btn fc-dont-know" onclick="markCard(false)">❌ 모른다</button>
+    <button class="fc-action-btn fc-know" onclick="markCard(true)">✅ 안다</button>
+  </div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="spin-questions.js"></script>
+<script>
+let cards = [];
+let currentIdx = 0;
+let known = 0;
+let unknown = 0;
+let activeFilter = 'all';
+
+const TYPE_NAMES = { S: '상황질문', P: '문제질문', I: '시사질문', N: '해결질문' };
+
+function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
+
+function setFilter(type, btn) {
+  activeFilter = type;
+  document.querySelectorAll('.fc-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  startGame();
+}
+
+function startGame() {
+  cards = activeFilter === 'all' ? shuffle(SPIN_QUESTIONS) : shuffle(SPIN_QUESTIONS.filter(q => q.type === activeFilter));
+  currentIdx = 0;
+  known = 0;
+  unknown = 0;
+  showCard();
+}
+
+function showCard() {
+  if (currentIdx >= cards.length) { alert('모든 카드를 확인했습니다!\n안다: ' + known + ' / 모른다: ' + unknown); currentIdx = 0; return; }
+  const c = cards[currentIdx];
+  document.getElementById('fcCard').classList.remove('flipped');
+  document.getElementById('fcIndustry').textContent = '📍 ' + c.ind;
+  document.getElementById('fcQuestion').textContent = '"' + c.q + '"';
+  document.getElementById('fcBadge').textContent = c.type;
+  document.getElementById('fcBadge').className = 'fc-spin-badge ' + c.type;
+  document.getElementById('fcSpinName').textContent = TYPE_NAMES[c.type];
+  document.getElementById('fcTip').textContent = '💡 ' + c.tip;
+  document.getElementById('fcProgress').textContent = (currentIdx + 1) + '/' + cards.length;
+  document.getElementById('fcKnown').textContent = known;
+  document.getElementById('fcUnknown').textContent = unknown;
+  document.getElementById('fcProgressFill').style.width = ((currentIdx + 1) / cards.length * 100) + '%';
+}
+
+function flipCard() {
+  document.getElementById('fcCard').classList.toggle('flipped');
+}
+
+function markCard(isKnown) {
+  if (isKnown) known++;
+  else unknown++;
+  currentIdx++;
+  showCard();
+}
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(startGame, 200));
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN 매칭 게임</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.mg-container { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+.mg-stats { display: flex; gap: 12px; margin-bottom: 20px; }
+.mg-stat { flex: 1; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+.mg-stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.mg-stat-value { font-size: 22px; font-weight: 900; margin-top: 4px; }
+
+.mg-board { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
+.mg-questions { display: flex; flex-direction: column; gap: 12px; }
+.mg-types { display: flex; flex-direction: column; gap: 12px; }
+
+.mg-card { padding: 16px; background: var(--card); border: 2px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; font-size: 13px; line-height: 1.5; color: var(--text); }
+.mg-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+.mg-card.selected { border-color: var(--gold); background: var(--pastel-gold); box-shadow: 0 0 0 3px rgba(245,166,35,0.2); }
+.mg-card.matched { opacity: 0.4; cursor: default; pointer-events: none; }
+.mg-card.wrong { animation: shake 0.4s; border-color: var(--accent); }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.mg-type-card { padding: 24px; text-align: center; font-size: 24px; font-weight: 900; }
+.mg-type-card.S { color: #2980b9; background: #e8f4fd; border-color: #bfdbfe; }
+.mg-type-card.P { color: #d68910; background: #fef5e7; border-color: #fde68a; }
+.mg-type-card.I { color: #c0392b; background: #fdedec; border-color: #fecaca; }
+.mg-type-card.N { color: #1e8449; background: #eafaf1; border-color: #bbf7d0; }
+.mg-type-label { font-size: 11px; font-weight: 600; margin-top: 4px; }
+
+.mg-result { text-align: center; padding: 40px 20px; }
+.mg-result-icon { font-size: 60px; margin-bottom: 16px; }
+.mg-result-score { font-size: 48px; font-weight: 900; color: var(--accent2); margin-bottom: 8px; }
+
+@media (max-width: 768px) { .mg-board { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+<div id="mainApp" style="display:none;">
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="mg-container">
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title"><span class="icon">🧩</span> SPIN 매칭 게임</div>
+    <p style="color:var(--text-tertiary); font-size:13px;">왼쪽 질문을 클릭한 후 오른쪽 SPIN 유형(S/P/I/N)을 선택해 짝을 맞추세요. 60초 안에 최대한 많은 라운드를 완료하세요.</p>
+  </div>
+
+  <div id="mgGame">
+    <div class="mg-stats">
+      <div class="mg-stat"><div class="mg-stat-label">라운드</div><div class="mg-stat-value" id="mgRound" style="color:var(--accent2);">1</div></div>
+      <div class="mg-stat"><div class="mg-stat-label">점수</div><div class="mg-stat-value" id="mgScore" style="color:var(--gold);">0</div></div>
+      <div class="mg-stat"><div class="mg-stat-label">시간</div><div class="mg-stat-value" id="mgTimer" style="color:var(--accent);">60</div></div>
+    </div>
+    <div class="mg-board">
+      <div class="mg-questions" id="mgQuestions"></div>
+      <div class="mg-types" id="mgTypes"></div>
+    </div>
+  </div>
+
+  <div id="mgResult" class="mg-result" style="display:none;">
+    <div class="mg-result-icon">🏆</div>
+    <div class="mg-result-score" id="mgFinalScore">0</div>
+    <div style="color:var(--text-muted); margin-bottom:24px;">최종 점수</div>
+    <button class="btn btn-primary" onclick="startGame()">🔄 다시 시작</button>
+    <a href="spin-tools.html" class="btn btn-secondary" style="margin-left:8px;">← 스핀도구들</a>
+  </div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="spin-questions.js"></script>
+<script>
+const TIME_LIMIT = 60;
+let round = 0;
+let score = 0;
+let timer = null;
+let timeLeft = 0;
+let selectedQ = null;
+let matched = 0;
+let currentRound = [];
+
+function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
+
+function startGame() {
+  round = 0;
+  score = 0;
+  document.getElementById('mgGame').style.display = 'block';
+  document.getElementById('mgResult').style.display = 'none';
+  timeLeft = TIME_LIMIT;
+  clearInterval(timer);
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('mgTimer').textContent = timeLeft;
+    if (timeLeft <= 0) { clearInterval(timer); endGame(); }
+  }, 1000);
+  startRound();
+}
+
+function startRound() {
+  round++;
+  document.getElementById('mgRound').textContent = round;
+  document.getElementById('mgScore').textContent = score;
+  matched = 0;
+  selectedQ = null;
+
+  // 4개 유형(S,P,I,N)에서 각 1개씩 무작위 선택
+  const types = ['S','P','I','N'];
+  currentRound = types.map(t => {
+    const pool = SPIN_QUESTIONS.filter(q => q.type === t);
+    return pool[Math.floor(Math.random() * pool.length)];
+  });
+
+  // 질문 카드 (셔플)
+  const shuffled = shuffle(currentRound);
+  document.getElementById('mgQuestions').innerHTML = shuffled.map((q, i) =>
+    '<div class="mg-card" data-type="' + q.type + '" data-idx="' + i + '" onclick="selectQuestion(this)">' +
+    '<div style="font-size:11px; color:var(--blue); font-weight:700; margin-bottom:4px;">' + q.ind + '</div>' +
+    '"' + q.q + '"</div>'
+  ).join('');
+
+  // 유형 카드 (셔플)
+  const shuffledTypes = shuffle(types);
+  document.getElementById('mgTypes').innerHTML = shuffledTypes.map(t =>
+    '<div class="mg-card mg-type-card ' + t + '" data-type="' + t + '" onclick="selectType(this)">' +
+    t + '<div class="mg-type-label">' + ({S:'상황질문',P:'문제질문',I:'시사질문',N:'해결질문'})[t] + '</div></div>'
+  ).join('');
+}
+
+function selectQuestion(el) {
+  document.querySelectorAll('#mgQuestions .mg-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedQ = el;
+}
+
+function selectType(el) {
+  if (!selectedQ) { return; }
+  const qType = selectedQ.dataset.type;
+  const tType = el.dataset.type;
+  if (qType === tType) {
+    selectedQ.classList.add('matched');
+    el.classList.add('matched');
+    score += 25;
+    matched++;
+    document.getElementById('mgScore').textContent = score;
+    if (matched >= 4) {
+      score += 50; // 라운드 보너스
+      setTimeout(startRound, 600);
+    }
+  } else {
+    selectedQ.classList.add('wrong');
+    el.classList.add('wrong');
+    score = Math.max(0, score - 5);
+    document.getElementById('mgScore').textContent = score;
+    setTimeout(() => {
+      selectedQ.classList.remove('wrong','selected');
+      el.classList.remove('wrong');
+    }, 500);
+  }
+  selectedQ = null;
+}
+
+function endGame() {
+  document.getElementById('mgGame').style.display = 'none';
+  document.getElementById('mgResult').style.display = 'block';
+  document.getElementById('mgFinalScore').textContent = score;
+}
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(startGame, 200));
+</script>
+</body>
+</html>
