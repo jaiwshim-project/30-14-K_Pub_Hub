@@ -3,44 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPIN 산업 맞히기</title>
+<title>SPIN 다음 질문 선택</title>
 <link rel="stylesheet" href="common.css">
 <style>
-.gi-container { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
-.gi-stats { display: flex; gap: 12px; margin-bottom: 20px; }
-.gi-stat { flex: 1; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
-.gi-stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
-.gi-stat-value { font-size: 22px; font-weight: 900; margin-top: 4px; }
+.gn-container { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+.gn-stats { display: flex; gap: 12px; margin-bottom: 20px; }
+.gn-stat { flex: 1; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+.gn-stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.gn-stat-value { font-size: 22px; font-weight: 900; margin-top: 4px; }
 
-.gi-progress { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
-.gi-progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transition: width 0.3s; }
+.gn-progress { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+.gn-progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--blue-light)); transition: width 0.3s; }
 
-.gi-question-card { background: linear-gradient(135deg, var(--card), var(--pastel-blue)); border: 2px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 24px; text-align: center; }
-.gi-spin-type { display: inline-block; padding: 6px 16px; border-radius: 8px; font-size: 13px; font-weight: 800; margin-bottom: 16px; }
-.gi-spin-type.S { background: #e8f4fd; color: #2980b9; }
-.gi-spin-type.P { background: #fef5e7; color: #d68910; }
-.gi-spin-type.I { background: #fdedec; color: #c0392b; }
-.gi-spin-type.N { background: #eafaf1; color: #1e8449; }
-.gi-question { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.6; }
-.gi-question-label { font-size: 12px; color: var(--text-muted); margin-top: 16px; font-weight: 600; }
+.gn-scenario-card { background: linear-gradient(135deg, var(--card), var(--pastel-blue)); border: 2px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+.gn-industry { display: inline-block; padding: 4px 12px; background: var(--pastel-blue); border: 1px solid rgba(36,113,163,0.2); border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--blue); margin-bottom: 14px; }
+.gn-stage { display: inline-block; padding: 4px 12px; background: var(--pastel-gold); border: 1px solid rgba(212,136,15,0.2); border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--gold); margin-left: 6px; }
+.gn-scenario-label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.gn-scenario-text { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.7; padding: 14px 18px; background: rgba(255,255,255,0.7); border-left: 3px solid var(--accent2); border-radius: 8px; margin-bottom: 14px; }
+.gn-question-prompt { font-size: 14px; color: var(--text-tertiary); font-weight: 600; }
+.gn-question-prompt strong { color: var(--accent); }
 
-.gi-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-.gi-option { padding: 16px 12px; border: 2px solid var(--border); border-radius: 12px; background: var(--card); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; color: var(--text); }
-.gi-option:hover { border-color: var(--accent2); transform: translateY(-2px); background: var(--pastel-blue); }
-.gi-option.correct { background: #eafaf1; border-color: #1e8449; color: #1e8449; }
-.gi-option.wrong { background: #fdedec; border-color: #c0392b; color: #c0392b; }
-.gi-option:disabled { cursor: not-allowed; }
+.gn-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+.gn-option { padding: 18px; border: 2px solid var(--border); border-radius: 12px; background: var(--card); font-family: inherit; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.gn-option-letter { font-size: 26px; font-weight: 900; }
+.gn-option-name { font-size: 12px; font-weight: 700; }
+.gn-option-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+.gn-option:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.gn-option.S:hover:not(:disabled) { border-color: #2980b9; background: #e8f4fd; }
+.gn-option.S .gn-option-letter, .gn-option.S .gn-option-name { color: #2980b9; }
+.gn-option.P:hover:not(:disabled) { border-color: #d68910; background: #fef5e7; }
+.gn-option.P .gn-option-letter, .gn-option.P .gn-option-name { color: #d68910; }
+.gn-option.I:hover:not(:disabled) { border-color: #c0392b; background: #fdedec; }
+.gn-option.I .gn-option-letter, .gn-option.I .gn-option-name { color: #c0392b; }
+.gn-option.N:hover:not(:disabled) { border-color: #1e8449; background: #eafaf1; }
+.gn-option.N .gn-option-letter, .gn-option.N .gn-option-name { color: #1e8449; }
+.gn-option.correct { background: #eafaf1 !important; border-color: #1e8449 !important; box-shadow: 0 0 0 3px rgba(30,132,73,0.2); }
+.gn-option.wrong { background: #fdedec !important; border-color: #c0392b !important; }
+.gn-option:disabled { cursor: not-allowed; }
 
-.gi-feedback { padding: 14px 18px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; line-height: 1.6; display: none; text-align: center; }
-.gi-feedback.correct { background: rgba(30,132,73,0.08); border: 1px solid rgba(30,132,73,0.2); color: var(--green); }
-.gi-feedback.wrong { background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.2); color: var(--accent); }
-.gi-feedback.show { display: block; }
+.gn-feedback { display: none; padding: 20px 24px; border-radius: 14px; margin-bottom: 20px; }
+.gn-feedback.show { display: block; animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.gn-feedback.correct { background: rgba(30,132,73,0.08); border: 2px solid rgba(30,132,73,0.25); }
+.gn-feedback.wrong { background: rgba(192,57,43,0.08); border: 2px solid rgba(192,57,43,0.25); }
+.gn-fb-title { font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+.gn-feedback.correct .gn-fb-title { color: var(--green); }
+.gn-feedback.wrong .gn-fb-title { color: var(--accent); }
+.gn-fb-explanation { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 12px; }
+.gn-fb-example { padding: 12px 16px; background: rgba(255,255,255,0.7); border-radius: 10px; font-size: 13px; color: var(--text-tertiary); line-height: 1.7; border-left: 3px solid var(--blue); }
 
-.gi-result { text-align: center; padding: 40px 20px; }
-.gi-result-icon { font-size: 60px; margin-bottom: 16px; }
-.gi-result-score { font-size: 48px; font-weight: 900; color: var(--accent2); margin-bottom: 8px; }
+.gn-next-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--blue), var(--blue-light)); color: white; font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; display: none; }
+.gn-next-btn.show { display: block; }
+.gn-next-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(36,113,163,0.3); }
 
-@media (max-width: 600px) { .gi-options { grid-template-columns: repeat(2, 1fr); } }
+.gn-result { text-align: center; padding: 40px 20px; }
+.gn-result-icon { font-size: 60px; margin-bottom: 16px; }
+.gn-result-score { font-size: 48px; font-weight: 900; color: var(--accent2); margin-bottom: 8px; }
 </style>
 </head>
 <body>
@@ -60,49 +78,62 @@
 </div>
 <div id="navPlaceholder" data-active=""></div>
 
-<div class="gi-container">
+<div class="gn-container">
   <div class="card" style="margin-bottom:20px;">
-    <div class="card-title"><span class="icon">🎯</span> SPIN 산업 맞히기</div>
-    <p style="color:var(--text-tertiary); font-size:13px;">질문을 보고 어떤 산업의 SPIN 질문인지 맞히세요. 30초 안에 정답을 선택하세요!</p>
-    <details class="game-guide" open style="margin-top:14px;">
+    <div class="card-title"><span class="icon">🎯</span> 다음 질문 선택 게임</div>
+    <p style="color:var(--text-tertiary); font-size:13px;">고객의 상황을 보고 영업담당자가 다음에 던져야 할 SPIN 질문 유형(S/P/I/N)을 선택하세요. 정답 시 효과적인 예시 질문도 확인할 수 있습니다.</p>
+    <details class="game-guide" style="margin-top:14px;">
       <summary style="cursor:pointer; font-size:13px; font-weight:700; color:var(--accent2); padding:10px 14px; background:var(--pastel-blue); border:1px solid rgba(36,113,163,0.15); border-radius:10px; user-select:none;">📖 게임 가이드 — 클릭하여 펼치기/접기</summary>
       <div style="margin-top:12px; padding:18px 22px; background:var(--bg); border:1px solid var(--border); border-radius:12px;">
         <div style="display:grid; gap:14px;">
-          <div><strong style="color:var(--accent2); font-size:13px;">🎯 목적</strong><br><span style="font-size:13px; color:var(--text-tertiary); line-height:1.7;">11개 산업별 SPIN 질문의 특성과 차이점을 인식합니다. IT, 제조, 금융 등 산업 특유의 어휘와 이슈를 통해 SPIN의 적용 방식이 어떻게 달라지는지 학습합니다.</span></div>
-          <div><strong style="color:var(--accent2); font-size:13px;">🏆 목표</strong><br><span style="font-size:13px; color:var(--text-tertiary); line-height:1.7;">10문제 중 최대한 많은 산업을 정확히 식별하여 고득점을 노립니다.</span></div>
-          <div><strong style="color:var(--accent2); font-size:13px;">📝 참가 방법</strong><br><ol style="font-size:13px; color:var(--text-tertiary); line-height:1.8; margin:4px 0 0 18px;"><li>화면 상단 SPIN 유형 배지 확인 (S/P/I/N)</li><li>질문 내용을 읽고 어느 산업인지 추측</li><li>30초 안에 6개 산업 보기 중 정답 선택</li><li>오답 시 정답이 자동으로 표시됨</li></ol></div>
-          <div><strong style="color:var(--accent2); font-size:13px;">⚔️ 대결 방식 & 점수</strong><br><ul style="font-size:13px; color:var(--text-tertiary); line-height:1.8; margin:4px 0 0 18px;"><li><strong>개인전</strong> — 10문제 도전, 결과는 리더보드에 등록</li><li>정답: <strong>+20점</strong></li><li>오답/시간 초과: <strong>-5점</strong> (최소 0점)</li><li>전체 정답 시 최대 200점</li></ul></div>
+          <div><strong style="color:var(--accent2); font-size:13px;">🎯 목적</strong><br><span style="font-size:13px; color:var(--text-tertiary); line-height:1.7;">실제 영업 상담에서 고객의 상황과 발언을 보고, 다음에 어떤 SPIN 질문을 던져야 가장 효과적인지 판단하는 능력을 키웁니다.</span></div>
+          <div><strong style="color:var(--accent2); font-size:13px;">🏆 목표</strong><br><span style="font-size:13px; color:var(--text-tertiary); line-height:1.7;">10가지 영업 시나리오에서 최적의 SPIN 질문 유형을 선택하여 고득점을 노립니다.</span></div>
+          <div><strong style="color:var(--accent2); font-size:13px;">📝 참가 방법</strong><br><ol style="font-size:13px; color:var(--text-tertiary); line-height:1.8; margin:4px 0 0 18px;"><li>고객 상황 카드를 자세히 읽습니다</li><li>현재 상담 단계와 고객 발언을 분석합니다</li><li>S/P/I/N 4가지 중 가장 적합한 질문 유형 선택</li><li>정답/오답 + 해설 + 예시 질문 확인</li></ol></div>
+          <div><strong style="color:var(--accent2); font-size:13px;">⚔️ 점수</strong><br><ul style="font-size:13px; color:var(--text-tertiary); line-height:1.8; margin:4px 0 0 18px;"><li>정답: <strong>+25점</strong></li><li>오답: <strong>-5점</strong> (최소 0점)</li><li>총 10문제, 최대 250점</li></ul></div>
         </div>
       </div>
     </details>
   </div>
 
-  <div id="giGame">
-    <div class="gi-stats">
-      <div class="gi-stat"><div class="gi-stat-label">문제</div><div class="gi-stat-value" id="giProgress" style="color:var(--blue);">1/10</div></div>
-      <div class="gi-stat"><div class="gi-stat-label">점수</div><div class="gi-stat-value" id="giScore" style="color:var(--gold);">0</div></div>
-      <div class="gi-stat"><div class="gi-stat-label">정답</div><div class="gi-stat-value" id="giCorrect" style="color:var(--green);">0</div></div>
-      <div class="gi-stat"><div class="gi-stat-label">시간</div><div class="gi-stat-value" id="giTimer" style="color:var(--accent);">30</div></div>
+  <div id="gnGame">
+    <div class="gn-stats">
+      <div class="gn-stat"><div class="gn-stat-label">문제</div><div class="gn-stat-value" id="gnProgress" style="color:var(--blue);">1/10</div></div>
+      <div class="gn-stat"><div class="gn-stat-label">점수</div><div class="gn-stat-value" id="gnScore" style="color:var(--gold);">0</div></div>
+      <div class="gn-stat"><div class="gn-stat-label">정답</div><div class="gn-stat-value" id="gnCorrect" style="color:var(--green);">0</div></div>
     </div>
-    <div class="gi-progress"><div class="gi-progress-fill" id="giProgressFill" style="width:0%"></div></div>
+    <div class="gn-progress"><div class="gn-progress-fill" id="gnProgressFill" style="width:0%"></div></div>
 
-    <div class="gi-question-card">
-      <div class="gi-spin-type" id="giSpinType">S</div>
-      <div class="gi-question" id="giQuestion"></div>
-      <div class="gi-question-label">↑ 어떤 산업의 질문일까요?</div>
+    <div class="gn-scenario-card">
+      <span class="gn-industry" id="gnIndustry">IT/소프트웨어</span>
+      <span class="gn-stage" id="gnStage">초기 탐색</span>
+      <div class="gn-scenario-label">고객 상황</div>
+      <div class="gn-scenario-text" id="gnScenario"></div>
+      <div class="gn-question-prompt">↑ 위 상황에서, 영업담당자가 던져야 할 가장 적합한 <strong>SPIN 질문 유형</strong>은?</div>
     </div>
 
-    <div class="gi-feedback" id="giFeedback"></div>
-    <div class="gi-options" id="giOptions"></div>
+    <div class="gn-options">
+      <button class="gn-option S" onclick="answer('S')"><span class="gn-option-letter">S</span><span class="gn-option-name">상황질문</span><span class="gn-option-desc">사실/배경 파악</span></button>
+      <button class="gn-option P" onclick="answer('P')"><span class="gn-option-letter">P</span><span class="gn-option-name">문제질문</span><span class="gn-option-desc">어려움/불만 탐색</span></button>
+      <button class="gn-option I" onclick="answer('I')"><span class="gn-option-letter">I</span><span class="gn-option-name">시사질문</span><span class="gn-option-desc">영향/결과 심화</span></button>
+      <button class="gn-option N" onclick="answer('N')"><span class="gn-option-letter">N</span><span class="gn-option-name">해결질문</span><span class="gn-option-desc">가치/이점 확인</span></button>
+    </div>
+
+    <div class="gn-feedback" id="gnFeedback">
+      <div class="gn-fb-title" id="gnFbTitle"></div>
+      <div class="gn-fb-explanation" id="gnFbExplanation"></div>
+      <div class="gn-fb-example" id="gnFbExample"></div>
+    </div>
+
+    <button class="gn-next-btn" id="gnNextBtn" onclick="nextQuestion()">다음 문제 →</button>
   </div>
 
-  <div id="giResult" class="gi-result" style="display:none;">
-    <div class="gi-result-icon">🎯</div>
-    <div class="gi-result-score" id="giFinalScore">0</div>
+  <div id="gnResult" class="gn-result" style="display:none;">
+    <div class="gn-result-icon">🏆</div>
+    <div class="gn-result-score" id="gnFinalScore">0</div>
     <div style="color:var(--text-muted); margin-bottom:8px;">최종 점수</div>
-    <div id="giResultDetail" style="font-size:14px; color:var(--text-tertiary); margin-bottom:24px;"></div>
+    <div id="gnResultDetail" style="font-size:14px; color:var(--text-tertiary); margin-bottom:24px;"></div>
     <button class="btn btn-primary" onclick="startGame()">🔄 다시 시작</button>
-    <a href="spin-tools.html" class="btn btn-secondary" style="margin-left:8px;">← 스핀도구들</a>
+    <a href="games-hub.html" class="btn btn-secondary" style="margin-left:8px;">← 게임 허브</a>
   </div>
 </div>
 
@@ -110,96 +141,113 @@
 </div>
 
 <script src="common.js"></script>
-<script src="spin-questions.js"></script>
 <script src="spin-game-utils.js"></script>
 <script>
+const SCENARIOS = [
+  { ind: 'IT/소프트웨어', stage: '초기 탐색', text: '처음 만난 고객 미팅. 고객사의 IT 인프라 현황과 사용 중인 시스템에 대해 아직 모르는 상태입니다.', type: 'S', explanation: '상담 초기에는 고객의 현재 환경과 배경을 파악하는 상황질문(S)이 필요합니다. 단, 너무 많이 하면 지루해지므로 핵심만 묻습니다.', example: '"현재 어떤 ERP 시스템을 사용하고 계신가요?"' },
+  { ind: '제조업', stage: '문제 탐색', text: '고객이 "우리 공장은 30년 된 설비로 운영 중입니다"라고 말했습니다. 설비 관련 어려움이 있을 가능성이 높습니다.', type: 'P', explanation: '고객의 상황을 파악했으니, 이제 그 상황에서 발생하는 문제/어려움을 탐색하는 문제질문(P)을 던질 차례입니다.', example: '"설비 노후화로 유지보수 비용이 증가하고 있지는 않나요?"' },
+  { ind: '금융/보험', stage: '문제 심화', text: '고객이 "최근 6개월간 고객 이탈률이 평소보다 15% 높아졌습니다"라고 문제를 언급했습니다.', type: 'I', explanation: '고객이 이미 문제를 인정했으므로, 그 문제의 심각성과 영향을 부각시키는 시사질문(I)으로 잠재니즈를 현재니즈로 전환해야 합니다.', example: '"고객 이탈이 신규 고객 확보 비용에 어떤 부담을 주고 있나요?"' },
+  { ind: '의료/제약', stage: '해결 가치 확인', text: '고객이 임상 데이터 관리 지연이 시장 출시 시기에 큰 영향을 미친다는 점을 명확히 인식하고 있는 상태입니다.', type: 'N', explanation: '고객이 이미 문제의 심각성을 충분히 인식했으므로, 해결책의 가치를 고객이 직접 말하게 하는 해결질문(N)을 던질 시점입니다.', example: '"AI 기반 데이터 분석으로 임상 기간을 30% 단축할 수 있다면 매출에 어떤 변화가 있을까요?"' },
+  { ind: '유통/리테일', stage: '초기 탐색', text: '리테일 체인 본부장과 첫 미팅. 매장 수, 채널 구성, 주력 카테고리 등에 대한 기본 정보가 필요한 상태입니다.', type: 'S', explanation: '고객의 비즈니스 규모와 운영 방식을 모르는 초기 단계에서는 상황질문(S)으로 사실 정보를 수집해야 다음 단계로 진행 가능합니다.', example: '"현재 온/오프라인 채널 비중은 어떻게 되나요?"' },
+  { ind: '건설/부동산', stage: '문제 탐색', text: '고객이 "프로젝트가 많이 늘어나면서 각 현장 진행 상황을 파악하기가 점점 어려워지고 있습니다"라고 말했습니다.', type: 'P', explanation: '고객이 어려움을 직접 표현했으나 아직 구체적인 문제가 무엇인지 명확하지 않습니다. 추가 문제질문(P)으로 문제를 더 구체화해야 합니다.', example: '"현장 일정 지연이 자주 발생하는 편인가요?"' },
+  { ind: '자동차', stage: '문제 심화', text: '고객이 "반도체 부품 수급이 작년부터 계속 불안정합니다. 이번 분기에도 몇 번 라인이 멈췄어요"라고 토로했습니다.', type: 'I', explanation: '문제가 명확히 드러났습니다. 이제 그 영향을 매출/생산성/관계 측면에서 심화시켜 잠재니즈를 현재니즈로 전환할 시사질문(I)이 필요합니다.', example: '"부품 수급 지연이 생산 라인 가동률에 어떤 영향을 미치고 있나요?"' },
+  { ind: '에너지', stage: '해결 가치 확인', text: '고객이 "비계획 정지가 발생할 때마다 시간당 수억 원 손실이 납니다. 올해는 벌써 5번 발생했어요"라고 심각성을 인정한 상태입니다.', type: 'N', explanation: '고객이 손실의 규모까지 구체적으로 언급하며 문제의 심각성을 충분히 인식했습니다. 해결책의 가치를 고객 본인이 표현하게 하는 해결질문(N) 차례입니다.', example: '"예측 정비로 비계획 정지를 80% 줄일 수 있다면 연간 가동률이 어떻게 개선될까요?"' },
+  { ind: '교육', stage: '초기 탐색', text: '교육 담당 임원과 첫 미팅. 회사의 교육 프로그램 운영 방식에 대해 사전 정보가 거의 없습니다.', type: 'S', explanation: '고객의 교육 인프라(LMS, 교육 방식, 평가 체계)를 모르는 상태에서는 상황질문(S)으로 기본 정보를 수집해야 합니다.', example: '"현재 학습 관리 시스템(LMS)은 어떤 것을 사용하고 계신가요?"' },
+  { ind: '컨설팅', stage: '문제 탐색', text: '대형 컨설팅펌 파트너가 "올해 매출은 전년 대비 늘었지만, 인력 운영 효율이 예전만 못 합니다"라고 말했습니다.', type: 'P', explanation: '고객이 효율 저하 문제를 언급했으나 구체적인 문제(채용/유지/배치/지식관리)는 불명확합니다. 추가 문제질문(P)으로 핵심 문제를 좁혀야 합니다.', example: '"핵심 인력 이탈로 프로젝트 품질에 영향을 받는 경우가 있나요?"' },
+  { ind: '식품/음료', stage: '문제 심화', text: '식품 회사 구매 책임자가 "원재료 가격이 작년 대비 20% 상승했어요. 가격 전가도 한계가 있고요"라고 어려움을 표현했습니다.', type: 'I', explanation: '문제(원가 상승 + 가격 전가의 한계)가 드러났습니다. 이 문제가 수익성/경쟁력/소비자 이탈에 어떤 영향을 미치는지 시사질문(I)으로 심화해야 합니다.', example: '"원가 상승을 가격에 반영하면 소비자 이탈이 우려되지는 않나요?"' },
+  { ind: 'IT/소프트웨어', stage: '해결 가치 확인', text: '고객이 시스템 장애로 인한 서비스 중단이 매월 평균 수천만 원의 매출 손실로 이어진다는 점을 명확히 인정한 상태입니다.', type: 'N', explanation: '문제의 심각성과 재무적 영향까지 고객이 인정했으므로, 해결책의 구체적 가치를 고객이 직접 말하게 하는 해결질문(N)이 필요합니다.', example: '"실시간 모니터링으로 장애를 사전에 예방할 수 있다면 운영팀의 업무가 어떻게 달라질까요?"' },
+  { ind: '제조업', stage: '초기 탐색', text: '자동차 부품 제조사 생산본부장과 첫 미팅. 생산 라인 수, 품질 관리 방식 등 기본 정보가 부족합니다.', type: 'S', explanation: '제조업 영업의 기본은 고객의 생산 환경 파악입니다. 상황질문(S)으로 라인 규모, QC 프로세스 등을 확인해야 합니다.', example: '"품질 관리 프로세스는 어떻게 운영되고 있나요?"' },
+  { ind: '금융/보험', stage: '문제 탐색', text: '은행 디지털 채널 책임자가 "디지털 전환은 했는데 효과가 기대에 못 미칩니다"라고 막연한 불만을 표현했습니다.', type: 'P', explanation: '고객의 불만이 아직 모호합니다. 어떤 부분이 구체적으로 문제인지(이탈률, 사기 탐지, 컴플라이언스 등) 문제질문(P)으로 좁혀야 합니다.', example: '"고객 이탈률이 업계 평균보다 높은 편이신가요?"' },
+  { ind: '유통/리테일', stage: '문제 심화', text: '대형 유통사 운영 책임자가 "재고 과잉으로 매년 폐기 비용이 만만치 않게 나갑니다"라고 문제를 명확히 언급했습니다.', type: 'I', explanation: '재고 폐기 문제가 명확히 드러났으므로, 그것이 ESG 평가, 비용 구조, 마진에 미치는 영향을 시사질문(I)으로 심화시켜야 합니다.', example: '"재고 비효율이 연간 폐기 비용에 어떤 영향을 미치고 있나요?"' }
+];
+
+const TYPE_NAMES = { S: '상황질문 (Situation)', P: '문제질문 (Problem)', I: '시사질문 (Implication)', N: '해결질문 (Need-Payoff)' };
+const TYPE_BADGE = {
+  S: 'background:#e8f4fd;color:#2980b9;padding:2px 8px;border-radius:6px;font-weight:800;',
+  P: 'background:#fef5e7;color:#d68910;padding:2px 8px;border-radius:6px;font-weight:800;',
+  I: 'background:#fdedec;color:#c0392b;padding:2px 8px;border-radius:6px;font-weight:800;',
+  N: 'background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:6px;font-weight:800;'
+};
 const TOTAL = 10;
-const TIME_LIMIT = 30;
-const TYPE_NAMES = { S: 'S 상황질문', P: 'P 문제질문', I: 'I 시사질문', N: 'N 해결질문' };
-const INDUSTRIES = [...new Set(SPIN_QUESTIONS.map(q => q.ind))];
 
 let questions = [];
 let currentIdx = 0;
 let score = 0;
 let correct = 0;
-let timer = null;
-let timeLeft = 0;
+let answered = false;
 
 function shuffle(arr) { return arr.slice().sort(() => Math.random() - 0.5); }
 
 function startGame() {
-  questions = shuffle(SPIN_QUESTIONS).slice(0, TOTAL);
+  questions = shuffle(SCENARIOS).slice(0, TOTAL);
   currentIdx = 0;
   score = 0;
   correct = 0;
-  document.getElementById('giGame').style.display = 'block';
-  document.getElementById('giResult').style.display = 'none';
+  document.getElementById('gnGame').style.display = 'block';
+  document.getElementById('gnResult').style.display = 'none';
   showQuestion();
 }
 
 function showQuestion() {
   if (currentIdx >= TOTAL) { showResult(); return; }
+  answered = false;
   const q = questions[currentIdx];
-
-  document.getElementById('giSpinType').textContent = TYPE_NAMES[q.type];
-  document.getElementById('giSpinType').className = 'gi-spin-type ' + q.type;
-  document.getElementById('giQuestion').textContent = '"' + q.q + '"';
-  document.getElementById('giProgress').textContent = (currentIdx + 1) + '/' + TOTAL;
-  document.getElementById('giScore').textContent = score;
-  document.getElementById('giCorrect').textContent = correct;
-  document.getElementById('giProgressFill').style.width = (currentIdx / TOTAL * 100) + '%';
-  document.getElementById('giFeedback').classList.remove('show');
-
-  // 정답 + 무작위 5개 오답 = 6개 보기
-  const wrongs = shuffle(INDUSTRIES.filter(i => i !== q.ind)).slice(0, 5);
-  const options = shuffle([q.ind, ...wrongs]);
-
-  document.getElementById('giOptions').innerHTML = options.map(opt =>
-    '<button class="gi-option" data-ind="' + opt + '" onclick="answer(this)">' + opt + '</button>'
-  ).join('');
-
-  timeLeft = TIME_LIMIT;
-  document.getElementById('giTimer').textContent = timeLeft;
-  clearInterval(timer);
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById('giTimer').textContent = timeLeft;
-    if (timeLeft <= 0) { clearInterval(timer); answer(null); }
-  }, 1000);
+  document.getElementById('gnIndustry').textContent = q.ind;
+  document.getElementById('gnStage').textContent = q.stage;
+  document.getElementById('gnScenario').textContent = q.text;
+  document.getElementById('gnProgress').textContent = (currentIdx + 1) + '/' + TOTAL;
+  document.getElementById('gnScore').textContent = score;
+  document.getElementById('gnCorrect').textContent = correct;
+  document.getElementById('gnProgressFill').style.width = (currentIdx / TOTAL * 100) + '%';
+  document.getElementById('gnFeedback').classList.remove('show');
+  document.getElementById('gnNextBtn').classList.remove('show');
+  document.querySelectorAll('.gn-option').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('correct', 'wrong');
+  });
 }
 
-function answer(el) {
-  clearInterval(timer);
+function answer(choice) {
+  if (answered) return;
+  answered = true;
   const q = questions[currentIdx];
-  const choice = el ? el.dataset.ind : null;
-  const isCorrect = choice === q.ind;
+  const isCorrect = choice === q.type;
 
-  document.querySelectorAll('.gi-option').forEach(b => {
-    b.disabled = true;
-    if (b.dataset.ind === q.ind) b.classList.add('correct');
-    else if (b === el) b.classList.add('wrong');
-  });
+  document.querySelectorAll('.gn-option').forEach(b => { b.disabled = true; });
+  document.querySelector('.gn-option.' + q.type).classList.add('correct');
+  if (!isCorrect) document.querySelector('.gn-option.' + choice).classList.add('wrong');
 
+  const fb = document.getElementById('gnFeedback');
   if (isCorrect) {
-    score += 20;
+    score += 25;
     correct++;
-    document.getElementById('giFeedback').textContent = '✅ 정답! +20점';
-    document.getElementById('giFeedback').className = 'gi-feedback correct show';
+    fb.className = 'gn-feedback correct show';
+    document.getElementById('gnFbTitle').textContent = '✅ 정답입니다! +25점';
+    document.getElementById('gnFbExplanation').innerHTML = '정답: <span style="' + TYPE_BADGE[q.type] + '">' + TYPE_NAMES[q.type] + '</span><br><br>' + q.explanation;
   } else {
     score = Math.max(0, score - 5);
-    document.getElementById('giFeedback').textContent = '❌ ' + (choice ? '오답' : '시간 초과') + '. 정답: ' + q.ind;
-    document.getElementById('giFeedback').className = 'gi-feedback wrong show';
+    fb.className = 'gn-feedback wrong show';
+    document.getElementById('gnFbTitle').textContent = '❌ 오답입니다 -5점';
+    document.getElementById('gnFbExplanation').innerHTML = '당신의 선택: <span style="' + TYPE_BADGE[choice] + '">' + TYPE_NAMES[choice] + '</span><br>정답: <span style="' + TYPE_BADGE[q.type] + '">' + TYPE_NAMES[q.type] + '</span><br><br>' + q.explanation;
   }
+  document.getElementById('gnFbExample').innerHTML = '💬 <strong>예시 질문:</strong> ' + q.example;
 
-  setTimeout(() => { currentIdx++; showQuestion(); }, 1800);
+  document.getElementById('gnScore').textContent = score;
+  document.getElementById('gnCorrect').textContent = correct;
+  document.getElementById('gnNextBtn').classList.add('show');
+}
+
+function nextQuestion() {
+  currentIdx++;
+  showQuestion();
 }
 
 function showResult() {
-  document.getElementById('giGame').style.display = 'none';
-  document.getElementById('giResult').style.display = 'block';
-  document.getElementById('giFinalScore').textContent = score;
-  document.getElementById('giResultDetail').textContent = '정답 ' + correct + ' / ' + TOTAL + '개';
-  saveGameScore('industry', 'SPIN 산업 맞히기', score, { correct: correct, total: TOTAL });
+  document.getElementById('gnGame').style.display = 'none';
+  document.getElementById('gnResult').style.display = 'block';
+  document.getElementById('gnFinalScore').textContent = score;
+  document.getElementById('gnResultDetail').textContent = '정답 ' + correct + ' / ' + TOTAL + '개';
+  saveGameScore('next-question', '다음 질문 선택', score, { correct: correct, total: TOTAL });
 }
 
 document.addEventListener('DOMContentLoaded', () => setTimeout(startGame, 200));

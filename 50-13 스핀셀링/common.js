@@ -546,7 +546,7 @@ function getNavHTML(activePage) {
       <a href="game-match.html" class="nav-sub-item"><span>🧩</span> 매칭 게임</a>
       <a href="game-flash.html" class="nav-sub-item"><span>🃏</span> 플래시카드</a>
       <a href="game-order.html" class="nav-sub-item"><span>🔢</span> 순서 정렬</a>
-      <a href="game-industry.html" class="nav-sub-item"><span>🎯</span> 산업 맞히기</a>
+      <a href="game-industry.html" class="nav-sub-item"><span>🎯</span> 다음 질문 선택</a>
       <a href="game-leaderboard.html" class="nav-sub-item" style="background:rgba(245,166,35,0.1); color:var(--gold-light);"><span>🏆</span> 게임 리더보드</a>
     </div>`;
 
