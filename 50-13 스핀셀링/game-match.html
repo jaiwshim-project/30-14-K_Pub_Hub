@@ -86,6 +86,7 @@
 
 <script src="common.js"></script>
 <script src="spin-questions.js"></script>
+<script src="spin-game-utils.js"></script>
 <script>
 const TIME_LIMIT = 60;
 let round = 0;
@@ -180,6 +181,7 @@ function endGame() {
   document.getElementById('mgGame').style.display = 'none';
   document.getElementById('mgResult').style.display = 'block';
   document.getElementById('mgFinalScore').textContent = score;
+  saveGameScore('match', 'SPIN 매칭 게임', score, { rounds: round });
 }
 
 document.addEventListener('DOMContentLoaded', () => setTimeout(startGame, 200));

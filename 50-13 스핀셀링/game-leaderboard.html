@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임 리더보드</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.lb-container { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+
+.lb-tabs { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 24px; flex-wrap: wrap; }
+.lb-tab { flex: 1; min-width: 100px; padding: 10px; text-align: center; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--text-muted); transition: all 0.2s; border: none; background: transparent; font-family: inherit; }
+.lb-tab.active { background: var(--card); color: var(--accent2); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+
+.lb-section { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+.lb-section-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
+.lb-rank-list { display: flex; flex-direction: column; gap: 8px; }
+.lb-rank-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg); border-radius: 10px; transition: all 0.2s; }
+.lb-rank-row:hover { background: var(--pastel-blue); }
+.lb-rank-num { width: 32px; height: 32px; border-radius: 50%; background: var(--card); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: var(--text-muted); flex-shrink: 0; }
+.lb-rank-row.rank-1 .lb-rank-num { background: linear-gradient(135deg, #f5a623, #d4880f); color: white; border-color: #d4880f; }
+.lb-rank-row.rank-2 .lb-rank-num { background: linear-gradient(135deg, #bdc3c7, #95a5a6); color: white; border-color: #95a5a6; }
+.lb-rank-row.rank-3 .lb-rank-num { background: linear-gradient(135deg, #e58e26, #cd6133); color: white; border-color: #cd6133; }
+.lb-name { flex: 1; font-size: 14px; font-weight: 700; color: var(--text); }
+.lb-team { font-size: 11px; color: var(--text-muted); padding: 2px 8px; background: var(--card); border-radius: 6px; font-weight: 600; }
+.lb-game { font-size: 11px; color: var(--blue); padding: 2px 8px; background: var(--pastel-blue); border-radius: 6px; font-weight: 600; }
+.lb-score { font-size: 16px; font-weight: 900; color: var(--accent2); min-width: 60px; text-align: right; }
+
+.lb-team-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.lb-team-card { background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+.lb-team-card.team-A { border-color: #c0392b; }
+.lb-team-card.team-B { border-color: #2471a3; }
+.lb-team-card.team-C { border-color: #1e8449; }
+.lb-team-card.team-D { border-color: #d4880f; }
+.lb-team-card.team-E { border-color: #7d3c98; }
+.lb-team-name { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
+.lb-team-score { font-size: 22px; font-weight: 900; color: var(--text); }
+.lb-team-rank { font-size: 11px; color: var(--gold); margin-top: 4px; font-weight: 700; }
+
+.lb-empty { text-align: center; padding: 40px 20px; color: var(--text-disabled); font-size: 14px; }
+
+@media (max-width: 768px) {
+  .lb-team-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+<div id="mainApp" style="display:none;">
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="lb-container">
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title"><span class="icon">🏆</span> 게임 리더보드</div>
+    <p style="color:var(--text-tertiary); font-size:13px;">5개 학습 게임의 Top 10 순위 + 팀별 합산 점수입니다.</p>
+  </div>
+
+  <div class="lb-tabs">
+    <button class="lb-tab active" onclick="switchTab('all', this)">🏆 전체</button>
+    <button class="lb-tab" onclick="switchTab('quiz-race', this)">🏁 퀴즈레이스</button>
+    <button class="lb-tab" onclick="switchTab('match', this)">🧩 매칭</button>
+    <button class="lb-tab" onclick="switchTab('flash', this)">🃏 플래시</button>
+    <button class="lb-tab" onclick="switchTab('order', this)">🔢 순서</button>
+    <button class="lb-tab" onclick="switchTab('industry', this)">🎯 산업</button>
+  </div>
+
+  <div class="lb-section">
+    <div class="lb-section-title">👥 팀별 합산 점수</div>
+    <div class="lb-team-grid" id="lbTeamGrid"></div>
+  </div>
+
+  <div class="lb-section">
+    <div class="lb-section-title">🥇 Top 10 개인 순위</div>
+    <div class="lb-rank-list" id="lbRankList"></div>
+  </div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="spin-game-utils.js"></script>
+<script>
+let activeGame = 'all';
+
+const GAME_NAMES = {
+  'quiz-race': '퀴즈레이스',
+  'match': '매칭게임',
+  'flash': '플래시카드',
+  'order': '순서정렬',
+  'industry': '산업맞히기'
+};
+
+function switchTab(game, btn) {
+  activeGame = game;
+  document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  loadLeaderboard();
+}
+
+async function loadLeaderboard() {
+  // 개인 순위
+  const rankings = await fetchGameLeaderboard(activeGame === 'all' ? null : activeGame, 10);
+  const list = document.getElementById('lbRankList');
+
+  if (!rankings || rankings.length === 0) {
+    list.innerHTML = '<div class="lb-empty">아직 게임 기록이 없습니다.<br>게임을 플레이하고 첫 기록을 남겨보세요!</div>';
+  } else {
+    list.innerHTML = rankings.map((r, i) => {
+      let team = '';
+      let gameLabel = '';
+      try {
+        const d = JSON.parse(r.activity_data || '{}');
+        if (d.team) team = '<span class="lb-team">팀 ' + d.team + '</span>';
+        const gKey = (r.activity_type || '').replace('game_', '');
+        gameLabel = GAME_NAMES[gKey] ? '<span class="lb-game">' + GAME_NAMES[gKey] + '</span>' : '';
+      } catch(e) {}
+      const rankClass = i < 3 ? ' rank-' + (i+1) : '';
+      return '<div class="lb-rank-row' + rankClass + '">' +
+        '<div class="lb-rank-num">' + (i + 1) + '</div>' +
+        '<div class="lb-name">' + (r.member_name || '익명') + '</div>' +
+        team + gameLabel +
+        '<div class="lb-score">' + (r.score || 0) + '점</div></div>';
+    }).join('');
+  }
+
+  // 팀별 합산
+  const teams = await fetchTeamGameScores();
+  const teamArr = Object.entries(teams).filter(([k, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+
+  if (teamArr.length === 0) {
+    document.getElementById('lbTeamGrid').innerHTML = '<div class="lb-empty" style="grid-column:1/-1;">아직 팀 점수가 없습니다</div>';
+  } else {
+    document.getElementById('lbTeamGrid').innerHTML = ['A','B','C','D','E'].map(t => {
+      const score = teams[t] || 0;
+      const rank = teamArr.findIndex(([k]) => k === t) + 1;
+      return '<div class="lb-team-card team-' + t + '">' +
+        '<div class="lb-team-name">팀 ' + t + '</div>' +
+        '<div class="lb-team-score">' + score + '</div>' +
+        (rank > 0 ? '<div class="lb-team-rank">' + rank + '위</div>' : '') +
+        '</div>';
+    }).join('');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    loadLeaderboard();
+    setInterval(loadLeaderboard, 15000); // 15초마다 자동 갱신
+  }, 200);
+});
+</script>
+</body>
+</html>

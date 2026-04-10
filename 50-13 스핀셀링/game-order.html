@@ -84,6 +84,7 @@
 
 <script src="common.js"></script>
 <script src="spin-questions.js"></script>
+<script src="spin-game-utils.js"></script>
 <script>
 const INDUSTRIES = [...new Set(SPIN_QUESTIONS.map(q => q.ind))];
 let round = 0;
@@ -151,6 +152,7 @@ function checkAnswer() {
     correctCount++;
     document.getElementById('soCorrect').textContent = correctCount;
     userOrder.forEach(el => el.classList.add('correct'));
+    saveGameScore('order', 'SPIN 순서 정렬', correctCount * 50, { correct: correctCount, attempts: attempts });
     setTimeout(startRound, 1500);
   } else {
     userOrder.forEach((el, i) => {

@@ -105,6 +105,7 @@
 
 <script src="common.js"></script>
 <script src="spin-questions.js"></script>
+<script src="spin-game-utils.js"></script>
 <script>
 const TOTAL_Q = 10;
 const TIME_LIMIT = 30;
@@ -181,6 +182,7 @@ function showResult() {
   document.getElementById('qrResult').style.display = 'block';
   document.getElementById('qrFinalScore').textContent = score;
   document.getElementById('qrResultDetail').textContent = '정답 ' + correctCount + ' / ' + TOTAL_Q + '개';
+  saveGameScore('quiz-race', 'SPIN 퀴즈 레이스', score, { correct: correctCount, total: TOTAL_Q });
 }
 
 document.addEventListener('DOMContentLoaded', () => setTimeout(startGame, 200));

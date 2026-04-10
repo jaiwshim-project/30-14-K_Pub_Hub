@@ -112,6 +112,7 @@
 
 <script src="common.js"></script>
 <script src="spin-questions.js"></script>
+<script src="spin-game-utils.js"></script>
 <script>
 let cards = [];
 let currentIdx = 0;
@@ -139,7 +140,12 @@ function startGame() {
 }
 
 function showCard() {
-  if (currentIdx >= cards.length) { alert('모든 카드를 확인했습니다!\n안다: ' + known + ' / 모른다: ' + unknown); currentIdx = 0; return; }
+  if (currentIdx >= cards.length) {
+    alert('모든 카드를 확인했습니다!\n안다: ' + known + ' / 모른다: ' + unknown);
+    saveGameScore('flash', 'SPIN 플래시카드', known * 10, { known: known, unknown: unknown });
+    currentIdx = 0;
+    return;
+  }
   const c = cards[currentIdx];
   document.getElementById('fcCard').classList.remove('flipped');
   document.getElementById('fcIndustry').textContent = '📍 ' + c.ind;

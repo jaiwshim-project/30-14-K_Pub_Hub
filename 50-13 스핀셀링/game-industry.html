@@ -100,6 +100,7 @@
 
 <script src="common.js"></script>
 <script src="spin-questions.js"></script>
+<script src="spin-game-utils.js"></script>
 <script>
 const TOTAL = 10;
 const TIME_LIMIT = 30;
@@ -187,6 +188,7 @@ function showResult() {
   document.getElementById('giResult').style.display = 'block';
   document.getElementById('giFinalScore').textContent = score;
   document.getElementById('giResultDetail').textContent = '정답 ' + correct + ' / ' + TOTAL + '개';
+  saveGameScore('industry', 'SPIN 산업 맞히기', score, { correct: correct, total: TOTAL });
 }
 
 document.addEventListener('DOMContentLoaded', () => setTimeout(startGame, 200));
