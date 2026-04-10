@@ -261,8 +261,80 @@ BAF (Benefit-Advantage-Feature): 역순 제시
     if (t) t.remove();
   }
 
+  // === Gemini Embedding API ===
+  const GEMINI_EMBED_URL = 'https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=' + GEMINI_KEY;
+  let _kbEmbeddings = null;
+
+  async function embedText(text) {
+    try {
+      const res = await fetch(GEMINI_EMBED_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'models/text-embedding-004', content: { parts: [{ text: text }] } })
+      });
+      const data = await res.json();
+      return data.embedding && data.embedding.values;
+    } catch(e) { return null; }
+  }
+
+  function cosineSim(a, b) {
+    let dot = 0, na = 0, nb = 0;
+    for (let i = 0; i < a.length; i++) { dot += a[i]*b[i]; na += a[i]*a[i]; nb += b[i]*b[i]; }
+    return dot / (Math.sqrt(na) * Math.sqrt(nb) + 1e-8);
+  }
+
+  async function ensureKBEmbeddings() {
+    if (_kbEmbeddings) return _kbEmbeddings;
+    if (typeof SPIN_KB === 'undefined') return null;
+    try {
+      const cached = localStorage.getItem('spin_kb_embeddings_v1');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.length === SPIN_KB.length) { _kbEmbeddings = parsed; return _kbEmbeddings; }
+      }
+    } catch(e) {}
+    try {
+      const embeddings = await Promise.all(SPIN_KB.map(c => embedText(c.tag + '. ' + c.content)));
+      _kbEmbeddings = embeddings;
+      try { localStorage.setItem('spin_kb_embeddings_v1', JSON.stringify(embeddings)); } catch(e) {}
+      return _kbEmbeddings;
+    } catch(e) { return null; }
+  }
+
+  async function vectorSearch(query, topK) {
+    const qEmb = await embedText(query);
+    if (!qEmb) return [];
+    const kbEmbs = await ensureKBEmbeddings();
+    if (!kbEmbs || typeof SPIN_KB === 'undefined') return [];
+    const scored = SPIN_KB.map((c, i) => ({ chunk: c, score: kbEmbs[i] ? cosineSim(qEmb, kbEmbs[i]) : 0 }));
+    return scored.sort((a, b) => b.score - a.score).slice(0, topK || 5).map(x => x.chunk);
+  }
+
+  async function hybridSearch(query) {
+    const kwResults = (typeof searchKB === 'function') ? searchKB(query, 5) : [];
+    let vecResults = [];
+    try { vecResults = await vectorSearch(query, 5); } catch(e) {}
+    const seen = {};
+    const merged = [];
+    [...kwResults, ...vecResults].forEach(c => {
+      if (c && !seen[c.id]) { seen[c.id] = true; merged.push(c); }
+    });
+    return merged.slice(0, 6);
+  }
+
   // === Gemini API 호출 ===
   async function callGemini(userMsg) {
+    // RAG: 지식베이스 검색
+    let ragContext = '';
+    try {
+      const chunks = await hybridSearch(userMsg);
+      if (chunks && chunks.length > 0) {
+        ragContext = '\n\n=== 플랫폼 지식베이스 (RAG) ===\n' +
+          chunks.map((c, i) => '[' + (i + 1) + '] ' + c.tag + ':\n' + c.content).join('\n\n') +
+          '\n\n위 참고문서를 우선 활용하여 답변하세요.';
+      }
+    } catch(e) {}
+
     // 교육생 개인화 데이터
     let personalContext = '';
     try {
@@ -298,7 +370,7 @@ BAF (Benefit-Advantage-Feature): 역순 제시
     } catch(e) {}
 
     const contents = [
-      { role: 'user', parts: [{ text: SPIN_KNOWLEDGE + personalContext + '\n\n---\n\n사용자 질문: ' + (chatHistory.length === 0 ? '' : '이전 대화:\n' + chatHistory.slice(-8).map(h => h.role + ': ' + h.content).join('\n') + '\n\n현재 질문: ') + userMsg }] }
+      { role: 'user', parts: [{ text: SPIN_KNOWLEDGE + ragContext + personalContext + '\n\n---\n\n사용자 질문: ' + (chatHistory.length === 0 ? '' : '이전 대화:\n' + chatHistory.slice(-8).map(h => h.role + ': ' + h.content).join('\n') + '\n\n현재 질문: ') + userMsg }] }
     ];
 
     const res = await fetch(GEMINI_URL, {

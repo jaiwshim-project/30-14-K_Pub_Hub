@@ -742,8 +742,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // Restore saved user
   restoreUser();
 
-  // Load chatbot
-  const cbScript = document.createElement('script');
-  cbScript.src = 'chatbot.js';
-  document.body.appendChild(cbScript);
+  // Load chatbot (지식베이스 먼저, 그 다음 챗봇)
+  const kbScript = document.createElement('script');
+  kbScript.src = 'spin-knowledge-base.js';
+  kbScript.onload = function() {
+    const cbScript = document.createElement('script');
+    cbScript.src = 'chatbot.js';
+    document.body.appendChild(cbScript);
+  };
+  document.body.appendChild(kbScript);
 });
