@@ -778,7 +778,8 @@ async function loadAllData() {
       session._activities = activities;
       session._registeredCount = members.filter(m => m.name && m.name.trim()).length;
       session._teamNames = session.team_names || {};
-      session._teamKeys = Object.keys(session._teamNames).filter(k => k.length === 1);
+      const activeTeams = new Set(members.filter(m => m.name && m.name.trim()).map(m => m.team_id));
+      session._teamKeys = [...activeTeams];
       session._totalScore = members.reduce((sum, m) =>
         sum + (m.score_quiz || 0) + (m.score_needs || 0) + (m.score_scenario || 0)
             + (m.score_practice || 0) + (m.score_roleplay || 0) + (m.score_fab || 0), 0);
