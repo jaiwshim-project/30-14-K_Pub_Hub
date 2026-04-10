@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling - 교육 자료</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.mat-container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+.mat-tabs { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 24px; }
+.mat-tab { flex: 1; padding: 10px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text-muted); transition: all 0.2s; border: none; background: transparent; font-family: inherit; }
+.mat-tab.active { background: var(--card); color: var(--accent2); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.mat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.mat-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px; transition: all 0.2s; cursor: pointer; }
+.mat-card:hover { border-color: var(--accent2); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+.mat-card-icon { font-size: 32px; margin-bottom: 10px; }
+.mat-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.mat-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.mat-card-meta { display: flex; gap: 8px; margin-top: 10px; }
+.mat-tag { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+.mat-tag.pdf { background: rgba(192,57,43,0.08); color: var(--accent); }
+.mat-tag.video { background: rgba(36,113,163,0.08); color: var(--blue); }
+.mat-tag.case { background: rgba(30,132,73,0.08); color: var(--green); }
+.mat-tag.template { background: rgba(212,136,15,0.08); color: var(--gold); }
+.mat-content { display: none; }
+.mat-content.active { display: block; }
+</style>
+</head>
+<body>
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+<div id="mainApp" style="display:none;">
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="mat-container">
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-title"><span class="icon">📂</span> 교육 자료실</div>
+    <p style="color:var(--text-tertiary); font-size:13px;">SPIN Selling 교육에 필요한 자료를 카테고리별로 정리했습니다.</p>
+  </div>
+
+  <div class="mat-tabs">
+    <button class="mat-tab active" onclick="switchMatTab('all', this)">전체</button>
+    <button class="mat-tab" onclick="switchMatTab('reading', this)">📖 리딩</button>
+    <button class="mat-tab" onclick="switchMatTab('template', this)">📋 템플릿</button>
+    <button class="mat-tab" onclick="switchMatTab('case', this)">📊 케이스</button>
+    <button class="mat-tab" onclick="switchMatTab('reference', this)">📚 참고</button>
+  </div>
+
+  <div class="mat-grid" id="matGrid"></div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+const MATERIALS = [
+  { cat: 'reading', icon: '📘', title: 'SPIN Selling 3.0 교재', desc: 'Korn Ferry 공인 SPIN Selling 3.0 교재. 교육 전 반드시 읽어야 하는 핵심 자료.', tags: ['pdf'], link: 'prereading.html' },
+  { cat: 'reading', icon: '📙', title: 'SPIN Selling 기본 개념', desc: 'S(상황), P(문제), I(시사), N(해결) 4가지 질문 유형의 정의와 활용법.', tags: ['pdf'] },
+  { cat: 'reading', icon: '📕', title: '대형 영업의 핵심 원리', desc: '소형 영업과 대형 영업의 차이점, 왜 SPIN이 대형 영업에 효과적인지 설명.', tags: ['pdf'] },
+  { cat: 'template', icon: '📋', title: '콜플랜 작성 템플릿', desc: '6단계 콜플랜 작성 양식. 상담 목적, 고객 배경, SPIN 질문, FAB 시나리오 포함.', tags: ['template'], link: 'callplan.html' },
+  { cat: 'template', icon: '📝', title: 'SPIN 질문 준비 시트', desc: '고객 미팅 전 S/P/I/N 질문을 각각 준비하는 워크시트.', tags: ['template'] },
+  { cat: 'template', icon: '🧩', title: 'FAB/BAF 분석 시트', desc: '자사 제품/서비스의 Feature, Advantage, Benefit을 정리하는 양식.', tags: ['template'], link: 'fab.html' },
+  { cat: 'case', icon: '🏢', title: 'IT 솔루션 영업 사례', desc: 'ERP 시스템 도입 제안에서 SPIN 기법을 활용한 실제 상담 스크립트.', tags: ['case'] },
+  { cat: 'case', icon: '🏦', title: '금융 상품 영업 사례', desc: '기업 대출 상담에서 시사질문으로 고객의 잠재니즈를 현재니즈로 전환한 사례.', tags: ['case'] },
+  { cat: 'case', icon: '🏭', title: '제조업 설비 영업 사례', desc: '스마트팩토리 솔루션 제안에서 SPIN 전체 프로세스를 활용한 성공 사례.', tags: ['case'] },
+  { cat: 'case', icon: '💊', title: '제약 영업 사례', desc: '신약 런칭 시 의료진 대상 SPIN 질문으로 처방 전환을 유도한 사례.', tags: ['case'] },
+  { cat: 'reference', icon: '📊', title: 'SPIN 질문 라이브러리', desc: '11개 산업별 132개 우수 SPIN 질문 예시 데이터베이스.', tags: ['pdf'], link: 'spin-library.html' },
+  { cat: 'reference', icon: '🧠', title: '온톨로지 역량 분석 가이드', desc: '약점→이슈→근본원인→전략→실행과제 온톨로지 기반 역량 분석 방법론.', tags: ['pdf'], link: 'ontology.html' },
+  { cat: 'reference', icon: '📈', title: 'Huthwaite 35,000건 연구 요약', desc: 'Neil Rackham의 35,000건 영업 상담 연구 핵심 발견을 정리한 요약본.', tags: ['pdf'] },
+  { cat: 'reference', icon: '🎯', title: '니즈 구분 가이드', desc: '잠재니즈(Implied Needs)와 현재니즈(Explicit Needs)를 구분하는 실전 가이드.', tags: ['pdf'] }
+];
+
+let activeMatCat = 'all';
+
+function switchMatTab(cat, btn) {
+  activeMatCat = cat;
+  document.querySelectorAll('.mat-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderMaterials();
+}
+
+function renderMaterials() {
+  const filtered = activeMatCat === 'all' ? MATERIALS : MATERIALS.filter(m => m.cat === activeMatCat);
+  document.getElementById('matGrid').innerHTML = filtered.map(m => {
+    const tagHTML = m.tags.map(t => '<span class="mat-tag ' + t + '">' + t.toUpperCase() + '</span>').join('');
+    const onclick = m.link ? ' onclick="location.href=\'' + m.link + '\'"' : '';
+    return '<div class="mat-card"' + onclick + '>' +
+      '<div class="mat-card-icon">' + m.icon + '</div>' +
+      '<div class="mat-card-title">' + m.title + '</div>' +
+      '<div class="mat-card-desc">' + m.desc + '</div>' +
+      '<div class="mat-card-meta">' + tagHTML + '</div></div>';
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(renderMaterials, 200));
+</script>
+</body>
+</html>

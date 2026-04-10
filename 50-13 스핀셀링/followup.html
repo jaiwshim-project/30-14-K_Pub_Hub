@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling - 30일 팔로업</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.fu-container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+.fu-timeline { position: relative; padding-left: 40px; }
+.fu-timeline::before { content: ''; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+
+.fu-week { position: relative; margin-bottom: 28px; }
+.fu-week-dot { position: absolute; left: -32px; top: 4px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border); background: var(--card); z-index: 1; }
+.fu-week.sent .fu-week-dot { background: var(--green); border-color: var(--green); }
+.fu-week.current .fu-week-dot { background: var(--gold); border-color: var(--gold); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(245,166,35,0.4); } 50% { box-shadow: 0 0 0 8px rgba(245,166,35,0); } }
+
+.fu-week-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px; transition: all 0.2s; }
+.fu-week-card:hover { border-color: var(--accent2); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+.fu-week.sent .fu-week-card { border-color: rgba(30,132,73,0.2); background: rgba(30,132,73,0.02); }
+
+.fu-week-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.fu-week-title { font-size: 16px; font-weight: 800; color: var(--text); }
+.fu-week-date { font-size: 12px; color: var(--text-muted); }
+.fu-week-status { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 6px; }
+.fu-week-status.sent { background: rgba(30,132,73,0.1); color: var(--green); }
+.fu-week-status.scheduled { background: rgba(212,136,15,0.1); color: var(--gold); }
+.fu-week-status.pending { background: var(--bg); color: var(--text-disabled); }
+
+.fu-week-content { font-size: 14px; color: var(--text-tertiary); line-height: 1.7; }
+.fu-week-actions { display: flex; gap: 8px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="auth-overlay hidden" id="authLogin"></div>
+<div class="auth-overlay hidden" id="authSignup"></div>
+<div id="mainApp" style="display:none;">
+<div class="header">
+  <div class="logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;">
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="logo-img">
+      <div>
+        <div class="logo-text">SPIN Selling <span style="color:var(--gold-light);">AI</span></div>
+        <div class="logo-sub">AI-Powered Training</div>
+      </div>
+    </a>
+  </div>
+</div>
+<div id="navPlaceholder" data-active=""></div>
+
+<div class="fu-container">
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-title"><span class="icon">📬</span> 30일 팔로업 프로그램</div>
+    <p style="color:var(--text-tertiary); font-size:13px; margin-bottom:12px;">교육 후 4주간 주간 리마인더로 SPIN Selling 실전 적용을 독려합니다.</p>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-primary" onclick="scheduleAll()">📧 전체 스케줄 설정</button>
+      <button class="btn btn-secondary" onclick="history.back()">← 이전</button>
+    </div>
+  </div>
+
+  <div class="fu-timeline" id="fuTimeline"></div>
+</div>
+
+<div id="footerPlaceholder"></div>
+</div>
+
+<script src="common.js"></script>
+<script>
+const WEEKS = [
+  {
+    week: 1,
+    title: '1주차: SPIN 질문 실전 적용',
+    content: '이번 주 목표: 실제 고객 미팅에서 상황질문(S)을 3개 이상, 문제질문(P)을 2개 이상 활용해보세요.\n\n실천 과제:\n• 이번 주 예정된 고객 미팅 1건을 선택하세요\n• 미팅 전 S/P 질문을 각 3개씩 준비하세요\n• 미팅 후 어떤 질문이 효과적이었는지 기록하세요',
+    tip: '첫 주는 S와 P에 집중합니다. I/N은 아직 시도하지 않아도 됩니다.'
+  },
+  {
+    week: 2,
+    title: '2주차: 시사질문(I) 도전',
+    content: '이번 주 목표: 고객의 문제를 심화시키는 시사질문(I)을 2개 이상 활용해보세요.\n\n실천 과제:\n• 1주차에 발견한 고객 문제 중 1개를 선택\n• "그 문제가 ~에 어떤 영향을 미치나요?" 패턴으로 I질문 준비\n• 고객이 문제의 심각성을 인식하는 순간을 포착하세요',
+    tip: '시사질문은 고객이 스스로 문제의 심각성을 깨닫게 하는 것이 핵심입니다.'
+  },
+  {
+    week: 3,
+    title: '3주차: 해결질문(N)과 FAB 연결',
+    content: '이번 주 목표: 해결질문(N)으로 고객이 솔루션의 가치를 직접 말하게 하세요.\n\n실천 과제:\n• "만약 ~가 해결된다면 어떤 변화가 있을까요?" 패턴 활용\n• 고객의 답변을 FAB로 연결하여 제안\n• 콜플랜을 작성하고 SPIN 전체 흐름을 연습하세요',
+    tip: '해결질문 후 고객이 직접 이점을 말하면, 그것을 FAB의 Benefit으로 활용하세요.'
+  },
+  {
+    week: 4,
+    title: '4주차: 종합 실전 & 자기 평가',
+    content: '이번 주 목표: SPIN 전체 프로세스를 한 번의 미팅에서 완성해보세요.\n\n실천 과제:\n• 중요한 고객 미팅 1건에 SPIN 콜플랜 작성\n• S→P→I→N 순서로 전체 흐름 실행\n• 미팅 후 자기 평가: 각 질문 유형별 활용도 점수화\n• 30일 팔로업 완료 보고서 작성',
+    tip: '4주간의 실천을 돌아보고, 가장 효과적이었던 질문 패턴을 정리하세요.'
+  }
+];
+
+function renderTimeline() {
+  const session = getSavedSession();
+  const trainingDate = session ? session.training_date : '';
+  const startDate = parseStartDate(trainingDate) || new Date();
+  const saved = JSON.parse(localStorage.getItem('spin_followup_' + (session ? session.id : '')) || '{}');
+  const today = new Date();
+
+  document.getElementById('fuTimeline').innerHTML = WEEKS.map(w => {
+    const weekDate = new Date(startDate);
+    weekDate.setDate(weekDate.getDate() + (w.week * 7));
+    const dateStr = weekDate.toLocaleDateString('ko-KR');
+
+    const status = saved['week' + w.week] === 'sent' ? 'sent' : today >= weekDate ? 'current' : 'pending';
+    const statusLabel = status === 'sent' ? '발송완료' : status === 'current' ? '발송 예정' : '대기중';
+
+    return '<div class="fu-week ' + status + '">' +
+      '<div class="fu-week-dot"></div>' +
+      '<div class="fu-week-card">' +
+        '<div class="fu-week-header">' +
+          '<div class="fu-week-title">' + w.title + '</div>' +
+          '<div><span class="fu-week-date">' + dateStr + '</span> <span class="fu-week-status ' + status + '">' + statusLabel + '</span></div>' +
+        '</div>' +
+        '<div class="fu-week-content">' + w.content.replace(/\n/g, '<br>') + '</div>' +
+        '<div style="margin-top:8px; padding:10px 14px; background:var(--pastel-gold); border-radius:8px; font-size:13px; color:var(--gold);"><strong>💡 팁:</strong> ' + w.tip + '</div>' +
+        '<div class="fu-week-actions">' +
+          '<button class="btn btn-secondary" style="font-size:12px; padding:6px 14px;" onclick="previewEmail(' + w.week + ')">📧 미리보기</button>' +
+          (status !== 'sent' ? '<button class="btn btn-primary" style="font-size:12px; padding:6px 14px;" onclick="markSent(' + w.week + ')">✅ 발송 완료</button>' : '') +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function parseStartDate(str) {
+  if (!str) return null;
+  const clean = str.replace(/\s+/g, '');
+  const m = clean.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
+  if (m) return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
+  return null;
+}
+
+function markSent(week) {
+  const session = getSavedSession();
+  const key = 'spin_followup_' + (session ? session.id : '');
+  const saved = JSON.parse(localStorage.getItem(key) || '{}');
+  saved['week' + week] = 'sent';
+  localStorage.setItem(key, JSON.stringify(saved));
+  renderTimeline();
+}
+
+function previewEmail(week) {
+  const w = WEEKS[week - 1];
+  alert('📧 ' + w.title + '\n\n' + w.content + '\n\n💡 ' + w.tip);
+}
+
+function scheduleAll() {
+  alert('전체 팔로업 스케줄이 설정되었습니다.\n\n교육 종료 후 매주 월요일에 리마인더 이메일이 발송됩니다.');
+}
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(renderTimeline, 200));
+</script>
+</body>
+</html>

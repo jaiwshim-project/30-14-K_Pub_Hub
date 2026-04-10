@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIN Selling - 팀 대항전</title>
+<link rel="stylesheet" href="common.css">
+<style>
+body { background: linear-gradient(135deg, #0a2240, #071a33); min-height: 100vh; margin: 0; }
+.battle-container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+.battle-header { text-align: center; margin-bottom: 48px; }
+.battle-title { font-size: 42px; font-weight: 900; color: #ffffff; letter-spacing: -1px; }
+.battle-title span { color: #f5a623; }
+.battle-sub { font-size: 16px; color: rgba(255,255,255,0.7); margin-top: 8px; }
+.battle-timer { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 12px; }
+
+.battle-grid { display: flex; gap: 20px; align-items: flex-end; justify-content: center; min-height: 400px; }
+.team-col { flex: 1; max-width: 200px; display: flex; flex-direction: column; align-items: center; }
+.team-bar-wrap { width: 100%; position: relative; }
+.team-bar { width: 100%; border-radius: 12px 12px 0 0; transition: height 1s cubic-bezier(0.4, 0, 0.2, 1); min-height: 20px; display: flex; align-items: flex-start; justify-content: center; padding-top: 16px; }
+.team-bar-score { font-size: 28px; font-weight: 900; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.team-label { margin-top: 16px; text-align: center; }
+.team-label-name { font-size: 18px; font-weight: 800; color: #ffffff; }
+.team-label-count { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+.team-label-trophy { font-size: 36px; margin-bottom: 8px; }
+
+.team-col.rank-1 .team-bar { box-shadow: 0 0 40px rgba(245,166,35,0.5); }
+.team-col.rank-1 .team-label-name { color: #f5a623; }
+
+@keyframes barGrow { from { height: 0; } }
+.team-bar { animation: barGrow 1s ease; }
+
+.team-colors-A { background: linear-gradient(180deg, #c0392b, #e74c3c); }
+.team-colors-B { background: linear-gradient(180deg, #2471a3, #3498db); }
+.team-colors-C { background: linear-gradient(180deg, #1e8449, #27ae60); }
+.team-colors-D { background: linear-gradient(180deg, #b8760c, #f5a623); }
+.team-colors-E { background: linear-gradient(180deg, #7d3c98, #9b59b6); }
+
+.battle-controls { text-align: center; margin-top: 32px; }
+.battle-btn { padding: 10px 24px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin: 0 6px; }
+.battle-btn:hover { background: rgba(255,255,255,0.2); }
+
+@media (max-width: 768px) {
+  .battle-title { font-size: 28px; }
+  .team-bar-score { font-size: 20px; }
+  .battle-grid { gap: 10px; }
+}
+</style>
+</head>
+<body>
+<div class="battle-container">
+  <div class="battle-header">
+    <div class="battle-title">SPIN Selling <span>팀 대항전</span></div>
+    <div class="battle-sub" id="battleCompany"></div>
+    <div class="battle-timer">⏱ <span id="battleRefresh">10</span>초 후 자동 갱신</div>
+  </div>
+  <div class="battle-grid" id="battleGrid"></div>
+  <div class="battle-controls">
+    <button class="battle-btn" onclick="loadBattle()">🔄 새로고침</button>
+    <button class="battle-btn" onclick="toggleFullscreen()">🖥 전체화면</button>
+    <button class="battle-btn" onclick="history.back()">← 이전</button>
+  </div>
+</div>
+
+<script src="common.js"></script>
+<script>
+const TEAM_KEYS = ['A','B','C','D','E'];
+let refreshTimer = null;
+let countdown = 10;
+
+async function loadBattle() {
+  const session = getSavedSession();
+  if (!session) { location.href = 'index.html'; return; }
+
+  document.getElementById('battleCompany').textContent = session.company_name + ' — ' + (session.training_date || '');
+
+  const members = await fetchAllMembers();
+  const teamNames = await fetchTeamNames();
+
+  const teamScores = {};
+  const teamCounts = {};
+  TEAM_KEYS.forEach(t => { teamScores[t] = 0; teamCounts[t] = 0; });
+
+  members.forEach(m => {
+    if (!m.name || !m.name.trim()) return;
+    const total = (m.score_quiz||0) + (m.score_needs||0) + (m.score_scenario||0) + (m.score_practice||0) + (m.score_roleplay||0) + (m.score_fab||0);
+    teamScores[m.team_id] = (teamScores[m.team_id] || 0) + total;
+    teamCounts[m.team_id] = (teamCounts[m.team_id] || 0) + 1;
+  });
+
+  const activeTeams = TEAM_KEYS.filter(t => teamCounts[t] > 0);
+  if (activeTeams.length === 0) {
+    document.getElementById('battleGrid').innerHTML = '<div style="color:rgba(255,255,255,0.5); font-size:18px;">등록된 팀이 없습니다</div>';
+    return;
+  }
+
+  const maxScore = Math.max(...activeTeams.map(t => teamScores[t]), 1);
+  const sorted = [...activeTeams].sort((a, b) => teamScores[b] - teamScores[a]);
+
+  document.getElementById('battleGrid').innerHTML = activeTeams.map(t => {
+    const score = teamScores[t];
+    const height = Math.max(40, (score / maxScore) * 350);
+    const rank = sorted.indexOf(t) + 1;
+    const name = teamNames[t] || '팀 ' + t;
+    return '<div class="team-col ' + (rank === 1 ? 'rank-1' : '') + '">' +
+      (rank === 1 ? '<div class="team-label-trophy">🏆</div>' : '') +
+      '<div class="team-bar-wrap"><div class="team-bar team-colors-' + t + '" style="height:' + height + 'px;"><span class="team-bar-score">' + score + '</span></div></div>' +
+      '<div class="team-label"><div class="team-label-name">' + name + '</div><div class="team-label-count">' + teamCounts[t] + '명 · ' + rank + '위</div></div></div>';
+  }).join('');
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+function startCountdown() {
+  countdown = 10;
+  clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => {
+    countdown--;
+    const el = document.getElementById('battleRefresh');
+    if (el) el.textContent = countdown;
+    if (countdown <= 0) {
+      loadBattle();
+      countdown = 10;
+    }
+  }, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => { loadBattle(); startCountdown(); }, 200);
+});
+</script>
+</body>
+</html>

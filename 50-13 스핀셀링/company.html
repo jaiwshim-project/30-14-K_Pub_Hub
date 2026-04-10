@@ -303,6 +303,13 @@
 
   <!-- 강사 전용: 관리 영역 -->
   <div id="dashTrainerSection" style="display:none;">
+    <div id="onlineStatus" style="background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:16px 20px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:14px; font-weight:800; color:var(--text);">🟢 실시간 접속 현황</span>
+        <span id="onlineCount" style="font-size:13px; font-weight:700; color:var(--green);">0명 접속중</span>
+      </div>
+      <div id="onlineList" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+    </div>
     <div class="card" style="border-left:4px solid var(--gold); margin-bottom:16px;">
       <div class="card-title"><span class="icon">🎓</span> 강사 관리</div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -628,6 +635,11 @@ function goToDashboard() {
 
   showStep('stepDashboard');
   updateProgress();
+
+  // 강사/매니저일 때 접속 현황 갱신
+  if (role === 'trainer' || role === 'manager') {
+    updateOnlineStatus();
+  }
 }
 
 // ========== 진행률 업데이트 ==========
@@ -662,6 +674,36 @@ function updateProgress() {
   document.getElementById('progressBar').style.width = percent + '%';
   document.getElementById('progressDetail').innerHTML = detail;
 }
+
+// ========== 실시간 접속 현황 ==========
+async function updateOnlineStatus() {
+  const session = getSavedSession();
+  if (!session) return;
+
+  const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/spin_activities?session_id=eq.' + session.id + '&created_at=gte.' + fiveMinAgo + '&select=member_name',
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
+    );
+    const activities = await res.json();
+
+    const onlineNames = [...new Set(activities.filter(a => a.member_name).map(a => a.member_name))];
+
+    const countEl = document.getElementById('onlineCount');
+    const listEl = document.getElementById('onlineList');
+    if (!countEl || !listEl) return;
+
+    countEl.textContent = onlineNames.length + '명 접속중';
+    listEl.innerHTML = onlineNames.length > 0
+      ? onlineNames.map(n => '<span style="font-size:12px; padding:4px 10px; background:rgba(30,132,73,0.08); color:var(--green); border-radius:6px; font-weight:600;">🟢 ' + n + '</span>').join('')
+      : '<span style="font-size:12px; color:var(--text-disabled);">현재 접속 중인 교육생이 없습니다</span>';
+  } catch(e) {}
+}
+
+// 30초마다 갱신
+setInterval(updateOnlineStatus, 30000);
 
 // ========== INIT ==========
 document.addEventListener('DOMContentLoaded', function() {
