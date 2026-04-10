@@ -118,11 +118,14 @@ BAF (Benefit-Advantage-Feature): 역순 제시
     container.innerHTML = `
     <style>
       #chatbot-container { --cb-primary: #0a2240; --cb-primary-hover: #0d2d52; --cb-gold: #f5a623; --cb-bg: #ffffff; --cb-surface: #f8fafc; --cb-border: #e2e8f0; --cb-text: #1e293b; --cb-text2: #64748b; --cb-user-bg: #0a2240; --cb-ai-bg: #f1f5f9; --cb-shadow: 0 20px 60px rgba(0,0,0,0.18); --cb-font: 'Noto Sans KR', 'Inter', -apple-system, sans-serif; }
-      .cb-toggle { position:fixed; bottom:24px; right:24px; width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg, var(--cb-primary), #0d3161); color:white; border:none; cursor:pointer; box-shadow:0 4px 20px rgba(10,34,64,0.4); display:flex; align-items:center; justify-content:center; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); z-index:10000; }
-      .cb-toggle:hover { transform:scale(1.08); box-shadow:0 6px 28px rgba(10,34,64,0.5); }
+      .cb-toggle { position:fixed; bottom:24px; right:24px; min-width:60px; height:60px; border-radius:30px; background:linear-gradient(135deg, #27ae60, #2ecc71); color:white; border:none; cursor:pointer; box-shadow:0 4px 20px rgba(46,204,113,0.4); display:flex; align-items:center; justify-content:center; gap:8px; padding:0 18px; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); z-index:10000; }
+      .cb-toggle:hover { transform:scale(1.08); box-shadow:0 6px 28px rgba(46,204,113,0.5); }
+      .cb-toggle-label { font-family:var(--cb-font); font-size:14px; font-weight:800; letter-spacing:0.5px; }
       .cb-toggle svg { width:26px; height:26px; transition:transform 0.3s; }
       .cb-toggle.active .cb-icon-chat { display:none; }
       .cb-toggle.active .cb-icon-close { display:block; }
+      .cb-toggle.active .cb-toggle-label { display:none; }
+      .cb-toggle.active { width:60px; min-width:60px; padding:0; border-radius:50%; }
       .cb-toggle .cb-icon-close { display:none; }
       .cb-window { position:fixed; bottom:100px; right:24px; width:400px; height:560px; background:var(--cb-bg); border-radius:20px; box-shadow:var(--cb-shadow); display:flex; flex-direction:column; overflow:hidden; z-index:9999; transform:translateY(20px) scale(0.95); opacity:0; visibility:hidden; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); border:1px solid var(--cb-border); }
       .cb-window.open { transform:translateY(0) scale(1); opacity:1; visibility:visible; }
@@ -173,8 +176,9 @@ BAF (Benefit-Advantage-Feature): 역순 제시
       @media(max-width:480px) { .cb-window { bottom:0; right:0; width:100%; height:100%; border-radius:0; } .cb-toggle { bottom:16px; right:16px; } }
     </style>
     <button class="cb-toggle" id="cbToggle" aria-label="SPIN AI 채팅">
-      <svg class="cb-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <svg class="cb-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <svg class="cb-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <svg class="cb-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <span class="cb-toggle-label">AI Bot</span>
     </button>
     <div class="cb-window" id="cbWindow">
       <div class="cb-header">

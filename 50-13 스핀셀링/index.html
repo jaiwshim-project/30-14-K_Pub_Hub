@@ -109,12 +109,6 @@
     <div id="sessionList" style="font-size:13px; color:var(--text-tertiary);">불러오는 중...</div>
   </div>
 
-  <!-- 관리자 영역 -->
-  <div style="text-align:center;">
-    <div class="admin-link" onclick="showAdminPanel()">
-      <span>🔧</span> 시스템 관리자 (교육 생성 / 교육생 등록)
-    </div>
-  </div>
 
   <!-- 관리자 패널 (숨김) -->
   <div id="adminPanel" style="display:none; margin-top:24px;">
@@ -251,6 +245,7 @@ function showAdminPanel() {
   const panel = document.getElementById('adminPanel');
   panel.style.display = 'block';
   loadAdminSessionList();
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 }
 
 async function handleCreateSession() {
