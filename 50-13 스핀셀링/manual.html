@@ -946,11 +946,67 @@ body {
     <h2 class="section-title">AI 및 개인화 학습</h2>
     <p class="section-desc">Gemini 기반 AI 코칭과 맞춤형 학습 경험을 제공합니다.</p>
   </div>
+
+  <!-- SPIN AI Bot 상세 박스 -->
+  <div class="reveal" style="background:linear-gradient(135deg, #f8fafc, #e8f4fd); border:2px solid #3498db; border-radius:20px; padding:32px; margin-bottom:32px; max-width:900px; margin-left:auto; margin-right:auto;">
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;">
+      <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, #27ae60, #2ecc71); display:flex; align-items:center; justify-content:center; font-size:32px; box-shadow:0 6px 20px rgba(46,204,113,0.3);">🤖</div>
+      <div>
+        <div style="font-size:22px; font-weight:900; color:#0a2240;">SPIN AI Bot</div>
+        <div style="font-size:13px; color:#64748b; font-weight:600;">Gemini 2.0 Flash + 하이브리드 RAG · 항상 우하단 녹색 버튼</div>
+      </div>
+    </div>
+
+    <p style="font-size:14px; color:#334155; line-height:1.8; margin-bottom:20px;">
+      모든 페이지 우하단의 녹색 <strong style="color:#27ae60;">🤖 SPIN AI Bot</strong> 버튼을 클릭하면 채팅창이 열립니다. 플랫폼의 <strong>모든 정보(38개 지식 청크)</strong>를 RAG 방식으로 검색하여 정확한 답변을 제공하며, 교육생의 점수·약점을 실시간 분석하여 개인화된 코칭을 합니다.
+    </p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; margin-bottom:20px;">
+      <div style="background:white; padding:16px 18px; border-radius:12px; border-left:3px solid #3498db;">
+        <div style="font-size:12px; font-weight:800; color:#3498db; margin-bottom:6px;">⚡ 기반 기술</div>
+        <div style="font-size:13px; color:#334155; line-height:1.6;">Google Gemini 2.0 Flash<br>+ gemini-embedding-001<br>+ 하이브리드 검색 (BM25 + 벡터)</div>
+      </div>
+      <div style="background:white; padding:16px 18px; border-radius:12px; border-left:3px solid #27ae60;">
+        <div style="font-size:12px; font-weight:800; color:#27ae60; margin-bottom:6px;">📚 지식 베이스</div>
+        <div style="font-size:13px; color:#334155; line-height:1.6;">38개 청크 (SPIN 방법론 8 + FAB 2 + 콜플랜 2 + 온톨로지 3 + 플랫폼 5 + 게임 6 + 부가기능 12)</div>
+      </div>
+      <div style="background:white; padding:16px 18px; border-radius:12px; border-left:3px solid #d4880f;">
+        <div style="font-size:12px; font-weight:800; color:#d4880f; margin-bottom:6px;">🎯 개인화</div>
+        <div style="font-size:13px; color:#334155; line-height:1.6;">교육생 이름·팀·6개 점수·강점/약점을 자동 분석하여 맞춤 코칭. 약점 영역 집중 조언.</div>
+      </div>
+      <div style="background:white; padding:16px 18px; border-radius:12px; border-left:3px solid #c0392b;">
+        <div style="font-size:12px; font-weight:800; color:#c0392b; margin-bottom:6px;">🔍 검색 방식</div>
+        <div style="font-size:13px; color:#334155; line-height:1.6;">키워드 검색 (즉시) + 벡터 임베딩 (의미 기반) → RRF로 병합 → Top 6 청크 컨텍스트</div>
+      </div>
+    </div>
+
+    <div style="background:white; padding:18px 22px; border-radius:12px; margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:800; color:#0a2240; margin-bottom:10px;">💬 답변 가능한 질문 예시</div>
+      <ul style="font-size:13px; color:#475569; line-height:1.9; margin:0; padding-left:20px;">
+        <li>"S와 P 질문의 차이점이 뭔가요?"</li>
+        <li>"시사질문(I)을 잘 만드는 방법은?"</li>
+        <li>"퀴즈 레이스 게임 점수는 어떻게 계산되나요?"</li>
+        <li>"교육 자료실에 어떤 자료가 있나요?"</li>
+        <li>"제 약점은 뭐고 어떻게 개선하면 좋을까요?"</li>
+        <li>"콜플랜은 몇 단계인가요?"</li>
+        <li>"음성 롤플레이는 어떻게 사용하나요?"</li>
+      </ul>
+    </div>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <span style="font-size:11px; padding:5px 12px; background:rgba(52,152,219,0.1); color:#2980b9; border-radius:6px; font-weight:700;">🌐 모든 페이지</span>
+      <span style="font-size:11px; padding:5px 12px; background:rgba(39,174,96,0.1); color:#27ae60; border-radius:6px; font-weight:700;">⚡ 실시간 응답</span>
+      <span style="font-size:11px; padding:5px 12px; background:rgba(212,136,15,0.1); color:#d4880f; border-radius:6px; font-weight:700;">🎯 개인 맞춤</span>
+      <span style="font-size:11px; padding:5px 12px; background:rgba(125,60,152,0.1); color:#7d3c98; border-radius:6px; font-weight:700;">🇰🇷 한국어 최적화</span>
+      <span style="font-size:11px; padding:5px 12px; background:rgba(192,57,43,0.1); color:#c0392b; border-radius:6px; font-weight:700;">📖 RAG 기반</span>
+    </div>
+  </div>
+
   <div class="features-grid">
     <div class="feature-card reveal">
       <div class="feature-icon fi-blue">&#129302;</div>
       <h3>AI 챗봇 개인화 코칭</h3>
-      <p>교육생 점수와 약점을 분석해 Gemini API가 맞춤형 코칭 피드백을 제공합니다.</p>
+      <p>SPIN AI Bot이 교육생 점수와 약점을 분석해 맞춤형 코칭 피드백을 제공합니다. 모든 페이지 우하단 플로팅 버튼.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon fi-purple">&#127897;&#65039;</div>
