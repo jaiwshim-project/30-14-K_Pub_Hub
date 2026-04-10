@@ -556,24 +556,36 @@ function getNavHTML(activePage) {
       const isSpinTools = item.section === 'spin-tools';
       const onclick = isHome ? ' onclick="clearSessionId();clearUser();clearRole();"' : '';
       if (isSpinTools) {
-        return `<div class="nav-item-wrap" onmouseenter="positionSubmenu(this)"><a href="${item.page}" class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label} ▾</a>${spinToolsSubmenu}</div>`;
+        return `<div class="nav-item-wrap" onmouseenter="showSubmenu(this)" onmouseleave="hideSubmenuDelayed(this)"><a href="${item.page}" class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label} ▾</a>${spinToolsSubmenu}</div>`;
       }
       return `<a href="${item.page}"${onclick} class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label}</a>`;
     }).join('') +
     '</div>';
 }
 
-function positionSubmenu(wrap) {
+let _submenuTimer = null;
+function showSubmenu(wrap) {
+  if (_submenuTimer) { clearTimeout(_submenuTimer); _submenuTimer = null; }
   const submenu = wrap.querySelector('.nav-submenu');
   if (!submenu) return;
   const rect = wrap.getBoundingClientRect();
-  submenu.style.top = (rect.bottom) + 'px';
-  // 우측 정렬, 화면 밖으로 나가지 않도록
-  const submenuWidth = 250;
+  const submenuWidth = 260;
   let leftPos = rect.right - submenuWidth;
   if (leftPos < 8) leftPos = 8;
+  submenu.style.position = 'fixed';
+  submenu.style.top = rect.bottom + 'px';
   submenu.style.left = leftPos + 'px';
   submenu.style.right = 'auto';
+  submenu.style.display = 'block';
+  submenu.style.zIndex = '99999';
+  // 서브메뉴 위로 마우스 이동 시에도 유지
+  submenu.onmouseenter = function() { if (_submenuTimer) { clearTimeout(_submenuTimer); _submenuTimer = null; } };
+  submenu.onmouseleave = function() { submenu.style.display = 'none'; };
+}
+function hideSubmenuDelayed(wrap) {
+  const submenu = wrap.querySelector('.nav-submenu');
+  if (!submenu) return;
+  _submenuTimer = setTimeout(() => { submenu.style.display = 'none'; }, 250);
 }
 
 function toggleDarkMode() {
