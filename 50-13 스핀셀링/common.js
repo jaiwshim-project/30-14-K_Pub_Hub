@@ -533,10 +533,29 @@ function getNavHTML(activePage) {
     filtered = items.filter(i => !adminOnly.includes(i.section) && !adminTrainer.includes(i.section));
   }
 
+  const spinToolsSubmenu = `
+    <div class="nav-submenu">
+      <a href="spin-tools.html" class="nav-sub-item"><span>🛠</span> 스핀 도구 메인</a>
+      <div class="nav-sub-divider">📚 자료 / 협업</div>
+      <a href="spin-library.html" class="nav-sub-item"><span>📚</span> SPIN 질문 라이브러리</a>
+      <a href="materials.html" class="nav-sub-item"><span>📂</span> 교육 자료실</a>
+      <a href="collab-board.html" class="nav-sub-item"><span>📌</span> 팀 협업 보드</a>
+      <div class="nav-sub-divider">🎮 학습 게임</div>
+      <a href="game-quiz-race.html" class="nav-sub-item"><span>🏁</span> 퀴즈 레이스</a>
+      <a href="game-match.html" class="nav-sub-item"><span>🧩</span> 매칭 게임</a>
+      <a href="game-flash.html" class="nav-sub-item"><span>🃏</span> 플래시카드</a>
+      <a href="game-order.html" class="nav-sub-item"><span>🔢</span> 순서 정렬</a>
+      <a href="game-industry.html" class="nav-sub-item"><span>🎯</span> 산업 맞히기</a>
+    </div>`;
+
   return '<div class="nav" id="mainNav">' +
     filtered.map(item => {
       const isHome = item.section === 'home';
+      const isSpinTools = item.section === 'spin-tools';
       const onclick = isHome ? ' onclick="clearSessionId();clearUser();clearRole();"' : '';
+      if (isSpinTools) {
+        return `<div class="nav-item-wrap"><a href="${item.page}" class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label} ▾</a>${spinToolsSubmenu}</div>`;
+      }
       return `<a href="${item.page}"${onclick} class="nav-item${item.section === activePage ? ' active' : ''}"><span class="nav-icon">${item.icon}</span> ${item.label}</a>`;
     }).join('') +
     '</div>';
