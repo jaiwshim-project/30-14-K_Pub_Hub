@@ -793,20 +793,6 @@ async function loadAllData() {
     today.setHours(0, 0, 0, 0);
 
     enriched.forEach(session => {
-      const tn = session._teamNames;
-      const manualStatus = tn && tn.status; // 수동 설정 우선
-
-      // 수동 설정이 있으면 우선 적용
-      if (manualStatus) {
-        categorized[manualStatus].push(session);
-        return;
-      }
-      if (tn && tn.ended === true) {
-        categorized.completed.push(session);
-        return;
-      }
-
-      // 날짜 기반 자동 판별
       const dateStr = session.training_date || '';
       const dates = parseDateRange(dateStr);
 
@@ -819,7 +805,6 @@ async function loadAllData() {
           categorized.active.push(session);
         }
       } else {
-        // 날짜 파싱 불가 → 점수 기반 판별
         if (session._totalScore > 0) {
           categorized.active.push(session);
         } else {
@@ -918,12 +903,7 @@ function renderGrid(type, sessions) {
             <span class="session-meta-item"><span class="meta-icon">📅</span> ${session.training_date || '날짜 미정'}</span>
             <span class="session-meta-item"><span class="meta-icon">👥</span> ${session._registeredCount}명</span>
             <span class="session-meta-item"><span class="meta-icon">🏷️</span> ${session._teamKeys.length}팀</span>
-            <select class="session-status-select" onchange="changeSessionStatus('${session.id}', this.value)" onclick="event.stopPropagation();">
-              <option value="auto" ${!(session._teamNames && session._teamNames.status) ? 'selected' : ''}>⚙ 자동(날짜)</option>
-              <option value="upcoming" ${type === 'upcoming' && (session._teamNames && session._teamNames.status) ? 'selected' : ''}>📅 진행예정</option>
-              <option value="active" ${type === 'active' && (session._teamNames && session._teamNames.status) ? 'selected' : ''}>🔄 진행중</option>
-              <option value="completed" ${type === 'completed' && (session._teamNames && session._teamNames.status) ? 'selected' : ''}>✅ 진행완료</option>
-            </select>
+            <span class="session-status-badge ${badgeClass}">${badgeText}</span>
           </div>
         </div>
         <div class="session-stats">
