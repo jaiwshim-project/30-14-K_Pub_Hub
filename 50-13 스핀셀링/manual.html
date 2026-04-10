@@ -103,17 +103,26 @@ body {
 }
 
 .nav-logo-icon {
-  width: 36px;
-  height: 36px;
-  background: var(--accent);
-  border-radius: 10px;
+  height: 32px;
+  width: auto;
+}
+
+.nav-back {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--primary);
+  gap: 6px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.2s;
+  margin-right: 12px;
 }
+.nav-back:hover { background: rgba(255,255,255,0.2); }
 
 .nav-links {
   display: flex;
@@ -217,17 +226,8 @@ body {
 
 .hero-logo {
   width: 80px;
-  height: 80px;
-  background: var(--accent);
-  border-radius: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  font-weight: 900;
-  color: #0a2240;
+  height: auto;
   margin: 0 auto 28px;
-  box-shadow: 0 8px 32px rgba(245,166,35,0.3);
 }
 
 .hero h1 {
@@ -783,8 +783,9 @@ body {
 <!-- Navigation -->
 <nav class="nav">
   <div class="nav-inner">
+    <a href="javascript:history.back()" class="nav-back">← 이전</a>
     <a href="#hero" class="nav-logo">
-      <div class="nav-logo-icon">S</div>
+      <img src="logo-kornferry.png" alt="Korn Ferry" class="nav-logo-icon">
       SPIN Selling AI
       <span class="version-badge">v1.0</span>
     </a>
@@ -817,7 +818,7 @@ body {
 <section class="hero" id="hero">
   <div class="hero-content">
     <div class="hero-badge">&#9733; Korn Ferry Certified</div>
-    <div class="hero-logo">S</div>
+    <img src="logo-kornferry.png" alt="Korn Ferry" class="hero-logo">
     <h1>SPIN Selling <span>AI</span></h1>
     <p class="hero-desc">Korn Ferry SPIN 2.0 &amp; 3.0 기반 AI 교육 플랫폼</p>
     <p class="hero-sub">심재우 대표 | SB Consulting | 사용 매뉴얼 v1.0</p>
@@ -1201,11 +1202,6 @@ body {
       <div class="contact-card-icon">&#128231;</div>
       <h3>이메일</h3>
       <p><a href="mailto:jaiwshim@gmail.com">jaiwshim@gmail.com</a></p>
-    </div>
-    <div class="contact-card">
-      <div class="contact-card-icon">&#128187;</div>
-      <h3>GitHub</h3>
-      <p><a href="https://github.com/jaiwshim-project/spin-selling-ai" target="_blank">jaiwshim-project/spin-selling-ai</a></p>
     </div>
     <div class="contact-card">
       <div class="contact-card-icon">&#127891;</div>
