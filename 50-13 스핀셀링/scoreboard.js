@@ -98,37 +98,29 @@ function renderTeamScoreTable(grouped) {
 
   const teamStats = TEAMS.map(t => {
     const members = grouped[t];
-    const totals = {};
+    const count = members.length || 1;
+    const avgs = {};
     CATEGORIES.forEach(c => {
-      totals[c] = members.reduce((sum, m) => sum + (m['score_' + c] || 0), 0);
+      avgs[c] = Math.round(members.reduce((sum, m) => sum + (m['score_' + c] || 0), 0) / count * 10) / 10;
     });
-    totals.total = CATEGORIES.reduce((sum, c) => sum + totals[c], 0);
-    return { key: t, ...totals };
+    avgs.total = Math.round(CATEGORIES.reduce((sum, c) => sum + avgs[c], 0) * 10) / 10;
+    return { key: t, count, ...avgs };
   }).sort((a, b) => b.total - a.total);
-
-  // 팀별 등록 인원 수로 만점 계산 (인원 x 6카테고리 x 100점)
-  const teamMemberCounts = {};
-  TEAMS.forEach(t => {
-    teamMemberCounts[t] = grouped[t] ? grouped[t].filter(m => m.name).length : 0;
-  });
 
   tbody.innerHTML = teamStats.map((team, i) => {
     const rankClass = i < 3 ? `rank-${i + 1}` : '';
-    const memberCount = teamMemberCounts[team.key] || 1;
-    const maxPerPerson = 600; // 6 카테고리 x 100점
-    const teamMax = memberCount * maxPerPerson;
     return `
       <tr>
         <td><span class="rank-badge ${rankClass}">${i + 1}</span></td>
-        <td style="font-weight:600;"><span class="team-label-cell ${team.key}">팀 ${team.key}</span></td>
-        <td>${team.quiz}${MAX_SUFFIX}/${CAT_MAX.quiz * memberCount}</span></td>
-        <td>${team.needs}${MAX_SUFFIX}/${CAT_MAX.needs * memberCount}</span></td>
-        <td>${team.scenario}${MAX_SUFFIX}/${CAT_MAX.scenario * memberCount}</span></td>
-        <td>${team.practice}${MAX_SUFFIX}/${CAT_MAX.practice * memberCount}</span></td>
-        <td>${team.roleplay}${MAX_SUFFIX}/${CAT_MAX.roleplay * memberCount}</span></td>
-        <td>${team.fab}${MAX_SUFFIX}/${CAT_MAX.fab * memberCount}</span></td>
-        <td class="score-total score-count-animated" data-target="${team.total}">${team.total}${MAX_SUFFIX}/${TOTAL_MAX * memberCount}</span></td>
-        <td style="min-width:80px; font-weight:700; color:var(--blue);">${team.total} / ${teamMax}</td>
+        <td style="font-weight:600;"><span class="team-label-cell ${team.key}">팀 ${team.key}</span> <span style="font-size:11px; color:var(--text-muted);">(${team.count}명)</span></td>
+        <td>${team.quiz}${MAX_SUFFIX}/${CAT_MAX.quiz}</span></td>
+        <td>${team.needs}${MAX_SUFFIX}/${CAT_MAX.needs}</span></td>
+        <td>${team.scenario}${MAX_SUFFIX}/${CAT_MAX.scenario}</span></td>
+        <td>${team.practice}${MAX_SUFFIX}/${CAT_MAX.practice}</span></td>
+        <td>${team.roleplay}${MAX_SUFFIX}/${CAT_MAX.roleplay}</span></td>
+        <td>${team.fab}${MAX_SUFFIX}/${CAT_MAX.fab}</span></td>
+        <td class="score-total score-count-animated" data-target="${team.total}">${team.total}${MAX_SUFFIX}/${TOTAL_MAX}</span></td>
+        <td style="min-width:80px; font-weight:700; color:var(--blue);">${team.total} / ${TOTAL_MAX}</td>
       </tr>
     `;
   }).join('');
@@ -235,13 +227,14 @@ function renderRanking(grouped, members) {
 
   const teamStats = TEAMS.map(t => {
     const ms = grouped[t];
-    const totals = {};
+    const count = ms.length || 1;
+    const avgs = {};
     CATEGORIES.forEach(c => {
-      totals[c] = ms.reduce((sum, m) => sum + (m['score_' + c] || 0), 0);
+      avgs[c] = Math.round(ms.reduce((sum, m) => sum + (m['score_' + c] || 0), 0) / count * 10) / 10;
     });
-    totals.total = CATEGORIES.reduce((sum, c) => sum + totals[c], 0);
+    avgs.total = Math.round(CATEGORIES.reduce((sum, c) => sum + avgs[c], 0) * 10) / 10;
     const memberNames = ms.filter(m => m.name).map(m => m.name);
-    return { key: t, memberNames, ...totals };
+    return { key: t, count, memberNames, ...avgs };
   }).sort((a, b) => b.total - a.total);
 
   const maxScore = Math.max(...teamStats.map(t => t.total), 1);
@@ -255,17 +248,18 @@ function renderRanking(grouped, members) {
           <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:4px;">
             <span style="font-size:16px; font-weight:800; color:var(--text);">팀 ${team.key}</span>
             <span style="font-size:24px; font-weight:900; color:${TEAM_COLORS[team.key]};">${team.total}점</span>
+            <span style="font-size:12px; color:var(--text-muted);">1인 평균 · ${team.count}명</span>
           </div>
           <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
             ${team.memberNames.length > 0 ? team.memberNames.join(', ') : '(팀원 미등록)'}
           </div>
           <div style="display:flex; gap:12px; font-size:11px; color:var(--text-tertiary); margin-bottom:8px; flex-wrap:wrap;">
-            <span>퀴즈 ${team.quiz}<span style="opacity:0.5">/${CAT_MAX.quiz * (team.memberNames.length || 1)}</span></span>
-            <span>니즈 ${team.needs}<span style="opacity:0.5">/${CAT_MAX.needs * (team.memberNames.length || 1)}</span></span>
-            <span>시나리오 ${team.scenario}<span style="opacity:0.5">/${CAT_MAX.scenario * (team.memberNames.length || 1)}</span></span>
-            <span>질문 ${team.practice}<span style="opacity:0.5">/${CAT_MAX.practice * (team.memberNames.length || 1)}</span></span>
-            <span>롤플레이 ${team.roleplay}<span style="opacity:0.5">/${CAT_MAX.roleplay * (team.memberNames.length || 1)}</span></span>
-            <span>FAB ${team.fab}<span style="opacity:0.5">/${CAT_MAX.fab * (team.memberNames.length || 1)}</span></span>
+            <span>퀴즈 ${team.quiz}<span style="opacity:0.5">/${CAT_MAX.quiz}</span></span>
+            <span>니즈 ${team.needs}<span style="opacity:0.5">/${CAT_MAX.needs}</span></span>
+            <span>시나리오 ${team.scenario}<span style="opacity:0.5">/${CAT_MAX.scenario}</span></span>
+            <span>질문 ${team.practice}<span style="opacity:0.5">/${CAT_MAX.practice}</span></span>
+            <span>롤플레이 ${team.roleplay}<span style="opacity:0.5">/${CAT_MAX.roleplay}</span></span>
+            <span>FAB ${team.fab}<span style="opacity:0.5">/${CAT_MAX.fab}</span></span>
           </div>
           <div class="team-score-bar">
             <div class="team-score-fill" style="width:${barPct}%; background:${TEAM_COLORS[team.key]};"></div>
